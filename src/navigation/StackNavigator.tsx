@@ -1,6 +1,6 @@
-import { FC } from 'react';
-import { TransitionPresets, createStackNavigator } from '@react-navigation/stack';
-import { useAppDispatch } from '../redux/hooks';
+import {FC} from 'react';
+import {TransitionPresets, createStackNavigator} from '@react-navigation/stack';
+import {useAppDispatch} from '../redux/hooks';
 import {
   Image,
   StyleSheet,
@@ -13,10 +13,10 @@ import {
   Clipboard,
 } from 'react-native';
 import SplashScreen from '../screens/auth/SplashScreen';
-import { screenName } from './screenNames';
-import { light_theme } from '../theme/colors';
-import { SCREEN_WIDTH, commonFontStyle, h } from '../theme/fonts';
-import { createDrawerNavigator } from '@react-navigation/drawer';
+import {screenName} from './screenNames';
+import {light_theme} from '../theme/colors';
+import {SCREEN_WIDTH, commonFontStyle, h} from '../theme/fonts';
+import {createDrawerNavigator} from '@react-navigation/drawer';
 import OnboardingScreen from '../screens/auth/Onboarding';
 import SignInScreen from '../screens/auth/SignInScreen';
 import SignUpScreen from '../screens/auth/SignUpScreen';
@@ -24,7 +24,7 @@ import ForgotScreen from '../screens/auth/ForgotScreen';
 import VerificationScreen from '../screens/auth/VerificationScreen';
 import VerificationCode from '../screens/auth/VerificationCode';
 import LocationScreen from '../screens/auth/LocationScreen';
-import MyTabs from "../navigation/BottomTabBar";
+import MyTabs from '../navigation/BottomTabBar';
 import FoodDetails from '../screens/Chef/FoodDetails';
 import MyOrdersList from '../screens/Chef/MyOrdersList';
 import Notification from '../screens/Chef/Notification';
@@ -52,9 +52,10 @@ import NewPassword from '../screens/auth/NewPassword';
 import EditFoodDetails from '../screens/Chef/EditFoodDetails';
 import Home from '../screens/Chef/Home';
 import OrderHistory from '../screens/ChefSettings/OrderHistory';
+import ChefNotification from '../screens/ChefSelf/ChefNotification';
 
 const Drawer = createDrawerNavigator();
-const { StatusBarManager } = NativeModules;
+const {StatusBarManager} = NativeModules;
 
 // function MyDrawer() {
 //   return (
@@ -95,14 +96,14 @@ const headerStyleTransparent = {
   headerTitleAlign: 'center',
   ...TransitionPresets.SlideFromRightIOS,
 };
-const Stack = createStackNavigator < RootStackParamList > ();
+const Stack = createStackNavigator<RootStackParamList>();
 
 const StackNavigator: FC = () => {
   const dispatch = useAppDispatch();
   return (
     <Stack.Navigator initialRouteName={screenName.SplashScreen}>
       <Stack.Screen
-        options={({ navigation }) => ({
+        options={({navigation}) => ({
           headerShown: false,
           ...headerStyleTransparent,
         })}
@@ -110,7 +111,7 @@ const StackNavigator: FC = () => {
         component={SplashScreen}
       />
       <Stack.Screen
-        options={({ navigation }) => ({
+        options={({navigation}) => ({
           headerShown: false,
           ...headerStyleTransparent,
         })}
@@ -127,7 +128,7 @@ const StackNavigator: FC = () => {
       /> */}
 
       <Stack.Screen
-        options={({ navigation }) => ({
+        options={({navigation}) => ({
           headerShown: false,
           ...headerStyleTransparent,
         })}
@@ -135,7 +136,7 @@ const StackNavigator: FC = () => {
         component={RoleSelectionScreen}
       />
       <Stack.Screen
-        options={({ navigation }) => ({
+        options={({navigation}) => ({
           ...headerStyleTransparent,
           headerShown: false,
         })}
@@ -143,7 +144,7 @@ const StackNavigator: FC = () => {
         component={SignInScreen}
       />
       <Stack.Screen
-        options={({ navigation }) => ({
+        options={({navigation}) => ({
           ...headerStyleTransparent,
           headerShown: false,
           // headerLeft: () => <Header navigation={navigation} />,
@@ -153,7 +154,7 @@ const StackNavigator: FC = () => {
         component={SignUpScreen}
       />
       <Stack.Screen
-        options={({ navigation }) => ({
+        options={({navigation}) => ({
           ...headerStyleTransparent,
           headerShown: false,
           headerTitle: '',
@@ -162,7 +163,7 @@ const StackNavigator: FC = () => {
         component={ForgotScreen}
       />
       <Stack.Screen
-        options={({ navigation }) => ({
+        options={({navigation}) => ({
           ...headerStyleTransparent,
           headerShown: false,
           headerTitle: '',
@@ -171,7 +172,7 @@ const StackNavigator: FC = () => {
         component={VerificationCode}
       />
       <Stack.Screen
-        options={({ navigation }) => ({
+        options={({navigation}) => ({
           ...headerStyleTransparent,
           headerShown: false,
           headerTitle: '',
@@ -180,7 +181,7 @@ const StackNavigator: FC = () => {
         component={NewPassword}
       />
       <Stack.Screen
-        options={({ navigation }) => ({
+        options={({navigation}) => ({
           ...headerStyleTransparent,
           headerShown: false,
           headerTitle: '',
@@ -188,119 +189,207 @@ const StackNavigator: FC = () => {
         name={screenName.LocationScreen}
         component={LocationScreen}
       />
-      <Stack.Screen options={({ navigation }) => ({
-        ...headerStyleTransparent,
-        headerShown: false,
-        headerTitle: '',
-      })} name={screenName.BottomTabBar} component={MyTabs} />
+      <Stack.Screen
+        options={({navigation}) => ({
+          ...headerStyleTransparent,
+          headerShown: false,
+          headerTitle: '',
+        })}
+        name={screenName.BottomTabBar}
+        component={MyTabs}
+      />
 
-      <Stack.Screen options={({ navigation }) => ({
-        ...headerStyleTransparent,
-        headerShown: false,
-        headerTitle: '',
-      })} name={screenName.FoodDetails} component={FoodDetails} />
+      <Stack.Screen
+        options={({navigation}) => ({
+          ...headerStyleTransparent,
+          headerShown: false,
+          headerTitle: '',
+        })}
+        name={screenName.FoodDetails}
+        component={FoodDetails}
+      />
 
-      <Stack.Screen options={({ navigation }) => ({
-        ...headerStyleTransparent,
-        headerShown: false,
-        headerTitle: '',
-      })} name={screenName.MyOrdersList} component={MyOrdersList} />
+      <Stack.Screen
+        options={({navigation}) => ({
+          ...headerStyleTransparent,
+          headerShown: false,
+          headerTitle: '',
+        })}
+        name={screenName.MyOrdersList}
+        component={MyOrdersList}
+      />
 
-      <Stack.Screen options={({ navigation }) => ({
-        ...headerStyleTransparent,
-        headerShown: false,
-        headerTitle: '',
-      })} name={screenName.ChefSignUp} component={ChefSignUp} />
+      <Stack.Screen
+        options={({navigation}) => ({
+          ...headerStyleTransparent,
+          headerShown: false,
+          headerTitle: '',
+        })}
+        name={screenName.ChefSignUp}
+        component={ChefSignUp}
+      />
 
-      <Stack.Screen options={({ navigation }) => ({
-        ...headerStyleTransparent,
-        headerShown: false,
-        headerTitle: '',
-      })} name={screenName.ProfileNotification} component={ProfileNotification} />
-      <Stack.Screen options={({ navigation }) => ({
-        ...headerStyleTransparent,
-        headerShown: false,
-        headerTitle: '',
-      })} name={screenName.ProfileMessages} component={ProfileMessages} />
+      <Stack.Screen
+        options={({navigation}) => ({
+          ...headerStyleTransparent,
+          headerShown: false,
+          headerTitle: '',
+        })}
+        name={screenName.ProfileNotification}
+        component={ProfileNotification}
+      />
+      <Stack.Screen
+        options={({navigation}) => ({
+          ...headerStyleTransparent,
+          headerShown: false,
+          headerTitle: '',
+        })}
+        name={screenName.ProfileMessages}
+        component={ProfileMessages}
+      />
 
-      <Stack.Screen options={({ navigation }) => ({
-        ...headerStyleTransparent,
-        headerShown: false,
-        headerTitle: '',
-      })} name={screenName.ReviewsScreen} component={ReviewsScreen} />
-      <Stack.Screen options={({ navigation }) => ({
-        ...headerStyleTransparent,
-        headerShown: false,
-        headerTitle: '',
-      })} name={screenName.PersonalInfo} component={PersonalInfo} />
-      <Stack.Screen options={({ navigation }) => ({
-        ...headerStyleTransparent,
-        headerShown: false,
-        headerTitle: '',
-      })} name={screenName.EditProfile} component={EditProfile} />
-      <Stack.Screen options={({ navigation }) => ({
-        ...headerStyleTransparent,
-        headerShown: false,
-        headerTitle: '',
-      })} name={screenName.OrderHistory} component={OrderHistory} />
-      <Stack.Screen options={({ navigation }) => ({
-        ...headerStyleTransparent,
-        headerShown: false,
-        headerTitle: '',
-      })} name={screenName.Settings} component={Settings} />
-      <Stack.Screen options={({ navigation }) => ({
-        ...headerStyleTransparent,
-        headerShown: false,
-        headerTitle: '',
-      })} name={screenName.CuisinesNameList} component={CuisinesNameList} />
-      <Stack.Screen options={({ navigation }) => ({
-        ...headerStyleTransparent,
-        headerShown: false,
-        headerTitle: '',
-      })} name={screenName.EditFoodDetails} component={EditFoodDetails} />
+      <Stack.Screen
+        options={({navigation}) => ({
+          ...headerStyleTransparent,
+          headerShown: false,
+          headerTitle: '',
+        })}
+        name={screenName.ReviewsScreen}
+        component={ReviewsScreen}
+      />
+      <Stack.Screen
+        options={({navigation}) => ({
+          ...headerStyleTransparent,
+          headerShown: false,
+          headerTitle: '',
+        })}
+        name={screenName.PersonalInfo}
+        component={PersonalInfo}
+      />
+      <Stack.Screen
+        options={({navigation}) => ({
+          ...headerStyleTransparent,
+          headerShown: false,
+          headerTitle: '',
+        })}
+        name={screenName.EditProfile}
+        component={EditProfile}
+      />
+      <Stack.Screen
+        options={({navigation}) => ({
+          ...headerStyleTransparent,
+          headerShown: false,
+          headerTitle: '',
+        })}
+        name={screenName.OrderHistory}
+        component={OrderHistory}
+      />
+      <Stack.Screen
+        options={({navigation}) => ({
+          ...headerStyleTransparent,
+          headerShown: false,
+          headerTitle: '',
+        })}
+        name={screenName.Settings}
+        component={Settings}
+      />
+      <Stack.Screen
+        options={({navigation}) => ({
+          ...headerStyleTransparent,
+          headerShown: false,
+          headerTitle: '',
+        })}
+        name={screenName.CuisinesNameList}
+        component={CuisinesNameList}
+      />
+      <Stack.Screen
+        options={({navigation}) => ({
+          ...headerStyleTransparent,
+          headerShown: false,
+          headerTitle: '',
+        })}
+        name={screenName.EditFoodDetails}
+        component={EditFoodDetails}
+      />
 
       {/* // chefSell */}
 
-      <Stack.Screen options={({ navigation }) => ({
-        ...headerStyleTransparent,
-        headerShown: false,
-        headerTitle: '',
-      })} name={screenName.ChefSelfBottomBar} component={ChefSelfBottomBar} />
+      <Stack.Screen
+        options={({navigation}) => ({
+          ...headerStyleTransparent,
+          headerShown: false,
+          headerTitle: '',
+        })}
+        name={screenName.ChefSelfBottomBar}
+        component={ChefSelfBottomBar}
+      />
 
-      <Stack.Screen options={({ navigation }) => ({
-        ...headerStyleTransparent,
-        headerShown: false,
-        headerTitle: '',
-      })} name={screenName.ChefNameList} component={ChefNameList} />
-      <Stack.Screen options={({ navigation }) => ({
-        ...headerStyleTransparent,
-        headerShown: false,
-        headerTitle: '',
-      })} name={screenName.ChefEditName} component={ChefEditName} />
+      <Stack.Screen
+        options={({navigation}) => ({
+          ...headerStyleTransparent,
+          headerShown: false,
+          headerTitle: '',
+        })}
+        name={screenName.ChefNameList}
+        component={ChefNameList}
+      />
+      <Stack.Screen
+        options={({navigation}) => ({
+          ...headerStyleTransparent,
+          headerShown: false,
+          headerTitle: '',
+        })}
+        name={screenName.ChefEditName}
+        component={ChefEditName}
+      />
+      <Stack.Screen
+        options={({navigation}) => ({
+          ...headerStyleTransparent,
+          headerShown: false,
+          headerTitle: '',
+        })}
+        name={screenName.ChefNotification}
+        component={ChefNotification}
+      />
 
       {/* // student */}
 
-
-      <Stack.Screen options={({ navigation }) => ({
-        ...headerStyleTransparent,
-        headerShown: false,
-        headerTitle: '',
-      })} name={screenName.StudentSignUp} component={StudentSignUp} />
-      <Stack.Screen options={({ navigation }) => ({
-        ...headerStyleTransparent,
-        headerShown: false,
-        headerTitle: '',
-      })} name={screenName.StudentSelect} component={StudentSelect} />
-      <Stack.Screen options={({ navigation }) => ({
-        ...headerStyleTransparent,
-        headerShown: false,
-        headerTitle: '',
-      })} name={screenName.StudentBottomBar} component={StudentBottomBar} />
-      <Stack.Screen options={({ navigation }) => ({
-        ...headerStyleTransparent,
-        headerShown: false,
-        headerTitle: '',
-      })} name={screenName.StudentCheckOut} component={StudentCheckOut} />
+      <Stack.Screen
+        options={({navigation}) => ({
+          ...headerStyleTransparent,
+          headerShown: false,
+          headerTitle: '',
+        })}
+        name={screenName.StudentSignUp}
+        component={StudentSignUp}
+      />
+      <Stack.Screen
+        options={({navigation}) => ({
+          ...headerStyleTransparent,
+          headerShown: false,
+          headerTitle: '',
+        })}
+        name={screenName.StudentSelect}
+        component={StudentSelect}
+      />
+      <Stack.Screen
+        options={({navigation}) => ({
+          ...headerStyleTransparent,
+          headerShown: false,
+          headerTitle: '',
+        })}
+        name={screenName.StudentBottomBar}
+        component={StudentBottomBar}
+      />
+      <Stack.Screen
+        options={({navigation}) => ({
+          ...headerStyleTransparent,
+          headerShown: false,
+          headerTitle: '',
+        })}
+        name={screenName.StudentCheckOut}
+        component={StudentCheckOut}
+      />
     </Stack.Navigator>
   );
 };
@@ -309,30 +398,43 @@ export const AdminHomeStack = () => {
   return (
     <>
       <Stack.Navigator initialRouteName={screenName.tab_bar_name.Home}>
-        <Stack.Screen options={({ navigation }) => ({
-          ...headerStyleTransparent,
-          headerShown: false,
-          headerTitle: '',
-        })} name={screenName.tab_bar_name.Home} component={Home} />
+        <Stack.Screen
+          options={({navigation}) => ({
+            ...headerStyleTransparent,
+            headerShown: false,
+            headerTitle: '',
+          })}
+          name={screenName.tab_bar_name.Home}
+          component={Home}
+        />
       </Stack.Navigator>
     </>
   );
-}
+};
 
 export const StudentHomeStack = () => {
   return (
     <>
-      <Stack.Navigator initialRouteName={screenName.student_tab_bar.StudentHome}>
-        <Stack.Screen options={({ navigation }) => ({
-          ...headerStyleTransparent,
-          headerShown: false,
-          headerTitle: '',
-        })} name={screenName.student_tab_bar.StudentHome} component={StudentHome} />
-        <Stack.Screen options={({ navigation }) => ({
-          ...headerStyleTransparent,
-          headerShown: false,
-          headerTitle: '',
-        })} name={screenName.StudentMenuList} component={StudentMenuList} />
+      <Stack.Navigator
+        initialRouteName={screenName.student_tab_bar.StudentHome}>
+        <Stack.Screen
+          options={({navigation}) => ({
+            ...headerStyleTransparent,
+            headerShown: false,
+            headerTitle: '',
+          })}
+          name={screenName.student_tab_bar.StudentHome}
+          component={StudentHome}
+        />
+        <Stack.Screen
+          options={({navigation}) => ({
+            ...headerStyleTransparent,
+            headerShown: false,
+            headerTitle: '',
+          })}
+          name={screenName.StudentMenuList}
+          component={StudentMenuList}
+        />
       </Stack.Navigator>
     </>
   );

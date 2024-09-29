@@ -73,6 +73,8 @@ export const Icons = {
   banner: require('../assets/Icons/banner.png'),
   logotLogo: require('../assets/Icons/logout_logo.png'),
   invoiceIcon: require('../assets/Icons/invoice_icon.png'),
+  image1: require('../assets/Icons/image1.png'),
+  noData: require('../assets/Icons/noData.png'),
 
   //tab
   ic_home: require('../assets/Icons/ic_home.png'),

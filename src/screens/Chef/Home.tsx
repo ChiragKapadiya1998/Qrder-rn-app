@@ -150,6 +150,9 @@ const Home = (props: Props) => {
         onPressCart={() => {}}
         location={value}
         onPressLocation={onPressLocation}
+        onRightPressNotification={() => {
+          navigation.navigate(screenName.tab_bar_name?.Notification);
+        }}
       />
       <ScrollView style={{flex: 1}}>
         <ImageBackground

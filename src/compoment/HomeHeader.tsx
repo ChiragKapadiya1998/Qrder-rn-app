@@ -48,6 +48,7 @@ const HomeHeader = ({
   isShowIcon = true,
   rightTextStyle,
   isCardIcon = false,
+  onRightPressNotification,
 }: HomeProps) => {
   const {navigate} = useNavigation();
   const {colors} = useTheme();
@@ -108,7 +109,11 @@ const HomeHeader = ({
         </TouchableOpacity>
       </View>
 
-      <TouchableOpacity style={styles.location_icon1}>
+      <TouchableOpacity
+        style={styles.location_icon1}
+        onPress={() => {
+          onRightPressNotification();
+        }}>
         <Image source={Icons?.ic_bell} style={styles?.menuIcon} />
       </TouchableOpacity>
     </SafeAreaView>

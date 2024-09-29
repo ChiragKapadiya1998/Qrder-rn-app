@@ -35,6 +35,7 @@ import {getChefsAction} from '../../actions/chefsAction';
 import {Icons} from '../../utils/images';
 import {light_theme} from '../../theme/colors';
 import PrimaryButton from '../../compoment/PrimaryButton';
+import {screenName} from '../../navigation/screenNames';
 
 const ChefHome = () => {
   const {colors} = useTheme();
@@ -44,6 +45,7 @@ const ChefHome = () => {
   const [orderRequestModal, setOrderRequestModal] = useState(false);
   const {isDarkTheme} = useAppSelector(state => state.common);
   const dispatch = useAppDispatch();
+  const navigation = useNavigation();
 
   const GetStatus = async () => {
     const Status = await getAsyncLocation();
@@ -122,6 +124,9 @@ const ChefHome = () => {
         onPressCart={() => {}}
         location={value}
         onPressLocation={onPressLocation}
+        onRightPressNotification={() => {
+          navigation.navigate(screenName.ChefNotification);
+        }}
       />
       <ScrollView style={{flex: 1}}>
         <ImageBackground
