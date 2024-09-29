@@ -1,11 +1,13 @@
 import {
+  ActivityIndicator,
   Image,
+  StatusBar,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, { useCallback ,useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useFocusEffect, useNavigation, useTheme } from '@react-navigation/native';
 import HomeHeader from '../../compoment/HomeHeader';
 import { strings } from '../../i18n/i18n';
@@ -19,15 +21,42 @@ import Loader from '../../compoment/Loader';
 import { screenName } from '../../navigation/screenNames';
 import { clearAsync, getAsyncUserInfo } from '../../utils/asyncStorageManager';
 import { dispatchNavigation } from '../../utils/globalFunctions';
+import { useAppSelector } from '../../redux/hooks';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import LogOutModal from '../../compoment/LogOutModal';
 
-const StudentProfile = () => {
-  const { colors} = useTheme();
+type Props = {};
+
+const StudentProfile = (props: Props) => {
+  const { colors, isDark } = useTheme();
   const navigation = useNavigation();
   const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
+  const { isDarkTheme } = useAppSelector(state => state.common);
   const [photoUri, setPhotoUri] = useState(null);
   const [loading, setLoading] = useState(false);
   const [name, setName] = useState('');
+  const [number, setNumber] = useState('');
+  const [visible, setVisible] = useState(false);
+  const [userData, setUserData] = useState<any>({});
 
+
+  const fetchUserInfo = async () => {
+    try {
+      const userList = await getAsyncUserInfo();
+      setUserData(userList)
+      setName(userList.name || '');
+      setNumber(userList.number || '')
+    } catch (error) {
+    }
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchUserInfo();
+    }, [])
+  );
+
+  console.log(name)
   const selectImage = () => {
     setLoading(true);
     ImagePicker.openPicker({
@@ -45,31 +74,29 @@ const StudentProfile = () => {
       });
   };
 
-
-  const fetchUserInfo = async () => {
-    try {
-      const userList = await getAsyncUserInfo();
-      setName(userList.name || '');
-    } catch (error) {
-    }
-  };
-
-  useFocusEffect(
-    useCallback(() => {
-      fetchUserInfo();
-    }, [])
-  );
-
-  const onPressNavigation = (list: string) => {
-    if (list == screenName.PersonalInfo) {
-      navigation.navigate(list, { hideEdit: false });
+  const onPressNavigation = (list) => {
+    if (list == screenName.EditProfile) {
+      navigation.navigate(list, { hideEdit: false, userData: userData });
+    } else if (list === 'log Out') {
+      setVisible(true);
     } else {
       list !== '' && navigation.navigate(list);
     }
   };
 
+  const closeModal = () => {
+    setVisible(false);
+  };
+
+  const onPressLogOut = async () => {
+    clearAsync(), dispatchNavigation(screenName.RoleSelectionScreen);
+    await GoogleSignin.signOut();
+    setVisible(false);
+  }
+
   return (
     <View style={styles.container}>
+      <StatusBar barStyle={isDarkTheme ? 'light-content' : 'dark-content'} backgroundColor={colors.white} />
       <HomeHeader
         onBackPress={() => {
           navigation.goBack();
@@ -85,64 +112,91 @@ const StudentProfile = () => {
       <KeyboardAwareScrollView
         keyboardShouldPersistTaps={'handled'}
         contentContainerStyle={styles.contentContainerStyle}>
-        <View style={styles.profileContainer}>
-          <TouchableOpacity onPress={selectImage}>
-            {loading ? (
-              <View style={[styles.loader, styles.profilImage]}>
-                <Loader />
+        <TouchableOpacity onPress={() => onPressNavigation('EditProfile')} activeOpacity={0.8} style={styles.profileContainer}>
+          <View style={styles.profileView}>
+            <View style={styles.profileBox}>
+              <View style={styles.profilImage} />
+              <View style={styles.userNameView}>
+                <Text style={styles.nameText}>{name}</Text>
+                <Text style={styles.numberText}>{number}</Text>
               </View>
-            ) : (
-              <Image
-                source={photoUri ? { uri: photoUri } : Icons.profileImage}
-                style={styles.profilImage}
-              />
-            )}
-          </TouchableOpacity>
-          <View style={styles.userNameView}>
-            <Text style={styles.nameText}>{name}</Text>
+            </View>
           </View>
-        </View>
+          <TouchableOpacity>
+            <Image style={styles.rightIcon} source={Icons.rightBack} />
+          </TouchableOpacity>
+        </TouchableOpacity>
 
+        <Text style={styles.accountText}>{strings('profileScreen.accounts')}</Text>
         <TitleList
           arr_list={[
             {
               title: strings('profileScreen.personal_info'),
               iconName: Icons.profileIcon,
-              screens: screenName.PersonalInfo
+              screens: screenName.EditProfile
+            },
+            {
+              title: strings('profileScreen.order_history'),
+              iconName: Icons.inventory,
+              screens: screenName.OrderHistory
+            },
+            {
+              title: strings('profileScreen.notifications'),
+              iconName: Icons.notificationIcon,
+              screens: screenName.ProfileNotification
             },
           ]}
           onPressCell={onPressNavigation}
+          styleProp={styles.boxCotainer}
         />
+        <Text style={styles.accountText}>{strings('profileScreen.more')}</Text>
         <TitleList
           arr_list={[
             {
-              title: strings('StudentSignUp.orders_history'),
-              iconName: Icons.menuIcon,
-              screens: screenName.MyOrdersList
+              title: strings('profileScreen.review'),
+              iconName: Icons.stareIcon,
+              screens: ""
+            },
+            {
+              title: strings('profileScreen.support'),
+              iconName: Icons.supportIcon,
+              screens: ""
+            },
+            {
+              title: strings('profileScreen.privacy_policy'),
+              iconName: Icons.privacyIcon,
+              screens: ""
+            },
+            {
+              title: strings('profileScreen.term_condition'),
+              iconName: Icons.termIcon,
+              screens: ""
             },
             {
               title: strings('profileScreen.settings'),
-              iconName: Icons.crmIcon,
+              iconName: Icons.settingsIcon,
               screens: screenName.Settings
+            },
+            {
+              title: strings('profileScreen.log_out'),
+              iconName: Icons.logout,
+              screens: "log Out"
             },
           ]}
           onPressCell={onPressNavigation}
           styleProp={styles.boxCotainer}
         />
-        <TitleList
-          arr_list={[
-            {
-              title: strings('profileScreen.log_out'),
-              iconName: Icons.logout,
-            },
-          ]}
-          onPressCell={() => {
-            clearAsync(), dispatchNavigation(screenName.RoleSelectionScreen);
-          }}
-          styleProp={styles.boxCotainer}
-        />
-        <Spacer height={hp(90)} />
+        <Spacer height={hp(20)} />
       </KeyboardAwareScrollView>
+
+      <LogOutModal
+        title={strings('Settings.logoutDes')}
+        rightText={strings('Settings.delete')}
+        leftText={strings('Settings.cancel')}
+        visible={visible}
+        closeModal={() => closeModal()}
+        onPressDelete={() => onPressLogOut()}
+      />
     </View>
   );
 };
@@ -154,44 +208,58 @@ const getGlobalStyles = (props: any) => {
   return StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: colors.white,
+      backgroundColor: colors.bg_white,
     },
     headerContainer: {
-      backgroundColor: colors.white,
+      backgroundColor: colors.bg_white,
     },
     contentContainerStyle: {
-      marginHorizontal: wp(16),
+      marginHorizontal: wp(20),
+    },
+    profileView: {
+      flex: 1
+    },
+    profileBox: {
+      flexDirection: 'row',
+      alignItems: 'center',
     },
     profileContainer: {
       flexDirection: 'row',
       alignItems: 'center',
-      paddingTop: hp(6),
-      paddingBottom: hp(32),
+      backgroundColor: colors.cards_bg,
+      paddingVertical: hp(12),
+      paddingHorizontal: wp(16),
+      borderRadius: 16
     },
     profilImage: {
-      width: wp(100),
-      height: wp(100),
-      borderRadius: wp(50),
-      // backgroundColor: '#F88222',
-      // opacity: 0.5
-    },
-    loader: {
-      alignItems: 'center',
-      justifyContent: 'center',
-      flex: 1,
+      width: wp(64),
+      height: wp(64),
+      borderRadius: wp(64),
+      borderColor: colors.text_orange,
+      borderWidth: 1,
+      backgroundColor: colors.bg_orange200,
     },
     userNameView: {
-      marginLeft: wp(32),
+      marginLeft: wp(12),
     },
     nameText: {
-      ...commonFontStyle(700, 20, colors.Title_Text),
+      ...commonFontStyle(700, 16, colors.black),
     },
-    desText: {
-      marginTop: hp(8),
-      ...commonFontStyle(400, 14, colors.gray_300),
+    numberText: {
+      marginTop: hp(4),
+      ...commonFontStyle(400, 12, colors.title_dec100),
     },
     boxCotainer: {
-      marginTop: hp(20),
+      marginTop: hp(8),
     },
+    rightIcon: {
+      width: wp(14),
+      height: hp(14),
+      resizeMode: 'contain',
+    },
+    accountText: {
+      marginTop: hp(20),
+      ...commonFontStyle(500, 16, colors.black),
+    }
   });
 };

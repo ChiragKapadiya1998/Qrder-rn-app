@@ -71,6 +71,8 @@ export const Icons = {
   termIcon: require('../assets/Icons/term_icons.png'),
   ic_order: require('../assets/Icons/ic_order.png'),
   banner: require('../assets/Icons/banner.png'),
+  logotLogo: require('../assets/Icons/logout_logo.png'),
+  invoiceIcon: require('../assets/Icons/invoice_icon.png'),
 
   //tab
   ic_home: require('../assets/Icons/ic_home.png'),

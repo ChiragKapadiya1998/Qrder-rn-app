@@ -39,6 +39,7 @@ type Props = {
   searchData?: any;
   showListView?: boolean;
   setShowListView?: any
+  isShowLabel?: boolean
 };
 
 const Input = ({
@@ -62,16 +63,19 @@ const Input = ({
   onFocus,
   setShowListView,
   searchData,
+  isShowLabel = false,
   ...rest
 }: Props) => {
   const { colors } = useTheme();
   const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
 
   return (
-    <View style={[styles.container, extraStyle]}>
-      {/* <Text numberOfLines={1} style={styles.labelTextStyle}>
-        {label}
-      </Text> */}
+    <View style={[styles.container, extraStyle,{ marginTop: isShowLabel ? hp(16) : hp(8)}]}>
+      {isShowLabel ?
+        <Text numberOfLines={1} style={styles.labelTextStyle}>
+          {label}
+        </Text> : null}
+
       <View style={[styles.firstThemeContainer, inputStyle]}>
         <TextInput
           {...rest}
@@ -141,9 +145,8 @@ const getGlobalStyles = (props: any) => {
       marginTop: hp(8),
     },
     labelTextStyle: {
-      ...commonFontStyle(400, 13, colors.Title_Text),
-      marginBottom: hp(4),
-      textTransform: 'uppercase',
+      ...commonFontStyle(500, 14, colors.black),
+      marginBottom: hp(8),
     },
     firstThemeContainer: {
       height: hp(56),
@@ -161,8 +164,8 @@ const getGlobalStyles = (props: any) => {
       ...commonFontStyle(400, 14, colors.black),
     },
     eyeIconStyle: {
-      height: hp(26),
-      width: hp(26),
+      height: hp(20),
+      width: hp(20),
       tintColor: colors.icon_tin,
     },
     listText: {

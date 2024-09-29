@@ -51,6 +51,7 @@ import StudentCheckOut from '../screens/StudentAuth/StudentCheckOut';
 import NewPassword from '../screens/auth/NewPassword';
 import EditFoodDetails from '../screens/Chef/EditFoodDetails';
 import Home from '../screens/Chef/Home';
+import OrderHistory from '../screens/ChefSettings/OrderHistory';
 
 const Drawer = createDrawerNavigator();
 const { StatusBarManager } = NativeModules;
@@ -94,7 +95,7 @@ const headerStyleTransparent = {
   headerTitleAlign: 'center',
   ...TransitionPresets.SlideFromRightIOS,
 };
-const Stack = createStackNavigator<RootStackParamList>();
+const Stack = createStackNavigator < RootStackParamList > ();
 
 const StackNavigator: FC = () => {
   const dispatch = useAppDispatch();
@@ -237,6 +238,11 @@ const StackNavigator: FC = () => {
         headerShown: false,
         headerTitle: '',
       })} name={screenName.EditProfile} component={EditProfile} />
+      <Stack.Screen options={({ navigation }) => ({
+        ...headerStyleTransparent,
+        headerShown: false,
+        headerTitle: '',
+      })} name={screenName.OrderHistory} component={OrderHistory} />
       <Stack.Screen options={({ navigation }) => ({
         ...headerStyleTransparent,
         headerShown: false,

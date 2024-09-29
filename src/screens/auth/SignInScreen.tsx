@@ -41,7 +41,7 @@ const SignInScreen = (props: Props) => {
   const {colors} = useTheme();
   const {params} = useRoute();
   const styles = React.useMemo(() => getGlobalStyles({colors}), [colors]);
-  const [email, setEmail] = useState(__DEV__ ? 'adminstudent@gmail.com' : '');
+  // const [email, setEmail] = useState(__DEV__ ? 'adminstudent@gmail.com' : '');
   // const [email, setEmail] = useState(__DEV__ ? 'ssss@gmail.com' : '');
   const [email, setEmail] = useState(__DEV__ ? 'admin@gmail.com' : '');
   const [password, setPassword] = useState(__DEV__ ? 'Test!@123' : '');
@@ -58,8 +58,8 @@ const SignInScreen = (props: Props) => {
 
   const dispatch = useAppDispatch();
   const onPressLogin = () => {
-    dispatchNavigation(screenName.ChefSelfBottomBar);
-    return;
+    // dispatchNavigation(screenName.ChefSelfBottomBar);
+    // return;
     if (email.trim().length === 0) {
       errorToast(strings('login.error_email'));
     } else if (!emailCheck(email)) {

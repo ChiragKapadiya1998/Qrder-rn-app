@@ -555,6 +555,7 @@ const getGlobalStyles = (props: any) => {
       height: hp(56),
       borderRadius: 32,
       paddingHorizontal: wp(25),
+      marginTop: hp(12),
     },
     otherStyle:{
       marginTop: hp(8),

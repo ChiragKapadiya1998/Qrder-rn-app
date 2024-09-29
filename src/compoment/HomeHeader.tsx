@@ -64,7 +64,7 @@ const HomeHeader = ({
     return (
       <SafeAreaView edges={['top']} style={[styles?.container, extraStyle]}>
         <View style={styles.address_container}>
-          <TouchableOpacity style={styles.location_icon} onPress={onBackPress}>
+          <TouchableOpacity onPress={onBackPress}>
             <Image source={Icons?.back} style={styles?.backIcon} />
           </TouchableOpacity>
           <View style={[styles.headerTitle]}>
@@ -124,7 +124,7 @@ const getGlobalStyles = (props: any) => {
       backgroundColor: colors?.bg_white,
       paddingTop: hp(8),
       paddingBottom: hp(20),
-      paddingHorizontal: wp(16),
+      paddingHorizontal: wp(20),
       flexDirection: 'row',
       alignItems: 'center',
     },

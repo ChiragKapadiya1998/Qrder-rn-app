@@ -72,11 +72,13 @@ export default {
     sign_up: 'Sign Up',
     sign_dec: 'Please sign up to get started',
     name: 'Name',
+    first_name:'First Name',
     p_name: 'Your First name',
     last_name: 'Last Name',
     lats_p_name: 'Your Last name',
     p_email: 'Email Id',
     email: 'Email',
+    email_address:'Email Address',
     full_name: 'Full Name',
     password: 'Password',
     re_type_password: 'Re-Type Password',
@@ -93,13 +95,16 @@ export default {
     state: 'State',
     p_enter_country: 'Enter Country',
     country: 'Country',
+    address:'Address',
     p_enter_area: 'Enter Address',
     area: 'Area',
     p_enter_pincode: 'Enter Pincode',
     p_enter_number: 'Mobile number',
+    p_enter_phone: 'Enter Phone Number',
     restaurantName: 'Name of restaurant',
     pincode: 'Pincode',
     restaurant: 'Restaurant',
+    restaurant_name: 'Enter Restaurant Name',
     canteen: 'Canteen',
     canteen_name: 'CANTEEN NAME',
     p_enter_canteen: 'Enter Canteen Name',
@@ -107,6 +112,8 @@ export default {
     university_name: 'Enter University Name',
     error_university_name: 'Please enter university name',
     select_university: 'Select University/college',
+    p_password:'Enter Password',
+    p_confirm_password:'Enter Confirm Password'
   },
   Phone_number_verification: {
     verification: 'Check your email',
@@ -227,7 +234,8 @@ export default {
     discount:'Discount',
     support:'Support',
     privacy_policy:'Privacy Policy',
-    term_condition:'Term & Condition'
+    term_condition:'Term & Condition',
+    download_invoice:'Download Invoice'
   },
   notifications: {
     notifications: 'Notifications',
@@ -243,7 +251,8 @@ export default {
     phone_Number: 'Phone Number',
     select_cusine_error: 'Please select your cusine',
     salary: 'Salary',
-    p_salary: 'Please enter salary',
+    p_salary: 'Please Enter Salary',
+    create_chef:'Create Chef'
   },
   PersonalInfo: {
     personal_Info: 'Personal Info',
@@ -255,6 +264,7 @@ export default {
     upload_Image: 'Upload Image',
     save: 'SAVE',
     i_love_fast_food: 'I love fast food',
+    save_details:'Save Details'
   },
   Settings: {
     settings: 'Settings',
@@ -266,6 +276,9 @@ export default {
     deleteText: ' Are you sure you want to delete your account on Qrder?',
     no: 'No',
     yes: 'Yes',
+    logoutDes:'Would you like to log out, are you sure?',
+    cancel:'Cancel',
+    delete:'Delete'
   },
   StudentSignUp: {
     student_register: 'Student Register',

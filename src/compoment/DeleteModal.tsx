@@ -13,7 +13,7 @@ type Props = {
     rightText: string
 };
 
-const DleleteModal = ({ visible, closeModal, title, onPressDelete, leftText ,rightText}: Props) => {
+const DleleteModal = ({ visible, closeModal, title, onPressDelete, leftText, rightText }: Props) => {
     const { colors, isDark } = useTheme();
     const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
 

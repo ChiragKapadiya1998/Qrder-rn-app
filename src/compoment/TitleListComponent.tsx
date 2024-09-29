@@ -103,8 +103,8 @@ const getGlobalStyles = (props: any) => {
       resizeMode: 'contain',
     },
     rightIcon: {
-      width: wp(24),
-      height: hp(24),
+      width: wp(14),
+      height: hp(14),
       resizeMode: 'contain',
     },
     titleText: {

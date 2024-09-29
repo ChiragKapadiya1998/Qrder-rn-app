@@ -13,20 +13,24 @@ import PrimaryButton from '../../compoment/PrimaryButton';
 import { updateLocale } from 'moment';
 import { updateProfile } from '../../actions/authAction';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import Spacer from '../../compoment/Spacer';
 
 type Props = {};
 
 const EditProfile = (props: Props) => {
     const route = useRoute();
-    const { userData } = route.params;
+    const { userData } = route?.params;
     const { colors, isDark } = useTheme();
     const navigation = useNavigation();
     const dispatch = useAppDispatch();
     const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
     const { isDarkTheme } = useAppSelector(state => state.common);
-    const [names, setName] = useState<string>(userData?.name);
-    const [emails, setEmail] = useState<string>(userData.email);
-    const [numbers, setNumber] = useState<string>(userData.number);
+    const [names, setName] = useState < string > (userData?.name);
+    const [lastName, setLastName] = useState('');
+    const [restaurant, setRestaurant] = useState < string > (userData.restaurant_name);
+    const [emails, setEmail] = useState < string > (userData.email);
+    const [numbers, setNumber] = useState < string > (userData.number);
+    const [address, setAddress] = useState < string > (userData.address);
     const [photoUri, setPhotoUri] = useState(null);
     const [loading, setLoading] = useState(false);
 
@@ -89,7 +93,7 @@ const EditProfile = (props: Props) => {
                     navigation.goBack();
                 }}
                 mainShow={true}
-                title={strings('PersonalInfo.editProfile')}
+                title={strings('profileScreen.profile')}
                 isShowIcon={false}
                 extraStyle={styles.headerContainer}
                 isHideIcon={true}
@@ -115,33 +119,65 @@ const EditProfile = (props: Props) => {
                         <Input
                             value={names}
                             placeholder={strings('sign_up.p_name')}
-                            label={strings('sign_up.name')}
+                            label={strings('sign_up.first_name')}
                             onChangeText={(t: string) => setName(t)}
+                            isShowLabel={true}
+                            inputStyle={styles.inputStyle}
+                        />
+                        <Input
+                            value={lastName}
+                            placeholder={strings('sign_up.lats_p_name')}
+                            label={strings('sign_up.last_name')}
+                            onChangeText={(t: string) => setLastName(t)}
+                            isShowLabel={true}
+                            inputStyle={styles.inputStyle}
+                        />
+                        {userData.role === 'student' ? null :
+                            <Input
+                                value={restaurant}
+                                placeholder={strings('sign_up.restaurant_name')}
+                                label={strings('sign_up.restaurant')}
+                                onChangeText={(t: string) => setRestaurant(t)}
+                                isShowLabel={true}
+                                inputStyle={styles.inputStyle}
+                            />}
+                        <Input
+                            value={numbers}
+                            placeholder={strings('sign_up.p_enter_phone')}
+                            keyboardType="number-pad"
+                            label={strings('chefSignUp.phone_Number')}
+                            onChangeText={(t: string) => setNumber(t)}
+                            maxLength={10}
+                            isShowLabel={true}
+                            inputStyle={styles.inputStyle}
                         />
                         <Input
                             value={emails}
                             placeholder={strings('sign_up.p_email')}
-                            label={strings('sign_up.email')}
+                            label={strings('sign_up.email_address')}
                             onChangeText={(t: string) => setEmail(t)}
+                            isShowLabel={true}
+                            inputStyle={styles.inputStyle}
                         />
-
-                        <Input
-                            value={numbers}
-                            placeholder={strings('sign_up.p_enter_number')}
-                            keyboardType="number-pad"
-                            label={strings('PersonalInfo.phone_number')}
-                            onChangeText={(t: string) => setNumber(t)}
-                            maxLength={10}
-                        />
+                        {userData.role === 'student' ? null :
+                            <Input
+                                value={address}
+                                placeholder={strings('sign_up.p_enter_area')}
+                                label={strings('sign_up.address')}
+                                onChangeText={(t: string) => setAddress(t)}
+                                isShowLabel={true}
+                                inputStyle={styles.inputStyle}
+                            />}
                     </View>
-                    <PrimaryButton
-                        extraStyle={styles.signupButton}
-                        onPress={onPressEditDone}
-                        title={strings('PersonalInfo.save')}
-                    />
-
                 </View>
             </KeyboardAwareScrollView>
+            <View style={{ bottom: 8, paddingHorizontal: wp(20) }}>
+                <PrimaryButton
+                    extraStyle={styles.signupButton}
+                    onPress={onPressEditDone}
+                    title={strings('PersonalInfo.save_details')}
+                />
+            </View>
         </View >
     );
 };
@@ -163,27 +199,32 @@ const getGlobalStyles = (props: any) => {
             textTransform: 'uppercase'
         },
         subContainer: {
-            paddingHorizontal: wp(16),
-            marginTop: hp(6)
+            paddingHorizontal: wp(20),
+            marginTop: hp(3)
         },
         profileContainer: {
             justifyContent: "center",
             alignItems: 'center',
         },
         profilImage: {
-            width: wp(130),
-            height: wp(130),
-            borderRadius: wp(50),
+            width: wp(99),
+            height: wp(99),
+            borderRadius: wp(99),
+            borderColor: colors.text_orange,
+            borderWidth: 1,
+            backgroundColor: colors.bg_orange200,
         },
         editImage: {
-            width: wp(41),
-            height: wp(41),
-            borderRadius: wp(40),
+            width: wp(30),
+            height: wp(30),
+            borderRadius: wp(15),
             backgroundColor: colors.Primary_Orange,
+            borderColor: colors.white,
+            borderWidth: 2,
             alignItems: 'center',
             justifyContent: 'center',
             position: 'absolute',
-            bottom: 0,
+            bottom: 2,
             right: 0
         },
         profileIcon: {
@@ -191,8 +232,9 @@ const getGlobalStyles = (props: any) => {
             height: 16,
             resizeMode: 'contain',
         },
-        inputView: {
-            marginTop: hp(6)
+        inputView: {},
+        inputStyle: {
+            borderColor: colors.text_orange
         },
         loader: {
             alignItems: 'center',
@@ -204,13 +246,13 @@ const getGlobalStyles = (props: any) => {
             ...commonFontStyle(700, 20, colors.Title_Text),
         },
         signupButton: {
-            marginTop: hp(47),
-            borderRadius: 12,
+            marginTop: hp(20),
+            borderRadius: 15,
             alignItems: 'center',
             justifyContent: 'center',
         },
         contentContainerStyle: {
-            paddingHorizontal: wp(24),
+            paddingHorizontal: wp(20),
         },
     });
 };

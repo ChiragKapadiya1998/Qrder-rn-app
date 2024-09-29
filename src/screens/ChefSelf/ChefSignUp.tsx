@@ -1,4 +1,4 @@
-import { Alert, StatusBar, StyleSheet, View } from 'react-native';
+import { Alert, Image, StatusBar, StyleSheet, TouchableOpacity, View } from 'react-native';
 import React, { useRef, useState } from 'react';
 import { useNavigation, useTheme } from '@react-navigation/native';
 import { hp, wp } from '../../theme/fonts';
@@ -21,6 +21,8 @@ import { chefsSignUp } from '../../actions/chefsAction';
 import Spacer from '../../compoment/Spacer';
 import { getAsyncUserInfo } from '../../utils/asyncStorageManager';
 import { dispatchNavigation } from '../../utils/globalFunctions';
+import HomeHeader from '../../compoment/HomeHeader';
+import { Icons } from '../../utils/images';
 
 type Props = {};
 
@@ -29,14 +31,17 @@ const ChefSignUp = (props: Props) => {
   const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState<string>('');
+  const [phone, setPhone] = useState < string > ('');
   const [password, setPassword] = useState('');
   const [salary, setSalary] = useState(0);
   const [rePassword, setRePassword] = useState('');
-  const [isShowPassword, setIsShowPassword] = useState<boolean>(true);
-  const [reShowPassword, setReShowPassword] = useState<boolean>(true);
+  const [isShowPassword, setIsShowPassword] = useState < boolean > (true);
+  const [reShowPassword, setReShowPassword] = useState < boolean > (true);
   const [quantityValue, setQuantityValue] = useState(0);
+  const [photoUri, setPhotoUri] = useState(null);
+  const [loading, setLoading] = useState(false);
   const { getCuisines } = useAppSelector(state => state.data);
+  const { isDarkTheme } = useAppSelector(state => state.common);
 
   const navigation = useNavigation();
   const dispatch = useAppDispatch();
@@ -86,7 +91,7 @@ const ChefSignUp = (props: Props) => {
       let obj = {
         data,
         onSuccess: (response: any) => {
-           navigation.goBack();
+          navigation.goBack();
           setName('');
           setEmail('');
           setQuantityValue(0);
@@ -109,96 +114,135 @@ const ChefSignUp = (props: Props) => {
   const onPressBack = () => {
     navigation.goBack();
   };
- 
+
+  const selectImage = () => {
+    setLoading(true);
+    ImageCropPicker.openPicker({
+      width: 100,
+      height: 100,
+      cropping: true,
+    })
+      .then(image => {
+        setPhotoUri(image.path);
+        setLoading(false);
+      })
+      .catch(error => {
+        console.log(error);
+        setLoading(false);
+      });
+  };
+
   return (
     <View style={styles.container}>
-      <StatusBar
-        barStyle={'light-content'}
-        backgroundColor={colors.Primary_Bg}
+      <StatusBar barStyle={isDarkTheme ? 'light-content' : 'dark-content'} backgroundColor={colors.white} />
+      <HomeHeader
+        onBackPress={() => {
+          navigation.goBack();
+        }}
+        mainShow={true}
+        title={strings('chefSignUp.create_chef')}
+        isShowIcon={false}
+        extraStyle={styles.headerContainer}
+        isHideIcon={true}
+        rightTextStyle={styles.rightTextStyle}
       />
+      <KeyboardAwareScrollView
+        keyboardShouldPersistTaps={'handled'}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.contentContainerStyle}>
+        <View style={styles.profileContainer}>
+          <View>
+            <Image
+              source={photoUri ? { uri: photoUri } : Icons.profileImage}
+              style={styles.profilImage}
+            />
+            <TouchableOpacity activeOpacity={0.9} onPress={selectImage} style={styles.editImage}>
+              <Image source={Icons.editPencial} style={styles.profileIcon} />
+            </TouchableOpacity>
+          </View>
 
-      <LoginHeader
-        title={strings('chefSignUp.chef_register')}
-        description={strings('sign_up.sign_dec')}
-        isBack={true}
-        onPress={() => onPressBack()}
-      />
-
-      <View style={styles.bottomContainer}>
-        <KeyboardAwareScrollView
-          keyboardShouldPersistTaps={'handled'}
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={styles.contentContainerStyle}>
-          <Input
-            value={name}
-            placeholder={strings('sign_up.p_name')}
-            label={strings('sign_up.name')}
-            onChangeText={(t: string) => setName(t)}
-          />
-          <Input
-            value={email}
-            placeholder={strings('sign_up.p_email')}
-            label={strings('sign_up.email')}
-            onChangeText={(t: string) => setEmail(t)}
-          />
-          <CCDropDown
-            data={getCuisines}
-            label={strings('chefSignUp.select_cusine')}
-            labelField={'name'}
-            valueField={'id'}
-            placeholder={strings('addFoodList.select_cusine')}
-            DropDownStyle={styles.dropDownStyle}
-            value={quantityValue}
-            setValue={setQuantityValue}
-            extraStyle={styles.extraStyle}
-          />
-          <Input
-            value={phone}
-            returnKeyType="next"
-            placeholder={strings('chefSignUp.phone_Number')}
-            label={strings('chefSignUp.phone_Number')}
-            keyboardType="number-pad"
-            maxLength={10}
-            onChangeText={(t: string) => setPhone(t.trim())}
-          />
-          <Input
-            value={salary}
-            returnKeyType="next"
-            placeholder={strings('chefSignUp.p_salary')}
-            label={strings('chefSignUp.salary')}
-            keyboardType="number-pad"
-            maxLength={10}
-            onChangeText={(t: string) => setSalary(t.trim())}
-          />
-          <Input
-            value={password}
-            autoCorrect={false}
-            isShowEyeIcon={true}
-            secureTextEntry={isShowPassword}
-            placeholder="* * * * * * *"
-            label={strings('sign_up.password')}
-            onChangeText={(t: string) => setPassword(t)}
-            onPressEye={() => setIsShowPassword(!isShowPassword)}
-          />
-          <Input
-            value={rePassword}
-            autoCorrect={false}
-            isShowEyeIcon={true}
-            placeholder="* * * * * * *"
-            secureTextEntry={reShowPassword}
-            label={strings('sign_up.re_type_password')}
-            onChangeText={(t: string) => setRePassword(t)}
-            onPressEye={() => setReShowPassword(!reShowPassword)}
-          />
-
-          <PrimaryButton
-            extraStyle={styles.signupButton}
-            onPress={onPressLogin}
-            title={strings('sign_up.sign_up')}
-          />
-          <Spacer height={hp(20)} />
-        </KeyboardAwareScrollView>
-      </View>
+        </View>
+        <Input
+          value={name}
+          placeholder={strings('sign_up.p_name')}
+          label={strings('sign_up.first_name')}
+          onChangeText={(t: string) => setName(t)}
+          isShowLabel={true}
+          inputStyle={styles.inputStyle}
+        />
+        <Input
+          value={email}
+          placeholder={strings('sign_up.p_email')}
+          label={strings('sign_up.email_address')}
+          onChangeText={(t: string) => setEmail(t)}
+          isShowLabel={true}
+          inputStyle={styles.inputStyle}
+        />
+        <CCDropDown
+          data={getCuisines}
+          label={strings('addFoodList.select_cusine')}
+          labelField={'name'}
+          valueField={'id'}
+          placeholder={strings('addFoodList.select_cusine')}
+          DropDownStyle={styles.dropDownStyle}
+          value={quantityValue}
+          setValue={setQuantityValue}
+          extraStyle={styles.otherStyle}
+          isShowLabel={true}
+        />
+        <Input
+          value={phone}
+          returnKeyType="next"
+          placeholder={strings('sign_up.p_enter_phone')}
+          label={strings('chefSignUp.phone_Number')}
+          keyboardType="number-pad"
+          maxLength={10}
+          onChangeText={(t: string) => setPhone(t.trim())}
+          isShowLabel={true}
+          inputStyle={styles.inputStyle}
+        />
+        <Input
+          value={password}
+          autoCorrect={false}
+          isShowEyeIcon={true}
+          secureTextEntry={isShowPassword}
+          placeholder={strings('sign_up.p_password')}
+          label={strings('sign_up.password')}
+          onChangeText={(t: string) => setPassword(t)}
+          onPressEye={() => setIsShowPassword(!isShowPassword)}
+          isShowLabel={true}
+          inputStyle={styles.inputStyle}
+        />
+        <Input
+          value={rePassword}
+          autoCorrect={false}
+          isShowEyeIcon={true}
+          placeholder={strings('sign_up.p_confirm_password')}
+          secureTextEntry={reShowPassword}
+          label={strings('Phone_number_verification.confirm_password')}
+          onChangeText={(t: string) => setRePassword(t)}
+          onPressEye={() => setReShowPassword(!reShowPassword)}
+          isShowLabel={true}
+          inputStyle={styles.inputStyle}
+        />
+        <Input
+          value={salary}
+          returnKeyType="next"
+          placeholder={strings('chefSignUp.p_salary')}
+          label={strings('chefSignUp.salary')}
+          keyboardType="number-pad"
+          maxLength={10}
+          onChangeText={(t: string) => setSalary(t.trim())}
+          isShowLabel={true}
+          inputStyle={styles.inputStyle}
+        />
+        <PrimaryButton
+          extraStyle={styles.signupButton}
+          onPress={onPressLogin}
+          title={strings('PersonalInfo.save_details')}
+        />
+        <Spacer height={hp(20)} />
+      </KeyboardAwareScrollView>
     </View>
   );
 };
@@ -210,32 +254,67 @@ const getGlobalStyles = (props: any) => {
   return StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: colors.Primary_Bg,
-      paddingHorizontal: hp(2),
+      backgroundColor: colors.bg_white,
     },
-    bottomContainer: {
-      flex: 2.5,
-      backgroundColor: colors.white,
-      borderTopLeftRadius: 24,
-      borderTopRightRadius: 24,
+    headerContainer: {
+      backgroundColor: colors.bg_white,
+    },
+    rightTextStyle: {
+      textDecorationLine: 'underline',
+      textTransform: 'uppercase'
     },
     contentContainerStyle: {
-      paddingHorizontal: wp(24),
+      paddingHorizontal: wp(20),
+      marginTop: hp(3),
     },
     signupButton: {
-      marginTop: hp(47),
-      borderRadius: 12,
+      marginTop: hp(28),
+      borderRadius: 15,
       alignItems: 'center',
       justifyContent: 'center',
     },
+    profileContainer: {
+      justifyContent: "center",
+      alignItems: 'center',
+    },
+    profilImage: {
+      width: wp(99),
+      height: wp(99),
+      borderRadius: wp(99),
+      borderColor: colors.text_orange,
+      borderWidth: 1,
+      backgroundColor: colors.bg_orange200,
+    },
+    editImage: {
+      width: wp(30),
+      height: wp(30),
+      borderRadius: wp(15),
+      backgroundColor: colors.Primary_Orange,
+      borderColor: colors.white,
+      borderWidth: 2,
+      alignItems: 'center',
+      justifyContent: 'center',
+      position: 'absolute',
+      bottom: 2,
+      right: 0
+    },
+    profileIcon: {
+      width: 16,
+      height: 16,
+      resizeMode: 'contain',
+    },
     dropDownStyle: {
-      borderColor: colors.inputColor,
-      backgroundColor: colors.inputColor,
-      height: hp(60),
-      borderRadius: 10,
+      borderColor: colors.text_orange,
+      backgroundColor: colors.input_bg,
+      height: hp(56),
+      borderRadius: 32,
+      paddingHorizontal: wp(25),
     },
-    extraStyle: {
-      marginTop: hp(24),
+    otherStyle: {
+      marginTop: hp(8),
     },
+    inputStyle: {
+      borderColor: colors.text_orange
+  },
   });
 };

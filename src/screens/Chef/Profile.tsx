@@ -23,6 +23,7 @@ import { clearAsync, getAsyncUserInfo } from '../../utils/asyncStorageManager';
 import { dispatchNavigation } from '../../utils/globalFunctions';
 import { useAppSelector } from '../../redux/hooks';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import LogOutModal from '../../compoment/LogOutModal';
 
 type Props = {};
 
@@ -35,11 +36,14 @@ const Profile = (props: Props) => {
   const [loading, setLoading] = useState(false);
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
+  const [visible, setVisible] = useState(false);
+  const [userData, setUserData] = useState<any>({});
 
 
   const fetchUserInfo = async () => {
     try {
       const userList = await getAsyncUserInfo();
+      setUserData(userList)
       setName(userList.name || '');
       setNumber(userList.number || '')
     } catch (error) {
@@ -70,15 +74,25 @@ const Profile = (props: Props) => {
       });
   };
 
-  const onPressNavigation = (list: string) => {
-    if (list == screenName.PersonalInfo) {
-      navigation.navigate(list, { hideEdit: false });
-    } if (list === 'log Out') {
-      console.log("222333")
+  const onPressNavigation = (list) => {
+    if (list == screenName.EditProfile) {
+      navigation.navigate(list, { hideEdit: false, userData: userData });
+    } else if (list === 'log Out') {
+      setVisible(true);
     } else {
       list !== '' && navigation.navigate(list);
     }
   };
+
+  const closeModal = () => {
+    setVisible(false);
+  };
+
+  const onPressLogOut = async () => {
+    clearAsync(), dispatchNavigation(screenName.RoleSelectionScreen);
+    await GoogleSignin.signOut();
+    setVisible(false);
+  }
 
   return (
     <View style={styles.container}>
@@ -98,7 +112,7 @@ const Profile = (props: Props) => {
       <KeyboardAwareScrollView
         keyboardShouldPersistTaps={'handled'}
         contentContainerStyle={styles.contentContainerStyle}>
-        <TouchableOpacity activeOpacity={0.8} style={styles.profileContainer}>
+        <TouchableOpacity onPress={() => onPressNavigation('EditProfile')} activeOpacity={0.8} style={styles.profileContainer}>
           <View style={styles.profileView}>
             <View style={styles.profileBox}>
               <View style={styles.profilImage} />
@@ -119,7 +133,7 @@ const Profile = (props: Props) => {
             {
               title: strings('profileScreen.personal_info'),
               iconName: Icons.profileIcon,
-              screens: screenName.PersonalInfo
+              screens: screenName.EditProfile
             },
             // {
             //   title: strings('profileScreen.menu'),
@@ -144,7 +158,7 @@ const Profile = (props: Props) => {
             {
               title: strings('profileScreen.order_history'),
               iconName: Icons.inventory,
-              // screens: screenName.ChefNameList
+              screens: screenName.OrderHistory
             },
             {
               title: strings('profileScreen.notifications'),
@@ -217,6 +231,15 @@ const Profile = (props: Props) => {
         /> */}
         <Spacer height={hp(90)} />
       </KeyboardAwareScrollView>
+
+      <LogOutModal
+        title={strings('Settings.logoutDes')}
+        rightText={strings('Settings.delete')}
+        leftText={strings('Settings.cancel')}
+        visible={visible}
+        closeModal={() => closeModal()}
+        onPressDelete={() => onPressLogOut()}
+      />
     </View>
   );
 };
@@ -273,8 +296,8 @@ const getGlobalStyles = (props: any) => {
       marginTop: hp(8),
     },
     rightIcon: {
-      width: wp(24),
-      height: hp(24),
+      width: wp(14),
+      height: hp(14),
       resizeMode: 'contain',
     },
     accountText: {

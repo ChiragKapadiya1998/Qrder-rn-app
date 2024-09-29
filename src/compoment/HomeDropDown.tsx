@@ -11,30 +11,31 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
-import React, {useCallback, useEffect, useState} from 'react';
-import {useFocusEffect, useIsFocused, useTheme} from '@react-navigation/native';
-import {commonFontStyle, hp, wp} from '../theme/fonts';
-import {Icons} from '../utils/images';
-import {Dropdown} from 'react-native-element-dropdown';
-import {strings} from '../i18n/i18n';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useFocusEffect, useIsFocused, useTheme } from '@react-navigation/native';
+import { commonFontStyle, hp, wp } from '../theme/fonts';
+import { Icons } from '../utils/images';
+import { Dropdown } from 'react-native-element-dropdown';
+import { strings } from '../i18n/i18n';
 
 type Props = {
   value: any;
   onChangeText: any;
+  isShowDate?: boolean
 };
 
-const HomeDropDown = ({value, onChangeText}: Props) => {
-  const {colors} = useTheme();
-  const styles = React.useMemo(() => getGlobalStyles({colors}), [colors]);
+const HomeDropDown = ({ value, onChangeText, isShowDate = false }: Props) => {
+  const { colors } = useTheme();
+  const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
   return (
-    <View style={styles.container}>
+    <View style={[isShowDate ? styles.containers : styles.container]}>
       <Dropdown
         style={[styles.dropdown]}
         data={[
-          {label: strings('home.daily'), value: strings('home.daily')},
-          {label: strings('home.week'), value: strings('home.week')},
-          {label: strings('home.monthly'), value: strings('home.monthly')},
-          {label: strings('home.yearly'), value: strings('home.yearly')},
+          { label: strings('home.daily'), value: strings('home.daily') },
+          { label: strings('home.week'), value: strings('home.week') },
+          { label: strings('home.monthly'), value: strings('home.monthly') },
+          { label: strings('home.yearly'), value: strings('home.yearly') },
         ]}
         placeholder=""
         labelField={'label'}
@@ -53,7 +54,7 @@ const HomeDropDown = ({value, onChangeText}: Props) => {
             style={styles.downIcon}
           />
         )}
-        containerStyle={{backgroundColor: colors.card_bg}}
+        containerStyle={{ backgroundColor: colors.card_bg }}
         activeColor={colors.card_bg}
       />
     </View>
@@ -63,7 +64,7 @@ const HomeDropDown = ({value, onChangeText}: Props) => {
 export default HomeDropDown;
 
 const getGlobalStyles = (props: any) => {
-  const {colors} = props;
+  const { colors } = props;
   return StyleSheet.create({
     container: {
       backgroundColor: colors.cards_bg,
@@ -76,9 +77,20 @@ const getGlobalStyles = (props: any) => {
       borderWidth: 1,
       borderColor: colors.image_bg,
     },
-
+    containers: {
+      backgroundColor: colors.cards_bg,
+      borderRadius: 8,
+      paddingHorizontal: 10,
+      height: hp(28),
+      alignSelf: 'flex-end',
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginBottom:hp(8),
+      borderWidth: 1,
+      borderColor: colors.border_gray,
+    },
     inputText: {
-      ...commonFontStyle(500, 12, colors.dropDownText),
+      ...commonFontStyle(400, 12, colors.black),
     },
     dropdown: {
       // flex: 1,
@@ -90,6 +102,7 @@ const getGlobalStyles = (props: any) => {
       height: 10,
       resizeMode: 'contain',
       marginRight: 3,
+      tintColor:colors.black
     },
     rederItemStyle: {
       ...commonFontStyle(400, 12, colors.black),

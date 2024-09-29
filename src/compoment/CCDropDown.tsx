@@ -35,7 +35,8 @@ type InputProps = {
   labelField?: any;
   valueField?: any;
   labelTextStyle?: ViewStyle;
-  extraStyle?:ViewStyle
+  extraStyle?: ViewStyle;
+  isShowLabel?: boolean
 };
 
 const CCDropDown = ({
@@ -53,15 +54,19 @@ const CCDropDown = ({
   valueField,
   labelTextStyle,
   extraStyle,
+  isShowLabel = false,
   ...rest
 }: InputProps) => {
   const { colors, isDark } = useTheme();
   const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
   return (
-    <View style={[styles.container,extraStyle]}>
-      {/* <Text numberOfLines={1} style={[styles.labelTextStyle, labelTextStyle]}>
-        {label}
-      </Text> */}
+    <View style={[styles.container, extraStyle,{   marginTop: isShowLabel ? hp(16) : hp(0),}]}>
+
+      {isShowLabel ?
+        <Text numberOfLines={1} style={[styles.labelTextStyle, labelTextStyle]}>
+          {label}
+        </Text> : null}
+
       <Dropdown
         style={[styles.dropdown, DropDownStyle]}
         placeholderStyle={styles.placeholderStyle}
@@ -98,8 +103,8 @@ const getGlobalStyles = (props: any) => {
       marginTop: hp(40),
     },
     labelTextStyle: {
-      ...commonFontStyle(400, 13, colors.Title_Text),
-      marginBottom: hp(4)
+      ...commonFontStyle(500, 14, colors.black),
+      marginBottom: hp(8)
     },
     inputStyle: {
       flex: 1,
@@ -130,7 +135,7 @@ const getGlobalStyles = (props: any) => {
       width: 13,
       height: 13,
       resizeMode: 'contain',
-      tintColor:colors.icon_tin
+      tintColor: colors.icon_tin
     }
   });
 };

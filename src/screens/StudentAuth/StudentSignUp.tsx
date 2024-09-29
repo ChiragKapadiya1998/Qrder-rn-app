@@ -269,12 +269,13 @@ const getGlobalStyles = (props: any) => {
       height: hp(56),
       borderRadius: 32,
       paddingHorizontal: wp(25),
+      marginTop: hp(8),
     },
     otherStyle: {
       marginTop: hp(8),
     },
     extraDropStyle: {
-      marginTop: hp(12),
+      // marginTop: hp(4),
     },
   });
 };
