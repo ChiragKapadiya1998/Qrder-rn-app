@@ -25,7 +25,7 @@ const App = (props: Props) => {
       SplashScreen.hide();
     }, 1100);
     LogBox.ignoreAllLogs(true);
-    requestNotificationUserPermission();
+    // requestNotificationUserPermission();
   }, []);
 
   const toastConfig = {
