@@ -52,10 +52,9 @@ export const light_theme = {
   neutral_200: '#5C6067',
   neutral_300: '#E5E6E8',
   green_100: 'rgba(77, 184, 39, 0.3)',
-  red: "red",
+  red: 'red',
   modalBg: '#fff',
   back_bg: '#ECF0F4',
-
 
   //new ui color
   Primary_Orange: '#F76400',
@@ -76,7 +75,8 @@ export const light_theme = {
   bg_orange200: 'rgba(250, 98, 0, 0.2)',
   border: '#C4C4C4',
   border_gray: '#DDDDDD',
-  btn_bg:"#DDDDDD",
+  btn_bg: '#DDDDDD',
+  blue: '#0162DD',
 };
 
 export const dark_theme = {
@@ -129,10 +129,9 @@ export const dark_theme = {
   btn_red: '#FF3326',
   border_line3: '#4A4E5A',
   orange_bg: 'rgba(255, 118, 34, 0.2)',
-  red: "red",
+  red: 'red',
   modalBg: '#1D1E20',
   back_bg: '#1D1E20',
-
 
   // new ui color
   Primary_Orange: '#F76400',
@@ -152,7 +151,7 @@ export const dark_theme = {
   title_dec100: '#898A8D',
   bg_orange200: 'rgba(250, 98, 0, 0.2)',
   border: '#50555C',
-  btn_bg:"#0C0F14",
+  btn_bg: '#0C0F14',
   border_gray: '#50555C',
+  blue: '#0162DD',
 };
-

@@ -10,26 +10,25 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, { useEffect, useState } from 'react';
-import { useIsFocused, useNavigation, useTheme } from '@react-navigation/native';
+import React, {useEffect, useState} from 'react';
+import {useIsFocused, useNavigation, useTheme} from '@react-navigation/native';
 import HomeHeader from '../../compoment/HomeHeader';
-import { strings } from '../../i18n/i18n';
+import {strings} from '../../i18n/i18n';
 import Input from '../../compoment/Input';
-import { commonFontStyle, hp, isIos, wp } from '../../theme/fonts';
-import { Icons } from '../../utils/images';
+import {commonFontStyle, hp, isIos, SCREEN_WIDTH, wp} from '../../theme/fonts';
+import {Icons} from '../../utils/images';
 import ImagePicker from 'react-native-image-crop-picker';
 import CCDropDown from '../../compoment/CCDropDown';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import PrimaryButton from '../../compoment/PrimaryButton';
-import { useAppDispatch, useAppSelector } from '../../redux/hooks';
-import { addMenuAction } from '../../actions/menuAction';
-import { errorToast } from '../../utils/commonFunction';
+import {useAppDispatch, useAppSelector} from '../../redux/hooks';
+import {addMenuAction} from '../../actions/menuAction';
+import {errorToast} from '../../utils/commonFunction';
 import moment = require('moment');
 import AddFolderModal from '../../compoment/AddFolderModal';
 import Spacer from '../../compoment/Spacer';
-import { getCuisinesAction } from '../../actions/cuisinesAction';
-import { screenName } from '../../navigation/screenNames';
-
+import {getCuisinesAction} from '../../actions/cuisinesAction';
+import {screenName} from '../../navigation/screenNames';
 
 type DataItem = {
   id: number;
@@ -39,40 +38,38 @@ type DataItem = {
 };
 
 const AddFoodDetails = () => {
-  const { colors } = useTheme();
+  const {colors} = useTheme();
   const navigation = useNavigation();
-  const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
+  const styles = React.useMemo(() => getGlobalStyles({colors}), [colors]);
   const [itemName, setItemName] = useState('');
   const [price, setPrice] = useState('');
   const [basicDetails, setBasicDetails] = useState('');
   const [images, setImages] = useState([]);
   const [quantityValue, setQuantityValue] = useState(0);
-  const { getCuisines, getMiscellaneous } = useAppSelector(state => state.data);
+  const {getCuisines, getMiscellaneous} = useAppSelector(state => state.data);
   const dispatch = useAppDispatch();
   const [newFolder, setNewFolder] = useState(false);
-  const [showAddField, setShowAddField] = useState(true);
+  const [showAddField, setShowAddField] = useState(false);
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    getCuisinesList()
+    getCuisinesList();
   }, [showAddField]);
-
 
   const getCuisinesList = () => {
     let obj = {
       data: {
         page: 1,
         limit: 15,
-        pagination:false
+        pagination: false,
       },
-      onSuccess: (res: any) => { },
-      onFailure: (Err: any) => { },
+      onSuccess: (res: any) => {},
+      onFailure: (Err: any) => {},
     };
     dispatch(getCuisinesAction(obj));
   };
 
-  
   const selectAndCropImage = () => {
     ImagePicker.openPicker({
       multiple: true,
@@ -107,9 +104,9 @@ const AddFoodDetails = () => {
       });
   };
 
-  const renderImage = ({ item }: any) => (
+  const renderImage = ({item}: any) => (
     <View style={styles.imageContainer}>
-      <Image source={{ uri: item.uri }} style={styles.imageView} />
+      <Image source={{uri: item.uri}} style={styles.imageView} />
     </View>
   );
 
@@ -123,7 +120,7 @@ const AddFoodDetails = () => {
     } else if (basicDetails.trim().length === 0) {
       errorToast(strings('addFoodList.basicDetails'));
     } else {
-      setLoading(true)
+      setLoading(true);
       let data = new FormData();
       data.append('name', itemName);
       data.append('cuisine_id', quantityValue);
@@ -137,7 +134,7 @@ const AddFoodDetails = () => {
       let obj = {
         data,
         onSuccess: (response: any) => {
-          setLoading(false)
+          setLoading(false);
           setImages([]);
           setItemName('');
           setPrice('');
@@ -146,7 +143,7 @@ const AddFoodDetails = () => {
           // Keyboard.dismiss()
         },
         onFailure: (Err: any) => {
-          setLoading(false)
+          setLoading(false);
           if (Err != undefined) {
             Alert.alert(Err?.data?.message);
           }
@@ -156,22 +153,19 @@ const AddFoodDetails = () => {
     }
   };
 
-
   const onRightPress = () => {
     setImages('');
     setItemName('');
     setPrice('');
     setQuantityValue(0);
     setBasicDetails('');
-  }
-
+  };
 
   const handlePress = (value: number) => {
     setSelectedOption(value);
   };
 
-
-  const renderItem:ListRenderItem<DataItem> = ({ item }: any) => (
+  const renderItem: ListRenderItem<DataItem> = ({item}: any) => (
     <View style={styles.radioView}>
       <TouchableOpacity
         key={item.id}
@@ -190,9 +184,10 @@ const AddFoodDetails = () => {
           style={[
             styles.radioText,
             {
-              color: selectedOption === item.id
-                ? colors.Primary_Orange
-                : colors.Title_Text,
+              color:
+                selectedOption === item.id
+                  ? colors.Primary_Orange
+                  : colors.Title_Text,
             },
           ]}>
           {item.name}
@@ -202,60 +197,72 @@ const AddFoodDetails = () => {
     </View>
   );
   if (showAddField) {
-    return <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: colors.white }}>
-      <TouchableOpacity onPress={() => { setNewFolder(true) }} style={styles.boxStyle}>
-        <Image source={Icons.cuisine} style={styles.imageStyle} />
-        <Text style={styles.boxText}>{strings("addFoodList.add_cuisines")}</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={() => setShowAddField(false)} style={styles.boxStyle}>
-        <Image source={Icons.addMenu1} style={styles.imageStyle} />
+    return (
+      <View
+        style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+          backgroundColor: colors.white,
+        }}>
+        <TouchableOpacity
+          onPress={() => {
+            setNewFolder(true);
+          }}
+          style={styles.boxStyle}>
+          <Image source={Icons.cuisine} style={styles.imageStyle} />
+          <Text style={styles.boxText}>
+            {strings('addFoodList.add_cuisines')}
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => setShowAddField(false)}
+          style={styles.boxStyle}>
+          <Image source={Icons.addMenu1} style={styles.imageStyle} />
 
-        <Text style={styles.boxText}>{strings("addFoodList.add_menu")}</Text>
-      </TouchableOpacity>
-      <AddFolderModal
-        isVisible={newFolder}
-        onClose={() => setNewFolder(false)}
-      />
-    </View>
+          <Text style={styles.boxText}>{strings('addFoodList.add_menu')}</Text>
+        </TouchableOpacity>
+        <AddFolderModal
+          isVisible={newFolder}
+          onClose={() => setNewFolder(false)}
+        />
+      </View>
+    );
   }
 
   return (
     <View style={styles.container}>
       <HomeHeader
         onBackPress={() => {
-          setShowAddField(true)
+          setShowAddField(true);
         }}
-        onRightPress={onRightPress}
+        onRightPress={() => {}}
         mainShow={true}
-        title={strings('addFoodList.add_new_items')}
+        title={strings('addFoodList.add_items')}
         extraStyle={styles.headerContainer}
         isHideIcon={true}
-        rightText={strings('addFoodList.reset')}
+        // rightText={strings('addFoodList.reset')}
       />
       <View style={styles.subContainer}>
         <KeyboardAwareScrollView
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps={'handled'}>
-          <Input
-            value={itemName}
-            placeholder={strings('addFoodList.p_itemName')}
-            label={strings('addFoodList.item_name')}
-            onChangeText={(t: string) => setItemName(t)}
-            extraStyle={styles.inputView}
-            inputStyle={styles.inputStyle}
-          />
-
           <Text style={styles.uploadText}>
             {strings('addFoodList.upload_photo_video')}
           </Text>
 
+          <TouchableOpacity onPress={() => {}}>
+            <Image source={Icons.addItem} style={styles.addItem} />
+          </TouchableOpacity>
+
           <View style={styles.uploadImage}>
-            <TouchableOpacity
+            {/* <TouchableOpacity
               style={styles.addImage}
               onPress={selectAndCropImage}>
               <Image style={styles.addIcon} source={Icons.addImage} />
               <Text style={styles.addText}>{strings('addFoodList.add')}</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
+
             <FlatList
               data={images}
               renderItem={renderImage}
@@ -265,50 +272,125 @@ const AddFoodDetails = () => {
               style={styles.imageList}
             />
           </View>
-          <View style={styles.itemPrice}>
-            <Input
-              value={price}
-              placeholder={'$50'}
-              label={strings('addFoodList.price')}
-              onChangeText={(t: string) => setPrice(t)}
-              extraStyle={styles.priceInput}
-              inputStyle={styles.priceInputStyle}
-              keyboardType="number-pad"
+          <Input
+            value={itemName}
+            placeholder={strings('addFoodList.item_name')}
+            label={strings('addFoodList.item_name')}
+            onChangeText={(t: string) => setItemName(t)}
+            extraStyle={styles.inputView}
+            inputStyle={styles.inputStyle}
+            isShowLabel={true}
+          />
+          {/* <View style={styles.itemPrice}> */}
+          <Input
+            value={price}
+            placeholder={strings('addFoodList.Addprice')}
+            label={strings('addFoodList.price')}
+            onChangeText={(t: string) => setPrice(t)}
+            extraStyle={styles.priceInput}
+            inputStyle={styles.priceInputStyle}
+            keyboardType="number-pad"
+            isShowLabel={true}
+          />
+          <CCDropDown
+            data={getCuisines}
+            label={strings('addFoodList.SelectCuisine')}
+            labelField={'name'}
+            valueField={'id'}
+            placeholder={strings('addFoodList.SelectCuisine')}
+            DropDownStyle={styles.dropDownStyle}
+            value={quantityValue}
+            setValue={setQuantityValue}
+            isShowLabel={true}
+          />
+          {/* </View> */}
+
+          <Text style={[styles.textStyle, {marginTop: 20}]}>
+            {strings('addFoodList.PriceWithTax')}
+          </Text>
+          <TouchableOpacity
+            style={{flexDirection: 'row', alignItems: 'center', gap: 5}}>
+            <View
+              style={{
+                width: 24,
+                height: 24,
+                // borderWidth: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+                borderRadius: 24 / 2,
+                backgroundColor: colors.blue,
+              }}>
+              <Image source={Icons.ic_check} style={styles.ic_check} />
+            </View>
+            <Text style={styles.text1}>
+              {strings('addFoodList.Inclusiveinvoice')}
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              gap: 5,
+              marginTop: 10,
+              marginBottom: 6,
+            }}>
+            <View
+              style={{
+                width: 24,
+                height: 24,
+                borderWidth: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+                borderRadius: 24 / 2,
+                // backgroundColor: colors.blue,
+                borderColor: colors.title_dec,
+              }}>
+              <Image source={Icons.ic_check} style={styles.ic_check} />
+            </View>
+            <Text style={styles.text1}>
+              {strings('addFoodList.Exclusiveinvoice')}
+            </Text>
+          </TouchableOpacity>
+
+          <Text style={styles.textStyle}>
+            {strings('addFoodList.TaxPercentage')}
+          </Text>
+          <View style={styles.PercentageInput}>
+            <TextInput
+              value={basicDetails}
+              onChangeText={(t: string) => setBasicDetails(t)}
+              placeholder={strings('addFoodList.add_basic')}
+              style={styles.inputTaxPercentage}
+              placeholderTextColor={colors.title_dec100}
             />
-            <CCDropDown
-              data={getCuisines}
-              label={strings('addFoodList.add_cusine')}
-              labelField={'name'}
-              valueField={'id'}
-              placeholder={strings('addFoodList.select_cusine')}
-              DropDownStyle={styles.dropDownStyle}
-              value={quantityValue}
-              setValue={setQuantityValue}
+            <Image source={Icons.pertenge} style={styles.pertenge} />
+          </View>
+
+          <View>
+            <Text style={styles.miscellaneousText}>
+              {strings('addFoodList.Miscellaneousitems')}
+            </Text>
+            <FlatList
+              data={getMiscellaneous}
+              renderItem={renderItem}
+              horizontal
+              keyExtractor={item => item.value}
+              showsHorizontalScrollIndicator={false}
             />
           </View>
 
           <Text style={styles.basicText}>
-            {strings('addFoodList.basic_details')}
+            {strings('addFoodList.Description')}
           </Text>
           <TextInput
             value={basicDetails}
             onChangeText={(t: string) => setBasicDetails(t)}
-            placeholder={strings('addFoodList.add_basic')}
+            placeholder={strings('addFoodList.Adddescription')}
             style={styles.basicInput}
             multiline
             maxLength={200}
             placeholderTextColor={colors.gray_300}
           />
-          <View>
-            <Text style={styles.miscellaneousText}>{strings('addFoodList.miscellaneous')}</Text>
-            <FlatList
-              data={getMiscellaneous}
-              renderItem={renderItem}
-              horizontal
-              keyExtractor={(item) => item.value}
-              showsHorizontalScrollIndicator={false}
-            />
-          </View>
           <PrimaryButton
             extraStyle={styles.saveChangeButton}
             onPress={onPressAddItem}
@@ -326,7 +408,7 @@ const AddFoodDetails = () => {
 export default AddFoodDetails;
 
 const getGlobalStyles = (props: any) => {
-  const { colors } = props;
+  const {colors} = props;
   return StyleSheet.create({
     container: {
       flex: 1,
@@ -338,6 +420,11 @@ const getGlobalStyles = (props: any) => {
     subContainer: {
       marginHorizontal: wp(16),
     },
+    addItem: {
+      width: SCREEN_WIDTH * 0.9,
+      height: 190,
+      resizeMode: 'contain',
+    },
     inputView: {
       marginTop: hp(6),
     },
@@ -345,14 +432,12 @@ const getGlobalStyles = (props: any) => {
       backgroundColor: colors.white,
       borderWidth: 1,
       borderColor: colors.border_line4,
-      height: hp(50),
+      // height: hp(50),
       paddingHorizontal: wp(16),
     },
     uploadText: {
-      ...commonFontStyle(400, 13, colors.Title_Text),
-      lineHeight: 15,
-      textTransform: 'uppercase',
-      paddingTop: hp(20),
+      ...commonFontStyle(500, 18, colors.black),
+      lineHeight: 20,
     },
     uploadImage: {
       paddingTop: hp(16),
@@ -390,13 +475,14 @@ const getGlobalStyles = (props: any) => {
       backgroundColor: colors.white,
       borderWidth: 1,
       borderColor: colors.border_line4,
-      height: hp(42),
-      width: wp(115),
+      // height: hp(42),
+      // width: wp(115),
       paddingHorizontal: wp(16),
     },
     dropDownStyle: {
       borderColor: colors.border_line4,
-      width: wp(137),
+      // width: wp(137),
+      height: hp(55),
     },
     imageContainer: {
       marginHorizontal: 10,
@@ -419,7 +505,7 @@ const getGlobalStyles = (props: any) => {
       padding: 15,
       textAlignVertical: 'top',
       marginTop: hp(20),
-      color: colors.black
+      color: colors.black,
     },
     saveChangeButton: {
       marginTop: hp(49),
@@ -441,7 +527,7 @@ const getGlobalStyles = (props: any) => {
       marginBottom: 25,
       justifyContent: 'center',
       alignItems: 'center',
-      backgroundColor: colors.card_bg
+      backgroundColor: colors.card_bg,
     },
     boxText: {
       ...commonFontStyle(400, 18, colors.black),
@@ -449,11 +535,10 @@ const getGlobalStyles = (props: any) => {
     imageStyle: {
       height: wp(30),
       width: wp(30),
-      marginBottom: 12
+      marginBottom: 12,
     },
     miscellaneousText: {
-      ...commonFontStyle(400, 13, colors.Title_Text),
-      textTransform: 'uppercase',
+      ...commonFontStyle(500, 14, colors.black),
       paddingTop: hp(20),
     },
     radioView: {
@@ -501,13 +586,42 @@ const getGlobalStyles = (props: any) => {
     checkboxInner: {
       width: 10,
       height: 10,
-      backgroundColor: colors.white
+      backgroundColor: colors.white,
     },
     checkIcon: {
       width: wp(18),
       height: hp(18),
       resizeMode: 'contain',
       tintColor: colors.black,
+    },
+    textStyle: {
+      ...commonFontStyle(500, 14, colors.black),
+      marginTop: 15,
+      marginBottom: 10,
+    },
+    PercentageInput: {
+      borderWidth: 1,
+      flexDirection: 'row',
+      alignItems: 'center',
+      height: hp(56),
+      borderRadius: 32,
+      borderColor: colors.title_dec100,
+      paddingHorizontal: 20,
+    },
+    inputTaxPercentage: {
+      ...commonFontStyle(400, 14, colors.black),
+      flex: 1,
+    },
+    pertenge: {
+      width: 20,
+      height: 20,
+    },
+    ic_check: {
+      width: 12,
+      height: 12,
+    },
+    text1: {
+      ...commonFontStyle(500, 14, colors.title_dec),
     },
   });
 };

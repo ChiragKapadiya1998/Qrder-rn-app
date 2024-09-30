@@ -75,6 +75,11 @@ export const Icons = {
   invoiceIcon: require('../assets/Icons/invoice_icon.png'),
   image1: require('../assets/Icons/image1.png'),
   noData: require('../assets/Icons/noData.png'),
+  addItem: require('../assets/Icons/addItem.png'),
+  ic_a_checkbox: require('../assets/Icons/ic_a_checkbox.png'),
+  ic_check: require('../assets/Icons/ic_check.png'),
+  ic_checkbox: require('../assets/Icons/ic_checkbox.png'),
+  pertenge: require('../assets/Icons/pertenge.png'),
 
   //tab
   ic_home: require('../assets/Icons/ic_home.png'),
