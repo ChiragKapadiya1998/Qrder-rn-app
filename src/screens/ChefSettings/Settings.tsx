@@ -68,12 +68,22 @@ const Settings = () => {
                 isShowIcon={false}
             />
             <View style={styles.subContainer}>
-                <Text style={styles.titleLabel}>{strings('Settings.general_settings')}</Text>
-                <View style={styles.dropdownContainer}>
+                <View style={[styles.dropdownContainer]}>
+                    <Text style={styles.label}>{strings('Settings.theme')}</Text>
+                    <Switch
+                        value={isDarkTheme}
+                        onChange={() => changeValue()}
+                        onMagicTap={changeValue}
+                        thumbColor={isDarkTheme ? colors.image_bg : colors.input_bg1}
+                        trackColor={{ false:  colors.text_gray1 , true: colors.input_bg1}}
+                        style={{ transform: [{ scaleX: 1.2 }, { scaleY: 1.2 }] }} 
+                    />
+                </View>
+                <View style={[styles.dropdownContainer,, { marginTop: hp(20) }]}>
                     <Text style={styles.label}>{strings('Settings.language')}</Text>
                     <Dropdown
                         style={styles.dropdown}
-                        selectedTextStyle={[styles.label, { marginLeft: 12 }]}
+                        selectedTextStyle={[styles.label, { marginLeft: 15,color:colors.text_orange,alignSelf:'center' }]}
                         data={languages}
                         labelField="label"
                         valueField="value"
@@ -81,18 +91,10 @@ const Settings = () => {
                         value={selectedLanguage}
                         onChange={(item) => changeLanguage(item.value)}
                         iconStyle={styles.downIcon}
-                        containerStyle={{ backgroundColor: colors.card_bg, top: 10 }}
-                        activeColor={colors.card_bg}
+                        containerStyle={{ backgroundColor: colors.cards_bg, top: 10 }}
+                        activeColor={colors.border}
                         itemTextStyle={{ color: colors.black }}
-                    />
-                </View>
-                <View style={[styles.dropdownContainer, { marginTop: hp(12) }]}>
-                    <Text style={styles.label}>{strings('Settings.theme')}</Text>
-                    <Switch
-                        value={isDarkTheme}
-                        onChange={() => changeValue()}
-                        onMagicTap={changeValue}
-                        style={{}}
+                        iconStyle={{tintColor:colors.text_orange}}
                     />
                 </View>
                 <Text style={styles.titleLabel}>{strings('Settings.account_setting')}</Text>
@@ -116,13 +118,13 @@ const getGlobalStyles = (props) => {
     return StyleSheet.create({
         container: {
             flex: 1,
-            backgroundColor: colors.white,
+            backgroundColor: colors.bg_white,
         },
         headerContainer: {
-            backgroundColor: colors.white,
+            backgroundColor: colors.bg_white,
         },
         subContainer: {
-            marginHorizontal: wp(16),
+            marginHorizontal: wp(20),
         },
         titleLabel: {
             ...commonFontStyle(400, 15, colors.black),
@@ -132,14 +134,14 @@ const getGlobalStyles = (props) => {
         dropdownContainer: {
             justifyContent: 'space-between',
             alignItems: 'center',
-            paddingHorizontal: wp(10),
-            paddingVertical: hp(12),
-            borderRadius: 12,
+            paddingHorizontal: wp(16),
+            paddingVertical: hp(13),
+            borderRadius: 8,
             flexDirection: 'row',
-            backgroundColor: colors.card_bg,
+            backgroundColor: colors.cards_bg,
         },
         label: {
-            ...commonFontStyle(400, 15, colors.Title_Text),
+            ...commonFontStyle(500, 15, colors.black),
         },
         dropdown: {
             width: SCREEN_WIDTH * 0.25,

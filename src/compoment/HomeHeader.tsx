@@ -6,14 +6,14 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import React, { useEffect, useState } from 'react';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
-import {useNavigation, useTheme} from '@react-navigation/native';
-import {commonFontStyle, hp, wp} from '../theme/fonts';
-import {Icons} from '../utils/images';
-import {strings} from '../i18n/i18n';
-import {useAppSelector} from '../redux/hooks';
+import { useNavigation, useTheme } from '@react-navigation/native';
+import { commonFontStyle, hp, wp } from '../theme/fonts';
+import { Icons } from '../utils/images';
+import { strings } from '../i18n/i18n';
+import { useAppSelector } from '../redux/hooks';
 
 type HomeProps = {
   onPressLocation?: () => void;
@@ -31,6 +31,8 @@ type HomeProps = {
   isShowIcon?: boolean;
   rightTextStyle: any;
   isCardIcon?: boolean;
+  isCreateIcon?: boolean,
+  createText?:string
 };
 
 const HomeHeader = ({
@@ -48,13 +50,15 @@ const HomeHeader = ({
   isShowIcon = true,
   rightTextStyle,
   isCardIcon = false,
+  isCreateIcon = false,
+  createText,
   onRightPressNotification,
 }: HomeProps) => {
-  const {navigate} = useNavigation();
-  const {colors} = useTheme();
-  const styles = React.useMemo(() => getGlobalStyles({colors}), [colors]);
-  const {getCardData} = useAppSelector(state => state.data);
-  const {isDarkTheme} = useAppSelector(state => state.common);
+  const { navigate } = useNavigation();
+  const { colors } = useTheme();
+  const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
+  const { getCardData } = useAppSelector(state => state.data);
+  const { isDarkTheme } = useAppSelector(state => state.common);
 
   const onPressBell = () => {
     // @ts-ignore
@@ -91,6 +95,12 @@ const HomeHeader = ({
             </View>
           </View>
         ) : null}
+        {isCreateIcon ? (
+          <TouchableOpacity onPress={onRightPress} style={styles.createView}>
+            <Image source={Icons.addItemIcon} style={styles.addItemIcon} />
+            <Text style={styles.createText}>{createText}</Text>
+          </TouchableOpacity>
+        ) : null}
       </SafeAreaView>
     );
   }
@@ -123,7 +133,7 @@ const HomeHeader = ({
 export default HomeHeader;
 
 const getGlobalStyles = (props: any) => {
-  const {colors} = props;
+  const { colors } = props;
   return StyleSheet.create({
     container: {
       backgroundColor: colors?.bg_white,
@@ -182,31 +192,17 @@ const getGlobalStyles = (props: any) => {
     home_title: {
       ...commonFontStyle(700, 26, colors.black),
     },
-    addrs: {
-      ...commonFontStyle(400, 14, colors.headerText2),
-      marginRight: wp(10),
-    },
     address_container: {
       flexDirection: 'row',
       alignItems: 'center',
       flex: 1,
     },
-    profile: {
-      width: wp(26),
-      height: wp(26),
-      borderRadius: wp(50),
-      backgroundColor: colors.green_4,
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    profile_text: {
-      ...commonFontStyle(700, 16, colors.black),
-    },
     title: {
       ...commonFontStyle(800, 22, colors.black),
     },
     resetText: {
-      ...commonFontStyle(400, 14, colors.headerText3),
+      ...commonFontStyle(400, 14, colors.text_orange),
+      textDecorationLine: 'underline'
     },
     cardIcon: {
       width: 24,
@@ -227,5 +223,22 @@ const getGlobalStyles = (props: any) => {
     cardText: {
       ...commonFontStyle(700, 10, colors.white),
     },
+    createText:{
+      marginLeft:wp(8),
+      ...commonFontStyle(600, 12, colors.defult_white),
+    },
+    createView: {
+      backgroundColor: colors.text_orange,
+      flexDirection:'row',
+      alignItems:'center',
+      paddingHorizontal:wp(10),
+      paddingVertical:hp(8),
+      borderRadius: 8,
+    },
+    addItemIcon: {
+      width: 12,
+      height: 12,
+      tintColor:colors.defult_white
+    }
   });
 };

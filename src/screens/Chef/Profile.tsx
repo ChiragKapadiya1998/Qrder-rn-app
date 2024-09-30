@@ -32,12 +32,12 @@ const Profile = (props: Props) => {
   const navigation = useNavigation();
   const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
   const { isDarkTheme } = useAppSelector(state => state.common);
-  const [photoUri, setPhotoUri] = useState(null);
   const [loading, setLoading] = useState(false);
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
   const [visible, setVisible] = useState(false);
-  const [userData, setUserData] = useState<any>({});
+  const [userData, setUserData] = useState < any > ({});
+  const [photoUri, setPhotoUri] = useState(null);
 
 
   const fetchUserInfo = async () => {
@@ -46,6 +46,7 @@ const Profile = (props: Props) => {
       setUserData(userList)
       setName(userList.name || '');
       setNumber(userList.number || '')
+      setPhotoUri(userList?.profile_image)
     } catch (error) {
     }
   };
@@ -115,7 +116,11 @@ const Profile = (props: Props) => {
         <TouchableOpacity onPress={() => onPressNavigation('EditProfile')} activeOpacity={0.8} style={styles.profileContainer}>
           <View style={styles.profileView}>
             <View style={styles.profileBox}>
-              <View style={styles.profilImage} />
+              <Image
+                source={photoUri ? { uri: photoUri } : Icons.profileImage}
+                style={styles.profilImage}
+              />
+              {/* <View style={styles.profilImage} /> */}
               <View style={styles.userNameView}>
                 <Text style={styles.nameText}>{name}</Text>
                 <Text style={styles.numberText}>{number}</Text>

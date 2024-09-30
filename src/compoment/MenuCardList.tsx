@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import React, { useRef, useState } from 'react';
 import { useTheme } from '@react-navigation/native';
-import { commonFontStyle } from '../theme/fonts';
+import { commonFontStyle, hp } from '../theme/fonts';
 import NoDataFound from './NoDataFound';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import MenuItems from './MenuItems';
@@ -73,9 +73,9 @@ const MenuCardList = ({
   return (
     <>
       <Text style={styles.itemsText}>
-        {currentData.current?.length
+        {/* {currentData.current?.length
           ? `${strings('CardMenuList.total')} ${currentData.current?.length} ${strings('CardMenuList.items')}`
-          : null}
+          : null} */}
       </Text>
       {currentData.current && (
         <FlatList
@@ -84,6 +84,12 @@ const MenuCardList = ({
           }
           data={currentData.current}
           onMomentumScrollBegin={onMomentumScrollBegin}
+          numColumns={2}
+          windowSize={10}
+          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
+          columnWrapperStyle={styles.columnWrapperStyle}
+          contentContainerStyle={{ gap: 11}}
           keyExtractor={(item, index) => `${item.id}-${index}`}
           ListFooterComponent={() => (
             <View>
@@ -103,7 +109,7 @@ const MenuCardList = ({
                 </View>
 
               )}
-              <View style={{ height: 70}} />
+              <View style={{ height: hp(150)}} />
             </View>
           )}
           ListEmptyComponent={
@@ -117,6 +123,7 @@ const MenuCardList = ({
             return (
               <MenuItems
                 item={item}
+                index={index}
                 showChef={showChef}
                 setDelete={() => {
                   setVisible(true);
@@ -150,21 +157,15 @@ const getGlobalStyles = (props: any) => {
     itemsText: {
       ...commonFontStyle(400, 14, colors.gray_400),
     },
-    containerContain: {
-      alignSelf: 'center',
-      ...commonFontStyle(400, 16, colors.black),
-    },
-    btnContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-    },
     seeMoreButton: {
       alignItems: 'center',
       paddingVertical: 10,
     },
     seeMoreText: {
       color: colors.black,
+    },
+    columnWrapperStyle: {
+      justifyContent: 'center',
     },
   });
 };

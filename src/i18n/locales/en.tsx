@@ -151,7 +151,7 @@ export default {
     yearly: 'Yearly',
   },
   myMenuList: {
-    my_menu: 'My Menu',
+    my_menu: 'My Food',
     all: 'All',
     breakfast: 'Breakfast',
     lunch: 'Lunch',
@@ -189,7 +189,7 @@ export default {
     PriceWithTax: 'Price With Tax',
     Inclusiveinvoice: 'Inclusive of tax in invoice',
     Exclusiveinvoice: 'Exclusive of tax in invoice',
-    Miscellaneousitems: 'Miscellaneous items',
+    Miscellaneousitems: 'Miscellaneous Items',
     SelectCuisine: 'Select Cuisine',
     Description: 'Description',
     Adddescription: 'Add description',
@@ -214,6 +214,9 @@ export default {
     add_basic: 'Write your basic details here...',
     add_to_card: 'ADD TO CARD',
     miscellaneous: 'Miscellaneous',
+    food_review:'Food Review',
+    give_food_rating:'Give Food Rating',
+    buy_now:'Buy Now'
   },
   foodDetails: {
     food_Details: 'Food Details',
@@ -277,7 +280,7 @@ export default {
     save_details: 'Save Details',
   },
   Settings: {
-    settings: 'Settings',
+    settings: 'Setting',
     general_settings: 'General Settings',
     language: 'Language',
     theme: 'Theme',
@@ -320,7 +323,14 @@ export default {
     cuisines_list: 'Cuisines list',
     edit_Cuisines_name: 'Edit Cuisines',
     new_add: 'New Add',
-    Search: 'Search...',
+    Search: 'Search here...',
+    create:'Create',
+    names:'Name',
+    action:'Action',
+    add_cuisines:'Add Cuisines',
+    cuisines_name:'Cuisines Name',
+    submit:'Submit',
+    cancel:'Cancel'
   },
   CardMenuList: {
     add: 'Add',

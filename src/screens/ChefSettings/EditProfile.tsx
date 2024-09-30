@@ -31,7 +31,7 @@ const EditProfile = (props: Props) => {
     const [emails, setEmail] = useState < string > (userData.email);
     const [numbers, setNumber] = useState < string > (userData.number);
     const [address, setAddress] = useState < string > (userData.address);
-    const [photoUri, setPhotoUri] = useState(null);
+    const [photoUri, setPhotoUri] = useState(userData.profile_image);
     const [loading, setLoading] = useState(false);
 
     const selectImage = () => {
@@ -84,7 +84,7 @@ const EditProfile = (props: Props) => {
             dispatch(updateProfile(obj));
         }
     };
-
+    console.log("===", userData)
     return (
         <View style={styles.container}>
             <StatusBar barStyle={isDarkTheme ? 'light-content' : 'dark-content'} backgroundColor={colors.white} />
@@ -109,9 +109,10 @@ const EditProfile = (props: Props) => {
                                 source={photoUri ? { uri: photoUri } : Icons.profileImage}
                                 style={styles.profilImage}
                             />
-                            <TouchableOpacity activeOpacity={0.9} onPress={selectImage} style={styles.editImage}>
-                                <Image source={Icons.editPencial} style={styles.profileIcon} />
-                            </TouchableOpacity>
+                            {userData.role !== 'staff' ?
+                                <TouchableOpacity activeOpacity={0.9} onPress={selectImage} style={styles.editImage}>
+                                    <Image source={Icons.editPencial} style={styles.profileIcon} />
+                                </TouchableOpacity> : null}
                         </View>
 
                     </View>
@@ -132,7 +133,7 @@ const EditProfile = (props: Props) => {
                             isShowLabel={true}
                             inputStyle={styles.inputStyle}
                         />
-                        {userData.role === 'student' ? null :
+                        {userData.role === 'student' || userData.role === 'staff' ? null :
                             <Input
                                 value={restaurant}
                                 placeholder={strings('sign_up.restaurant_name')}
@@ -159,7 +160,7 @@ const EditProfile = (props: Props) => {
                             isShowLabel={true}
                             inputStyle={styles.inputStyle}
                         />
-                        {userData.role === 'student' ? null :
+                        {userData.role === 'student' || userData.role === 'staff' ? null :
                             <Input
                                 value={address}
                                 placeholder={strings('sign_up.p_enter_area')}
@@ -171,13 +172,15 @@ const EditProfile = (props: Props) => {
                     </View>
                 </View>
             </KeyboardAwareScrollView>
-            <View style={{ bottom: 8, paddingHorizontal: wp(20) }}>
-                <PrimaryButton
-                    extraStyle={styles.signupButton}
-                    onPress={onPressEditDone}
-                    title={strings('PersonalInfo.save_details')}
-                />
-            </View>
+
+            {userData.role !== 'staff' ?
+                <View style={{ bottom: 8, paddingHorizontal: wp(20) }}>
+                    <PrimaryButton
+                        extraStyle={styles.signupButton}
+                        onPress={onPressEditDone}
+                        title={strings('PersonalInfo.save_details')}
+                    />
+                </View> : null}
         </View >
     );
 };

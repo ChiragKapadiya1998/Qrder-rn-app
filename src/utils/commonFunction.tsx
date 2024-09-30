@@ -75,36 +75,43 @@ export const infoToast = (message: string) => {
 export const DropDownData = [
   {
     name: strings('roleSelection.owner'),
-    value:'Admin',
+    value: 'Admin',
     id: 1,
   },
   {
     name: strings('roleSelection.staff'),
-    value:'Staff',
+    value: 'Staff',
     id: 2,
   },
   {
     name: strings('roleSelection.student'),
-    value:'Student',
+    value: 'Student',
     id: 2,
   },
 ];
 
 export const DropDownDatas = [
   {
-      name: 'Nirma University of Science and Technology',
-      id: 1,
+    name: 'Nirma University of Science and Technology',
+    id: 1,
   },
   {
-      name: 'Gujarat University',
-      id: 2,
+    name: 'Gujarat University',
+    id: 2,
   },
   {
-      name: 'Sardar Patel University',
-      id: 3,
+    name: 'Sardar Patel University',
+    id: 3,
   },
   {
-      name: 'Saurashtra University',
-      id: 4,
+    name: 'Saurashtra University',
+    id: 4,
   },
+];
+
+export const miscellData = [
+  { id: '1', name: 'Cold Drink', price: 50 },
+  { id: '2', name: 'Hot Coffee', price: 70 },
+  { id: '3', name: 'Tea', price: 30 },
+  { id: '4', name: 'Milkshake', price: 100 },
 ];

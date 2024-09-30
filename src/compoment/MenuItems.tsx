@@ -1,7 +1,7 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useState } from 'react'
 import { useNavigation, useTheme } from '@react-navigation/native';
-import { commonFontStyle, hp, wp } from '../theme/fonts';
+import { commonFontStyle, hp, SCREEN_WIDTH, wp } from '../theme/fonts';
 import { Icons } from '../utils/images';
 import { Menu, MenuDivider, MenuItem } from 'react-native-material-menu';
 import { strings } from '../i18n/i18n';
@@ -19,10 +19,11 @@ type ItemProps = {
     item: ListObj;
     setDelete?: any
     showChef: any
+    index: any
 };
 
 
-const MenuItems = ({ item, setDelete, showChef }: ItemProps) => {
+const MenuItems = ({ item, index, setDelete, showChef }: ItemProps) => {
     const { colors } = useTheme();
     const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
     const navigation = useNavigation();
@@ -46,9 +47,42 @@ const MenuItems = ({ item, setDelete, showChef }: ItemProps) => {
         setDelete(true);
     };
 
+    const containerWidth = (SCREEN_WIDTH - 56) / 2;
+    const containerHeight = 100;
+    const xPosition = index % 2 === 0 ? 0 : 10;
+
     return (
         <View style={styles.boxView}>
-            <TouchableOpacity activeOpacity={0.5} onPress={() => {
+            <TouchableOpacity
+                onPress={() => {
+                    navigation.navigate(screenName.FoodDetails, { itemData: item, showChef: showChef, showAddToCard: false })
+                }}
+                activeOpacity={0.7}
+                style={{
+                    width: containerWidth,
+                    marginLeft: xPosition,
+                }}>
+                <View
+                    style={[
+                        styles.renderContainer,
+                        {
+                            // height: 210,
+                            backgroundColor: colors.cards_bg,
+                        },
+                    ]}>
+                    <View style={[styles.imageView]}>
+                        <Image
+                            source={{ uri: item.image }}
+                            style={[styles.imageStyle]}
+                        />
+                    </View>
+                    <Text numberOfLines={1} style={styles.titleText}>{item?.name}</Text>
+                    <Text numberOfLines={1} style={styles.desText}>{item?.description}</Text>
+                    <Text style={styles.priceText}> {`₹${item?.price}`}</Text>
+                </View>
+            </TouchableOpacity>
+
+            {/* <TouchableOpacity activeOpacity={0.5} onPress={() => {
                 navigation.navigate(screenName.FoodDetails, { itemData: item, showChef: showChef, showAddToCard: false })
             }} style={styles.subBoxView}>
                 {item.images[0] ? (
@@ -105,7 +139,7 @@ const MenuItems = ({ item, setDelete, showChef }: ItemProps) => {
                         </View>
                     </View>
                 </View>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
         </View>
     )
 }
@@ -115,20 +149,22 @@ const getGlobalStyles = (props: any) => {
     const { colors } = props;
     return StyleSheet.create({
         boxView: {
-            marginTop: hp(20),
+            marginTop: hp(5),
+            flex: 1
+        },
+        renderContainer: {
+            width: '100%',
+            borderRadius: 20,
+            paddingVertical: hp(10),
+            paddingHorizontal: wp(12)
         },
         subBoxView: {
             flexDirection: 'row',
         },
-        imageView: {
-            width: wp(102),
-            height: wp(102),
-            borderRadius: 20,
-        },
         container: {
             flex: 1,
             marginLeft: wp(12),
-            paddingTop: hp(11),
+            // paddingTop: hp(11),
         },
         leftView: {
             flexDirection: 'row',
@@ -136,7 +172,11 @@ const getGlobalStyles = (props: any) => {
             alignItems: 'center',
         },
         titleText: {
-            ...commonFontStyle(700, 14, colors.headerText),
+            marginTop: hp(12),
+            ...commonFontStyle(600, 16, colors.black),
+        },
+        desText: {
+            ...commonFontStyle(500, 12, colors.title_dec100),
         },
         optionIcon: {
             width: wp(24),
@@ -151,10 +191,10 @@ const getGlobalStyles = (props: any) => {
             paddingHorizontal: wp(12),
             paddingVertical: hp(2),
             borderRadius: 29,
-            marginVertical: hp(11),
         },
         priceText: {
-            ...commonFontStyle(700, 18, colors.Title_Text),
+            marginTop: hp(4),
+            ...commonFontStyle(600, 14, colors.text_orange),
         },
         breakfastText: {
             ...commonFontStyle(400, 14, colors.Primary_Orange),
@@ -189,6 +229,21 @@ const getGlobalStyles = (props: any) => {
         },
         boxMenu: {
             backgroundColor: colors.card_bg
+        },
+        imageView: {
+            // width: wp(48),
+            // height: wp(48),
+            // borderRadius: wp(48),
+            // backgroundColor: colors.cards_bg,
+            alignItems: "center",
+            justifyContent: 'center',
+        },
+        imageStyle: {
+            width: wp(135),
+            height: hp(113),
+            borderRadius: 16,
+            // backgroundColor: 'red',
+            resizeMode: 'stretch'
         }
     });
 };

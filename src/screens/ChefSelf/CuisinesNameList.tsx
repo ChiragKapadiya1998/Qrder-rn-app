@@ -4,6 +4,7 @@ import {
   Image,
   StatusBar,
   StyleSheet,
+  Text,
   TextInput,
   View,
 } from 'react-native';
@@ -90,7 +91,7 @@ const CuisinesNameList = (props: Props) => {
     dispatch(getCuisinesAction(obj));
   };
 
-  const onSearchBar = (text:string) => {
+  const onSearchBar = (text: string) => {
     setSearchQuery(text)
     const filteredItems = getCuisines?.filter((f: any) =>
       f?.name?.toLowerCase()?.match(text?.toLowerCase()),
@@ -110,56 +111,65 @@ const CuisinesNameList = (props: Props) => {
           navigation.goBack();
         }}
         onRightPress={() => {
-          setNewFolder(true)
+          navigation.navigate(screenName.CuisinesEdit);
+          // setNewFolder(true)
         }}
         mainShow={true}
-        title={strings('CuisinesNameList.cuisines_list')}
+        title={strings('profileScreen.cuisines')}
         extraStyle={styles.headerContainer}
-        rightText={strings('CuisinesNameList.new_add')}
-        isHideIcon={true}
-        rightTextStyle={styles.rightTextStyle}
+        createText={strings('CuisinesNameList.create')}
+        isShowIcon={false}
+        isCreateIcon={true}
       />
-      <View style={{ marginHorizontal: wp(16) }}>
+      <View style={{ marginHorizontal: wp(20) }}>
         <View style={styles.searchInputContainer}>
+          <Image source={Icons.search} style={styles.searchIcon} />
           <TextInput
             style={styles.searchInput}
             placeholder={strings('CuisinesNameList.Search')}
             value={searchQuery}
             onChangeText={text => onSearchBar(text)}
-            placeholderTextColor={colors.gray_300}
+            placeholderTextColor={colors.text_gray1}
           />
-          <Image source={Icons.search} style={styles.searchIcon} />
         </View>
 
         {loading ? (
           <Loader size={'small'} />
         ) : (
-        <FlatList
-          onEndReachedThreshold={0.3}
-          data={getAllData}
-          ListEmptyComponent={<NoDataFound />}
-          renderItem={({ item, index }) => {
-            return (
-              <CuisinesNameCardList
-                item={item}
-                onPressEdit={() => {
-                  setEditFolder(true);
-                  setSelectItem(item);
-                }}
-                setDelete={() => {
-                  setVisible(true);
-                  setSelectItem(item);
-                }}
-              />
-            );
-          }}
-          showsVerticalScrollIndicator={false}
-          ListFooterComponent={() => {
-            return (
+          <FlatList
+            onEndReachedThreshold={0.3}
+            data={getAllData}
+            ListEmptyComponent={<NoDataFound />}
+            ListHeaderComponent={() => {
+              return (
+                <View style={styles.headerList}>
+                  <Text style={styles.nameText}>{strings('CuisinesNameList.names')}</Text>
+                  <Text style={styles.nameText}>{strings('CuisinesNameList.action')}</Text>
+                </View>
+              )
+            }}
+            renderItem={({ item, index }) => {
+              return (
+                <CuisinesNameCardList
+                  item={item}
+                  onPressEdit={() => {
+                    setEditFolder(true);
+                    setSelectItem(item);
+                  }}
+                  setDelete={() => {
+                    setVisible(true);
+                    setSelectItem(item);
+                  }}
+                />
+              );
+            }}
+            showsVerticalScrollIndicator={false}
+            ListFooterComponent={() => {
+              return (
                 <View style={{ height: 150 }} />
-            );
-          }}
-        />)}
+              );
+            }}
+          />)}
       </View>
       <AddFolderModal
         isVisible={newFolder}
@@ -189,35 +199,40 @@ const getGlobalStyles = (props: any) => {
   return StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: colors.white,
+      backgroundColor: colors.bg_white,
     },
     headerContainer: {
-      backgroundColor: colors.white,
-    },
-    rightTextStyle: {
-      textDecorationLine: 'underline',
+      backgroundColor: colors.bg_white,
     },
     searchInputContainer: {
-      borderColor: colors.black,
-      borderWidth: 1,
-      borderRadius: 5,
-      backgroundColor: colors.card_bg,
+      borderRadius: 15,
+      backgroundColor: colors.cards_bg,
       flexDirection: 'row',
       alignItems: 'center',
-      marginTop: hp(10),
-      marginBottom: hp(15),
-      paddingHorizontal: 10,
+      paddingHorizontal: wp(14),
     },
     searchInput: {
       flex: 1,
       color: colors.black,
-      paddingVertical: 5,
+      height: hp(44)
     },
     searchIcon: {
-      width: 14,
-      height: 14,
-      marginLeft: 10,
-      tintColor: colors.black,
+      width: 20,
+      height: 20,
+      tintColor: colors.border,
     },
+    headerList: {
+      backgroundColor: colors.cards_bg,
+      height: hp(42),
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      paddingHorizontal: wp(16),
+      marginTop: hp(16),
+      borderRadius: 8,
+      flexDirection: 'row'
+    },
+    nameText: {
+      ...commonFontStyle(500, 16, colors.black),
+    }
   });
 };

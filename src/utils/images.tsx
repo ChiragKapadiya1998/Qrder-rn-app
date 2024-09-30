@@ -80,6 +80,13 @@ export const Icons = {
   ic_check: require('../assets/Icons/ic_check.png'),
   ic_checkbox: require('../assets/Icons/ic_checkbox.png'),
   pertenge: require('../assets/Icons/pertenge.png'),
+  allIcon: require('../assets/Icons/all_Icon.png'),
+  decrementIcon: require('../assets/Icons/decrement_icon.png'),
+  incrementIcon: require('../assets/Icons/increment_icon.png'),
+  addItemIcon: require('../assets/Icons/add_item.png'),
+  editItemIcon: require('../assets/Icons/edit_item.png'),
+  deleteItemIcon: require('../assets/Icons/delete_Item.png'),
+
 
   //tab
   ic_home: require('../assets/Icons/ic_home.png'),

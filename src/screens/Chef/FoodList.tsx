@@ -23,6 +23,7 @@ import {
   getMenuAction,
 } from '../../actions/menuAction';
 import { GET_EMPTY_MENU_LIST } from '../../redux/actionTypes';
+import { Icons } from '../../utils/images';
 
 
 type Props = {};
@@ -43,6 +44,7 @@ const MyMenuList = (props: Props) => {
   const [loadingMore, setLoadingMore] = useState(false);
   const [loading, setLoading] = useState(true);
   const [onEndReached, setOnEndReached] = useState(true);
+  const [photoUri, setPhotoUri] = useState(null);
   const refFlatList = useRef();
 
   const onRefresh = React.useCallback(() => {
@@ -148,6 +150,31 @@ const MyMenuList = (props: Props) => {
       }
     }, 100);
   };
+
+
+  const renderItem = ({ item }) => {
+    const selectColor = tabSelection === item.name ? colors.text_orange : colors.text_gray
+    return (
+      < View >
+        <TouchableOpacity onPress={() => onTabChange(item)} style={styles.cuisineView}>
+          {item.name === 'All' ?
+            <View style={[styles.allImage, { borderColor: selectColor }]}>
+              <Image
+                source={Icons.allIcon}
+                style={[styles.allIconImage, { tintColor: selectColor }]}
+              />
+            </View>
+            :
+            <Image
+              source={item.name === 'All' ? Icons.allIcon : { uri: item.image }}
+              style={[styles.profilImage, { borderColor: selectColor }]}
+            />}
+          <Text style={[styles.cuisinesText, { color: tabSelection === item.name ? colors.text_orange : colors.black }]}>{item.name}</Text>
+        </TouchableOpacity>
+
+      </View >
+    )
+  }
   return (
     <View style={styles.container}>
       <StatusBar
@@ -164,7 +191,9 @@ const MyMenuList = (props: Props) => {
         mainShow={true}
         title={strings('myMenuList.my_menu')}
         extraStyle={styles.headerContainer}
-        isShowIcon={false}
+        isShowIcon={true}
+        isHideIcon={true}
+        rightText={strings('home.see_all')}
       />
 
       {getCuisines && getCuisines.length !== 0 && (
@@ -176,50 +205,16 @@ const MyMenuList = (props: Props) => {
             ]}
             horizontal
             showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{ gap: 16 }}
             keyExtractor={(item, index) => `${item.id}-${index}`}
             onEndReachedThreshold={0.5}
-            renderItem={({ item }) => (
-              <TouchableOpacity
-                onPress={() =>  onTabChange(item)}
-                style={[
-                  styles.tabItemView,
-                  {
-                    // borderBottomWidth: 1,
-                    backgroundColor:  tabSelection === item.name
-                    ? colors.orange_bg
-                    : colors.card_bg,
-                    marginBottom: hp(16),
-                    // borderColor:
-                    //   tabSelection === item.name
-                    //     ? colors.headerText3
-                    //     : colors.card_bg,
-                  },
-                ]}>
-                   <View
-                    style={[
-                        styles.imageView,
-                        { backgroundColor: tabSelection === item.name
-                          ? colors.image_Bg_gray
-                          : colors.image_Bg_gray },
-                    ]}
-                />
-                <Text
-                  style={{
-                    color:
-                      tabSelection === item.name
-                        ? colors.black
-                        : colors.Title_Text,
-                  }}>
-                  {item.name}
-                </Text>
-              </TouchableOpacity>
-            )}
+            renderItem={renderItem}
           />
-          <View style={styles.underlineAll} />
         </View>
-      )}
+      )
+      }
 
-      <View style={styles.boxContainer} key={'1'}>
+      <View style={styles.boxContainer}>
         <MenuCardList
           onRefresh={() => {
             onRefresh();
@@ -234,28 +229,7 @@ const MyMenuList = (props: Props) => {
           }}
         />
       </View>
-      {/* <PagerView
-        style={{flex: 1}}
-        initialPage={tabSelectionIndex}
-        ref={ref}
-        onPageSelected={onPageSelected}>
-        <View style={styles.boxContainer} key={'1'}>
-          <MenuCardList />
-        </View>
-
-        <View style={styles.boxContainer} key={'2'}>
-          <MenuCardList />
-        </View>
-
-        <View style={styles.boxContainer} key={'3'}>
-          <MenuCardList />
-        </View>
-
-        <View style={styles.boxContainer} key={'4'}>
-          <MenuCardList />
-        </View>
-      </PagerView> */}
-    </View>
+    </View >
   );
 };
 
@@ -266,55 +240,50 @@ const getGlobalStyles = (props: any) => {
   return StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: colors.white,
+      backgroundColor: colors.bg_white,
     },
     headerContainer: {
-      backgroundColor: colors.white,
+      backgroundColor: colors.bg_white,
     },
     tabMainView: {
       flexDirection: 'row',
-      marginBottom: hp(24),
-      marginHorizontal: wp(24),
+      marginHorizontal: wp(20),
     },
-    tabItemView: {
-      flex: 1,
-      marginTop: hp(14),
-      alignItems: 'center',
-      marginRight: 20,
-      flexDirection:'row',
-      paddingVertical:hp(5),
-      paddingHorizontal:wp(10),
-      borderRadius:50
-    },
-    ongoingText: {
-      ...commonFontStyle(700, 14, colors.gray_200),
-    },
-    historyText: {
-      ...commonFontStyle(700, 14, colors.gray_200),
-    },
-    selectUnderline: {
-      height: 2,
-      backgroundColor: colors.headerText3,
-      marginTop: hp(16),
-      width: wp(45),
-    },
-    underlineAll: {
-      height: 1,
-      width: SCREEN_WIDTH,
-      backgroundColor: colors.card_bg,
-      position: 'absolute',
-      bottom: 0,
-      zIndex: -1,
-    },
-    boxContainer: {
-      flex: 1,
-      marginHorizontal: wp(16),
-    },
-    imageView: {
+    allIconImage: {
       width: wp(30),
       height: wp(30),
-      borderRadius: wp(30),
-      marginRight:wp(8)
-  },
+      resizeMode: 'contain'
+    },
+    cuisineView: {
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    allImage: {
+      width: wp(48),
+      height: wp(48),
+      borderRadius: wp(48),
+      borderColor: colors.text_gray,
+      borderWidth: 1,
+      backgroundColor: colors.cards_bg,
+      alignItems: "center",
+      justifyContent: 'center'
+    },
+    profilImage: {
+      width: wp(48),
+      height: wp(48),
+      borderRadius: wp(48),
+      borderColor: colors.text_gray,
+      borderWidth: 1,
+      backgroundColor: colors.cards_bg,
+      resizeMode: 'cover'
+    },
+    cuisinesText: {
+      marginTop: hp(4),
+      ...commonFontStyle(600, 14, colors.black),
+    },
+    boxContainer: {
+      // flex: 1,
+      marginHorizontal: wp(20),
+    },
   });
 };

@@ -207,7 +207,8 @@ const AddFoodDetails = () => {
         }}>
         <TouchableOpacity
           onPress={() => {
-            setNewFolder(true);
+            navigation.navigate(screenName.CuisinesNameList);
+            // setNewFolder(true);
           }}
           style={styles.boxStyle}>
           <Image source={Icons.cuisine} style={styles.imageStyle} />

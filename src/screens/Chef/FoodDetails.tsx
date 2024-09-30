@@ -1,10 +1,12 @@
 import {
   Alert,
+  FlatList,
   Image,
   StatusBar,
   StyleSheet,
   Text,
   TextInput,
+  TouchableOpacity,
   View,
 } from 'react-native';
 import React, { useState } from 'react';
@@ -25,6 +27,8 @@ import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { screenName } from '../../navigation/screenNames';
 import PrimaryButton from '../../compoment/PrimaryButton';
 import { addCardAction, getCardAction } from '../../actions/cardAction';
+import { miscellData } from '../../utils/commonFunction';
+import Spacer from '../../compoment/Spacer';
 
 const FoodDetails = ({ route }) => {
   const { itemData, showChef, showAddToCard } = route?.params;
@@ -34,7 +38,18 @@ const FoodDetails = ({ route }) => {
   const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
   const { isDarkTheme } = useAppSelector(state => state.common);
   const [basicDetails, setBasicDetails] = useState('');
-  const { name, price, cuisine_name, description, id } = itemData
+  const { name, price, cuisine_name, description, id, image } = itemData
+  const [selectedItems, setSelectedItems] = useState([]);
+
+
+  const toggleSelection = (id) => {
+    if (selectedItems.includes(id)) {
+      setSelectedItems((prevSelected) => prevSelected.filter((item) => item !== id));
+    } else {
+      setSelectedItems((prevSelected) => [...prevSelected, id]);
+    }
+  };
+
 
   const onPressAddCard = () => {
     let obj = {
@@ -60,6 +75,26 @@ const FoodDetails = ({ route }) => {
     dispatch(addCardAction(obj));
   }
 
+
+  const renderItem = ({ item }) => {
+    const isSelected = selectedItems.includes(item.id);
+    const select = isSelected ? colors.text_orange : colors.title_dec100
+    return (
+      <View style={styles.itemContainer}>
+        <TouchableOpacity
+          style={styles.checkboxContainer}
+          onPress={() => toggleSelection(item.id)}
+        >
+          <View style={[styles.checkbox, { backgroundColor: isSelected ? colors.blue : 'transparent' }]}>
+            {isSelected && <Image source={Icons.ic_check} style={styles.ic_check} />}
+          </View>
+          <Text style={[styles.text1, { color: select }]}>{item.name}</Text>
+        </TouchableOpacity>
+        <Text style={[styles.priceTextStyle, { color: select }]}>{`₹${item.price}`}</Text>
+      </View>
+    );
+  };
+
   return (
     <View style={styles.container}>
       <StatusBar barStyle={isDarkTheme ? 'light-content' : 'dark-content'} backgroundColor={colors.white} />
@@ -71,7 +106,7 @@ const FoodDetails = ({ route }) => {
           navigation.navigate(screenName.EditFoodDetails, { itemData: itemData })
         }}
         mainShow={true}
-        title={strings('foodDetails.food_Details')}
+        title={name || strings('foodDetails.food_Details')}
         extraStyle={styles.headerContainer}
         isHideIcon={true}
         rightText={!showChef ? strings('foodDetails.edit') : ""}
@@ -79,7 +114,33 @@ const FoodDetails = ({ route }) => {
       <KeyboardAwareScrollView
         keyboardShouldPersistTaps={'handled'}
         contentContainerStyle={styles.contentContainerStyle}>
-        <View style={styles.mainConatiner}>
+
+        <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+          <Image source={{ uri: image }} style={styles.imageStyle} />
+        </View>
+        <View style={styles.headingView}>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <Text style={styles.foodText}>{name}</Text>
+            <View style={styles.rateView}>
+              <Image source={Icons.star} style={styles.starStyle} />
+              <Text style={styles.rateText}>4.9</Text>
+            </View>
+          </View>
+          <Text style={styles.leftText}>{cuisine_name}</Text>
+          <Text style={styles.priceText}>{`₹${price}`}</Text>
+          {showAddToCard ?
+            <View style={styles.addItemView}>
+              <TouchableOpacity>
+                <Image source={Icons.decrementIcon} style={styles.decrementIcons} />
+              </TouchableOpacity>
+
+              <Text style={styles.countText}>{3}</Text>
+              <TouchableOpacity>
+                <Image source={Icons.incrementIcon} style={styles.decrementIcons} />
+              </TouchableOpacity>
+            </View> : null}
+        </View>
+        {/* <View style={styles.mainConatiner}>
           <Swiper
             showsPagination={true}
             autoplay={true}
@@ -109,27 +170,9 @@ const FoodDetails = ({ route }) => {
               );
             })}
           </Swiper>
-        </View>
-
-        <View style={styles.foodTitle}>
-          <View>
-            <Text style={styles.foodText}>{name}</Text>
-            {/* <View style={styles.locationView}>
-              <Image source={Icons.locationPin} style={styles.locationIcon} />
-              <Text style={styles.locationText}>Kentucky 39495</Text>
-            </View> */}
-          </View>
-          <View>
-            <Text style={styles.priceText}>{`₹${price}`}</Text>
-            <View style={styles.rateView}>
-              <Image source={Icons.star} style={styles.starStyle} />
-              <Text style={styles.rateText}>4.9</Text>
-            </View>
-          </View>
-        </View>
-        <View style={styles.underlineAll} />
+        </View> */}
         <Text style={styles.basicText}>
-          {strings('foodDetails.basic_details')}
+          {strings('addFoodList.Description')}
         </Text>
         <TextInput
           value={description}
@@ -139,16 +182,50 @@ const FoodDetails = ({ route }) => {
           multiline
           maxLength={200}
           editable={false}
-          placeholderTextColor={colors.white}
+          placeholderTextColor={colors.black}
         />
 
+        <Text style={styles.miscellText}>
+          {strings('addFoodList.Miscellaneousitems')}
+        </Text>
+        <FlatList
+          data={miscellData}
+          renderItem={renderItem}
+          contentContainerStyle={{ gap: 10 }}
+          keyExtractor={(item) => item.id}
+        />
+
+        <Text style={styles.foodReviewText}>
+          {strings('addFoodList.food_review')}
+        </Text>
+
+        <PrimaryButton
+          extraStyle={styles.reviewButton}
+          onPress={onPressAddCard}
+          title={strings('addFoodList.give_food_rating')}
+          titleStyle={styles.reviewText}
+        />
         {showAddToCard ?
           <PrimaryButton
             extraStyle={styles.addButton}
             onPress={onPressAddCard}
             title={strings('addFoodList.add_to_card')}
           /> : null}
+        <Spacer height={20} />
       </KeyboardAwareScrollView>
+
+      <View style={styles.buyNowView}>
+        <View>
+          <Text style={styles.pricesText}>{'price'}</Text>
+          <Text style={styles.prText}>{`₹${price}`}</Text>
+        </View>
+        <PrimaryButton
+          extraStyle={styles.buyNowBtn}
+          onPress={onPressAddCard}
+          title={strings('addFoodList.buy_now')}
+          titleStyle={styles.buyNowText}
+        />
+      </View>
     </View>
   );
 };
@@ -160,50 +237,38 @@ const getGlobalStyles = (props: any) => {
   return StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: colors.white,
+      backgroundColor: colors.bg_white,
     },
     contentContainerStyle: {
-      marginHorizontal: wp(16),
+      marginHorizontal: wp(20),
     },
     headerContainer: {
-      backgroundColor: colors.white,
+      backgroundColor: colors.bg_white,
     },
     foodTitle: {
       flexDirection: 'row',
       justifyContent: 'space-between',
     },
     foodText: {
-      ...commonFontStyle(700, 16, colors.Title_Text),
-    },
-    locationView: {
-      flexDirection: 'row',
-      alignItems: 'center',
-    },
-    locationIcon: {
-      width: 12,
-      height: 12,
-      marginTop: 10,
-    },
-    locationText: {
-      paddingTop: hp(9),
-      ...commonFontStyle(400, 13, colors.tabBar),
+      ...commonFontStyle(700, 16, colors.black),
     },
     priceText: {
-      alignSelf: 'flex-end',
-      ...commonFontStyle(700, 18, colors.Title_Text),
+      marginTop: hp(5),
+      ...commonFontStyle(700, 20, colors.text_orange),
     },
     rateView: {
       flexDirection: 'row',
-      paddingTop: hp(7),
       alignItems: 'center',
+      marginLeft: wp(8)
     },
     starStyle: {
       width: 17,
       height: 17,
+      resizeMode: 'contain'
     },
     rateText: {
-      marginLeft: 3,
-      ...commonFontStyle(700, 14, colors.Primary_Orange),
+      marginLeft: 4,
+      ...commonFontStyle(600, 16, colors.black),
     },
     rateText1: {
       ...commonFontStyle(400, 14, colors.tabBar),
@@ -216,20 +281,31 @@ const getGlobalStyles = (props: any) => {
       marginTop: hp(24),
     },
     basicText: {
-      ...commonFontStyle(400, 14, colors.Title_Text),
-      paddingTop: hp(20),
-      textTransform: 'uppercase',
+      ...commonFontStyle(500, 18, colors.black),
     },
     basicInput: {
-      height: hp(136),
-      borderColor: colors.border_line4,
-      borderWidth: 1,
-      borderRadius: 8,
-      padding: 15,
+      // height: hp(100),
+      borderRadius: 16,
+      padding: 16,
       textAlignVertical: 'top',
-      marginTop: hp(20),
+      marginTop: hp(8),
       color: colors.black,
-      backgroundColor: colors.card_bg
+      backgroundColor: colors.cards_bg
+    },
+    miscellText: {
+      marginTop: hp(16),
+      marginBottom: hp(8),
+      ...commonFontStyle(500, 18, colors.black),
+    },
+    ic_check: {
+      width: 11,
+      height: 11,
+    },
+    text1: {
+      ...commonFontStyle(500, 14, colors.title_dec100),
+    },
+    priceTextStyle: {
+      ...commonFontStyle(600, 14, colors.text_orange),
     },
     descriptionText: {
       marginTop: 15,
@@ -250,10 +326,19 @@ const getGlobalStyles = (props: any) => {
     },
 
     imageStyle: {
-      borderRadius: 20,
-      width: '99%',
+      // width:wp(210),
+      // height: hp(220),
       resizeMode: 'cover',
-      height: SCREEN_HEIGHT * 0.24,
+      borderRadius: 16,
+      height: SCREEN_HEIGHT * 0.27,
+      width: SCREEN_WIDTH * 0.56,
+    },
+    headingView: {
+      backgroundColor: colors.cards_bg,
+      borderRadius: 16,
+      paddingVertical: hp(16),
+      paddingHorizontal: wp(16),
+      marginVertical: hp(16)
     },
     activateDot: {
       backgroundColor: colors.white,
@@ -290,7 +375,23 @@ const getGlobalStyles = (props: any) => {
       paddingHorizontal: 16,
     },
     leftText: {
-      ...commonFontStyle(400, 14, colors.Title_Text),
+      ...commonFontStyle(500, 12, colors.title_dec100),
+    },
+    addItemView: {
+      flexDirection: "row",
+      alignItems: 'center',
+      position: 'absolute',
+      bottom: 25,
+      right: 16
+    },
+    decrementIcons: {
+      width: 25,
+      height: 25,
+      resizeMode: 'contain',
+    },
+    countText: {
+      marginHorizontal: wp(10),
+      ...commonFontStyle(600, 14, colors.text_orange),
     },
     addButton: {
       height: hp(50),
@@ -298,5 +399,69 @@ const getGlobalStyles = (props: any) => {
       alignItems: 'center',
       justifyContent: 'center',
     },
+    itemContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+    },
+    checkboxContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 10,
+    },
+    checkbox: {
+      width: 20,
+      height: 20,
+      justifyContent: 'center',
+      alignItems: 'center',
+      borderRadius: 10,
+      borderWidth: 1,
+      borderColor: colors.title_dec100,
+    },
+    foodReviewText: {
+      marginTop: hp(16),
+      ...commonFontStyle(500, 18, colors.black),
+    },
+    reviewButton: {
+      height: hp(44),
+      marginTop: hp(20),
+      backgroundColor: colors.bg_white,
+      borderColor: colors.text_orange,
+      borderWidth: 1,
+      borderRadius: hp(22),
+    },
+    reviewText: {
+      ...commonFontStyle(600, 16, colors?.text_orange)
+    },
+    buyNowView: {
+      height: hp(87),
+      paddingHorizontal: wp(20),
+      paddingVertical: hp(16),
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      backgroundColor: colors.cards_bg,
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.5,
+      shadowRadius: 4,
+      elevation: 15,
+    },
+    pricesText: {
+      ...commonFontStyle(500, 12, colors?.title_dec100)
+    },
+    prText: {
+      marginTop: hp(8),
+      ...commonFontStyle(700, 20, colors.text_orange),
+    },
+    buyNowBtn: {
+      height: hp(55),
+      backgroundColor: colors.text_orange,
+      borderRadius: 15,
+      paddingHorizontal: wp(30)
+    },
+    buyNowText: {
+      ...commonFontStyle(600, 18, colors.defult_white),
+    }
   });
 };
