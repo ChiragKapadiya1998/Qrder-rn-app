@@ -147,8 +147,8 @@ const getGlobalStyles = (props: any) => {
       alignItems: 'center',
     },
     bag_logo: {
-      width: 30,
-      height: 30,
+      width: 20,
+      height: 20,
       resizeMode: 'contain',
     },
     bagView:{

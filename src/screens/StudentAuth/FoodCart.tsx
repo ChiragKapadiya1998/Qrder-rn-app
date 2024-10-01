@@ -6,6 +6,7 @@ import {
     Text,
     TouchableOpacity,
     View,
+    ScrollView,
 } from 'react-native';
 import React, { useState } from 'react';
 import { useNavigation, useTheme } from '@react-navigation/native';
@@ -18,23 +19,25 @@ import Input from '../../compoment/Input';
 import PrimaryButton from '../../compoment/PrimaryButton';
 
 const FoodCart = () => {
-    const { navigate } = useNavigation();
     const { colors } = useTheme();
+    const navigation = useNavigation();
     const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
     const { getCardData } = useAppSelector(state => state.data);
     const { isDarkTheme } = useAppSelector(state => state.common);
-    const [address, setAddress] = useState < string > ('');
+    const [address, setAddress] = useState('');
     const [loading, setLoading] = useState(false);
+
+    const cardData = [1, 2,];
 
     return (
         <View style={styles.container}>
             <StatusBar barStyle={isDarkTheme ? 'light-content' : 'dark-content'} backgroundColor={colors.white} />
             <HomeHeader
                 onBackPress={() => {
-                    navigate.goBack();
+                    navigation.goBack();
                 }}
                 onRightPress={() => {
-                    navigate.navigate('FoodCart');
+                    navigation.navigate('FoodCart');
                 }}
                 mainShow={true}
                 title={strings('foodDetails.food_cart')}
@@ -42,24 +45,24 @@ const FoodCart = () => {
                 isHideIcon={true}
             />
 
-            <View style={{ flex: 0.5 }}>
+            <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: hp(100) }}>
                 <FlatList
-                    data={[1, 2, 3, 4, 5, 6, 7, 8]}
+                    data={cardData}
                     renderItem={({ item }) => (
                         <View style={styles.headingView}>
                             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                 <View style={styles.imageStyle} />
                                 <View style={{ marginLeft: wp(10), flex: 1 }}>
-                                    <Text style={styles.foodText}>{'sdasd'}</Text>
-                                    <Text numberOfLines={1} style={styles.leftText}>{'sdasdasd'}</Text>
+                                    <Text style={styles.foodText}>{'Item Name'}</Text>
+                                    <Text numberOfLines={1} style={styles.leftText}>{'Description'}</Text>
                                     <View style={styles.addContiner}>
                                         <Text style={styles.priceText}>{`₹${300}`}</Text>
                                         <View style={styles.addItemView}>
-                                            <TouchableOpacity onPress={() => handleDecrement(item.id)}>
+                                            <TouchableOpacity onPress={() => handleDecrement(item)}>
                                                 <Image source={Icons.minus} style={styles.decrementIcons} />
                                             </TouchableOpacity>
                                             <Text style={styles.countText}>{3}</Text>
-                                            <TouchableOpacity onPress={() => handleIncrement(item.id)}>
+                                            <TouchableOpacity onPress={() => handleIncrement(item)}>
                                                 <Image source={Icons.plus} style={styles.plusIcons} />
                                             </TouchableOpacity>
                                         </View>
@@ -68,42 +71,47 @@ const FoodCart = () => {
                             </View>
                         </View>
                     )}
+                    keyExtractor={(item) => item.toString()}
                     contentContainerStyle={styles.containerView}
                 />
-            </View>
 
-            <View style={{ flex: 1, paddingHorizontal: wp(20), marginTop: hp(16) }}>
-                <Text style={styles.summaryText}>{'Summary'}</Text>
-                <View style={[styles.comanStyle, { marginTop: hp(8) }]}>
-                    <Text style={styles.priText}>{'Price(2 item)'}</Text>
-                    <Text style={[styles.priText, { color: colors.black }]}>{`₹${300}`}</Text>
+                {/* Summary Section */}
+                <View style={{ paddingHorizontal: wp(20), marginTop: hp(16) }}>
+                    <Text style={styles.summaryText}>{'Summary'}</Text>
+                    <View style={[styles.comanStyle, { marginTop: hp(8) }]}>
+                        <Text style={styles.priText}>{'Price(2 item)'}</Text>
+                        <Text style={[styles.priText, { color: colors.black }]}>{`₹${300}`}</Text>
+                    </View>
+                    <View style={[styles.comanStyle, { marginVertical: hp(12) }]}>
+                        <Text style={styles.priText}>{'Discount'}</Text>
+                        <Text style={[styles.priText, { color: colors.black }]}>{`₹${50}`}</Text>
+                    </View>
+                    <View style={styles.comanStyle}>
+                        <Text style={styles.priText}>{'Delivery Charge'}</Text>
+                        <Text style={[styles.priText, { color: colors.green_text }]}>{'Free Delivery'}</Text>
+                    </View>
+                    <View style={styles.borderLine} />
+                    <View style={styles.comanStyle}>
+                        <Text style={styles.priText}>{'Total Pay'}</Text>
+                        <Text style={styles.totalPrice}>{`₹${250}`}</Text>
+                    </View>
+
+                    {/* Address Input */}
+                    <Input
+                        value={address}
+                        placeholder={strings('sign_up.add_address')}
+                        label={strings('sign_up.address')}
+                        onChangeText={(t) => setAddress(t)}
+                        isShowLabel={true}
+                        inputStyle={styles.inputStyle}
+                    />
                 </View>
-                <View style={[styles.comanStyle, { marginVertical: hp(12) }]}>
-                    <Text style={styles.priText}>{'Discount'}</Text>
-                    <Text style={[styles.priText, { color: colors.black }]}>{`₹${300}`}</Text>
-                </View>
-                <View style={styles.comanStyle}>
-                    <Text style={styles.priText}>{'Delivery Change'}</Text>
-                    <Text style={[styles.priText, { color: colors.green_text }]}>{'Free Delivery'}</Text>
-                </View>
-                <View style={styles.borderLine} />
-                <View style={styles.comanStyle}>
-                    <Text style={styles.priText}>{'Total Pay'}</Text>
-                    <Text style={[styles.totalPrice]}>{`₹${300}`}</Text>
-                </View>
-                <Input
-                    value={address}
-                    placeholder={strings('sign_up.add_address')}
-                    label={strings('sign_up.address')}
-                    onChangeText={(t: string) => setAddress(t)}
-                    isShowLabel={true}
-                    inputStyle={styles.inputStyle}
-                />
-            </View>
-            <View style={styles.buttonContainer}>
+            </ScrollView>
+
+            {/* Fixed Pay Now Button */}
+            <View style={styles.fixedButtonContainer}>
                 <PrimaryButton
                     extraStyle={styles.submitButton}
-                    // onPress={onPressEdit}
                     title={strings('sign_up.pay_now')}
                     titleStyle={styles.submitText}
                     isLoading={loading}
@@ -202,15 +210,16 @@ const getGlobalStyles = (props: any) => {
         inputStyle: {
             borderColor: colors.text_orange
         },
-        buttonContainer: {
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
+        fixedButtonContainer: {
+            position: 'absolute',
+            bottom: 0,
+            left: 0,
+            right: 0,
             paddingHorizontal: wp(20),
-            paddingBottom: hp(10),
+            paddingVertical: hp(10),
+            backgroundColor: colors.bg_white,
         },
         submitButton: {
-            flex: 1,
             borderRadius: 15,
             alignItems: 'center',
             justifyContent: 'center',
