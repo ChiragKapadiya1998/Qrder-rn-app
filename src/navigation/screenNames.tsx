@@ -30,6 +30,7 @@ export const screenName = {
   EditFoodDetails: 'EditFoodDetails',
   OrderHistory: 'OrderHistory',
   CuisinesEdit:'CuisinesEdit',
+  CuisinesAdd:'CuisinesAdd',
 
   //chefSignUp
 
@@ -60,4 +61,5 @@ export const screenName = {
     StudentNotification: 'StudentNotification',
     StudentOrderHistory: 'StudentOrderHistory',
   },
+  FoodCart:'FoodCart',
 };

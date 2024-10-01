@@ -1,6 +1,6 @@
 import { Alert, Image, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useState } from 'react'
-import { useNavigation, useRoute, useTheme } from '@react-navigation/native';
+import { useNavigation, useTheme } from '@react-navigation/native';
 import HomeHeader from '../../compoment/HomeHeader';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { strings } from '../../i18n/i18n';
@@ -11,38 +11,49 @@ import ImageCropPicker from 'react-native-image-crop-picker';
 import PrimaryButton from '../../compoment/PrimaryButton';
 import Spacer from '../../compoment/Spacer';
 import { infoToast } from '../../utils/commonFunction';
-import { addCuisinesAction, editCuisinesAction } from '../../actions/cuisinesAction';
+import { addCuisinesAction } from '../../actions/cuisinesAction';
 import { getAsyncUserInfo } from '../../utils/asyncStorageManager';
 
+export interface ListObj {
+    title: string;
+    iconName?: any;
+    images?: string[];
+    name?: string;
+    cuisine_name?: string;
+    price?: number;
+}
+type ItemProps = {
+    item: ListObj;
+};
 
-const CuisinesEdit = () => {
+
+const CuisinesAdd = ({ item }: ItemProps) => {
     const { colors } = useTheme();
-    const route = useRoute();
-    const { selectList } = route?.params;
     const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
     const navigation = useNavigation();
     const [visible, setVisible] = useState(false);
-    const [cuisineName, seCuisineName] = useState(selectList?.name);
-    const [photoUri, setPhotoUri] = useState(selectList?.image);
+    const [cuisineName, seCuisineName] = useState('');
+    const [photoUri, setPhotoUri] = useState(null);
     const [loading, setLoading] = useState(false);
     const { isDarkTheme } = useAppSelector(state => state.common);
     const dispatch = useAppDispatch();
 
-    const onPressEdit = async () => {
+    const onPressNewAdd = async () => {
         if (cuisineName == '') {
-            infoToast(strings('addFoodList.error_enter'));
+            infoToast(strings("addFoodList.error_enter"))
         } else {
             setLoading(true)
-            const userDetails = await getAsyncUserInfo();
+            const userDetails = await getAsyncUserInfo()
+
+            let data = new FormData();
+            data.append('name', cuisineName);
+            data.append('parent_id', userDetails?.id);
+
             let obj = {
-                id: selectList?.id,
-                data: {
-                    name: cuisineName,
-                    parent_id: userDetails?.id,
-                },
+                data,
                 onSuccess: (response: any) => {
                     navigation.goBack()
-                    seCuisineName('');
+                    seCuisineName("")
                     setLoading(false)
                 },
                 onFailure: (Err: any) => {
@@ -52,13 +63,19 @@ const CuisinesEdit = () => {
                     setLoading(false)
                 },
             };
-            dispatch(editCuisinesAction(obj));
+            dispatch(addCuisinesAction(obj));
         }
     };
 
-    const goback = () => {
-        navigation.goBack();
-    }
+
+    const hideMenu = () => setVisible(false);
+
+    const showMenu = () => setVisible(true);
+
+    const onPressDelete = () => {
+        setDelete(true);
+    };
+
 
     const selectImage = () => {
         setLoading(true);
@@ -84,9 +101,11 @@ const CuisinesEdit = () => {
                 backgroundColor={colors.white}
             />
             <HomeHeader
-                onBackPress={goback}
+                onBackPress={() => {
+                    navigation.goBack();
+                }}
                 mainShow={true}
-                title={strings('CuisinesNameList.edit_Cuisines_name')}
+                title={strings('CuisinesNameList.add_cuisines')}
                 extraStyle={styles.headerContainer}
                 isShowIcon={false}
             />
@@ -115,7 +134,7 @@ const CuisinesEdit = () => {
             <View style={styles.buttonContainer}>
                 <PrimaryButton
                     extraStyle={styles.submitButton}
-                    onPress={onPressEdit}
+                    onPress={onPressNewAdd}
                     title={strings('CuisinesNameList.submit')}
                     titleStyle={styles.submitText}
                     isLoading={loading}
@@ -123,7 +142,7 @@ const CuisinesEdit = () => {
                 <Spacer width={16} />
                 <PrimaryButton
                     extraStyle={styles.cancelBtn}
-                    onPress={goback}
+                    // onPress={onPressEditDone}
                     title={strings('CuisinesNameList.cancel')}
                     titleStyle={styles.cancelText}
                 />
@@ -132,7 +151,7 @@ const CuisinesEdit = () => {
     );
 
 }
-export default CuisinesEdit
+export default CuisinesAdd
 
 const getGlobalStyles = (props: any) => {
     const { colors } = props;

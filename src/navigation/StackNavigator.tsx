@@ -54,6 +54,8 @@ import Home from '../screens/Chef/Home';
 import OrderHistory from '../screens/ChefSettings/OrderHistory';
 import ChefNotification from '../screens/ChefSelf/ChefNotification';
 import CuisinesEdit from '../screens/ChefSelf/CuisinesEdit';
+import CuisinesAdd from '../screens/ChefSelf/CuisinesAdd';
+import FoodCart from '../screens/StudentAuth/FoodCart';
 
 const Drawer = createDrawerNavigator();
 const { StatusBarManager } = NativeModules;
@@ -318,6 +320,15 @@ const StackNavigator: FC = () => {
           headerShown: false,
           headerTitle: '',
         })}
+        name={screenName.CuisinesAdd}
+        component={CuisinesAdd}
+      />
+      <Stack.Screen
+        options={({ navigation }) => ({
+          ...headerStyleTransparent,
+          headerShown: false,
+          headerTitle: '',
+        })}
         name={screenName.EditFoodDetails}
         component={EditFoodDetails}
       />
@@ -399,6 +410,15 @@ const StackNavigator: FC = () => {
         })}
         name={screenName.StudentCheckOut}
         component={StudentCheckOut}
+      />
+       <Stack.Screen
+        options={({ navigation }) => ({
+          ...headerStyleTransparent,
+          headerShown: false,
+          headerTitle: '',
+        })}
+        name={screenName.FoodCart}
+        component={FoodCart}
       />
     </Stack.Navigator>
   );

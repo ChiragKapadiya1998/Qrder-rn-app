@@ -103,13 +103,13 @@ const FoodDetails = ({ route }) => {
           navigation.goBack();
         }}
         onRightPress={() => {
-          navigation.navigate(screenName.EditFoodDetails, { itemData: itemData })
+          navigation.navigate(screenName.FoodCart)
+          // navigation.navigate(screenName.EditFoodDetails, { itemData: itemData })
         }}
         mainShow={true}
         title={name || strings('foodDetails.food_Details')}
         extraStyle={styles.headerContainer}
-        isHideIcon={true}
-        rightText={!showChef ? strings('foodDetails.edit') : ""}
+        isHideIcon={false}
       />
       <KeyboardAwareScrollView
         keyboardShouldPersistTaps={'handled'}
@@ -213,19 +213,19 @@ const FoodDetails = ({ route }) => {
           /> : null}
         <Spacer height={20} />
       </KeyboardAwareScrollView>
-
-      <View style={styles.buyNowView}>
-        <View>
-          <Text style={styles.pricesText}>{'price'}</Text>
-          <Text style={styles.prText}>{`₹${price}`}</Text>
-        </View>
-        <PrimaryButton
-          extraStyle={styles.buyNowBtn}
-          onPress={onPressAddCard}
-          title={strings('addFoodList.buy_now')}
-          titleStyle={styles.buyNowText}
-        />
-      </View>
+      {showAddToCard ?
+        <View style={styles.buyNowView}>
+          <View>
+            <Text style={styles.pricesText}>{'price'}</Text>
+            <Text style={styles.prText}>{`₹${price}`}</Text>
+          </View>
+          <PrimaryButton
+            extraStyle={styles.buyNowBtn}
+            onPress={onPressAddCard}
+            title={strings('addFoodList.buy_now')}
+            titleStyle={styles.buyNowText}
+          />
+        </View> : null}
     </View>
   );
 };

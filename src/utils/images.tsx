@@ -86,6 +86,7 @@ export const Icons = {
   addItemIcon: require('../assets/Icons/add_item.png'),
   editItemIcon: require('../assets/Icons/edit_item.png'),
   deleteItemIcon: require('../assets/Icons/delete_Item.png'),
+  bagIcon: require('../assets/Icons/bag_icon.png'),
 
 
   //tab

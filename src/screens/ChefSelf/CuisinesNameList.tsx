@@ -8,8 +8,8 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import React, { useEffect, useState } from 'react';
-import { useIsFocused, useNavigation, useTheme } from '@react-navigation/native';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useFocusEffect, useIsFocused, useNavigation, useTheme } from '@react-navigation/native';
 import { commonFontStyle, hp, wp } from '../../theme/fonts';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import HomeHeader from '../../compoment/HomeHeader';
@@ -46,12 +46,19 @@ const CuisinesNameList = (props: Props) => {
   const isFocused = useIsFocused()
 
   const closeModal = () => {
-    setVisible(false);
+    setVisible(false); 
   };
 
-  useEffect(() => {
-    setGetAllData(getCuisines)
-  }, [getCuisines?.length, isFocused])
+  useFocusEffect(
+    useCallback(() => {
+      setGetAllData(getCuisines)
+    }, [isFocused,getCuisines?.length])
+  );
+
+
+  // useEffect(() => {
+  //   setGetAllData(getCuisines)
+  // }, [getCuisines?.length, isFocused])
 
   const removeMenuCardList = () => {
     let UserInfo = {
@@ -111,7 +118,7 @@ const CuisinesNameList = (props: Props) => {
           navigation.goBack();
         }}
         onRightPress={() => {
-          navigation.navigate(screenName.CuisinesEdit);
+          navigation.navigate(screenName.CuisinesAdd);
           // setNewFolder(true)
         }}
         mainShow={true}
@@ -153,7 +160,7 @@ const CuisinesNameList = (props: Props) => {
                 <CuisinesNameCardList
                   item={item}
                   onPressEdit={() => {
-                    setEditFolder(true);
+                    navigation.navigate(screenName.CuisinesEdit, { selectList: item });
                     setSelectItem(item);
                   }}
                   setDelete={() => {
@@ -171,7 +178,7 @@ const CuisinesNameList = (props: Props) => {
             }}
           />)}
       </View>
-      <AddFolderModal
+      {/* <AddFolderModal
         isVisible={newFolder}
         onClose={() => setNewFolder(false)}
       />
@@ -179,7 +186,7 @@ const CuisinesNameList = (props: Props) => {
         selectItem={selectItem}
         isVisible={editFolder}
         onClose={() => setEditFolder(false)}
-      />
+      /> */}
       <DleleteModal
         title={strings('myMenuList.are_you_sure')}
         rightText={strings('myMenuList.yes')}

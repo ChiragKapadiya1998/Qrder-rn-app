@@ -77,6 +77,7 @@ export const light_theme = {
   border_gray: '#DDDDDD',
   btn_bg: '#DDDDDD',
   blue: '#0162DD',
+  green_text: '#1CAA50'
 };
 
 export const dark_theme = {
@@ -154,4 +155,5 @@ export const dark_theme = {
   btn_bg: '#0C0F14',
   border_gray: '#50555C',
   blue: '#0162DD',
+  green_text: '#1CAA50'
 };

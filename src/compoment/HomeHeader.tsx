@@ -32,7 +32,7 @@ type HomeProps = {
   rightTextStyle: any;
   isCardIcon?: boolean;
   isCreateIcon?: boolean,
-  createText?:string
+  createText?: string
 };
 
 const HomeHeader = ({
@@ -83,7 +83,10 @@ const HomeHeader = ({
                 {rightText}
               </Text>
             ) : (
-              <Image source={Icons?.option} style={styles?.header_logo} />
+              <View style={styles.bagView}>
+                <Image source={Icons?.bagIcon} style={styles?.bag_logo} />
+              </View>
+
             )}
           </TouchableOpacity>
         ) : null}
@@ -143,11 +146,18 @@ const getGlobalStyles = (props: any) => {
       flexDirection: 'row',
       alignItems: 'center',
     },
-    header_logo: {
-      width: wp(45),
-      height: wp(45),
-      borderRadius: wp(45),
+    bag_logo: {
+      width: 30,
+      height: 30,
       resizeMode: 'contain',
+    },
+    bagView:{
+      height:hp(35),
+      width: wp(35),
+      borderRadius:10,
+      backgroundColor:colors.cards_bg,
+      alignItems:'center',
+      justifyContent:'center'
     },
     arrow_down: {
       width: wp(9),
@@ -223,22 +233,22 @@ const getGlobalStyles = (props: any) => {
     cardText: {
       ...commonFontStyle(700, 10, colors.white),
     },
-    createText:{
-      marginLeft:wp(8),
+    createText: {
+      marginLeft: wp(8),
       ...commonFontStyle(600, 12, colors.defult_white),
     },
     createView: {
       backgroundColor: colors.text_orange,
-      flexDirection:'row',
-      alignItems:'center',
-      paddingHorizontal:wp(10),
-      paddingVertical:hp(8),
+      flexDirection: 'row',
+      alignItems: 'center',
+      paddingHorizontal: wp(10),
+      paddingVertical: hp(8),
       borderRadius: 8,
     },
     addItemIcon: {
       width: 12,
       height: 12,
-      tintColor:colors.defult_white
+      tintColor: colors.defult_white
     }
   });
 };

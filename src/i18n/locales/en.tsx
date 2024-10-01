@@ -114,6 +114,8 @@ export default {
     select_university: 'Select University/college',
     p_password: 'Enter Password',
     p_confirm_password: 'Enter Confirm Password',
+    add_address:'Add address',
+    pay_now:'Pay Now'
   },
   Phone_number_verification: {
     verification: 'Check your email',
@@ -224,6 +226,7 @@ export default {
     basic_details: 'Basic Details',
     description: 'Description',
     no_data_found: 'No Data Found',
+    food_cart:'Food Cart'
   },
   profileScreen: {
     profile: 'Profile',
