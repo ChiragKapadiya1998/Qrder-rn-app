@@ -157,12 +157,15 @@ const Home = (props: Props) => {
       <ScrollView style={{flex: 1}}>
         <ImageBackground
           source={Icons.banner}
-          resizeMode="contain"
+          resizeMode="stretch"
           style={{
-            width: SCREEN_WIDTH,
-            height: SCREEN_HEIGHT * 0.133,
+            width: SCREEN_WIDTH * 0.94,
+            height: SCREEN_HEIGHT * 0.13,
             marginVertical: 12,
             justifyContent: 'center',
+            marginHorizontal: wp(20),
+            alignSelf: 'center',
+            top: -10,
           }}>
           <Text style={styles.bannerText}>50%</Text>
         </ImageBackground>
@@ -275,7 +278,7 @@ const getGlobalStyles = (props: any) => {
       alignItems: 'center',
       alignSelf: 'center',
       justifyContent: 'space-between',
-      marginVertical: 10,
+      marginVertical: 0,
       marginHorizontal: hp(20),
     },
     headerView: {

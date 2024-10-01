@@ -12,10 +12,10 @@ import {
   ViewStyle,
 } from 'react-native';
 import React from 'react';
-import { useIsFocused, useTheme } from '@react-navigation/native';
-import { commonFontStyle, hp, SCREEN_WIDTH, wp } from '../theme/fonts';
-import { Icons } from '../utils/images';
-import { useAppSelector } from '../redux/hooks';
+import {useIsFocused, useTheme} from '@react-navigation/native';
+import {commonFontStyle, hp, SCREEN_WIDTH, wp} from '../theme/fonts';
+import {Icons} from '../utils/images';
+import {useAppSelector} from '../redux/hooks';
 
 type Props = {
   placeholder: string;
@@ -38,8 +38,8 @@ type Props = {
   onFocus?: any;
   searchData?: any;
   showListView?: boolean;
-  setShowListView?: any
-  isShowLabel?: boolean
+  setShowListView?: any;
+  isShowLabel?: boolean;
 };
 
 const Input = ({
@@ -66,17 +66,31 @@ const Input = ({
   isShowLabel = false,
   ...rest
 }: Props) => {
-  const { colors } = useTheme();
-  const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
+  const {colors} = useTheme();
+  const styles = React.useMemo(() => getGlobalStyles({colors}), [colors]);
 
   return (
-    <View style={[styles.container, extraStyle,{ marginTop: isShowLabel ? hp(16) : hp(8)}]}>
-      {isShowLabel ?
+    <View
+      style={[
+        styles.container,
+        extraStyle,
+        {marginTop: isShowLabel ? hp(16) : hp(8)},
+      ]}>
+      {isShowLabel ? (
         <Text numberOfLines={1} style={styles.labelTextStyle}>
           {label}
-        </Text> : null}
+        </Text>
+      ) : null}
 
-      <View style={[styles.firstThemeContainer, inputStyle]}>
+      <View
+        style={[
+          styles.firstThemeContainer,
+          inputStyle,
+          {
+            borderColor:
+              value?.length == 0 ? colors.border_line4 : colors.text_orange,
+          },
+        ]}>
         <TextInput
           {...rest}
           ref={inputRef}
@@ -111,8 +125,8 @@ const Input = ({
           style={styles.listView}>
           <FlatList
             data={searchData}
-            contentContainerStyle={{ flex: 1 }}
-            renderItem={({ item, index }) => {
+            contentContainerStyle={{flex: 1}}
+            renderItem={({item, index}) => {
               return (
                 <TouchableOpacity
                   onPress={() => {
@@ -139,7 +153,7 @@ const Input = ({
 export default Input;
 
 const getGlobalStyles = (props: any) => {
-  const { colors } = props;
+  const {colors} = props;
   return StyleSheet.create({
     container: {
       marginTop: hp(8),
@@ -182,6 +196,6 @@ const getGlobalStyles = (props: any) => {
       height: 250,
       borderWidth: 1,
       borderColor: colors.gray_200,
-    }
+    },
   });
 };

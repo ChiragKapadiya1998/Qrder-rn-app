@@ -44,6 +44,7 @@ const AddFoodDetails = () => {
   const [itemName, setItemName] = useState('');
   const [price, setPrice] = useState('');
   const [basicDetails, setBasicDetails] = useState('');
+  const [percentageInput, setPercentageInput] = useState('');
   const [images, setImages] = useState([]);
   const [quantityValue, setQuantityValue] = useState(0);
   const {getCuisines, getMiscellaneous} = useAppSelector(state => state.data);
@@ -356,10 +357,19 @@ const AddFoodDetails = () => {
           <Text style={styles.textStyle}>
             {strings('addFoodList.TaxPercentage')}
           </Text>
-          <View style={styles.PercentageInput}>
+          <View
+            style={[
+              styles.PercentageInput,
+              {
+                borderColor:
+                  percentageInput?.length == 0
+                    ? colors.border_line4
+                    : colors.text_orange,
+              },
+            ]}>
             <TextInput
-              value={basicDetails}
-              onChangeText={(t: string) => setBasicDetails(t)}
+              value={percentageInput}
+              onChangeText={(t: string) => setPercentageInput(t)}
               placeholder={strings('addFoodList.add_basic')}
               style={styles.inputTaxPercentage}
               placeholderTextColor={colors.title_dec100}
@@ -392,13 +402,29 @@ const AddFoodDetails = () => {
             maxLength={200}
             placeholderTextColor={colors.gray_300}
           />
-          <PrimaryButton
+          {/* <PrimaryButton
             extraStyle={styles.saveChangeButton}
             onPress={onPressAddItem}
             title={strings('addFoodList.save_changes')}
             titleStyle={styles.saveText}
             isLoading={loading}
-          />
+          /> */}
+          <View style={styles.buttonContainer}>
+            <PrimaryButton
+              extraStyle={styles.submitButton}
+              onPress={onPressAddItem}
+              title={strings('CuisinesNameList.submit')}
+              titleStyle={styles.submitText}
+              isLoading={loading}
+            />
+            <Spacer width={16} />
+            <PrimaryButton
+              extraStyle={styles.cancelBtn}
+              // onPress={onPressEditDone}
+              title={strings('CuisinesNameList.cancel')}
+              titleStyle={styles.cancelText}
+            />
+          </View>
           <View style={styles.spacerView} />
         </KeyboardAwareScrollView>
       </View>
@@ -606,7 +632,7 @@ const getGlobalStyles = (props: any) => {
       alignItems: 'center',
       height: hp(56),
       borderRadius: 32,
-      borderColor: colors.title_dec100,
+      borderColor: colors.border_line4,
       paddingHorizontal: 20,
     },
     inputTaxPercentage: {
@@ -623,6 +649,35 @@ const getGlobalStyles = (props: any) => {
     },
     text1: {
       ...commonFontStyle(500, 14, colors.title_dec),
+    },
+
+    buttonContainer: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      // paddingHorizontal: wp(20),
+      paddingTop: hp(40),
+    },
+    submitButton: {
+      flex: 1,
+      borderRadius: 15,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    cancelBtn: {
+      flex: 1,
+      borderRadius: 15,
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: colors.white,
+      borderColor: colors.text_gray,
+      borderWidth: 1,
+    },
+    submitText: {
+      ...commonFontStyle(600, 18, colors.defult_white),
+    },
+    cancelText: {
+      ...commonFontStyle(600, 18, colors.title_dec100),
     },
   });
 };

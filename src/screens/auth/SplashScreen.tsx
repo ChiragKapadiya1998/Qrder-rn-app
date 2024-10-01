@@ -53,7 +53,7 @@ const SplashScreen = (props: Props) => {
         // dispatchNavigation(screenName.StudentSelect);
       }
     } else {
-      dispatchNavigation(screenName.RoleSelectionScreen);
+      dispatchNavigation(screenName.SignInScreen);
     }
   };
 

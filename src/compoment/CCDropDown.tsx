@@ -9,11 +9,11 @@ import {
   ViewStyle,
 } from 'react-native';
 import React from 'react';
-import { Dropdown } from 'react-native-element-dropdown';
-import { Icons } from '../utils/images';
-import { commonFontStyle, hp, wp } from '../theme/fonts';
-import { useTheme } from '@react-navigation/native';
-import { light_theme } from '../theme/colors';
+import {Dropdown} from 'react-native-element-dropdown';
+import {Icons} from '../utils/images';
+import {commonFontStyle, hp, wp} from '../theme/fonts';
+import {useTheme} from '@react-navigation/native';
+import {light_theme} from '../theme/colors';
 
 type InputProps = {
   placeholder: string;
@@ -36,7 +36,7 @@ type InputProps = {
   valueField?: any;
   labelTextStyle?: ViewStyle;
   extraStyle?: ViewStyle;
-  isShowLabel?: boolean
+  isShowLabel?: boolean;
 };
 
 const CCDropDown = ({
@@ -57,18 +57,32 @@ const CCDropDown = ({
   isShowLabel = false,
   ...rest
 }: InputProps) => {
-  const { colors, isDark } = useTheme();
-  const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
-  return (
-    <View style={[styles.container, extraStyle,{   marginTop: isShowLabel ? hp(16) : hp(0),}]}>
+  const {colors, isDark} = useTheme();
+  const styles = React.useMemo(() => getGlobalStyles({colors}), [colors]);
 
-      {isShowLabel ?
+  console.log('value', value);
+
+  return (
+    <View
+      style={[
+        styles.container,
+        extraStyle,
+        {marginTop: isShowLabel ? hp(16) : hp(0)},
+      ]}>
+      {isShowLabel ? (
         <Text numberOfLines={1} style={[styles.labelTextStyle, labelTextStyle]}>
           {label}
-        </Text> : null}
+        </Text>
+      ) : null}
 
       <Dropdown
-        style={[styles.dropdown, DropDownStyle]}
+        style={[
+          styles.dropdown,
+          DropDownStyle,
+          {
+            borderColor: value == 0 ? colors.border_line4 : colors.text_orange,
+          },
+        ]}
         placeholderStyle={styles.placeholderStyle}
         iconStyle={styles.iconStyle}
         data={data}
@@ -89,7 +103,7 @@ const CCDropDown = ({
             style={styles.downIcon}
           />
         )}
-        containerStyle={{ backgroundColor: colors.input_bg, }}
+        containerStyle={{backgroundColor: colors.input_bg}}
         activeColor={colors.input_bg}
       />
     </View>
@@ -97,14 +111,14 @@ const CCDropDown = ({
 };
 
 const getGlobalStyles = (props: any) => {
-  const { colors } = props;
+  const {colors} = props;
   return StyleSheet.create({
     container: {
       marginTop: hp(40),
     },
     labelTextStyle: {
       ...commonFontStyle(500, 14, colors.black),
-      marginBottom: hp(8)
+      marginBottom: hp(8),
     },
     inputStyle: {
       flex: 1,
@@ -135,8 +149,8 @@ const getGlobalStyles = (props: any) => {
       width: 13,
       height: 13,
       resizeMode: 'contain',
-      tintColor: colors.icon_tin
-    }
+      tintColor: colors.icon_tin,
+    },
   });
 };
 

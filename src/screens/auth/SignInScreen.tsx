@@ -54,7 +54,7 @@ const SignInScreen = (props: Props) => {
 
   const navigation = useNavigation();
 
-  console.log('params?.role', params?.role);
+  console.log('params?.role selectRole', selectRole);
 
   const dispatch = useAppDispatch();
   const onPressLogin = () => {
@@ -78,13 +78,13 @@ const SignInScreen = (props: Props) => {
       var data = new FormData();
       data.append('email', email);
       data.append('password', password);
-      data.append('role', params?.role.toLowerCase());
+      data.append('role', selectRole.toLowerCase());
       let obj = {
         data,
         onSuccess: () => {
-          if (params?.role == 'Admin') {
+          if (selectRole == 'Admin') {
             dispatchNavigation(screenName.BottomTabBar);
-          } else if (params?.role == 'Staff') {
+          } else if (selectRole == 'Staff') {
             dispatchNavigation(screenName.ChefSelfBottomBar);
           } else {
             dispatchNavigation(screenName.StudentSelect);
@@ -131,13 +131,13 @@ const SignInScreen = (props: Props) => {
         ...userInfo,
         user: {
           ...userInfo.user,
-          role: params?.role.toLowerCase(),
+          role: selectRole.toLowerCase(),
         },
       };
       let userObj = {
         data: googleUser,
         onSuccess: () => {
-          if (params?.role == 'Admin') {
+          if (selectRole == 'Admin') {
             dispatchNavigation(screenName.BottomTabBar);
           } else {
             dispatchNavigation(screenName.StudentSelect);
@@ -221,7 +221,7 @@ const SignInScreen = (props: Props) => {
                 {strings('login.remember_me')}
               </Text>
             </View> */}
-            {(params?.role == 'Admin' || params?.role == 'Student') && (
+            {(selectRole == 'Admin' || selectRole == 'Student') && (
               <TouchableOpacity
                 onPress={() => navigation.navigate(screenName.ForgotScreen)}>
                 <Text style={styles.forgotText}>
@@ -236,11 +236,11 @@ const SignInScreen = (props: Props) => {
             onPress={onPressLogin}
             title={strings('login.login_in')}
           />
-          {params?.role == 'Admin' || params?.role == 'Student' ? (
+          {selectRole == 'Student' ? (
             <Text style={styles.orContinueText}>{strings('login.or')}</Text>
           ) : null}
 
-          {params?.role == 'Admin' || params?.role == 'Student' ? (
+          {selectRole == 'Student' ? (
             <View>
               {/* <TouchableOpacity
               style={[
@@ -263,7 +263,7 @@ const SignInScreen = (props: Props) => {
           ) : null}
         </KeyboardAwareScrollView>
       </View>
-      {params?.role == 'Admin' || params?.role == 'Student' ? (
+      {selectRole == 'Admin' || selectRole == 'Student' ? (
         <>
           <TouchableOpacity onPress={onPressSignUp} style={{bottom: 10}}>
             <Text style={styles.bottomText}>

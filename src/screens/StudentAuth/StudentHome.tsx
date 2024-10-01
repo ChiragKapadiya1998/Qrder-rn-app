@@ -18,6 +18,8 @@ import NoDataFound from '../../compoment/NoDataFound';
 import {screenName} from '../../navigation/screenNames';
 import {getCardAction} from '../../actions/cardAction';
 import CardView from '../../compoment/CardView';
+import {getUniversityDataAction} from '../../actions/commonAction';
+import {getAsyncUserInfo} from '../../utils/asyncStorageManager';
 
 const StudentHome = () => {
   const {colors} = useTheme();
@@ -37,7 +39,20 @@ const StudentHome = () => {
 
   useEffect(() => {
     getCardDatas();
+    onGetData();
   }, [isFocuse]);
+
+  const onGetData = async () => {
+    const userDetails = await getAsyncUserInfo();
+    console.log('userDetails', userDetails);
+
+    let obj = {
+      // params:selectRole,
+      onSuccess: (res: any) => {},
+      onFailure: (Err: any) => {},
+    };
+    // dispatch(getUniversityDataAction(obj));
+  };
 
   const getCardDatas = () => {
     let obj = {
