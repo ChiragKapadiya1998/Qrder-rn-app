@@ -80,7 +80,7 @@ const CCDropDown = ({
           styles.dropdown,
           DropDownStyle,
           {
-            borderColor: value == 0 ? colors.border_line4 : colors.text_orange,
+            borderColor: value == 0 ? colors.text_border : colors.text_orange,
           },
         ]}
         placeholderStyle={styles.placeholderStyle}

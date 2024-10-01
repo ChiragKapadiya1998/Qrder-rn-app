@@ -23,7 +23,7 @@ import { clearAsync, getAsyncUserInfo } from '../../utils/asyncStorageManager';
 import { dispatchNavigation } from '../../utils/globalFunctions';
 import { useAppSelector } from '../../redux/hooks';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
-import LogOutModal from '../../compoment/LogOutModal';
+import LogOutModal from '../../compoment/GeneralModal';
 
 type Props = {};
 

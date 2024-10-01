@@ -56,6 +56,12 @@ import ChefNotification from '../screens/ChefSelf/ChefNotification';
 import CuisinesEdit from '../screens/ChefSelf/CuisinesEdit';
 import CuisinesAdd from '../screens/ChefSelf/CuisinesAdd';
 import FoodCart from '../screens/StudentAuth/FoodCart';
+import Support from '../screens/ChefSettings/Support';
+import RecipesMastersList from '../screens/ChefSettings/RecipesMasters';
+import EditRecipesMasters from '../screens/ChefSettings/EditRecipesMasters';
+import AddRecipesMasters from '../screens/ChefSettings/AddRecipesMasters';
+import MiscellaneousList from '../screens/Chef/MiscellaneousList';
+import EditMiscellaneous from '../screens/Chef/EditMiscellaneous';
 
 const Drawer = createDrawerNavigator();
 const { StatusBarManager } = NativeModules;
@@ -332,7 +338,42 @@ const StackNavigator: FC = () => {
         name={screenName.EditFoodDetails}
         component={EditFoodDetails}
       />
-
+      <Stack.Screen
+        options={({ navigation }) => ({
+          ...headerStyleTransparent,
+          headerShown: false,
+          headerTitle: '',
+        })}
+        name={screenName.Support}
+        component={Support}
+      />
+      <Stack.Screen
+        options={({ navigation }) => ({
+          ...headerStyleTransparent,
+          headerShown: false,
+          headerTitle: '',
+        })}
+        name={screenName.RecipesMastersList}
+        component={RecipesMastersList}
+      />
+      <Stack.Screen
+        options={({ navigation }) => ({
+          ...headerStyleTransparent,
+          headerShown: false,
+          headerTitle: '',
+        })}
+        name={screenName.EditRecipesMasters}
+        component={EditRecipesMasters}
+      />
+      <Stack.Screen
+        options={({ navigation }) => ({
+          ...headerStyleTransparent,
+          headerShown: false,
+          headerTitle: '',
+        })}
+        name={screenName.AddRecipesMasters}
+        component={AddRecipesMasters}
+      />
       {/* // chefSell */}
 
       <Stack.Screen
@@ -411,7 +452,7 @@ const StackNavigator: FC = () => {
         name={screenName.StudentCheckOut}
         component={StudentCheckOut}
       />
-       <Stack.Screen
+      <Stack.Screen
         options={({ navigation }) => ({
           ...headerStyleTransparent,
           headerShown: false,
@@ -419,6 +460,24 @@ const StackNavigator: FC = () => {
         })}
         name={screenName.FoodCart}
         component={FoodCart}
+      />
+      <Stack.Screen
+        options={({ navigation }) => ({
+          ...headerStyleTransparent,
+          headerShown: false,
+          headerTitle: '',
+        })}
+        name={screenName.MiscellaneousList}
+        component={MiscellaneousList}
+      />
+        <Stack.Screen
+        options={({ navigation }) => ({
+          ...headerStyleTransparent,
+          headerShown: false,
+          headerTitle: '',
+        })}
+        name={screenName.EditMiscellaneous}
+        component={EditMiscellaneous}
       />
     </Stack.Navigator>
   );

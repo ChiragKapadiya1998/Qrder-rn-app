@@ -23,7 +23,7 @@ import { clearAsync, getAsyncUserInfo } from '../../utils/asyncStorageManager';
 import { dispatchNavigation } from '../../utils/globalFunctions';
 import { useAppSelector } from '../../redux/hooks';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
-import LogOutModal from '../../compoment/LogOutModal';
+import GeneralModal from '../../compoment/GeneralModal';
 
 type Props = {};
 
@@ -38,6 +38,8 @@ const Profile = (props: Props) => {
   const [visible, setVisible] = useState(false);
   const [userData, setUserData] = useState < any > ({});
   const [photoUri, setPhotoUri] = useState(null);
+  const [discountModal, setDiscountModal] = useState(false);
+  const [lotSizeModal, setLotSizeModal] = useState(false);
 
 
   const fetchUserInfo = async () => {
@@ -80,6 +82,10 @@ const Profile = (props: Props) => {
       navigation.navigate(list, { hideEdit: false, userData: userData });
     } else if (list === 'log Out') {
       setVisible(true);
+    } else if(list === 'Discount'){
+      setDiscountModal(true)
+    } else if(list === 'Review'){
+      setLotSizeModal(true)
     } else {
       list !== '' && navigation.navigate(list);
     }
@@ -87,6 +93,8 @@ const Profile = (props: Props) => {
 
   const closeModal = () => {
     setVisible(false);
+    setDiscountModal(false)
+    setLotSizeModal(false)
   };
 
   const onPressLogOut = async () => {
@@ -94,6 +102,11 @@ const Profile = (props: Props) => {
     await GoogleSignin.signOut();
     setVisible(false);
   }
+
+  const onPressDiscount = () => {
+    setDiscountModal(false)
+  }
+
 
   return (
     <View style={styles.container}>
@@ -153,7 +166,7 @@ const Profile = (props: Props) => {
             {
               title: strings('profileScreen.recipes_master'),
               iconName: Icons.inventory,
-              screens: ''
+              screens: screenName.RecipesMastersList
             },
             {
               title: strings('profileScreen.chef'),
@@ -185,17 +198,17 @@ const Profile = (props: Props) => {
             {
               title: strings('profileScreen.review'),
               iconName: Icons.stareIcon,
-              screens: ""
+              screens: "Review"
             },
             {
               title: strings('profileScreen.discount'),
               iconName: Icons.discountIcon,
-              screens: ""
+              screens: "Discount"
             },
             {
               title: strings('profileScreen.support'),
               iconName: Icons.supportIcon,
-              screens: ""
+              screens: screenName.Support
             },
             {
               title: strings('profileScreen.privacy_policy'),
@@ -237,13 +250,32 @@ const Profile = (props: Props) => {
         <Spacer height={hp(90)} />
       </KeyboardAwareScrollView>
 
-      <LogOutModal
+      <GeneralModal
         title={strings('Settings.logoutDes')}
         rightText={strings('Settings.delete')}
         leftText={strings('Settings.cancel')}
         visible={visible}
         closeModal={() => closeModal()}
         onPressDelete={() => onPressLogOut()}
+        isShowLogOut={true}
+      />
+      <GeneralModal
+        title={strings('Settings.logoutDes')}
+        rightText={strings('CuisinesNameList.submit')}
+        leftText={strings('Settings.cancel')}
+        visible={discountModal}
+        closeModal={() => closeModal()}
+        onPressDelete={() => onPressDiscount()}
+        isShowDiscount={true}
+      />
+      <GeneralModal
+        title={strings('Settings.logoutDes')}
+        rightText={strings('CuisinesNameList.submit')}
+        leftText={strings('Settings.cancel')}
+        visible={lotSizeModal}
+        closeModal={() => closeModal()}
+        onPressDelete={() => onPressDiscount()}
+        isShowLotSize={true}
       />
     </View>
   );

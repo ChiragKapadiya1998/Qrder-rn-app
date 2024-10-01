@@ -31,6 +31,12 @@ export const screenName = {
   OrderHistory: 'OrderHistory',
   CuisinesEdit:'CuisinesEdit',
   CuisinesAdd:'CuisinesAdd',
+  Support:'Support',
+  RecipesMastersList:'RecipesMastersList',
+  EditRecipesMasters:'EditRecipesMasters',
+  AddRecipesMasters:'AddRecipesMasters',
+  MiscellaneousList:'MiscellaneousList',
+  EditMiscellaneous:'EditMiscellaneous',
 
   //chefSignUp
 

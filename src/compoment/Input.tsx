@@ -88,7 +88,7 @@ const Input = ({
           inputStyle,
           {
             borderColor:
-              value?.length == 0 ? colors.border_line4 : colors.text_orange,
+              value?.length == 0 ? colors.text_border : colors.text_orange,
           },
         ]}>
         <TextInput

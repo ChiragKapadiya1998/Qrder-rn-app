@@ -10,25 +10,25 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
-import {useIsFocused, useNavigation, useTheme} from '@react-navigation/native';
+import React, { useEffect, useState } from 'react';
+import { useIsFocused, useNavigation, useTheme } from '@react-navigation/native';
 import HomeHeader from '../../compoment/HomeHeader';
-import {strings} from '../../i18n/i18n';
+import { strings } from '../../i18n/i18n';
 import Input from '../../compoment/Input';
-import {commonFontStyle, hp, isIos, SCREEN_WIDTH, wp} from '../../theme/fonts';
-import {Icons} from '../../utils/images';
+import { commonFontStyle, hp, isIos, SCREEN_WIDTH, wp } from '../../theme/fonts';
+import { Icons } from '../../utils/images';
 import ImagePicker from 'react-native-image-crop-picker';
 import CCDropDown from '../../compoment/CCDropDown';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import PrimaryButton from '../../compoment/PrimaryButton';
-import {useAppDispatch, useAppSelector} from '../../redux/hooks';
-import {addMenuAction} from '../../actions/menuAction';
-import {errorToast} from '../../utils/commonFunction';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import { addMenuAction } from '../../actions/menuAction';
+import { errorToast } from '../../utils/commonFunction';
 import moment = require('moment');
 import AddFolderModal from '../../compoment/AddFolderModal';
 import Spacer from '../../compoment/Spacer';
-import {getCuisinesAction} from '../../actions/cuisinesAction';
-import {screenName} from '../../navigation/screenNames';
+import { getCuisinesAction } from '../../actions/cuisinesAction';
+import { screenName } from '../../navigation/screenNames';
 
 type DataItem = {
   id: number;
@@ -38,21 +38,21 @@ type DataItem = {
 };
 
 const AddFoodDetails = () => {
-  const {colors} = useTheme();
+  const { colors } = useTheme();
   const navigation = useNavigation();
-  const styles = React.useMemo(() => getGlobalStyles({colors}), [colors]);
+  const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
   const [itemName, setItemName] = useState('');
   const [price, setPrice] = useState('');
   const [basicDetails, setBasicDetails] = useState('');
   const [percentageInput, setPercentageInput] = useState('');
   const [images, setImages] = useState([]);
   const [quantityValue, setQuantityValue] = useState(0);
-  const {getCuisines, getMiscellaneous} = useAppSelector(state => state.data);
+  const { getCuisines, getMiscellaneous } = useAppSelector(state => state.data);
   const dispatch = useAppDispatch();
   const [newFolder, setNewFolder] = useState(false);
   const [showAddField, setShowAddField] = useState(false);
-  const [selectedOption, setSelectedOption] = useState<number | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [selectedOption, setSelectedOption] = useState < number | null > (null);
+  const [loading, setLoading] = useState < boolean > (false);
 
   useEffect(() => {
     getCuisinesList();
@@ -65,8 +65,8 @@ const AddFoodDetails = () => {
         limit: 15,
         pagination: false,
       },
-      onSuccess: (res: any) => {},
-      onFailure: (Err: any) => {},
+      onSuccess: (res: any) => { },
+      onFailure: (Err: any) => { },
     };
     dispatch(getCuisinesAction(obj));
   };
@@ -105,9 +105,9 @@ const AddFoodDetails = () => {
       });
   };
 
-  const renderImage = ({item}: any) => (
+  const renderImage = ({ item }: any) => (
     <View style={styles.imageContainer}>
-      <Image source={{uri: item.uri}} style={styles.imageView} />
+      <Image source={{ uri: item.uri }} style={styles.imageView} />
     </View>
   );
 
@@ -166,7 +166,7 @@ const AddFoodDetails = () => {
     setSelectedOption(value);
   };
 
-  const renderItem: ListRenderItem<DataItem> = ({item}: any) => (
+  const renderItem: ListRenderItem<DataItem> = ({ item }: any) => (
     <View style={styles.radioView}>
       <TouchableOpacity
         key={item.id}
@@ -238,12 +238,12 @@ const AddFoodDetails = () => {
         onBackPress={() => {
           setShowAddField(true);
         }}
-        onRightPress={() => {}}
+        onRightPress={() => { }}
         mainShow={true}
         title={strings('addFoodList.add_items')}
         extraStyle={styles.headerContainer}
         isHideIcon={true}
-        // rightText={strings('addFoodList.reset')}
+      // rightText={strings('addFoodList.reset')}
       />
       <View style={styles.subContainer}>
         <KeyboardAwareScrollView
@@ -253,7 +253,7 @@ const AddFoodDetails = () => {
             {strings('addFoodList.upload_photo_video')}
           </Text>
 
-          <TouchableOpacity onPress={() => {}}>
+          <TouchableOpacity onPress={() => { }}>
             <Image source={Icons.addItem} style={styles.addItem} />
           </TouchableOpacity>
 
@@ -307,11 +307,11 @@ const AddFoodDetails = () => {
           />
           {/* </View> */}
 
-          <Text style={[styles.textStyle, {marginTop: 20}]}>
+          <Text style={[styles.textStyle, { marginTop: 20 }]}>
             {strings('addFoodList.PriceWithTax')}
           </Text>
           <TouchableOpacity
-            style={{flexDirection: 'row', alignItems: 'center', gap: 5}}>
+            style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}>
             <View
               style={{
                 width: 24,
@@ -409,6 +409,13 @@ const AddFoodDetails = () => {
             titleStyle={styles.saveText}
             isLoading={loading}
           /> */}
+          <PrimaryButton
+            extraStyle={styles.submitButton}
+            onPress={() => navigation.navigate(screenName.MiscellaneousList)}
+            title={'Miscellaneous'}
+            titleStyle={styles.submitText}
+            isLoading={loading}
+          />
           <View style={styles.buttonContainer}>
             <PrimaryButton
               extraStyle={styles.submitButton}
@@ -435,7 +442,7 @@ const AddFoodDetails = () => {
 export default AddFoodDetails;
 
 const getGlobalStyles = (props: any) => {
-  const {colors} = props;
+  const { colors } = props;
   return StyleSheet.create({
     container: {
       flex: 1,

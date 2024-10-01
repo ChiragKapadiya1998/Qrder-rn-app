@@ -114,8 +114,8 @@ export default {
     select_university: 'Select University/college',
     p_password: 'Enter Password',
     p_confirm_password: 'Enter Confirm Password',
-    add_address:'Add address',
-    pay_now:'Pay Now'
+    add_address: 'Add address',
+    pay_now: 'Pay Now'
   },
   Phone_number_verification: {
     verification: 'Check your email',
@@ -216,9 +216,9 @@ export default {
     add_basic: 'Write your basic details here...',
     add_to_card: 'ADD TO CARD',
     miscellaneous: 'Miscellaneous',
-    food_review:'Food Review',
-    give_food_rating:'Give Food Rating',
-    buy_now:'Buy Now'
+    food_review: 'Food Review',
+    give_food_rating: 'Give Food Rating',
+    buy_now: 'Buy Now'
   },
   foodDetails: {
     food_Details: 'Food Details',
@@ -226,7 +226,7 @@ export default {
     basic_details: 'Basic Details',
     description: 'Description',
     no_data_found: 'No Data Found',
-    food_cart:'Food Cart'
+    food_cart: 'Food Cart'
   },
   profileScreen: {
     profile: 'Profile',
@@ -327,13 +327,13 @@ export default {
     edit_Cuisines_name: 'Edit Cuisines',
     new_add: 'New Add',
     Search: 'Search here...',
-    create:'Create',
-    names:'Name',
-    action:'Action',
-    add_cuisines:'Add Cuisines',
-    cuisines_name:'Cuisines Name',
-    submit:'Submit',
-    cancel:'Cancel'
+    create: 'Create',
+    names: 'Name',
+    action: 'Action',
+    add_cuisines: 'Add Cuisines',
+    cuisines_name: 'Cuisines Name',
+    submit: 'Submit',
+    cancel: 'Cancel'
   },
   CardMenuList: {
     add: 'Add',
@@ -360,4 +360,39 @@ export default {
     remove: 'Remove',
     sub_total: 'Sub Total',
   },
+  foodCart: {
+    summary: 'Summary',
+    price: 'Price',
+    item: 'item',
+    discount: 'Discount',
+    delivery_charge: 'Delivery Charge',
+    free_delivery: 'Free Delivery',
+    total_pay: 'Total Pay'
+  },
+  supportText: {
+    support: 'Support',
+    type_support: 'Type Support',
+    p_support: 'Select Type Support',
+    text: 'Text',
+    enter_text: 'Enter text',
+    enter_discount: 'Enter Discount',
+    enter_lot_size: 'Enter lot size'
+  },
+  recipesMaster: {
+    edit_recipes_master: 'Edit Recipes Master',
+    recipes_Name: 'Recipes Name',
+    e_recipes_name: 'Enter Recipes Name',
+    material_name: 'Material Name',
+    e_material_name: 'Enter Material Name',
+    stock: 'Stock',
+    e_stock: 'Enter Stock',
+    unit: 'Unit',
+    e_unit: 'Enter Unit'
+  },
+  miscellaneousList:{
+    miscellaneous:'Miscellaneous',
+    add:'Add',
+    price:'Price',
+    miscellaneous_items:'Miscellaneous items'
+  }
 };

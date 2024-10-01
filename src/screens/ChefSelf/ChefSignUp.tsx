@@ -33,7 +33,7 @@ const ChefSignUp = (props: Props) => {
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState < string > ('');
   const [password, setPassword] = useState('');
-  const [salary, setSalary] = useState(0);
+  const [salary, setSalary] = useState('');
   const [rePassword, setRePassword] = useState('');
   const [isShowPassword, setIsShowPassword] = useState < boolean > (true);
   const [reShowPassword, setReShowPassword] = useState < boolean > (true);
@@ -227,7 +227,7 @@ const ChefSignUp = (props: Props) => {
         />
         <Input
           value={salary}
-          returnKeyType="next"
+          autoCorrect={false}
           placeholder={strings('chefSignUp.p_salary')}
           label={strings('chefSignUp.salary')}
           keyboardType="number-pad"
@@ -314,7 +314,7 @@ const getGlobalStyles = (props: any) => {
       marginTop: hp(8),
     },
     inputStyle: {
-      borderColor: colors.text_orange
-  },
+      borderColor: colors.text_border
+    },
   });
 };

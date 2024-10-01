@@ -20,10 +20,12 @@ type ItemProps = {
     item: ListObj;
     setDelete?: any
     onPressEdit?: any
+    isRecipeMaster?: boolean;
+    isShowPrice?: boolean
 };
 
 
-const CuisinesNameCardList = ({ item, setDelete, onPressEdit }: ItemProps) => {
+const CuisinesNameCardList = ({ item, setDelete, onPressEdit, isRecipeMaster = false, isShowPrice = false }: ItemProps) => {
     const { colors } = useTheme();
     const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
     const navigation = useNavigation();
@@ -39,14 +41,16 @@ const CuisinesNameCardList = ({ item, setDelete, onPressEdit }: ItemProps) => {
     };
 
     return (
-        <View style={styles.boxView}>
+        <View style={[styles.boxView]}>
             <View style={styles.subBoxView}>
                 <View style={styles.container}>
-                    <View style={styles.leftView}>
+                    <View style={[styles.leftView, {paddingHorizontal: wp(16) }]}>
                         <View style={styles.viewStyle}>
-                            <Image source={{ uri: item.image }} style={styles.imageStyle} />
+                            {isRecipeMaster ? null :
+                                <Image source={{ uri: item.image }} style={styles.imageStyle} />}
                             <Text style={styles.titleText}> {item?.name}</Text>
                         </View>
+                        {isShowPrice ? <Text style={styles.titleText}> {'50'}</Text> : null}
                         <View style={styles.viewStyle}>
                             <TouchableOpacity onPress={() => onPressEdit()}>
                                 <Image source={Icons.editItemIcon} style={styles.editIcon} />
@@ -57,6 +61,7 @@ const CuisinesNameCardList = ({ item, setDelete, onPressEdit }: ItemProps) => {
                             </TouchableOpacity>
                         </View>
                     </View>
+                    <View style={{ borderBottomColor: colors.image_bg, borderBottomWidth: 1 }} />
                 </View>
             </View >
         </View >
@@ -68,7 +73,7 @@ const getGlobalStyles = (props: any) => {
     const { colors } = props;
     return StyleSheet.create({
         boxView: {
-            marginTop: hp(20),
+            // marginTop: hp(20),
         },
         subBoxView: {
             flexDirection: 'row',
@@ -80,6 +85,7 @@ const getGlobalStyles = (props: any) => {
             flexDirection: 'row',
             justifyContent: 'space-between',
             alignItems: 'center',
+            marginVertical: hp(12)
         },
         imageStyle: {
             width: 16,
@@ -87,7 +93,8 @@ const getGlobalStyles = (props: any) => {
             borderRadius: 16,
             borderWidth: 1,
             borderColor: colors.text_gray,
-            resizeMode: 'cover'
+            resizeMode: 'cover',
+            marginLeft: wp(8),
         },
         editIcon: {
             width: 16,
@@ -99,7 +106,6 @@ const getGlobalStyles = (props: any) => {
             alignItems: 'center'
         },
         titleText: {
-            marginLeft: wp(8),
             ...commonFontStyle(400, 14, colors.title_dec100),
         },
     });
