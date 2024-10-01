@@ -1,15 +1,22 @@
-import { Alert, Image, StatusBar, StyleSheet, TouchableOpacity, View } from 'react-native';
-import React, { useRef, useState } from 'react';
-import { useNavigation, useTheme } from '@react-navigation/native';
-import { hp, wp } from '../../theme/fonts';
+import {
+  Alert,
+  Image,
+  StatusBar,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import React, {useRef, useState} from 'react';
+import {useNavigation, useTheme} from '@react-navigation/native';
+import {hp, wp} from '../../theme/fonts';
 import Input from '../../compoment/Input';
 import PrimaryButton from '../../compoment/PrimaryButton';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import LoginHeader from '../../compoment/LoginHeader';
-import { screenName } from '../../navigation/screenNames';
-import { strings } from '../../i18n/i18n';
+import {screenName} from '../../navigation/screenNames';
+import {strings} from '../../i18n/i18n';
 import CCDropDown from '../../compoment/CCDropDown';
-import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import {useAppDispatch, useAppSelector} from '../../redux/hooks';
 import {
   emailCheck,
   errorToast,
@@ -17,31 +24,31 @@ import {
   specialCarCheck,
   UpperCaseCheck,
 } from '../../utils/commonFunction';
-import { chefsSignUp } from '../../actions/chefsAction';
+import {chefsSignUp} from '../../actions/chefsAction';
 import Spacer from '../../compoment/Spacer';
-import { getAsyncUserInfo } from '../../utils/asyncStorageManager';
-import { dispatchNavigation } from '../../utils/globalFunctions';
+import {getAsyncUserInfo} from '../../utils/asyncStorageManager';
+import {dispatchNavigation} from '../../utils/globalFunctions';
 import HomeHeader from '../../compoment/HomeHeader';
-import { Icons } from '../../utils/images';
+import {Icons} from '../../utils/images';
 
 type Props = {};
 
 const ChefSignUp = (props: Props) => {
-  const { colors, isDark } = useTheme();
-  const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
+  const {colors, isDark} = useTheme();
+  const styles = React.useMemo(() => getGlobalStyles({colors}), [colors]);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState < string > ('');
+  const [phone, setPhone] = useState<string>('');
   const [password, setPassword] = useState('');
   const [salary, setSalary] = useState('');
   const [rePassword, setRePassword] = useState('');
-  const [isShowPassword, setIsShowPassword] = useState < boolean > (true);
-  const [reShowPassword, setReShowPassword] = useState < boolean > (true);
+  const [isShowPassword, setIsShowPassword] = useState<boolean>(true);
+  const [reShowPassword, setReShowPassword] = useState<boolean>(true);
   const [quantityValue, setQuantityValue] = useState(0);
   const [photoUri, setPhotoUri] = useState(null);
   const [loading, setLoading] = useState(false);
-  const { getCuisines } = useAppSelector(state => state.data);
-  const { isDarkTheme } = useAppSelector(state => state.common);
+  const {getCuisines} = useAppSelector(state => state.data);
+  const {isDarkTheme} = useAppSelector(state => state.common);
 
   const navigation = useNavigation();
   const dispatch = useAppDispatch();
@@ -60,7 +67,7 @@ const ChefSignUp = (props: Props) => {
     } else if (phone.trim().length !== 10) {
       errorToast(strings('login.error_v_phone'));
     } else if (salary == 0) {
-      errorToast(strings('login.error_v_phone'));
+      errorToast(strings('login.error_v_salary'));
     } else if (password.trim().length === 0) {
       errorToast(strings('login.error_password'));
     } else if (password.trim().length < 9) {
@@ -77,9 +84,9 @@ const ChefSignUp = (props: Props) => {
       errorToast(strings('login.error_re_tyre_match'));
     } else {
       var data = new FormData();
-      const userDetails = await getAsyncUserInfo()
+      const userDetails = await getAsyncUserInfo();
 
-      data.append('parent_id', userDetails?.id)
+      data.append('parent_id', userDetails?.id);
       data.append('name', name);
       data.append('email', email);
       data.append('cuisine_id', quantityValue);
@@ -97,9 +104,8 @@ const ChefSignUp = (props: Props) => {
           setQuantityValue(0);
           setPhone('');
           setPassword('');
-          setRePassword('')
-          setSalary(0)
-
+          setRePassword('');
+          setSalary(0);
         },
         onFailure: (Err: any) => {
           if (Err != undefined) {
@@ -134,7 +140,10 @@ const ChefSignUp = (props: Props) => {
 
   return (
     <View style={styles.container}>
-      <StatusBar barStyle={isDarkTheme ? 'light-content' : 'dark-content'} backgroundColor={colors.white} />
+      <StatusBar
+        barStyle={isDarkTheme ? 'light-content' : 'dark-content'}
+        backgroundColor={colors.white}
+      />
       <HomeHeader
         onBackPress={() => {
           navigation.goBack();
@@ -150,7 +159,7 @@ const ChefSignUp = (props: Props) => {
         keyboardShouldPersistTaps={'handled'}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.contentContainerStyle}>
-        <View style={styles.profileContainer}>
+        {/* <View style={styles.profileContainer}>
           <View>
             <Image
               source={photoUri ? { uri: photoUri } : Icons.profileImage}
@@ -161,7 +170,7 @@ const ChefSignUp = (props: Props) => {
             </TouchableOpacity>
           </View>
 
-        </View>
+        </View> */}
         <Input
           value={name}
           placeholder={strings('sign_up.p_name')}
@@ -202,6 +211,17 @@ const ChefSignUp = (props: Props) => {
           inputStyle={styles.inputStyle}
         />
         <Input
+          value={salary}
+          autoCorrect={false}
+          placeholder={strings('chefSignUp.p_salary')}
+          label={strings('chefSignUp.salary')}
+          keyboardType="number-pad"
+          maxLength={10}
+          onChangeText={(t: string) => setSalary(t.trim())}
+          isShowLabel={true}
+          inputStyle={styles.inputStyle}
+        />
+        <Input
           value={password}
           autoCorrect={false}
           isShowEyeIcon={true}
@@ -225,17 +245,7 @@ const ChefSignUp = (props: Props) => {
           isShowLabel={true}
           inputStyle={styles.inputStyle}
         />
-        <Input
-          value={salary}
-          autoCorrect={false}
-          placeholder={strings('chefSignUp.p_salary')}
-          label={strings('chefSignUp.salary')}
-          keyboardType="number-pad"
-          maxLength={10}
-          onChangeText={(t: string) => setSalary(t.trim())}
-          isShowLabel={true}
-          inputStyle={styles.inputStyle}
-        />
+
         <PrimaryButton
           extraStyle={styles.signupButton}
           onPress={onPressLogin}
@@ -250,7 +260,7 @@ const ChefSignUp = (props: Props) => {
 export default ChefSignUp;
 
 const getGlobalStyles = (props: any) => {
-  const { colors } = props;
+  const {colors} = props;
   return StyleSheet.create({
     container: {
       flex: 1,
@@ -261,7 +271,7 @@ const getGlobalStyles = (props: any) => {
     },
     rightTextStyle: {
       textDecorationLine: 'underline',
-      textTransform: 'uppercase'
+      textTransform: 'uppercase',
     },
     contentContainerStyle: {
       paddingHorizontal: wp(20),
@@ -274,7 +284,7 @@ const getGlobalStyles = (props: any) => {
       justifyContent: 'center',
     },
     profileContainer: {
-      justifyContent: "center",
+      justifyContent: 'center',
       alignItems: 'center',
     },
     profilImage: {
@@ -296,7 +306,7 @@ const getGlobalStyles = (props: any) => {
       justifyContent: 'center',
       position: 'absolute',
       bottom: 2,
-      right: 0
+      right: 0,
     },
     profileIcon: {
       width: 16,
@@ -314,7 +324,7 @@ const getGlobalStyles = (props: any) => {
       marginTop: hp(8),
     },
     inputStyle: {
-      borderColor: colors.text_border
+      borderColor: colors.text_border,
     },
   });
 };

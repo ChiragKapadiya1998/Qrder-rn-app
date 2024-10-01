@@ -40,8 +40,7 @@ const SplashScreen = (props: Props) => {
   const getUserInfo = async () => {
     let isUser = await getAsyncToken();
     let isRole = await getAsyncRole();
-    // dispatchNavigation(screenName.SignInScreen);
-    console.log('isUser', isUser);
+    console.log('isRole', isRole);
 
     if (isUser) {
       if (isRole == 'Admin') {
@@ -49,8 +48,7 @@ const SplashScreen = (props: Props) => {
       } else if (isRole == 'Staff') {
         dispatchNavigation(screenName.ChefSelfBottomBar);
       } else {
-        dispatchNavigation(screenName.StudentSelect);
-        // dispatchNavigation(screenName.StudentSelect);
+        dispatchNavigation(screenName.StudentBottomBar);
       }
     } else {
       dispatchNavigation(screenName.SignInScreen);

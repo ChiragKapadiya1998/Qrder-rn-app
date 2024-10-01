@@ -34,6 +34,7 @@ import {
 } from '@react-native-google-signin/google-signin';
 import {GOOGLE_WEB_CLINET_ID} from '../../utils/apiConstants';
 import CCDropDown from '../../compoment/CCDropDown';
+import {setAsyncRole} from '../../utils/asyncStorageManager';
 
 type Props = {};
 
@@ -44,7 +45,9 @@ const SignInScreen = (props: Props) => {
   // const [email, setEmail] = useState(__DEV__ ? 'adminstudent@gmail.com' : '');
   // const [email, setEmail] = useState(__DEV__ ? 'ssss@gmail.com' : '');
   const [email, setEmail] = useState(__DEV__ ? 'admin@gmail.com' : '');
+  // const [email, setEmail] = useState(__DEV__ ? 'user03@gmail.com' : '');
   const [password, setPassword] = useState(__DEV__ ? 'Test!@123' : '');
+  // const [password, setPassword] = useState(__DEV__ ? 'Test@1234' : '');
   // const [email, setEmail] = useState('');
   // const [password, setPassword] = useState('');
   const [isShowPassword, setIsShowPassword] = useState<boolean>(true);
@@ -81,13 +84,14 @@ const SignInScreen = (props: Props) => {
       data.append('role', selectRole.toLowerCase());
       let obj = {
         data,
-        onSuccess: () => {
+        onSuccess: async () => {
+          await setAsyncRole(selectRole);
           if (selectRole == 'Admin') {
             dispatchNavigation(screenName.BottomTabBar);
           } else if (selectRole == 'Staff') {
             dispatchNavigation(screenName.ChefSelfBottomBar);
           } else {
-            dispatchNavigation(screenName.StudentSelect);
+            dispatchNavigation(screenName.StudentBottomBar);
           }
           setEmail('');
           setPassword('');
@@ -103,12 +107,16 @@ const SignInScreen = (props: Props) => {
   };
 
   const onPressSignUp = () => {
-    if (selectedRole === 'Admin') {
-      navigation.navigate(screenName.SignUpScreen);
-    }
-    if (selectedRole === 'Student') {
-      navigation.navigate(screenName.StudentSignUp);
-    }
+    console.log('adas', selectedRole);
+    navigation.navigate(screenName.SignUpScreen);
+    // if (selectRole == 'Admin') {
+    //   navigation.navigate(screenName.SignUpScreen);
+    //   return;
+    // }
+    // if (selectRole == 'Student') {
+    //   navigation.navigate(screenName.StudentSignUp);
+    //   return;
+    // }
   };
 
   const googlesignIn = async () => {

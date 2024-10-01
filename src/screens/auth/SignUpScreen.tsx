@@ -7,15 +7,15 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, { useEffect, useState } from 'react';
-import { useNavigation, useTheme } from '@react-navigation/native';
-import { commonFontStyle, hp, wp } from '../../theme/fonts';
+import React, {useEffect, useState} from 'react';
+import {useNavigation, useTheme} from '@react-navigation/native';
+import {commonFontStyle, hp, wp} from '../../theme/fonts';
 import Input from '../../compoment/Input';
 import PrimaryButton from '../../compoment/PrimaryButton';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import LoginHeader from '../../compoment/LoginHeader';
-import { screenName } from '../../navigation/screenNames';
-import { strings } from '../../i18n/i18n';
+import {screenName} from '../../navigation/screenNames';
+import {strings} from '../../i18n/i18n';
 import Spacer from '../../compoment/Spacer';
 import {
   DropDownData,
@@ -26,18 +26,26 @@ import {
   specialCarCheck,
   UpperCaseCheck,
 } from '../../utils/commonFunction';
-import { dispatchNavigation } from '../../utils/globalFunctions';
-import { canteenRegisterSignUp, userSignUp } from '../../actions/authAction';
-import { useAppDispatch, useAppSelector } from '../../redux/hooks';
-import { getCityAction, getUniversitiesDataAction, searchCities } from '../../actions/commonAction';
+import {dispatchNavigation} from '../../utils/globalFunctions';
+import {
+  canteenRegisterSignUp,
+  studentUserSignUp,
+  userSignUp,
+} from '../../actions/authAction';
+import {useAppDispatch, useAppSelector} from '../../redux/hooks';
+import {
+  getCityAction,
+  getUniversitiesDataAction,
+  searchCities,
+} from '../../actions/commonAction';
 import debounce from 'lodash/debounce';
 import CCDropDown from '../../compoment/CCDropDown';
 
 type Props = {};
 
 const SignUpScreen = (props: Props) => {
-  const { colors, isDark } = useTheme();
-  const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
+  const {colors, isDark} = useTheme();
+  const styles = React.useMemo(() => getGlobalStyles({colors}), [colors]);
   const [name, setName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
@@ -54,17 +62,23 @@ const SignUpScreen = (props: Props) => {
   const [country, setCountry] = useState('');
   const [pincode, setPincode] = useState('');
   const [showListView, setShowListView] = useState(false);
-  const { getCity, searchCity } = useAppSelector(state => state.common);
-  const { getUniversitiesData } = useAppSelector(state => state.data);
+  const {getCity, searchCity} = useAppSelector(state => state.common);
+  const {getUniversitiesData} = useAppSelector(state => state.data);
   const [filteredData, setFilteredData] = useState([]);
   const [addressList, setAddressList] = useState([]);
   const [area, setArea] = useState('');
   const [selectedOption, setSelectedOption] = useState('Restaurant');
   const [selectRole, setSelectRole] = useState('');
+  const [selectUniversity, setSelectUniversity] = useState('');
+
+  const [collegeName, setCollegeName] = useState('');
+  const [hostelName, setHostelName] = useState('');
+  const [hostelAddress, setHostelAddress] = useState('');
 
   const options = [
-    { label: strings('sign_up.restaurant'), value: 'Restaurant' },
-    { label: strings('sign_up.canteen'), value: 'Canteen' },
+    {name: strings('sign_up.restaurant'), value: 'Restaurant'},
+    {name: strings('sign_up.canteen'), value: 'Canteen'},
+    {name: strings('sign_up.student'), value: 'Student'},
   ];
 
   const handlePress = value => {
@@ -77,22 +91,22 @@ const SignUpScreen = (props: Props) => {
 
   useEffect(() => {
     // getCityList()
-    getUniversitiesDataPress()
+    getUniversitiesDataPress();
   }, []);
 
   console.log('getUniversitiesData', getUniversitiesData);
 
-
   const getUniversitiesDataPress = () => {
     let obj = {
-      onSuccess: (res: any) => { },
-      onFailure: (Err: any) => { },
+      onSuccess: (res: any) => {},
+      onFailure: (Err: any) => {},
     };
     dispatch(getUniversitiesDataAction(obj));
   };
 
   const emptyFiled = () => {
     setName('');
+    setLastName('');
     setEmail('');
     setPassword('');
     setRePassword('');
@@ -115,8 +129,12 @@ const SignUpScreen = (props: Props) => {
   };
 
   const onPressLogin = () => {
-    if (name.trim().length === 0) {
+    if (selectRole.trim().length === 0) {
+      errorToast(strings('login.error_role'));
+    } else if (name.trim().length === 0) {
       errorToast(strings('login.error_name'));
+    } else if (lastName.trim().length === 0) {
+      errorToast(strings('login.error_nameLastName'));
     } else if (email.trim().length === 0) {
       errorToast(strings('login.error_email'));
     } else if (!emailCheck(email)) {
@@ -127,6 +145,8 @@ const SignUpScreen = (props: Props) => {
       errorToast(strings('login.error_v_phone'));
     } else if (restaurantName.trim().length == 0) {
       errorToast(strings('login.error_restaurantName'));
+    } else if (area.trim().length === 0) {
+      errorToast(strings('login.error_address'));
     } else if (city.trim().length === 0) {
       errorToast(strings('login.error_city'));
     } else if (state.trim().length === 0) {
@@ -152,6 +172,7 @@ const SignUpScreen = (props: Props) => {
     } else {
       var data = new FormData();
       data.append('name', name);
+      data.append('lastname', lastName);
       data.append('email', email);
       data.append('password', password);
       data.append('confirmed', rePassword);
@@ -179,8 +200,12 @@ const SignUpScreen = (props: Props) => {
   };
 
   const onPressCanteenRegister = () => {
-    if (name.trim().length === 0) {
+    if (selectRole.trim().length === 0) {
+      errorToast(strings('login.error_role'));
+    } else if (name.trim().length === 0) {
       errorToast(strings('login.error_name'));
+    } else if (lastName.trim().length === 0) {
+      errorToast(strings('login.error_nameLastName'));
     } else if (email.trim().length === 0) {
       errorToast(strings('login.error_email'));
     } else if (!emailCheck(email)) {
@@ -189,10 +214,12 @@ const SignUpScreen = (props: Props) => {
       errorToast(strings('login.error_phone'));
     } else if (number.trim().length !== 10) {
       errorToast(strings('login.error_v_phone'));
-    } else if (universityName == "") {
+    } else if (universityName == '') {
       errorToast(strings('login.error_v_university'));
     } else if (canteenName.trim().length == 0) {
       errorToast(strings('login.error_v_canteen'));
+    } else if (area.trim().length === 0) {
+      errorToast(strings('login.error_address'));
     } else if (city.trim().length === 0) {
       errorToast(strings('login.error_city'));
     } else if (state.trim().length === 0) {
@@ -216,9 +243,9 @@ const SignUpScreen = (props: Props) => {
     } else if (rePassword.trim() !== password.trim()) {
       errorToast(strings('login.error_re_tyre_match'));
     } else {
-
       var data = new FormData();
       data.append('name', name);
+      data.append('lastname', lastName);
       data.append('email', email);
       data.append('password', password);
       data.append('confirmed', rePassword);
@@ -234,7 +261,6 @@ const SignUpScreen = (props: Props) => {
       let obj = {
         data,
         onSuccess: (response: any) => {
-          console.log('response data', response);
           dispatchNavigation(screenName.BottomTabBar);
         },
         onFailure: (Err: any) => {
@@ -247,10 +273,79 @@ const SignUpScreen = (props: Props) => {
     }
   };
 
+  const onPressLoginStudent = () => {
+    if (selectRole.trim().length === 0) {
+      errorToast(strings('login.error_role'));
+    } else if (selectUniversity === '') {
+      errorToast(strings('StudentSignUp.error_university'));
+    } else if (name.trim().length === 0) {
+      errorToast(strings('login.error_name'));
+    } else if (lastName.trim().length === 0) {
+      errorToast(strings('login.error_nameLastName'));
+    } else if (email.trim().length === 0) {
+      errorToast(strings('login.error_email'));
+    } else if (!emailCheck(email)) {
+      errorToast(strings('login.error_v_email'));
+    } else if (number.trim().length === 0) {
+      errorToast(strings('login.error_phone'));
+    } else if (number.trim().length !== 10) {
+      errorToast(strings('login.error_v_phone'));
+    } else if (collegeName.trim().length == 0) {
+      errorToast(strings('StudentSignUp.error_colleg_name'));
+    } else if (hostelName.trim().length === 0) {
+      errorToast(strings('StudentSignUp.error_hostel'));
+    } else if (hostelAddress.trim().length === 0) {
+      errorToast(strings('StudentSignUp.error_hostel_address'));
+    } else if (password.trim().length === 0) {
+      errorToast(strings('login.error_password'));
+    } else if (password.trim().length < 9) {
+      errorToast(strings('login.error_v_password'));
+    } else if (!numberCheck(password)) {
+      errorToast(strings('login.error_number_password'));
+    } else if (!specialCarCheck(password)) {
+      errorToast(strings('login.error_character_password'));
+    } else if (!UpperCaseCheck(password)) {
+      errorToast(strings('login.error_uppercase_password'));
+    } else if (rePassword.trim().length === 0) {
+      errorToast(strings('login.error_re_tyre'));
+    } else if (rePassword.trim() !== password.trim()) {
+      errorToast(strings('login.error_re_tyre_match'));
+    } else {
+      var data = new FormData();
+      data.append('name', name);
+      data.append('lastname', lastName);
+      data.append('email', email);
+      data.append('number', number);
+      data.append('password', password);
+      data.append('confirmed', rePassword);
+      data.append('role', 'student');
+      data.append('university_id', selectUniversity);
+      data.append('status', '1');
+      data.append('college_name', collegeName);
+      data.append('hostel_name', hostelName);
+      data.append('hostel_address', hostelAddress);
+
+      let obj = {
+        data,
+        onSuccess: (response: any) => {
+          console.log('response', response);
+
+          dispatchNavigation(screenName.StudentBottomBar);
+        },
+        onFailure: (Err: any) => {
+          if (Err != undefined) {
+            Alert.alert(Err?.message);
+          }
+        },
+      };
+      dispatch(studentUserSignUp(obj));
+    }
+  };
+
   const getCityList = () => {
     let obj = {
-      onSuccess: (res: any) => { },
-      onFailure: (Err: any) => { },
+      onSuccess: (res: any) => {},
+      onFailure: (Err: any) => {},
     };
     dispatch(getCityAction(obj));
   };
@@ -259,8 +354,8 @@ const SignUpScreen = (props: Props) => {
     debounce(searchText => {
       let UserInfo = {
         data: searchText,
-        onSuccess: res => { },
-        onFailure: Err => { },
+        onSuccess: res => {},
+        onFailure: Err => {},
       };
       dispatch(searchCities(UserInfo));
     }, 300),
@@ -299,7 +394,7 @@ const SignUpScreen = (props: Props) => {
           showsVerticalScrollIndicator={false}
           nestedScrollEnabled
           contentContainerStyle={styles.contentContainerStyle}>
-          <View style={styles.radioView}>
+          {/* <View style={styles.radioView}>
             {options.map(option => (
               <TouchableOpacity
                 key={option.value}
@@ -309,7 +404,7 @@ const SignUpScreen = (props: Props) => {
                   style={[
                     styles.radioButton,
                     selectedOption === option.value &&
-                    styles.selectedRadioButton,
+                      styles.selectedRadioButton,
                   ]}>
                   {selectedOption === option.value && (
                     <View style={styles.radioButtonInner} />
@@ -329,19 +424,22 @@ const SignUpScreen = (props: Props) => {
                 </Text>
               </TouchableOpacity>
             ))}
-          </View>
+          </View> */}
           <CCDropDown
-            data={DropDownData}
+            data={options}
             label={strings('login.select_role')}
             labelField={'name'}
             valueField={'value'}
             placeholder={strings('roleSelection.select_role')}
             DropDownStyle={styles.dropDownStyle}
             value={selectRole}
-            setValue={setSelectRole}
+            setValue={item => {
+              setSelectRole(item);
+              emptyFiled();
+            }}
             extraStyle={styles.extraDropStyle}
           />
-          {selectedOption === 'Canteen' ?
+          {selectRole === 'Canteen' ? (
             <CCDropDown
               data={getUniversitiesData}
               label={strings('sign_up.university_name')}
@@ -352,7 +450,21 @@ const SignUpScreen = (props: Props) => {
               value={universityName}
               setValue={setUniversityName}
               extraStyle={styles.otherStyle}
-            /> : null}
+            />
+          ) : null}
+          {selectRole === 'Student' && (
+            <CCDropDown
+              data={getUniversitiesData}
+              label={strings('sign_up.university_name')}
+              labelField={'name'}
+              valueField={'id'}
+              placeholder={strings('sign_up.select_university')}
+              DropDownStyle={styles.dropDownStyle}
+              value={selectUniversity}
+              setValue={setSelectUniversity}
+              extraStyle={styles.otherStyle}
+            />
+          )}
 
           <Input
             value={name}
@@ -366,6 +478,13 @@ const SignUpScreen = (props: Props) => {
             label={strings('sign_up.last_name')}
             onChangeText={(t: string) => setLastName(t)}
           />
+
+          <Input
+            value={email}
+            placeholder={strings('sign_up.p_email')}
+            label={strings('sign_up.email')}
+            onChangeText={(t: string) => setEmail(t)}
+          />
           <Input
             value={number}
             placeholder={strings('sign_up.p_enter_number')}
@@ -375,20 +494,14 @@ const SignUpScreen = (props: Props) => {
             maxLength={10}
           />
 
-          <Input
-            value={email}
-            placeholder={strings('sign_up.p_email')}
-            label={strings('sign_up.email')}
-            onChangeText={(t: string) => setEmail(t)}
-          />
-          {selectedOption === 'Restaurant' ? (
+          {selectRole === 'Restaurant' ? (
             <Input
               value={restaurantName}
               placeholder={strings('sign_up.restaurantName')}
               label={strings('sign_up.restaurantName')}
               onChangeText={(t: string) => setRestaurantName(t)}
             />
-          ) : (
+          ) : selectRole === 'Canteen' ? (
             <>
               <Input
                 value={canteenName}
@@ -397,62 +510,84 @@ const SignUpScreen = (props: Props) => {
                 onChangeText={(t: string) => setCanteenName(t)}
               />
             </>
+          ) : null}
+
+          {selectRole !== 'Student' && (
+            <>
+              <Input
+                value={area}
+                placeholder={strings('sign_up.p_enter_area')}
+                label={strings('sign_up.area')}
+                onChangeText={(t: string) => setArea(t)}
+              />
+              <Input
+                value={city}
+                placeholder={strings('sign_up.p_enter_cty')}
+                label={strings('sign_up.city')}
+                onChangeText={(t: string) => FilterSearch(t)}
+                showListView={showListView}
+                searchData={searchCity}
+                setShowListView={item => {
+                  setShowListView(false);
+                  setCity(item.name);
+                  setState(item?.state?.name);
+                  setCountry(item?.state?.country?.name);
+                  setAddressList(item);
+                }}
+                onFocus={() => {
+                  setShowListView(true);
+                }}
+              />
+              <Input
+                value={state}
+                placeholder={strings('sign_up.p_enter_state')}
+                label={strings('sign_up.state')}
+                onChangeText={(t: string) => setState(t)}
+                showListView={false}
+                // extraStyle={{ zIndex: -1, width: '48.9%' }}
+              />
+              <Input
+                value={country}
+                placeholder={strings('sign_up.p_enter_country')}
+                label={strings('sign_up.country')}
+                onChangeText={(t: string) => setCountry(t)}
+                // extraStyle={{ zIndex: -1, width: '49%' }}
+              />
+
+              <Input
+                value={pincode}
+                placeholder={strings('sign_up.p_enter_pincode')}
+                keyboardType="number-pad"
+                label={strings('sign_up.pincode')}
+                onChangeText={(t: string) => setPincode(t)}
+                extraStyle={{zIndex: -1}}
+              />
+            </>
           )}
-          <Input
-            value={area}
-            placeholder={strings('sign_up.p_enter_area')}
-            label={strings('sign_up.area')}
-            onChangeText={(t: string) => setArea(t)}
-          />
-          <Input
-            value={city}
-            placeholder={strings('sign_up.p_enter_cty')}
-            label={strings('sign_up.city')}
-            onChangeText={(t: string) => FilterSearch(t)}
-            showListView={showListView}
-            searchData={searchCity}
-            setShowListView={item => {
-              setShowListView(false);
-              setCity(item.name);
-              setState(item?.state?.name);
-              setCountry(item?.state?.country?.name);
-              setAddressList(item);
-            }}
-            onFocus={() => {
-              setShowListView(true);
-            }}
-          />
-          <View
-            style={{
-              // flexDirection: 'row',
-              // alignItems: 'center',
-              // gap: 6,
-              // zIndex: -1,
-            }}>
-            <Input
-              value={state}
-              placeholder={strings('sign_up.p_enter_state')}
-              label={strings('sign_up.state')}
-              onChangeText={(t: string) => setState(t)}
-              showListView={false}
-            // extraStyle={{ zIndex: -1, width: '48.9%' }}
-            />
-            <Input
-              value={country}
-              placeholder={strings('sign_up.p_enter_country')}
-              label={strings('sign_up.country')}
-              onChangeText={(t: string) => setCountry(t)}
-            // extraStyle={{ zIndex: -1, width: '49%' }}
-            />
-          </View>
-          <Input
-            value={pincode}
-            placeholder={strings('sign_up.p_enter_pincode')}
-            keyboardType="number-pad"
-            label={strings('sign_up.pincode')}
-            onChangeText={(t: string) => setPincode(t)}
-            extraStyle={{ zIndex: -1 }}
-          />
+
+          {selectRole === 'Student' && (
+            <>
+              <Input
+                value={collegeName}
+                placeholder={strings('StudentSignUp.enter_college')}
+                label={strings('StudentSignUp.college_name')}
+                onChangeText={(t: string) => setCollegeName(t)}
+              />
+              <Input
+                value={hostelName}
+                placeholder={strings('StudentSignUp.enter_name')}
+                label={strings('StudentSignUp.hostel_name')}
+                onChangeText={(t: string) => setHostelName(t)}
+              />
+              <Input
+                value={hostelAddress}
+                placeholder={strings('StudentSignUp.enter_hostel_address')}
+                label={strings('StudentSignUp.hostel_address')}
+                onChangeText={(t: string) => setHostelAddress(t)}
+                extraStyle={{zIndex: -1}}
+              />
+            </>
+          )}
           <Input
             value={password}
             autoCorrect={false}
@@ -462,7 +597,7 @@ const SignUpScreen = (props: Props) => {
             label={strings('sign_up.password')}
             onChangeText={(t: string) => setPassword(t)}
             onPressEye={() => setIsShowPassword(!isShowPassword)}
-            extraStyle={{ zIndex: -1 }}
+            extraStyle={{zIndex: -1}}
           />
           <Input
             value={rePassword}
@@ -477,9 +612,11 @@ const SignUpScreen = (props: Props) => {
           <PrimaryButton
             extraStyle={styles.signupButton}
             onPress={() => {
-              selectedOption == 'Restaurant'
+              selectRole == 'Restaurant'
                 ? onPressLogin()
-                : onPressCanteenRegister();
+                : selectRole == 'Canteen'
+                ? onPressCanteenRegister()
+                : onPressLoginStudent();
             }}
             title={strings('sign_up.sign_up')}
           />
@@ -493,7 +630,7 @@ const SignUpScreen = (props: Props) => {
 export default SignUpScreen;
 
 const getGlobalStyles = (props: any) => {
-  const { colors } = props;
+  const {colors} = props;
   return StyleSheet.create({
     container: {
       flex: 1,
@@ -557,7 +694,7 @@ const getGlobalStyles = (props: any) => {
       paddingHorizontal: wp(25),
       marginTop: hp(12),
     },
-    otherStyle:{
+    otherStyle: {
       marginTop: hp(8),
     },
     extraDropStyle: {
