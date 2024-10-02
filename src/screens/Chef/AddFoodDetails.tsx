@@ -29,6 +29,8 @@ import AddFolderModal from '../../compoment/AddFolderModal';
 import Spacer from '../../compoment/Spacer';
 import {getCuisinesAction} from '../../actions/cuisinesAction';
 import {screenName} from '../../navigation/screenNames';
+import ImageCropPicker from 'react-native-image-crop-picker';
+import {openImagePicker} from '../../utils/globalFunctions';
 
 type DataItem = {
   id: number;
@@ -45,7 +47,12 @@ const AddFoodDetails = () => {
   const [price, setPrice] = useState('');
   const [basicDetails, setBasicDetails] = useState('');
   const [percentageInput, setPercentageInput] = useState('');
-  const [images, setImages] = useState([]);
+  const [images, setImages] = useState('');
+  const [imageData, setImageData] = useState<any>({
+    uri: '',
+  });
+  const [isPictureEdit, setIsPictureEdit] = useState<boolean>(false);
+
   const [quantityValue, setQuantityValue] = useState(0);
   const {getCuisines, getMiscellaneous} = useAppSelector(state => state.data);
   const dispatch = useAppDispatch();
@@ -53,10 +60,25 @@ const AddFoodDetails = () => {
   const [showAddField, setShowAddField] = useState(false);
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const isFocuse = useIsFocused();
+
+  const [miscellaneous, setMiscellaneous] = useState(
+    getMiscellaneous.map(item => {
+      return {...item, isSelect: false};
+    }),
+  );
 
   useEffect(() => {
     getCuisinesList();
   }, [showAddField]);
+
+  useEffect(() => {
+    setMiscellaneous(
+      getMiscellaneous.map(item => {
+        return {...item, isSelect: false};
+      }),
+    );
+  }, [isFocuse]);
 
   const getCuisinesList = () => {
     let obj = {
@@ -69,6 +91,15 @@ const AddFoodDetails = () => {
       onFailure: (Err: any) => {},
     };
     dispatch(getCuisinesAction(obj));
+  };
+
+  const selectImage = () => {
+    openImagePicker({
+      onSucess: res => {
+        setImageData(res);
+        setIsPictureEdit(true);
+      },
+    });
   };
 
   const selectAndCropImage = () => {
@@ -112,7 +143,9 @@ const AddFoodDetails = () => {
   );
 
   const onPressAddItem = () => {
-    if (itemName.trim().length === 0) {
+    if (imageData.uri == '') {
+      errorToast(strings('addFoodList.selectImg'));
+    } else if (itemName.trim().length === 0) {
       errorToast(strings('addFoodList.item_name_error'));
     } else if (price.trim().length === 0) {
       errorToast(strings('addFoodList.price_error'));
@@ -127,20 +160,30 @@ const AddFoodDetails = () => {
       data.append('cuisine_id', quantityValue);
       data.append('price', price);
       data.append('description', basicDetails);
-      // data.append('files', {
-      //   uri: images[0]?.uri,
-      //   type: images[0]?.mime,
-      //   name: images[0]?.name,
-      // });
+      data.append('files[]', {
+        uri: imageData?.uri,
+        type: imageData?.mime,
+        name: imageData?.name,
+      });
+      console.log('data', JSON.stringify(data));
+
       let obj = {
         data,
         onSuccess: (response: any) => {
           setLoading(false);
-          setImages([]);
+          setImages();
           setItemName('');
           setPrice('');
           setQuantityValue(0);
           setBasicDetails('');
+          setPercentageInput('');
+          setImageData({uri: ''});
+          setIsPictureEdit(false);
+          setMiscellaneous(
+            getMiscellaneous.map(item => {
+              return {...item, isSelect: false};
+            }),
+          );
           // Keyboard.dismiss()
         },
         onFailure: (Err: any) => {
@@ -163,7 +206,14 @@ const AddFoodDetails = () => {
   };
 
   const handlePress = (value: number) => {
-    setSelectedOption(value);
+    const update = miscellaneous.map(item => {
+      if (item?.id == value.id) {
+        return {...value, isSelect: !value?.isSelect};
+      } else {
+        return {...item};
+      }
+    });
+    setMiscellaneous(update);
   };
 
   const renderItem: ListRenderItem<DataItem> = ({item}: any) => (
@@ -171,24 +221,24 @@ const AddFoodDetails = () => {
       <TouchableOpacity
         key={item.id}
         style={styles.radioContainer}
-        onPress={() => handlePress(item.id)}>
+        onPress={() => handlePress(item)}>
         <View
           style={[
             styles.checkbox,
-            selectedOption === item.id && styles.selectedCheckbox,
+            item?.isSelect == true && styles.selectedCheckbox,
           ]}>
-          {selectedOption === item.id && (
-            <Image style={styles.checkIcon} source={Icons.checkIcon} />
+          {item?.isSelect == true && (
+            <Image style={styles.ic_check} source={Icons.ic_check} />
           )}
         </View>
         <Text
           style={[
             styles.radioText,
             {
-              color:
-                selectedOption === item.id
-                  ? colors.Primary_Orange
-                  : colors.Title_Text,
+              // color:
+              //   item?.isSelect == true
+              //     ? colors.Primary_Orange
+              //     : colors.Title_Text,
             },
           ]}>
           {item.name}
@@ -236,7 +286,7 @@ const AddFoodDetails = () => {
     <View style={styles.container}>
       <HomeHeader
         onBackPress={() => {
-          setShowAddField(true);
+          navigation.goBack();
         }}
         onRightPress={() => {}}
         mainShow={true}
@@ -253,10 +303,24 @@ const AddFoodDetails = () => {
             {strings('addFoodList.upload_photo_video')}
           </Text>
 
-          <TouchableOpacity onPress={() => {}}>
-            <Image source={Icons.addItem} style={styles.addItem} />
-          </TouchableOpacity>
-
+          {!isPictureEdit ? (
+            <TouchableOpacity
+              onPress={() => {
+                selectImage();
+              }}>
+              <Image source={Icons.addItem} style={styles.addItem} />
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity
+              onPress={() => {
+                selectImage();
+              }}>
+              <Image
+                source={{uri: imageData.uri}}
+                style={[styles.addItem, {resizeMode: 'stretch'}]}
+              />
+            </TouchableOpacity>
+          )}
           <View style={styles.uploadImage}>
             {/* <TouchableOpacity
               style={styles.addImage}
@@ -265,14 +329,14 @@ const AddFoodDetails = () => {
               <Text style={styles.addText}>{strings('addFoodList.add')}</Text>
             </TouchableOpacity> */}
 
-            <FlatList
+            {/* <FlatList
               data={images}
               renderItem={renderImage}
               keyExtractor={item => item.id}
               showsHorizontalScrollIndicator={false}
               horizontal
               style={styles.imageList}
-            />
+            /> */}
           </View>
           <Input
             value={itemName}
@@ -382,7 +446,7 @@ const AddFoodDetails = () => {
               {strings('addFoodList.Miscellaneousitems')}
             </Text>
             <FlatList
-              data={getMiscellaneous}
+              data={miscellaneous}
               renderItem={renderItem}
               horizontal
               keyExtractor={item => item.value}
@@ -397,7 +461,15 @@ const AddFoodDetails = () => {
             value={basicDetails}
             onChangeText={(t: string) => setBasicDetails(t)}
             placeholder={strings('addFoodList.Adddescription')}
-            style={styles.basicInput}
+            style={[
+              styles.basicInput,
+              {
+                borderColor:
+                  basicDetails?.length == 0
+                    ? colors.border_line4
+                    : colors.text_orange,
+              },
+            ]}
             multiline
             maxLength={200}
             placeholderTextColor={colors.gray_300}
@@ -435,7 +507,9 @@ const AddFoodDetails = () => {
             <Spacer width={16} />
             <PrimaryButton
               extraStyle={styles.cancelBtn}
-              // onPress={onPressEditDone}
+              onPress={() => {
+                navigation.goBack();
+              }}
               title={strings('CuisinesNameList.cancel')}
               titleStyle={styles.cancelText}
             />
@@ -466,6 +540,8 @@ const getGlobalStyles = (props: any) => {
       width: SCREEN_WIDTH * 0.9,
       height: 190,
       resizeMode: 'contain',
+      marginTop: 10,
+      borderRadius: 10,
     },
     inputView: {
       marginTop: hp(6),
@@ -610,12 +686,12 @@ const getGlobalStyles = (props: any) => {
       backgroundColor: colors.Primary_Orange,
     },
     radioText: {
-      marginLeft: 10,
+      marginLeft: 8,
       ...commonFontStyle(400, 14, colors.Title_Text),
     },
     checkbox: {
-      height: hp(18),
-      width: wp(18),
+      height: hp(22),
+      width: wp(22),
       borderRadius: 2,
       borderWidth: 2,
       borderColor: colors.Border_gray,
@@ -623,7 +699,8 @@ const getGlobalStyles = (props: any) => {
       justifyContent: 'center',
     },
     selectedCheckbox: {
-      borderColor: colors.Primary_Orange,
+      // borderColor: colors.black,
+      backgroundColor: colors.blue,
     },
     checkboxInner: {
       width: 10,

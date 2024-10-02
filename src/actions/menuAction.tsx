@@ -3,7 +3,14 @@ import {RootState} from '../redux/hooks';
 import {AnyAction} from 'redux';
 import {makeAPIRequest} from '../utils/apiGlobal';
 import {DELETE, GET, POST, api} from '../utils/apiConstants';
-import {DELETE_MENU_DATA, GET_EMPTY_MENU_LIST, GET_MENU_DATA, GET_MISCELLANEOUS, IS_LOADING, USER_INFO} from '../redux/actionTypes';
+import {
+  DELETE_MENU_DATA,
+  GET_EMPTY_MENU_LIST,
+  GET_MENU_DATA,
+  GET_MISCELLANEOUS,
+  IS_LOADING,
+  USER_INFO,
+} from '../redux/actionTypes';
 import {
   getAsyncToken,
   setAsyncToken,
@@ -22,13 +29,16 @@ export const getMenuAction =
       method: GET,
       url: api.getMenu,
       headers: headers,
-      params:request.data
+      params: request.data,
     })
       .then(async (response: any) => {
         if (response.status === 200 || response.status === 201) {
           console.log('response?.data', response?.data);
-          let Data = {...response?.data?.data, current_page: request?.data?.page}
-          dispatch({type: GET_MENU_DATA, payload:Data});
+          let Data = {
+            ...response?.data?.data,
+            current_page: request?.data?.page,
+          };
+          dispatch({type: GET_MENU_DATA, payload: Data});
 
           dispatch({type: IS_LOADING, payload: false});
           if (request.onSuccess) request.onSuccess(response.data);
@@ -55,11 +65,13 @@ export const addMenuAction =
       data: request.data,
     })
       .then(async (response: any) => {
+        console.log('response?.data', response?.data);
+
         if (response?.data?.success) {
           successToast(response?.data?.message);
           dispatch({type: IS_LOADING, payload: false});
           if (request.onSuccess) request.onSuccess(response.data);
-        }else{
+        } else {
           if (request.onFailure) request.onFailure(response.data);
         }
       })
@@ -80,12 +92,18 @@ export const getCuisinesMenuListAction =
       method: GET,
       url: `${api.getCuisinesMenuList}/${request.id}`,
       headers: headers,
-      params:request?.data
+      params: request?.data,
     })
       .then(async (response: any) => {
         if (response.status === 200 || response.status === 201) {
-          console.log("getCuisinesMenuListAction=-=+++",response?.data?.data)
-          dispatch({type: GET_MENU_DATA, payload:{...response?.data?.data, current_page: request?.data?.page}});
+          console.log('getCuisinesMenuListAction=-=+++', response?.data?.data);
+          dispatch({
+            type: GET_MENU_DATA,
+            payload: {
+              ...response?.data?.data,
+              current_page: request?.data?.page,
+            },
+          });
 
           dispatch({type: IS_LOADING, payload: false});
           if (request.onSuccess) request.onSuccess(response.data);
@@ -124,25 +142,24 @@ export const deleteMenuAction =
       });
   };
 
-  export const updateManuAction =
+export const updateManuAction =
   (request: any): ThunkAction<void, RootState, unknown, AnyAction> =>
   async dispatch => {
-    
     let headers = {
-      "Authorization":await getAsyncToken(),
+      Authorization: await getAsyncToken(),
       'Content-Type': 'multipart/form-data',
     };
     return makeAPIRequest({
       method: POST,
       url: `${api.updateMenu}/${request.params}`,
       headers: headers,
-      data:request.data
+      data: request.data,
     })
       .then(async (response: any) => {
-        if (response?.data?.success) {    
-          successToast(response?.data?.message);               
+        if (response?.data?.success) {
+          successToast(response?.data?.message);
           if (request.onSuccess) request.onSuccess(response.data);
-        }else{
+        } else {
           if (request.onFailure) request.onFailure(response.data);
         }
       })
@@ -150,7 +167,7 @@ export const deleteMenuAction =
         if (request.onFailure) request.onFailure(error?.response?.data);
       });
   };
-  export const getMiscellaneousAction =
+export const getMiscellaneousAction =
   (request: any): ThunkAction<void, RootState, unknown, AnyAction> =>
   async dispatch => {
     let headers = {
@@ -160,12 +177,18 @@ export const deleteMenuAction =
       method: GET,
       url: `${api.getmiscellaneous}`,
       headers: headers,
-      params:request?.data
+      params: request?.data,
     })
       .then(async (response: any) => {
         if (response.status === 200 || response.status === 201) {
-          dispatch({type: GET_MISCELLANEOUS, payload:{...response?.data?.data, current_page: request?.data?.page}});
-          if (request.onSuccess) request.onSuccess(response.data);
+          dispatch({
+            type: GET_MISCELLANEOUS,
+            payload: {
+              ...response?.data?.data,
+              current_page: request?.data?.page,
+            },
+          });
+          if (request.onSuccess) request.onSuccess(response?.data?.data);
         }
       })
       .catch(error => {

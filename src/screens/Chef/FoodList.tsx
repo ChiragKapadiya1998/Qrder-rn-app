@@ -299,7 +299,7 @@ const getGlobalStyles = (props: any) => {
       ...commonFontStyle(600, 14, colors.black),
     },
     boxContainer: {
-      // flex: 1,
+      flex: 1,
       marginHorizontal: wp(20),
     },
   });

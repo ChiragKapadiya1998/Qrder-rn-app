@@ -48,7 +48,6 @@ const EditProfile = (props: Props) => {
   console.log('userData', userData);
 
   const selectImage = () => {
-    setLoading(true);
     ImageCropPicker.openPicker({
       width: 100,
       height: 100,
@@ -126,6 +125,11 @@ const EditProfile = (props: Props) => {
       data.append('number', numbers);
       //   data.append('restaurant_name', restaurant);
       data.append('address', address);
+      data.append('image', {
+        uri: photoUri?.uri,
+        type: photoUri?.mime,
+        name: photoUri?.name,
+      });
       let obj = {
         data,
         onSuccess: (response: any) => {

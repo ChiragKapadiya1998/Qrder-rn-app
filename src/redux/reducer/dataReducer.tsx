@@ -1,4 +1,28 @@
-import { DECREMENT, DELETE_CARD_LIST, DELETE_CHEF_DATA, DELETE_CUISINES_DATA, DELETE_MENU_DATA, GET_CANTEEN_CUISINE_LIST, GET_CANTEEN_MENU_LIST, GET_CARD_LIST, GET_CHEFS_DATA, GET_CITY_DATA, GET_CUISINES_DATA, GET_EMPTY_CANTEEN_LIST, GET_EMPTY_MENU_LIST, GET_MENU_DATA, GET_MISCELLANEOUS, GET_UNIVERSITIES_CANTEEN_LIST, GET_UNIVERSITIES_LIST, INCREMENT, IS_LOADING, SET_APP_THEME } from '../actionTypes';
+import {
+  DECREMENT,
+  DELETE_CARD_LIST,
+  DELETE_CHEF_DATA,
+  DELETE_CUISINES_DATA,
+  DELETE_MENU_DATA,
+  GET_CANTEEN_CUISINE_LIST,
+  GET_CANTEEN_MENU_LIST,
+  GET_CARD_LIST,
+  GET_CHEFS_DATA,
+  GET_CITY_DATA,
+  GET_CUISINES_DATA,
+  GET_EMPTY_CANTEEN_LIST,
+  GET_EMPTY_MENU_LIST,
+  GET_MENU_DATA,
+  GET_MENU_MASTERS,
+  GET_MISCELLANEOUS,
+  GET_RECIPES_MASTERS,
+  GET_RECIPES_MENU,
+  GET_UNIVERSITIES_CANTEEN_LIST,
+  GET_UNIVERSITIES_LIST,
+  INCREMENT,
+  IS_LOADING,
+  SET_APP_THEME,
+} from '../actionTypes';
 
 const initialState = {
   getCuisines: [],
@@ -12,7 +36,10 @@ const initialState = {
   allMenuCount: 0,
   cuisinesCount: 0,
   canteenMenuCount: 0,
-  getMiscellaneous: []
+  getMiscellaneous: [],
+  getMenuMasters: [],
+  getRecipesMasters: [],
+  getRecipesMenu: [],
 };
 
 export default function (state = initialState, action: any) {
@@ -28,10 +55,10 @@ export default function (state = initialState, action: any) {
       };
     }
     case GET_UNIVERSITIES_LIST: {
-      return { ...state, getUniversitiesData: action.payload };
+      return {...state, getUniversitiesData: action.payload};
     }
     case GET_UNIVERSITIES_CANTEEN_LIST: {
-      return { ...state, getUniversityCanteenData: action.payload };
+      return {...state, getUniversityCanteenData: action.payload};
     }
     case GET_CANTEEN_MENU_LIST: {
       if (action.payload.current_page == 1) {
@@ -43,16 +70,19 @@ export default function (state = initialState, action: any) {
       } else {
         return {
           ...state,
-          getCanteenMenuData: [...state.getCanteenMenuData, ...action.payload.data],
+          getCanteenMenuData: [
+            ...state.getCanteenMenuData,
+            ...action.payload.data,
+          ],
           canteenMenuCount: action.payload.total_count,
         };
       }
     }
     case GET_EMPTY_CANTEEN_LIST: {
-      return { ...state, getCanteenMenuData: [], canteenMenuCount: 0 };
+      return {...state, getCanteenMenuData: [], canteenMenuCount: 0};
     }
     case GET_EMPTY_MENU_LIST: {
-      return { ...state, getMenuData: [], allMenuCount: 0 };
+      return {...state, getMenuData: [], allMenuCount: 0};
     }
     case GET_MENU_DATA: {
       if (action.payload.current_page == 1) {
@@ -70,45 +100,51 @@ export default function (state = initialState, action: any) {
       }
     }
     case GET_CHEFS_DATA: {
-      return { ...state, getChefsData: action.payload };
+      return {...state, getChefsData: action.payload};
     }
     case DELETE_MENU_DATA: {
       const remove = state.getMenuData.filter(
         item => item?.id !== action.payload,
       );
-      return { ...state, getMenuData: remove, allMenuCount: state.allMenuCount - 1 };
+      return {
+        ...state,
+        getMenuData: remove,
+        allMenuCount: state.allMenuCount - 1,
+      };
     }
     case DELETE_CHEF_DATA: {
       const removeChef = state.getChefsData.filter(
         item => item?.id !== action.payload,
       );
-      return { ...state, getChefsData: removeChef };
+      return {...state, getChefsData: removeChef};
     }
     case DELETE_CUISINES_DATA: {
       const remove = state.getCuisines.filter(
         item => item?.id !== action.payload,
       );
-      return { ...state, getCuisines: remove, };
+      return {...state, getCuisines: remove};
     }
     case GET_CANTEEN_CUISINE_LIST: {
-      return { ...state, getCanteenCuisines: action.payload };
+      return {...state, getCanteenCuisines: action.payload};
     }
     case GET_CARD_LIST: {
-      return { ...state, getCardData: action.payload };
+      return {...state, getCardData: action.payload};
     }
     case DELETE_CARD_LIST: {
       const removeCard = state.getCardData.filter(
         item => item?.id !== action.payload,
       );
-      return { ...state, getCardData: removeCard };
+      return {...state, getCardData: removeCard};
     }
     case INCREMENT: {
       const updatedCardData = state.getCardData.map((item: any) => {
-        return (
-          item.menu_id === action.payload
-            ? { ...item, quantity: item.quantity + 1, product_total: (item.price * (item.quantity + 1)) }
-            : item
-        )
+        return item.menu_id === action.payload
+          ? {
+              ...item,
+              quantity: item.quantity + 1,
+              product_total: item.price * (item.quantity + 1),
+            }
+          : item;
       });
       return {
         ...state,
@@ -118,8 +154,12 @@ export default function (state = initialState, action: any) {
     case DECREMENT: {
       const updatedCardData = state.getCardData.map((item: any) =>
         item.menu_id === action.payload && item.quantity > 1
-          ? { ...item, quantity: item.quantity - 1, product_total: (item.price * (item.quantity - 1)) }
-          : item
+          ? {
+              ...item,
+              quantity: item.quantity - 1,
+              product_total: item.price * (item.quantity - 1),
+            }
+          : item,
       );
       return {
         ...state,
@@ -134,7 +174,25 @@ export default function (state = initialState, action: any) {
             ? action.payload.data
             : [...state.getMiscellaneous, ...action.payload.data],
         miscellaneousCount: action.payload.total_count,
-      }
+      };
+    }
+    case GET_MENU_MASTERS: {
+      return {
+        ...state,
+        getMenuMasters: action.payload.data,
+      };
+    }
+    case GET_RECIPES_MASTERS: {
+      return {
+        ...state,
+        getRecipesMasters: action.payload.data,
+      };
+    }
+    case GET_RECIPES_MENU: {
+      return {
+        ...state,
+        getRecipesMenu: action.payload.data,
+      };
     }
     default:
       return state;

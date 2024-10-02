@@ -7,14 +7,14 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, { useRef, useState } from 'react';
-import { useTheme } from '@react-navigation/native';
-import { commonFontStyle, hp } from '../theme/fonts';
+import React, {useRef, useState} from 'react';
+import {useTheme} from '@react-navigation/native';
+import {commonFontStyle, hp} from '../theme/fonts';
 import NoDataFound from './NoDataFound';
-import { useAppDispatch, useAppSelector } from '../redux/hooks';
+import {useAppDispatch, useAppSelector} from '../redux/hooks';
 import MenuItems from './MenuItems';
-import { strings } from '../i18n/i18n';
-import { deleteMenuAction } from '../actions/menuAction';
+import {strings} from '../i18n/i18n';
+import {deleteMenuAction} from '../actions/menuAction';
 import DleleteModal from './DeleteModal';
 
 type Props = {
@@ -25,7 +25,7 @@ type Props = {
   loadingMore: boolean;
   loading: boolean;
   onMomentumScrollBegin: () => void;
-  showChef: any
+  showChef: any;
 };
 
 const MenuCardList = ({
@@ -38,11 +38,11 @@ const MenuCardList = ({
   onMomentumScrollBegin,
   loading,
 }: Props) => {
-  const { colors } = useTheme();
-  const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
+  const {colors} = useTheme();
+  const styles = React.useMemo(() => getGlobalStyles({colors}), [colors]);
   const [visible, setVisible] = useState(false);
   const [selectItem, setSelectItem] = useState([]);
-  const { getMenuData, allMenuCount } = useAppSelector(state => state.data);
+  const {getMenuData, allMenuCount} = useAppSelector(state => state.data);
   const dispatch = useAppDispatch();
 
   const currentData = useRef();
@@ -89,29 +89,29 @@ const MenuCardList = ({
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicator={false}
           columnWrapperStyle={styles.columnWrapperStyle}
-          contentContainerStyle={{ gap: 11}}
+          contentContainerStyle={{gap: 11}}
           keyExtractor={(item, index) => `${item.id}-${index}`}
-          ListFooterComponent={() => (
-            <View>
-              {hasMoreItems && !loadingMore && (
-                <TouchableOpacity
-                  onPress={loadMoreData}
-                  style={[styles.seeMoreButton]}
-                >
-                  <Text style={styles.seeMoreText}>
-                    {strings('CardMenuList.see_more')}
-                  </Text>
-                </TouchableOpacity>
-              )}
-              {loadingMore && (
-                <View style={styles.seeMoreButton}>
-                  <ActivityIndicator size={'small'} color={colors.black} />
-                </View>
+          // ListFooterComponent={() => (
+          //   <View>
+          //     {hasMoreItems && !loadingMore && (
+          //       <TouchableOpacity
+          //         onPress={loadMoreData}
+          //         style={[styles.seeMoreButton]}
+          //       >
+          //         <Text style={styles.seeMoreText}>
+          //           {strings('CardMenuList.see_more')}
+          //         </Text>
+          //       </TouchableOpacity>
+          //     )}
+          //     {loadingMore && (
+          //       <View style={styles.seeMoreButton}>
+          //         <ActivityIndicator size={'small'} color={colors.black} />
+          //       </View>
 
-              )}
-              <View style={{ height: hp(150)}} />
-            </View>
-          )}
+          //     )}
+          //     <View style={{ height: hp(150)}} />
+          //   </View>
+          // )}
           ListEmptyComponent={
             loading ? (
               <ActivityIndicator size={'small'} color={colors.black} />
@@ -119,7 +119,7 @@ const MenuCardList = ({
               <NoDataFound />
             )
           }
-          renderItem={({ item, index }) => {
+          renderItem={({item, index}) => {
             return (
               <MenuItems
                 item={item}
@@ -133,7 +133,7 @@ const MenuCardList = ({
             );
           }}
           showsVerticalScrollIndicator={false}
-        // onEndReached={loadMoreData}
+          // onEndReached={loadMoreData}
         />
       )}
 
@@ -152,7 +152,7 @@ const MenuCardList = ({
 export default MenuCardList;
 
 const getGlobalStyles = (props: any) => {
-  const { colors } = props;
+  const {colors} = props;
   return StyleSheet.create({
     itemsText: {
       ...commonFontStyle(400, 14, colors.gray_400),

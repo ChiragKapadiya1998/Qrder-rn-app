@@ -1,5 +1,7 @@
 export const api = {
-  BASE_URL: 'https://qrder.in/api/',
+  // BASE_URL: 'https://qrder.in/api/',
+  BASE_URL:
+    'https://1236-2405-201-201f-9802-75f3-a699-d5c8-a2d2.ngrok-free.app/api/',
 
   // Auth
   login: 'login',
@@ -23,6 +25,9 @@ export const api = {
   addCard: 'add-to-cart',
   getCard: 'cart',
   getmiscellaneous: 'miscellaneous-items',
+  menuMasters: 'menu-masters',
+  recipeMaster: 'recipe-master',
+  recipeMenu: 'recipe-menu',
 
   //student
   studentRegister: 'student-register',

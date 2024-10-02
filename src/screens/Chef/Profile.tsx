@@ -177,6 +177,21 @@ const Profile = (props: Props) => {
               screens: '',
             },
             {
+              title: strings('profileScreen.ItemMasters'),
+              iconName: Icons.inventory,
+              screens: screenName.ItemMastersList,
+            },
+            {
+              title: strings('profileScreen.Miscellaneous'),
+              iconName: Icons.inventory,
+              screens: screenName.MiscellaneousList,
+            },
+            {
+              title: strings('profileScreen.Cuisines'),
+              iconName: Icons.inventory,
+              screens: screenName.CuisinesNameList,
+            },
+            {
               title: strings('profileScreen.recipes_master'),
               iconName: Icons.inventory,
               screens: screenName.RecipesMastersList,

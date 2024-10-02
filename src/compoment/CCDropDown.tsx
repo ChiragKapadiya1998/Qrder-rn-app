@@ -55,6 +55,7 @@ const CCDropDown = ({
   labelTextStyle,
   extraStyle,
   isShowLabel = false,
+  disable,
   ...rest
 }: InputProps) => {
   const {colors, isDark} = useTheme();
@@ -93,6 +94,7 @@ const CCDropDown = ({
         selectedTextStyle={styles.selectedTextStyle}
         itemTextStyle={styles.item_style}
         value={value}
+        disable={disable}
         onChange={(item: any) => {
           setValue(item[valueField]);
         }}
