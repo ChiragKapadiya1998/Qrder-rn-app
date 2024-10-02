@@ -26,10 +26,11 @@ import { deleteCuisinesAction, getCuisinesAction } from '../../actions/cuisinesA
 import AddFolderModal from '../../compoment/AddFolderModal';
 import EditFolderModal from '../../compoment/EditFolderModal';
 import Loader from '../../compoment/Loader';
+import ItemMastersCardList from '../../compoment/ItemMastersCardList';
 
 type Props = {};
 
-const MiscellaneousList = (props: Props) => {
+const ItemMastersList = (props: Props) => {
     const { colors, isDark } = useTheme();
     const navigation = useNavigation();
     const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
@@ -118,13 +119,13 @@ const MiscellaneousList = (props: Props) => {
                     navigation.goBack();
                 }}
                 onRightPress={() => {
-                    navigation.navigate(screenName.AddMiscellaneous);
+                    navigation.navigate(screenName.AddItemMasters);
                     // setNewFolder(true)
                 }}
                 mainShow={true}
-                title={strings('miscellaneousList.miscellaneous')}
+                title={strings('itemMastersList.item_masters')}
                 extraStyle={styles.headerContainer}
-                createText={strings('miscellaneousList.add')}
+                createText={strings('CuisinesNameList.create')}
                 isShowIcon={false}
                 isCreateIcon={true}
             />
@@ -150,26 +151,26 @@ const MiscellaneousList = (props: Props) => {
                         ListHeaderComponent={() => {
                             return (
                                 <View style={styles.headerList}>
-                                    <Text style={styles.nameText}>{strings('CuisinesNameList.names')}</Text>
-                                    <Text style={styles.nameText}>{strings('miscellaneousList.price')}</Text>
+                                    <Text style={[styles.nameText,{flex:1}]}>{strings('CuisinesNameList.names')}</Text>
+                                    <Text style={[styles.nameText,{flex:1}]}>{strings('recipesMaster.unit')}</Text>
+                                    <Text numberOfLines={1} style={[styles.nameText,{flex:1}]}>{strings('itemMastersList.in_weight')}</Text>
+                                    <Text numberOfLines={1} style={[styles.nameText,{flex:1}]}>{strings('itemMastersList.out_weight')}</Text>
                                     <Text style={styles.nameText}>{strings('CuisinesNameList.action')}</Text>
                                 </View>
                             )
                         }}
                         renderItem={({ item, index }) => {
                             return (
-                                <CuisinesNameCardList
+                                <ItemMastersCardList
                                     item={item}
                                     onPressEdit={() => {
-                                        navigation.navigate(screenName.EditMiscellaneous);
+                                        navigation.navigate(screenName.EditItemMasters);
                                         setSelectItem(item);
                                     }}
                                     setDelete={() => {
                                         setVisible(true);
                                         setSelectItem(item);
                                     }}
-                                    isRecipeMaster={true}
-                                    isShowPrice={true}
                                 />
                             );
                         }}
@@ -202,7 +203,7 @@ const MiscellaneousList = (props: Props) => {
     );
 };
 
-export default MiscellaneousList;
+export default ItemMastersList;
 
 const getGlobalStyles = (props: any) => {
     const { colors } = props;
@@ -242,7 +243,7 @@ const getGlobalStyles = (props: any) => {
             flexDirection: 'row'
         },
         nameText: {
-            ...commonFontStyle(500, 16, colors.black),
+            ...commonFontStyle(500, 14, colors.black),
         }
     });
 };

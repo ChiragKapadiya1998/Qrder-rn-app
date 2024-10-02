@@ -37,6 +37,10 @@ export const screenName = {
   AddRecipesMasters:'AddRecipesMasters',
   MiscellaneousList:'MiscellaneousList',
   EditMiscellaneous:'EditMiscellaneous',
+  AddMiscellaneous:'AddMiscellaneous',
+  ItemMastersList:'ItemMastersList',
+  AddItemMasters:'AddItemMasters',
+  EditItemMasters:'EditItemMasters',
 
   //chefSignUp
 

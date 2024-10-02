@@ -416,6 +416,14 @@ const AddFoodDetails = () => {
             titleStyle={styles.submitText}
             isLoading={loading}
           />
+          <Spacer height={10} />
+          <PrimaryButton
+            extraStyle={styles.submitButton}
+            onPress={() => navigation.navigate(screenName.ItemMastersList)}
+            title={'Miscellaneous'}
+            titleStyle={styles.submitText}
+            isLoading={loading}
+          />
           <View style={styles.buttonContainer}>
             <PrimaryButton
               extraStyle={styles.submitButton}

@@ -1,61 +1,47 @@
-import { Alert, Image, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useState } from 'react'
-import { useNavigation, useRoute, useTheme } from '@react-navigation/native';
+import { Alert, Image, StatusBar, StyleSheet, Text, TouchableOpacity, View, FlatList } from 'react-native';
+import React, { useState } from 'react';
+import { useNavigation, useTheme } from '@react-navigation/native';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
-import { infoToast } from '../../utils/commonFunction';
 import { strings } from '../../i18n/i18n';
-import { getAsyncUserInfo } from '../../utils/asyncStorageManager';
 import HomeHeader from '../../compoment/HomeHeader';
 import Input from '../../compoment/Input';
 import PrimaryButton from '../../compoment/PrimaryButton';
 import Spacer from '../../compoment/Spacer';
 import { commonFontStyle, hp, wp } from '../../theme/fonts';
+import { Icons } from '../../utils/images';
+import { errorToast, infoToast } from '../../utils/commonFunction';
 
-const EditMiscellaneous = () => {
+const AddMiscellaneous = () => {
     const { colors } = useTheme();
-    // const route = useRoute();
-    // const { selectList } = route?.params;
     const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
     const navigation = useNavigation();
     const [recipesName, setRecipesName] = useState('');
     const [materialName, setMaterialName] = useState('');
-    const [stockName, setStockName] = useState('');
-    const [unitName, setUnitName] = useState('');
-    const [loading, setLoading] = useState(false);
+    const [itemsList, setItemsList] = useState([]);
     const { isDarkTheme } = useAppSelector(state => state.common);
     const dispatch = useAppDispatch();
 
-    // const onPressEdit = async () => {
-    //     if (cuisineName == '') {
-    //         infoToast(strings('addFoodList.error_enter'));
-    //     } else {
-    //         setLoading(true)
-    //         const userDetails = await getAsyncUserInfo();
-    //         let obj = {
-    //             id: selectList?.id,
-    //             data: {
-    //                 name: cuisineName,
-    //                 parent_id: userDetails?.id,
-    //             },
-    //             onSuccess: (response: any) => {
-    //                 navigation.goBack()
-    //                 seCuisineName('');
-    //                 setLoading(false)
-    //             },
-    //             onFailure: (Err: any) => {
-    //                 if (Err != undefined) {
-    //                     Alert.alert('Warning', Err?.message);
-    //                 }
-    //                 setLoading(false)
-    //             },
-    //         };
-    //         dispatch(editCuisinesAction(obj));
-    //     }
-    // };
+
+    const onPressAddItem = () => {
+        if (recipesName === '' || materialName === '') {
+            errorToast(strings('miscellaneousList.error_empty_fields'));
+            return;
+        }
+        const newItem = {
+            id: Math.random().toString(),
+            recipesName,
+            materialName,
+        };
+
+        setItemsList([newItem, ...itemsList]);
+        setRecipesName('');
+        setMaterialName('');
+    };
+
 
     const goback = () => {
         navigation.goBack();
-    }
+    };
 
     return (
         <View style={styles.container}>
@@ -66,7 +52,7 @@ const EditMiscellaneous = () => {
             <HomeHeader
                 onBackPress={goback}
                 mainShow={true}
-                title={strings('miscellaneousList.miscellaneous')}
+                title={strings('miscellaneousList.add_miscellaneous')}
                 extraStyle={styles.headerContainer}
                 isShowIcon={false}
             />
@@ -75,25 +61,48 @@ const EditMiscellaneous = () => {
                     value={recipesName}
                     placeholder={strings('miscellaneousList.e_miscellaneous_items')}
                     label={strings('miscellaneousList.miscellaneous_items')}
-                    onChangeText={(t: string) => setRecipesName(t)}
+                    onChangeText={setRecipesName}
                     isShowLabel={true}
                 />
                 <Input
                     value={materialName}
+                    keyboardType="number-pad"
                     placeholder={strings('miscellaneousList.add_price')}
                     label={strings('miscellaneousList.price')}
-                    onChangeText={(t: string) => setMaterialName(t)}
+                    onChangeText={setMaterialName}
                     isShowLabel={true}
                 />
+                <TouchableOpacity style={styles.addBtnView} onPress={onPressAddItem}>
+                    <Image source={Icons.plus} style={styles.plusIcon} />
+                </TouchableOpacity>
+
+                <FlatList
+                    data={itemsList}
+                    keyExtractor={(item) => item.id}
+                    showsVerticalScrollIndicator={false}
+                    contentContainerStyle={{ gap: 16 }}
+                    renderItem={({ item }) => (
+                        <View style={styles.cardContainer}>
+                            <View style={styles.boxView}>
+                                <Text style={styles.textStyle}>{strings('miscellaneousList.miscellaneous_item_name')}</Text>
+                                <Text style={styles.nameText}>{item.recipesName}</Text>
+                            </View>
+                            <View style={[styles.boxView, { marginTop: hp(8) }]}>
+                                <Text style={styles.textStyle}>{strings('miscellaneousList.price')}</Text>
+                                <Text style={[styles.nameText, { color: colors.text_orange }]}>{`₹${item.materialName}`}</Text>
+                            </View>
+                        </View>
+                    )}
+                />
+
+                <Spacer height={10} />
             </View>
 
             <View style={styles.buttonContainer}>
                 <PrimaryButton
                     extraStyle={styles.submitButton}
-                    // onPress={onPressEdit}
                     title={strings('CuisinesNameList.submit')}
                     titleStyle={styles.submitText}
-                    isLoading={loading}
                 />
                 <Spacer width={16} />
                 <PrimaryButton
@@ -105,11 +114,11 @@ const EditMiscellaneous = () => {
             </View>
         </View>
     );
+};
 
-}
-export default EditMiscellaneous
+export default AddMiscellaneous;
 
-const getGlobalStyles = (props: any) => {
+const getGlobalStyles = (props) => {
     const { colors } = props;
     return StyleSheet.create({
         container: {
@@ -117,7 +126,7 @@ const getGlobalStyles = (props: any) => {
             backgroundColor: colors.bg_white,
         },
         headerContainer: {
-            paddingBottom: hp(4)
+            paddingBottom: hp(4),
         },
         contentContainer: {
             flex: 1,
@@ -143,13 +152,45 @@ const getGlobalStyles = (props: any) => {
             justifyContent: 'center',
             backgroundColor: colors.white,
             borderColor: colors.text_gray,
-            borderWidth: 1
+            borderWidth: 1,
         },
         submitText: {
             ...commonFontStyle(600, 18, colors.defult_white),
         },
         cancelText: {
             ...commonFontStyle(600, 18, colors.title_dec100),
+        },
+        addBtnView: {
+            height: hp(52),
+            borderRadius: 8,
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: colors.bg_white,
+            borderColor: colors.image_bg,
+            borderWidth: 1,
+            marginTop: hp(24),
+            marginBottom: hp(24),
+        },
+        plusIcon: {
+            width: 14,
+            height: 14,
+            resizeMode: 'contain',
+            tintColor: colors.black,
+        },
+        cardContainer: {
+            backgroundColor: colors.cards_bg,
+            padding: 16,
+            borderRadius: 16,
+        },
+        boxView: {
+            justifyContent: 'space-between',
+            flexDirection: 'row'
+        },
+        textStyle: {
+            ...commonFontStyle(500, 14, colors.title_dec100),
+        },
+        nameText: {
+            ...commonFontStyle(600, 14, colors.black),
         },
     });
 };

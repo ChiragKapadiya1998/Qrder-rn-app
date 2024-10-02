@@ -20,12 +20,10 @@ type ItemProps = {
     item: ListObj;
     setDelete?: any
     onPressEdit?: any
-    isRecipeMaster?: boolean;
-    isShowPrice?: boolean
 };
 
 
-const CuisinesNameCardList = ({ item, setDelete, onPressEdit, isRecipeMaster = false, isShowPrice = false }: ItemProps) => {
+const ItemMastersCardList = ({ item, setDelete, onPressEdit }: ItemProps) => {
     const { colors } = useTheme();
     const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
     const navigation = useNavigation();
@@ -46,11 +44,11 @@ const CuisinesNameCardList = ({ item, setDelete, onPressEdit, isRecipeMaster = f
                 <View style={styles.container}>
                     <View style={[styles.leftView, { paddingHorizontal: wp(16) }]}>
                         <View style={[styles.viewStyle, { flex: 1 }]}>
-                            {isRecipeMaster ? null :
-                                <Image source={{ uri: item.image }} style={styles.imageStyle} />}
                             <Text numberOfLines={1} style={styles.titleText}>{item?.name}</Text>
                         </View>
-                        {isShowPrice ? <Text style={[styles.titleText]}> {'50'}</Text> : null}
+                        <Text style={[styles.titleText]}> {strings('itemMastersList.kg')}</Text>
+                        <Text style={[styles.titleText]}> {'02'}</Text>
+                        <Text style={[styles.titleText]}> {'08'}</Text>
                         <View style={styles.viewStyle}>
                             <TouchableOpacity onPress={() => onPressEdit()}>
                                 <Image source={Icons.editItemIcon} style={styles.editIcon} />
@@ -67,7 +65,7 @@ const CuisinesNameCardList = ({ item, setDelete, onPressEdit, isRecipeMaster = f
         </View >
     )
 }
-export default CuisinesNameCardList
+export default ItemMastersCardList
 
 const getGlobalStyles = (props: any) => {
     const { colors } = props;

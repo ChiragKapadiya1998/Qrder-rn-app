@@ -11,16 +11,15 @@ import PrimaryButton from '../../compoment/PrimaryButton';
 import Spacer from '../../compoment/Spacer';
 import { commonFontStyle, hp, wp } from '../../theme/fonts';
 
-const EditMiscellaneous = () => {
+const EditItemMasters = () => {
     const { colors } = useTheme();
     // const route = useRoute();
     // const { selectList } = route?.params;
     const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
     const navigation = useNavigation();
-    const [recipesName, setRecipesName] = useState('');
-    const [materialName, setMaterialName] = useState('');
-    const [stockName, setStockName] = useState('');
     const [unitName, setUnitName] = useState('');
+    const [materialName, setMaterialName] = useState('');
+    const [inWeightNmae, setInWeightNmae] = useState('');
     const [loading, setLoading] = useState(false);
     const { isDarkTheme } = useAppSelector(state => state.common);
     const dispatch = useAppDispatch();
@@ -66,23 +65,31 @@ const EditMiscellaneous = () => {
             <HomeHeader
                 onBackPress={goback}
                 mainShow={true}
-                title={strings('miscellaneousList.miscellaneous')}
+                title={strings('itemMastersList.edit_item_masters')}
                 extraStyle={styles.headerContainer}
                 isShowIcon={false}
             />
             <View style={styles.contentContainer}>
                 <Input
-                    value={recipesName}
-                    placeholder={strings('miscellaneousList.e_miscellaneous_items')}
-                    label={strings('miscellaneousList.miscellaneous_items')}
-                    onChangeText={(t: string) => setRecipesName(t)}
+                    value={materialName}
+                    placeholder={strings('recipesMaster.e_material_name')}
+                    label={strings('recipesMaster.material_name')}
+                    onChangeText={(t: string) => setMaterialName(t)}
                     isShowLabel={true}
                 />
                 <Input
-                    value={materialName}
-                    placeholder={strings('miscellaneousList.add_price')}
-                    label={strings('miscellaneousList.price')}
-                    onChangeText={(t: string) => setMaterialName(t)}
+                    value={unitName}
+                    placeholder={strings('recipesMaster.e_unit')}
+                    label={strings('recipesMaster.unit')}
+                    onChangeText={(t: string) => setUnitName(t)}
+                    isShowLabel={true}
+                />
+                <Input
+                    value={inWeightNmae}
+                    placeholder={strings('itemMastersList.e_weight')}
+                    label={strings('itemMastersList.in_weight')}
+                    onChangeText={(t: string) => setInWeightNmae(t)}
+                    keyboardType="number-pad"
                     isShowLabel={true}
                 />
             </View>
@@ -107,7 +114,7 @@ const EditMiscellaneous = () => {
     );
 
 }
-export default EditMiscellaneous
+export default EditItemMasters
 
 const getGlobalStyles = (props: any) => {
     const { colors } = props;

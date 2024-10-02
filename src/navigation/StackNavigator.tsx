@@ -62,6 +62,10 @@ import EditRecipesMasters from '../screens/ChefSettings/EditRecipesMasters';
 import AddRecipesMasters from '../screens/ChefSettings/AddRecipesMasters';
 import MiscellaneousList from '../screens/Chef/MiscellaneousList';
 import EditMiscellaneous from '../screens/Chef/EditMiscellaneous';
+import AddMiscellaneous from '../screens/Chef/AddMiscellaneous';
+import ItemMastersList from '../screens/Chef/ItemMastersList';
+import AddItemMasters from '../screens/Chef/AddItemMasters';
+import EditItemMasters from '../screens/Chef/EditItemMasters';
 
 const Drawer = createDrawerNavigator();
 const { StatusBarManager } = NativeModules;
@@ -470,7 +474,7 @@ const StackNavigator: FC = () => {
         name={screenName.MiscellaneousList}
         component={MiscellaneousList}
       />
-        <Stack.Screen
+      <Stack.Screen
         options={({ navigation }) => ({
           ...headerStyleTransparent,
           headerShown: false,
@@ -478,6 +482,42 @@ const StackNavigator: FC = () => {
         })}
         name={screenName.EditMiscellaneous}
         component={EditMiscellaneous}
+      />
+      <Stack.Screen
+        options={({ navigation }) => ({
+          ...headerStyleTransparent,
+          headerShown: false,
+          headerTitle: '',
+        })}
+        name={screenName.AddMiscellaneous}
+        component={AddMiscellaneous}
+      />
+      <Stack.Screen
+        options={({ navigation }) => ({
+          ...headerStyleTransparent,
+          headerShown: false,
+          headerTitle: '',
+        })}
+        name={screenName.ItemMastersList}
+        component={ItemMastersList}
+      />
+      <Stack.Screen
+        options={({ navigation }) => ({
+          ...headerStyleTransparent,
+          headerShown: false,
+          headerTitle: '',
+        })}
+        name={screenName.AddItemMasters}
+        component={AddItemMasters}
+      />
+      <Stack.Screen
+        options={({ navigation }) => ({
+          ...headerStyleTransparent,
+          headerShown: false,
+          headerTitle: '',
+        })}
+        name={screenName.EditItemMasters}
+        component={EditItemMasters}
       />
     </Stack.Navigator>
   );

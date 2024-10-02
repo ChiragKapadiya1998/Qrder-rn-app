@@ -391,8 +391,23 @@ export default {
   },
   miscellaneousList:{
     miscellaneous:'Miscellaneous',
+    add_miscellaneous:'Add Miscellaneous',
     add:'Add',
     price:'Price',
-    miscellaneous_items:'Miscellaneous items'
+    miscellaneous_items:'Miscellaneous items',
+    e_miscellaneous_items:'Enter Miscellaneous items',
+    add_price:'Add price',
+    miscellaneous_item_name:'Miscellaneous Item name',
+    error_empty_fields:'Please Enter fields'
+  },
+  itemMastersList:{
+    item_masters:'Item Masters',
+    in_weight:'In-We...',
+    out_weight:'Out-We...',
+    kg:'Kg',
+    add_item_masters:'Add Item Masters',
+    in_weight:'In-Weight',
+    e_weight:'Enter In-Weight',
+    edit_item_masters:'Edit Item Masters',
   }
 };
