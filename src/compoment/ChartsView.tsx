@@ -177,8 +177,8 @@ const ChartsView = ({
           adjustToWidth={false}
           barBorderRadius={5}
           frontColor={colors.Primary_Orange}
-          yAxisTextStyle={{color: 'black'}}
-          xAxisTextStyle={{color: 'black'}}
+          yAxisTextStyle={{color: colors.black}}
+          xAxisLabelTextStyle={{color: colors.black}}
           noOfSections={4} // Number of sections on the Y-axis
           yAxisLabelTexts={['0', '20K', '40K', '60K', '70K', '80K']}
           // isAnimated

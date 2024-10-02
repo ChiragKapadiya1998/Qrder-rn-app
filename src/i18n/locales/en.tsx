@@ -39,7 +39,9 @@ export default {
       'DFOOD WILL ACCESS YOUR LOCATION ONLY WHILE USING THE APP',
 
     error_email: 'Please enter your email address',
-    error_name: 'Please enter your name',
+    error_name: 'Please enter your first name',
+    error_role: 'Please select role',
+    error_nameLastName: 'Please enter your last name',
     error_password: 'Please enter your password',
     error_v_password: 'Your password must be at least 9 characters long',
     error_number_password: 'Password must contain one number',
@@ -48,10 +50,12 @@ export default {
     error_v_email: 'Please enter your valid email address',
     error_phone: 'Please enter your phone number',
     error_v_phone: 'Please enter valid phone number',
+    error_v_salary: 'Please enter salary',
     error_v_university: 'Please select university',
     error_v_canteen: 'Please enter your canteen name',
     error_country: 'Please enter your country',
     error_city: 'Please enter your city',
+    error_address: 'Please enter your address',
     error_state: 'Please enter your state',
     error_pincode: 'Please enter your pin code',
     error_re_tyre: 'Please enter your re-tyre password',
@@ -103,6 +107,7 @@ export default {
     p_enter_phone: 'Enter Phone Number',
     restaurantName: 'Name of restaurant',
     pincode: 'Pincode',
+    student: 'Student',
     restaurant: 'Restaurant',
     restaurant_name: 'Enter Restaurant Name',
     canteen: 'Canteen',
@@ -115,7 +120,7 @@ export default {
     p_password: 'Enter Password',
     p_confirm_password: 'Enter Confirm Password',
     add_address: 'Add address',
-    pay_now: 'Pay Now'
+    pay_now: 'Pay Now',
   },
   Phone_number_verification: {
     verification: 'Check your email',
@@ -182,6 +187,7 @@ export default {
   },
   addFoodList: {
     add_new_items: 'Add New Items',
+    FooddeliveryCustomization: 'Food delivery Customization',
     add_items: 'Add Items',
     reset: 'RESET',
     item_name: 'Add Item Name',
@@ -218,7 +224,7 @@ export default {
     miscellaneous: 'Miscellaneous',
     food_review: 'Food Review',
     give_food_rating: 'Give Food Rating',
-    buy_now: 'Buy Now'
+    buy_now: 'Buy Now',
   },
   foodDetails: {
     food_Details: 'Food Details',
@@ -226,10 +232,11 @@ export default {
     basic_details: 'Basic Details',
     description: 'Description',
     no_data_found: 'No Data Found',
-    food_cart: 'Food Cart'
+    food_cart: 'Food Cart',
   },
   profileScreen: {
     profile: 'Profile',
+    OrderWaterBottle: 'OrderWaterBottle',
     personal_info: 'Personal Info',
     addresses: 'Addresses',
     menu: 'Menu',
@@ -333,7 +340,7 @@ export default {
     add_cuisines: 'Add Cuisines',
     cuisines_name: 'Cuisines Name',
     submit: 'Submit',
-    cancel: 'Cancel'
+    cancel: 'Cancel',
   },
   CardMenuList: {
     add: 'Add',
@@ -367,7 +374,7 @@ export default {
     discount: 'Discount',
     delivery_charge: 'Delivery Charge',
     free_delivery: 'Free Delivery',
-    total_pay: 'Total Pay'
+    total_pay: 'Total Pay',
   },
   supportText: {
     support: 'Support',
@@ -376,7 +383,7 @@ export default {
     text: 'Text',
     enter_text: 'Enter text',
     enter_discount: 'Enter Discount',
-    enter_lot_size: 'Enter lot size'
+    enter_lot_size: 'Enter lot size',
   },
   recipesMaster: {
     edit_recipes_master: 'Edit Recipes Master',
@@ -387,7 +394,13 @@ export default {
     stock: 'Stock',
     e_stock: 'Enter Stock',
     unit: 'Unit',
-    e_unit: 'Enter Unit'
+    e_unit: 'Enter Unit',
+  },
+  miscellaneousList: {
+    miscellaneous: 'Miscellaneous',
+    add: 'Add',
+    price: 'Price',
+    miscellaneous_items: 'Miscellaneous items',
   },
   miscellaneousList:{
     miscellaneous:'Miscellaneous',

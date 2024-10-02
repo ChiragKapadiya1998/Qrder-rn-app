@@ -138,7 +138,21 @@ const ChefHome = () => {
             marginVertical: 12,
             justifyContent: 'center',
           }}>
-          <Text style={styles.bannerText}>50%</Text>
+          <ImageBackground
+            source={Icons.ic_dec}
+            resizeMode="contain"
+            style={{
+              width: 90,
+              height: 90,
+              alignSelf: 'flex-end',
+              marginRight: SCREEN_WIDTH * 0.1,
+              justifyContent: 'center',
+              alignItems: 'center',
+              flexDirection: 'row',
+            }}>
+            <Text style={styles.bannerText}>50%</Text>
+            <Text style={styles.bannerText1}>{'OFF'}</Text>
+          </ImageBackground>
         </ImageBackground>
         {/* <View style={styles.headerCard}>
           <CardView
@@ -286,9 +300,16 @@ const getGlobalStyles = (props: any) => {
       marginBottom: 10,
     },
     bannerText: {
-      ...commonFontStyle(700, 38, light_theme.white),
-      alignSelf: 'flex-end',
-      marginRight: SCREEN_WIDTH * 0.1,
+      ...commonFontStyle(800, 40, light_theme.white),
+      alignSelf: 'center',
+      top: 5,
+    },
+    bannerText1: {
+      ...commonFontStyle(700, 20, light_theme.white),
+      lineHeight: 20,
+      position: 'absolute',
+      bottom: -2,
+      right: 5,
     },
     seeText: {
       ...commonFontStyle(400, 14, colors.Primary_Orange),
