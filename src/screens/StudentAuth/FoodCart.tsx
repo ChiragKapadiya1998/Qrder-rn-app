@@ -79,7 +79,7 @@ const FoodCart = () => {
                 <View style={{ paddingHorizontal: wp(20), marginTop: hp(16) }}>
                     <Text style={styles.summaryText}>{strings('foodCart.summary')}</Text>
                     <View style={[styles.comanStyle, { marginTop: hp(8) }]}>
-                        <Text style={styles.priText}>{strings('foodCart.price') + `${2}` + strings('foodCart.price')}</Text>
+                        <Text style={styles.priText}>{strings('foodCart.price') + `${2}` + strings('foodCart.item')}</Text>
                         <Text style={[styles.priText, { color: colors.black }]}>{`₹${300}`}</Text>
                     </View>
                     <View style={[styles.comanStyle, { marginVertical: hp(12) }]}>

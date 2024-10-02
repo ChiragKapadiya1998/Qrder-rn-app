@@ -32,7 +32,8 @@ type HomeProps = {
   rightTextStyle: any;
   isCardIcon?: boolean;
   isCreateIcon?: boolean,
-  createText?: string
+  createText?: string;
+  isShowInvoice?: boolean
 };
 
 const HomeHeader = ({
@@ -53,6 +54,7 @@ const HomeHeader = ({
   isCreateIcon = false,
   createText,
   onRightPressNotification,
+  isShowInvoice = false
 }: HomeProps) => {
   const { navigate } = useNavigation();
   const { colors } = useTheme();
@@ -98,12 +100,17 @@ const HomeHeader = ({
             </View>
           </View>
         ) : null}
-        {isCreateIcon ? (
+        {isCreateIcon ? isShowInvoice ?
+          <TouchableOpacity onPress={onRightPress} style={styles.invoiceView}>
+            <Image source={Icons.invoiceIcon} style={styles.invoiceIcons} />
+            <Text style={styles.invoiceText}>{createText}</Text>
+          </TouchableOpacity>
+          :
           <TouchableOpacity onPress={onRightPress} style={styles.createView}>
             <Image source={Icons.addItemIcon} style={styles.addItemIcon} />
             <Text style={styles.createText}>{createText}</Text>
           </TouchableOpacity>
-        ) : null}
+          : null}
       </SafeAreaView>
     );
   }
@@ -151,13 +158,13 @@ const getGlobalStyles = (props: any) => {
       height: 20,
       resizeMode: 'contain',
     },
-    bagView:{
-      height:hp(35),
+    bagView: {
+      height: hp(35),
       width: wp(35),
-      borderRadius:10,
-      backgroundColor:colors.cards_bg,
-      alignItems:'center',
-      justifyContent:'center'
+      borderRadius: 10,
+      backgroundColor: colors.cards_bg,
+      alignItems: 'center',
+      justifyContent: 'center'
     },
     arrow_down: {
       width: wp(9),
@@ -237,6 +244,10 @@ const getGlobalStyles = (props: any) => {
       marginLeft: wp(8),
       ...commonFontStyle(600, 12, colors.defult_white),
     },
+    invoiceText: {
+      marginLeft: wp(8),
+      ...commonFontStyle(600, 12, colors.black),
+    },
     createView: {
       backgroundColor: colors.text_orange,
       flexDirection: 'row',
@@ -245,10 +256,23 @@ const getGlobalStyles = (props: any) => {
       paddingVertical: hp(8),
       borderRadius: 8,
     },
+    invoiceView: {
+      backgroundColor: colors.cards_bg,
+      flexDirection: 'row',
+      alignItems: 'center',
+      paddingHorizontal: wp(12),
+      paddingVertical: hp(5),
+      borderRadius: 16,
+    },
     addItemIcon: {
       width: 12,
       height: 12,
       tintColor: colors.defult_white
+    },
+    invoiceIcons: {
+      width: 18,
+      height: 18,
+      tintColor: colors.text_orange
     }
   });
 };

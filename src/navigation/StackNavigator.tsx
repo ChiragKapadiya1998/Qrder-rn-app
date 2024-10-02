@@ -66,6 +66,7 @@ import AddMiscellaneous from '../screens/Chef/AddMiscellaneous';
 import ItemMastersList from '../screens/Chef/ItemMastersList';
 import AddItemMasters from '../screens/Chef/AddItemMasters';
 import EditItemMasters from '../screens/Chef/EditItemMasters';
+import MyOrders from '../screens/ChefSettings/MyOrders';
 
 const Drawer = createDrawerNavigator();
 const { StatusBarManager } = NativeModules;
@@ -518,6 +519,15 @@ const StackNavigator: FC = () => {
         })}
         name={screenName.EditItemMasters}
         component={EditItemMasters}
+      />
+      <Stack.Screen
+        options={({ navigation }) => ({
+          ...headerStyleTransparent,
+          headerShown: false,
+          headerTitle: '',
+        })}
+        name={screenName.MyOrders}
+        component={MyOrders}
       />
     </Stack.Navigator>
   );

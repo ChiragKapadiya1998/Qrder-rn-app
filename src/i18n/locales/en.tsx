@@ -430,4 +430,24 @@ export default {
     select_unit_error: 'Please select unit',
     weight_error: 'Please enter weight',
   },
+  myOrders:{
+    my_orders:'My Orders',
+    order_details:'Order Details',
+    order_id:'Order Id',
+    user_name:'User Name',
+    phone_number:'Phone Number',
+    subtotal:'Subtotal',
+    discount:'Discount',
+    tax:'Tax',
+    platform_free:'Platform Free',
+    created_date:'Created Date',
+    address_details:'Address  Details',
+    canteen_address:'Canteen Address',
+    dining_parcel:'Dining/Parcel',
+    items:'Items',
+    thank_you:'Thank You!',
+    thank_you_des:'Thank you for placing the order',
+    go_to_home:'Go to Home',
+    address:'Address'
+  }
 };

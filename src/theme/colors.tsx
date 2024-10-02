@@ -72,13 +72,14 @@ export const light_theme = {
   cards_bg: '#F1F1F1',
   image_bg: '#C8C8C8',
   title_dec100: '#898A8D',
-  text_border:'#898A8D',
+  text_border: '#898A8D',
   bg_orange200: 'rgba(250, 98, 0, 0.2)',
   border: '#C4C4C4',
   border_gray: '#DDDDDD',
   btn_bg: '#DDDDDD',
   blue: '#0162DD',
-  green_text: '#1CAA50'
+  green_text: '#1CAA50',
+  red_text: '#CC3730'
 };
 
 export const dark_theme = {
@@ -151,11 +152,12 @@ export const dark_theme = {
   cards_bg: '#181A1E',
   image_bg: '#2B2E34',
   title_dec100: '#898A8D',
-  text_border:'#1E1E1E',
+  text_border: '#1E1E1E',
   bg_orange200: 'rgba(250, 98, 0, 0.2)',
   border: '#50555C',
   btn_bg: '#0C0F14',
   border_gray: '#50555C',
   blue: '#0162DD',
-  green_text: '#1CAA50'
+  green_text: '#1CAA50',
+  red_text: '#CC3730'
 };

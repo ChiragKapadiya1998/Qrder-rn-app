@@ -61,7 +61,7 @@ const SignInScreen = (props: Props) => {
 
   const dispatch = useAppDispatch();
   const onPressLogin = () => {
-    // dispatchNavigation(screenName.BottomTabBar);
+    // dispatchNavigation(screenName.StudentSelect);
     // return;
     if (email.trim().length === 0) {
       errorToast(strings('login.error_email'));

@@ -1,7 +1,7 @@
-import { StatusBar, StyleSheet, View } from 'react-native';
+import { StatusBar, StyleSheet, Text, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { useNavigation, useTheme } from '@react-navigation/native';
-import { hp, wp } from '../../theme/fonts';
+import { commonFontStyle, hp, wp } from '../../theme/fonts';
 import PrimaryButton from '../../compoment/PrimaryButton';
 import { screenName } from '../../navigation/screenNames';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -19,25 +19,25 @@ const StudentSelect = (props: Props) => {
   const navigation = useNavigation();
   const dispatch = useAppDispatch();
   const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
-  const [selectRole, setSelectRole] = useState('');
-  const {getUniversitiesData} = useAppSelector(state => state.data);
-  
+  const [selectUniversity, setSelectUniversity] = useState('');
+  const { getUniversitiesData } = useAppSelector(state => state.data);
+
   const onPressSelect = () => {
-    if(selectRole == ''){
+    if (selectUniversity == '') {
       errorToast(strings('StudentSignUp.error_university'));
-    }else{
+    } else {
       let obj = {
-        params:selectRole,
+        params: selectUniversity,
         onSuccess: (res: any) => {
           navigation.navigate(screenName.StudentBottomBar)
         },
-        onFailure: (Err: any) => {},
+        onFailure: (Err: any) => { },
       };
       dispatch(getUniversityDataAction(obj));
     }
-   
+
   };
-  
+
 
   useEffect(() => {
     getUniversitiesDataPress()
@@ -45,8 +45,8 @@ const StudentSelect = (props: Props) => {
 
   const getUniversitiesDataPress = () => {
     let obj = {
-      onSuccess: (res: any) => {},
-      onFailure: (Err: any) => {},
+      onSuccess: (res: any) => { },
+      onFailure: (Err: any) => { },
     };
     dispatch(getUniversitiesDataAction(obj));
   };
@@ -57,35 +57,29 @@ const StudentSelect = (props: Props) => {
         barStyle={'light-content'}
         backgroundColor={colors.Primary_Bg}
       />
+      <KeyboardAwareScrollView
+        keyboardShouldPersistTaps={'handled'}
+        contentContainerStyle={styles.contentContainerStyle}>
+          <Text style={styles.selectText}>{strings('StudentSignUp.select_university')}</Text>
+          <Text style={styles.desText}>{strings('sign_up.sign_dec')}</Text>
+        <CCDropDown
+          data={getUniversitiesData}
+          label={strings('StudentSignUp.university_name')}
+          labelField={'name'}
+          valueField={'id'}
+          placeholder={strings('StudentSignUp.select_university_name')}
+          DropDownStyle={styles.dropDownStyle}
+          value={selectUniversity}
+          setValue={setSelectUniversity}
+          extraStyle={styles.otherStyle}
+        />
 
-      <LoginHeader
-        title={strings('StudentSignUp.select_university')}
-        isBack={false}
-      />
-
-      <View style={styles.bottomContainer}>
-        <KeyboardAwareScrollView
-          keyboardShouldPersistTaps={'handled'}
-          contentContainerStyle={styles.contentContainerStyle}>
-          <CCDropDown
-            data={getUniversitiesData}
-            label={strings('StudentSignUp.university_name')}
-            labelField={'name'}
-            valueField={'id'}
-            placeholder={strings('StudentSignUp.select_university_name')}
-            DropDownStyle={styles.dropDownStyle}
-            value={selectRole}
-            setValue={setSelectRole}
-            extraStyle={styles.extraStyle}
-          />
-
-          <PrimaryButton
-            extraStyle={styles.signupButton}
-            onPress={onPressSelect}
-            title={strings('roleSelection.continue')}
-          />
-        </KeyboardAwareScrollView>
-      </View>
+        <PrimaryButton
+          extraStyle={styles.signupButton}
+          onPress={onPressSelect}
+          title={strings('roleSelection.continue')}
+        />
+      </KeyboardAwareScrollView>
     </View>
   );
 };
@@ -97,30 +91,36 @@ const getGlobalStyles = (props: any) => {
   return StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: colors.Primary_Bg,
-      paddingHorizontal: hp(2),
-    },
-    bottomContainer: {
-      flex: 2.5,
-      backgroundColor: colors.white,
-      borderTopLeftRadius: 24,
-      borderTopRightRadius: 24,
+      backgroundColor: colors.bg_white,
+
     },
     contentContainerStyle: {
-      paddingHorizontal: wp(24),
+      flex: 1,
+      paddingHorizontal: wp(20),
+      justifyContent: 'center'
     },
     dropDownStyle: {
-      borderColor: colors.inputColor,
-      backgroundColor: colors.inputColor,
-      height: hp(60),
-      borderRadius: 10,
+      borderColor: colors.input_border,
+      backgroundColor: colors.input_bg,
+      height: hp(56),
+      borderRadius: 32,
+      paddingHorizontal: wp(25),
+      marginTop: hp(20),
     },
-    extraStyle: {
-      marginTop: hp(24),
+    selectText:{
+      ...commonFontStyle(800, 20, colors.black),
+      textAlign:'center'
+    },
+    desText:{
+      ...commonFontStyle(400, 14, colors.text_gray),
+      textAlign:'center'
+    },
+    otherStyle: {
+      marginTop: hp(8),
     },
     signupButton: {
-      marginTop: hp(30),
-      borderRadius: 12,
+      marginTop: hp(12),
+      borderRadius: 20,
       alignItems: 'center',
       justifyContent: 'center',
     },

@@ -8,8 +8,8 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
-import {useNavigation, useTheme} from '@react-navigation/native';
+import React, { useEffect, useState } from 'react';
+import { useNavigation, useTheme } from '@react-navigation/native';
 import {
   getAddress,
   requestLocationPermission,
@@ -28,22 +28,22 @@ import {
   wp,
 } from '../../theme/fonts';
 import OrderModal from '../../compoment/OrderModal';
-import {strings} from '../../i18n/i18n';
-import {useAppDispatch, useAppSelector} from '../../redux/hooks';
-import {getCuisinesAction} from '../../actions/cuisinesAction';
-import {getChefsAction} from '../../actions/chefsAction';
-import {Icons} from '../../utils/images';
-import {light_theme} from '../../theme/colors';
+import { strings } from '../../i18n/i18n';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import { getCuisinesAction } from '../../actions/cuisinesAction';
+import { getChefsAction } from '../../actions/chefsAction';
+import { Icons } from '../../utils/images';
+import { light_theme } from '../../theme/colors';
 import PrimaryButton from '../../compoment/PrimaryButton';
-import {screenName} from '../../navigation/screenNames';
+import { screenName } from '../../navigation/screenNames';
 
 const ChefHome = () => {
-  const {colors} = useTheme();
-  const styles = React.useMemo(() => getGlobalStyles({colors}), [colors]);
+  const { colors } = useTheme();
+  const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
   const [value, setValue] = useState('');
   const [runningOrderModal, setRunninOrderModal] = useState(false);
   const [orderRequestModal, setOrderRequestModal] = useState(false);
-  const {isDarkTheme} = useAppSelector(state => state.common);
+  const { isDarkTheme } = useAppSelector(state => state.common);
   const dispatch = useAppDispatch();
   const navigation = useNavigation();
 
@@ -93,16 +93,16 @@ const ChefHome = () => {
         limit: 15,
         pagination: false,
       },
-      onSuccess: (res: any) => {},
-      onFailure: (Err: any) => {},
+      onSuccess: (res: any) => { },
+      onFailure: (Err: any) => { },
     };
     dispatch(getCuisinesAction(obj));
   };
 
   const getChefsList = () => {
     let obj = {
-      onSuccess: (res: any) => {},
-      onFailure: (Err: any) => {},
+      onSuccess: (res: any) => { },
+      onFailure: (Err: any) => { },
     };
     dispatch(getChefsAction(obj));
   };
@@ -120,15 +120,15 @@ const ChefHome = () => {
         backgroundColor={colors.white}
       />
       <HomeHeader
-        onPressProfile={() => {}}
-        onPressCart={() => {}}
+        onPressProfile={() => { }}
+        onPressCart={() => { }}
         location={value}
         onPressLocation={onPressLocation}
         onRightPressNotification={() => {
           navigation.navigate(screenName.ChefNotification);
         }}
       />
-      <ScrollView style={{flex: 1}}>
+      <ScrollView style={{ flex: 1 }}>
         <ImageBackground
           source={Icons.banner}
           resizeMode="contain"
@@ -191,14 +191,14 @@ const ChefHome = () => {
 
         <FlatList
           data={[1, 2, 2, 4, 45, 65, 6]}
-          contentContainerStyle={{marginHorizontal: wp(20)}}
-          renderItem={({item, index}) => {
+          contentContainerStyle={{ marginHorizontal: wp(20) }}
+          renderItem={({ item, index }) => {
             return (
               <View style={styles.listContainer}>
-                <View style={{flexDirection: 'row'}}>
-                  <View style={styles.imageView}>
+                <View style={{ flexDirection: 'row' }}>
+                  <TouchableOpacity onPress={() => navigation.navigate(screenName.MyOrders, { roll: 'staff' })} style={styles.imageView}>
                     <Text style={styles.imageText}>#{index + 1}</Text>
-                  </View>
+                  </TouchableOpacity>
 
                   <View style={styles.rightContainer}>
                     <Text style={styles.breakText}>Invoice ID: #32053</Text>
@@ -231,12 +231,12 @@ const ChefHome = () => {
                     styles.btnContainer,
                     // { bottom: isRunning ? 0 : 2 },
                   ]}>
-                  <View style={{flexDirection: 'row'}}>
+                  <View style={{ flexDirection: 'row' }}>
                     <PrimaryButton
                       extraStyle={styles.cancelBtn}
                       title={strings('orderModal.cancel')}
                       titleStyle={styles.cancelText}
-                      onPress={() => {}}
+                      onPress={() => { }}
                     />
                   </View>
                 </View>
@@ -245,31 +245,35 @@ const ChefHome = () => {
           }}
         />
 
-        <View style={{height: 100}} />
+        < View style={{ height: 100 }} />
 
-        {runningOrderModal && (
-          <OrderModal
-            isVisible={runningOrderModal}
-            onPressCancel={() => setRunninOrderModal(false)}
-            isRunning={true}
-          />
-        )}
+        {
+          runningOrderModal && (
+            <OrderModal
+              isVisible={runningOrderModal}
+              onPressCancel={() => setRunninOrderModal(false)}
+              isRunning={true}
+            />
+          )
+        }
 
-        {orderRequestModal && (
-          <OrderModal
-            isVisible={orderRequestModal}
-            onPressCancel={() => setOrderRequestModal(false)}
-          />
-        )}
-      </ScrollView>
-    </View>
+        {
+          orderRequestModal && (
+            <OrderModal
+              isVisible={orderRequestModal}
+              onPressCancel={() => setOrderRequestModal(false)}
+            />
+          )
+        }
+      </ScrollView >
+    </View >
   );
 };
 
 export default ChefHome;
 
 const getGlobalStyles = (props: any) => {
-  const {colors} = props;
+  const { colors } = props;
   return StyleSheet.create({
     container: {
       flex: 1,
