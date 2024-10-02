@@ -40,6 +40,7 @@ import {
 } from '../../actions/commonAction';
 import debounce from 'lodash/debounce';
 import CCDropDown from '../../compoment/CCDropDown';
+import { setAsyncRole } from '../../utils/asyncStorageManager';
 
 type Props = {};
 
@@ -186,7 +187,8 @@ const SignUpScreen = (props: Props) => {
       data.append('status', '1');
       let obj = {
         data,
-        onSuccess: (response: any) => {
+        onSuccess: async(response: any) => {
+          await setAsyncRole(selectRole);
           dispatchNavigation(screenName.BottomTabBar);
         },
         onFailure: (Err: any) => {
@@ -260,7 +262,9 @@ const SignUpScreen = (props: Props) => {
       data.append('university_id', 2);
       let obj = {
         data,
-        onSuccess: (response: any) => {
+        onSuccess: async(response: any) => {
+          await setAsyncRole(selectRole);
+
           dispatchNavigation(screenName.BottomTabBar);
         },
         onFailure: (Err: any) => {
@@ -327,8 +331,9 @@ const SignUpScreen = (props: Props) => {
 
       let obj = {
         data,
-        onSuccess: (response: any) => {
+        onSuccess: async(response: any) => {
           console.log('response', response);
+          await setAsyncRole(selectRole);
 
           dispatchNavigation(screenName.StudentBottomBar);
         },
