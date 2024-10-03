@@ -37,6 +37,7 @@ export const api = {
   cuisineMenu: 'canteen-menu',
   canteenCuisine: 'canteen-cuisine',
   getStudentMenu: 'cuisine-menu',
+  waterBottle: 'water-bottle',
 };
 
 export const POST = 'POST';

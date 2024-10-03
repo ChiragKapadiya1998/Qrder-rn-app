@@ -40,7 +40,7 @@ import {
 } from '../../actions/commonAction';
 import debounce from 'lodash/debounce';
 import CCDropDown from '../../compoment/CCDropDown';
-import { setAsyncRole } from '../../utils/asyncStorageManager';
+import {setAsyncRole} from '../../utils/asyncStorageManager';
 
 type Props = {};
 
@@ -48,6 +48,7 @@ const SignUpScreen = (props: Props) => {
   const {colors, isDark} = useTheme();
   const styles = React.useMemo(() => getGlobalStyles({colors}), [colors]);
   const [name, setName] = useState('');
+  const [user_name, setUser_name] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -107,6 +108,7 @@ const SignUpScreen = (props: Props) => {
 
   const emptyFiled = () => {
     setName('');
+    setUser_name('');
     setLastName('');
     setEmail('');
     setPassword('');
@@ -134,6 +136,8 @@ const SignUpScreen = (props: Props) => {
       errorToast(strings('login.error_role'));
     } else if (name.trim().length === 0) {
       errorToast(strings('login.error_name'));
+    } else if (user_name.trim().length === 0) {
+      errorToast(strings('sign_up.user_name_error'));
     } else if (lastName.trim().length === 0) {
       errorToast(strings('login.error_nameLastName'));
     } else if (email.trim().length === 0) {
@@ -173,13 +177,15 @@ const SignUpScreen = (props: Props) => {
     } else {
       var data = new FormData();
       data.append('name', name);
-      data.append('lastname', lastName);
+      data.append('user_name', user_name);
+      data.append('last_name', lastName);
       data.append('email', email);
       data.append('password', password);
       data.append('confirmed', rePassword);
       data.append('restaurant_name', restaurantName);
       data.append('number', number);
       data.append('address', area);
+      data.append('pincode', pincode);
       data.append('city_id', addressList?.id);
       data.append('state_id', addressList?.state?.id);
       data.append('country_id', addressList?.state?.country?.id);
@@ -187,7 +193,7 @@ const SignUpScreen = (props: Props) => {
       data.append('status', '1');
       let obj = {
         data,
-        onSuccess: async(response: any) => {
+        onSuccess: async (response: any) => {
           await setAsyncRole(selectRole);
           dispatchNavigation(screenName.BottomTabBar);
         },
@@ -206,6 +212,8 @@ const SignUpScreen = (props: Props) => {
       errorToast(strings('login.error_role'));
     } else if (name.trim().length === 0) {
       errorToast(strings('login.error_name'));
+    } else if (user_name.trim().length === 0) {
+      errorToast(strings('sign_up.user_name_error'));
     } else if (lastName.trim().length === 0) {
       errorToast(strings('login.error_nameLastName'));
     } else if (email.trim().length === 0) {
@@ -247,13 +255,15 @@ const SignUpScreen = (props: Props) => {
     } else {
       var data = new FormData();
       data.append('name', name);
-      data.append('lastname', lastName);
+      data.append('user_name', user_name);
+      data.append('last_name', lastName);
       data.append('email', email);
       data.append('password', password);
       data.append('confirmed', rePassword);
       data.append('restaurant_name', canteenName);
       data.append('number', number);
       data.append('address', area);
+      data.append('pincode', pincode);
       data.append('city_id', addressList?.id);
       data.append('state_id', addressList?.state?.id);
       data.append('country_id', addressList?.state?.country?.id);
@@ -262,7 +272,7 @@ const SignUpScreen = (props: Props) => {
       data.append('university_id', 2);
       let obj = {
         data,
-        onSuccess: async(response: any) => {
+        onSuccess: async (response: any) => {
           await setAsyncRole(selectRole);
 
           dispatchNavigation(screenName.BottomTabBar);
@@ -317,7 +327,7 @@ const SignUpScreen = (props: Props) => {
     } else {
       var data = new FormData();
       data.append('name', name);
-      data.append('lastname', lastName);
+      data.append('last_name', lastName);
       data.append('email', email);
       data.append('number', number);
       data.append('password', password);
@@ -331,7 +341,7 @@ const SignUpScreen = (props: Props) => {
 
       let obj = {
         data,
-        onSuccess: async(response: any) => {
+        onSuccess: async (response: any) => {
           console.log('response', response);
           await setAsyncRole(selectRole);
 
@@ -477,6 +487,14 @@ const SignUpScreen = (props: Props) => {
             label={strings('sign_up.name')}
             onChangeText={(t: string) => setName(t)}
           />
+          {selectRole !== 'Student' && (
+            <Input
+              value={user_name}
+              placeholder={strings('sign_up.user_name')}
+              label={strings('sign_up.user_name')}
+              onChangeText={(t: string) => setUser_name(t)}
+            />
+          )}
           <Input
             value={lastName}
             placeholder={strings('sign_up.lats_p_name')}

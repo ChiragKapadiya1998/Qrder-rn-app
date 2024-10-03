@@ -43,12 +43,12 @@ const SplashScreen = (props: Props) => {
     console.log('isRole', isRole);
 
     if (isUser) {
-      if (isRole == 'Admin') {
-        dispatchNavigation(screenName.BottomTabBar);
+      if (isRole == 'Student') {
+        dispatchNavigation(screenName.StudentBottomBar);
       } else if (isRole == 'Staff') {
         dispatchNavigation(screenName.ChefSelfBottomBar);
       } else {
-        dispatchNavigation(screenName.StudentBottomBar);
+        dispatchNavigation(screenName.BottomTabBar);
       }
     } else {
       dispatchNavigation(screenName.SignInScreen);
