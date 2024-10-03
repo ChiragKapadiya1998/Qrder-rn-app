@@ -147,6 +147,22 @@ const AddFoodDetails = () => {
     </View>
   );
 
+  const goBack = () => {
+    setLoading(false);
+    setImages();
+    setItemName('');
+    setPrice('');
+    setQuantityValue(0);
+    setBasicDetails('');
+    setPercentageInput('');
+    setImageData({ uri: '' });
+    setIsPictureEdit(false);
+    setMiscellaneous(
+      getMiscellaneous.map(item => {
+        return { ...item, isSelect: false };
+      }))
+  }
+
   const onPressAddItem = () => {
     if (imageData.uri == '') {
       errorToast(strings('addFoodList.selectImg'));
@@ -162,7 +178,7 @@ const AddFoodDetails = () => {
       setLoading(true);
       let data = new FormData();
       const texPre = selectedTex === 0 ? 0 : Number(percentageInput)
-      const listData=miscellaneous.filter(list => list.isSelect == true).map((item) => { return item.id })
+      const listData = miscellaneous.filter(list => list.isSelect == true).map((item) => { return item.id })
 
       data.append('name', itemName);
       data.append('cuisine_id', quantityValue);
@@ -312,6 +328,7 @@ const AddFoodDetails = () => {
     <View style={styles.container}>
       <HomeHeader
         onBackPress={() => {
+          goBack()
           navigation.goBack();
         }}
         onRightPress={() => { }}
@@ -462,10 +479,9 @@ const AddFoodDetails = () => {
             <FlatList
               data={miscellaneous}
               renderItem={renderItem}
-              horizontal={false}
+              horizontal={true}
               keyExtractor={item => item.value}
               showsVerticalScrollIndicator={false}
-              contentContainerStyle={{gap:12}}
             />
           </View>
 
@@ -515,6 +531,7 @@ const AddFoodDetails = () => {
             <PrimaryButton
               extraStyle={styles.cancelBtn}
               onPress={() => {
+                goBack()
                 navigation.goBack();
               }}
               title={strings('CuisinesNameList.cancel')}
@@ -679,7 +696,7 @@ const getGlobalStyles = (props: any) => {
     },
     radioView: {
       flexDirection: 'row',
-      marginTop:hp(12)
+      marginTop: hp(12)
     },
     radioContainer: {
       flexDirection: 'row',
@@ -789,5 +806,8 @@ const getGlobalStyles = (props: any) => {
     cancelText: {
       ...commonFontStyle(600, 18, colors.title_dec100),
     },
+    upToText: {
+      ...commonFontStyle(500, 12, colors.title_dec100),
+    }
   });
 };

@@ -68,7 +68,6 @@ const EditMenuList = () => {
     const isFocuse = useIsFocused();
     const [miscellaneous, setMiscellaneous] = useState([]);
 
-console.log("--=-",itemData)
     useEffect(() => {
         const selectedIds = new Set(miscellaneous_items.map(item => item.id));
         console.log("Selected IDs: ", selectedIds);
@@ -159,7 +158,7 @@ console.log("--=-",itemData)
             setLoading(true);
             let data = new FormData();
             const texPre = selectedTex === 0 ? 0 : Number(percentageInput)
-            const listData=miscellaneous.filter(list => list.isSelect == true).map((item) => { return item.id })
+            const listData = miscellaneous.filter(list => list.isSelect == true).map((item) => { return item.id })
 
 
             data.append('name', itemName);
@@ -170,26 +169,20 @@ console.log("--=-",itemData)
             data.append('tax_percentage', texPre);
             data.append('miscellaneous_item_ids', `[${listData}]`);
 
-            if(imageData?.uri !== itemData.image ){
+            if (imageData?.uri !== itemData.image) {
                 data.append('file', {
                     uri: imageData?.uri,
                     type: imageData?.mime,
                     name: imageData?.name,
                 });
             }
-           
-            console.log('data', JSON.stringify(data));
-
             let obj = {
                 params: itemData?.id,
                 data,
                 onSuccess: (response: any) => {
-                    console.log('====================================');
-                    console.log("response",response);
-                    console.log('====================================');
                     navigation.navigate(screenName.tab_bar_name.MenuList)
                     setLoading(false);
-                   
+
                 },
                 onFailure: (Err: any) => {
                     setLoading(false);
@@ -384,10 +377,9 @@ console.log("--=-",itemData)
                         <FlatList
                             data={miscellaneous}
                             renderItem={renderItem}
-                            horizontal ={false}
+                            horizontal={true}
                             keyExtractor={item => item.value}
                             showsVerticalScrollIndicator={false}
-                            contentContainerStyle={{gap:12}}
                         />
                     </View>
 
@@ -562,7 +554,7 @@ const getGlobalStyles = (props: any) => {
         },
         radioView: {
             flexDirection: 'row',
-            marginTop:hp(12)
+            marginTop: hp(12)
         },
         radioContainer: {
             flexDirection: 'row',
@@ -656,5 +648,8 @@ const getGlobalStyles = (props: any) => {
         cancelText: {
             ...commonFontStyle(600, 18, colors.title_dec100),
         },
+        upToText: {
+            ...commonFontStyle(500, 12, colors.title_dec100),
+          }
     });
 };

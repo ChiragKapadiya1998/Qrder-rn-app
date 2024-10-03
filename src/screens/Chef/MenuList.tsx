@@ -190,7 +190,7 @@ console.log("====<><><",currentData.current)
                 isCreateIcon={true}
             />
 
-            <View style={[styles.boxView,{flex:1}]}>
+            <View style={[styles.boxView]}>
                 {currentData.current &&
                     <FlatList
                         onEndReachedThreshold={0.3}
@@ -217,6 +217,7 @@ console.log("====<><><",currentData.current)
                             );
                         }}
                         renderItem={renderItem}
+                        contentContainerStyle={{paddingBottom:hp(100)}}
                         showsVerticalScrollIndicator={false}
                         ListEmptyComponent={
                             loading ? (
@@ -249,7 +250,7 @@ console.log("====<><><",currentData.current)
                     />
                 }
             </View>
-            <Spacer height={30}/>
+            {/* <Spacer height={30}/> */}
             <DleleteModal
                 title={strings('myMenuList.are_you_sure')}
                 rightText={strings('myMenuList.yes')}
