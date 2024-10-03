@@ -22,6 +22,7 @@ import Notification from '../screens/Chef/Notification';
 import Profile from '../screens/Chef/Profile';
 import {Icons} from '../utils/images';
 import {AdminHomeStack} from './StackNavigator';
+import MenuList from '../screens/Chef/MenuList';
 
 const Tab = createBottomTabNavigator();
 
@@ -164,8 +165,8 @@ function BottomTabBar() {
         component={AdminHomeStack}
       />
       <Tab.Screen
-        name={screenName.tab_bar_name.FoodList}
-        component={FoodList}
+        name={screenName.tab_bar_name.MenuList}
+        component={MenuList}
       />
       <Tab.Screen
         name={screenName.tab_bar_name.AddFoodDetails}

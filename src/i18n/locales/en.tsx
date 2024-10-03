@@ -228,6 +228,9 @@ export default {
     food_review: 'Food Review',
     give_food_rating: 'Give Food Rating',
     buy_now: 'Buy Now',
+    add_food_photo:'Add Food Photo',
+    upToMb:'(up to 12 Mb)',
+    e_Tex_Per:"Please enter a percentage between 0% and 100%"
   },
   foodDetails: {
     food_Details: 'Food Details',
@@ -452,4 +455,7 @@ export default {
     go_to_home: 'Go to Home',
     address: 'Address',
   },
+  menuList:{
+    menu:'Menu'
+  }
 };

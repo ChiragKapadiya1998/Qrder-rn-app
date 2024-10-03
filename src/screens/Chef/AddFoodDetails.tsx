@@ -7,30 +7,31 @@ import {
   StyleSheet,
   Text,
   TextInput,
+  ToastAndroid,
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
-import {useIsFocused, useNavigation, useTheme} from '@react-navigation/native';
+import React, { useEffect, useState } from 'react';
+import { useIsFocused, useNavigation, useTheme } from '@react-navigation/native';
 import HomeHeader from '../../compoment/HomeHeader';
-import {strings} from '../../i18n/i18n';
+import { strings } from '../../i18n/i18n';
 import Input from '../../compoment/Input';
-import {commonFontStyle, hp, isIos, SCREEN_WIDTH, wp} from '../../theme/fonts';
-import {Icons} from '../../utils/images';
+import { commonFontStyle, hp, isIos, SCREEN_WIDTH, wp } from '../../theme/fonts';
+import { Icons } from '../../utils/images';
 import ImagePicker from 'react-native-image-crop-picker';
 import CCDropDown from '../../compoment/CCDropDown';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import PrimaryButton from '../../compoment/PrimaryButton';
-import {useAppDispatch, useAppSelector} from '../../redux/hooks';
-import {addMenuAction} from '../../actions/menuAction';
-import {errorToast} from '../../utils/commonFunction';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import { addMenuAction } from '../../actions/menuAction';
+import { errorToast } from '../../utils/commonFunction';
 import moment = require('moment');
 import AddFolderModal from '../../compoment/AddFolderModal';
 import Spacer from '../../compoment/Spacer';
-import {getCuisinesAction} from '../../actions/cuisinesAction';
-import {screenName} from '../../navigation/screenNames';
+import { getCuisinesAction } from '../../actions/cuisinesAction';
+import { screenName } from '../../navigation/screenNames';
 import ImageCropPicker from 'react-native-image-crop-picker';
-import {openImagePicker} from '../../utils/globalFunctions';
+import { openImagePicker, options } from '../../utils/globalFunctions';
 
 type DataItem = {
   id: number;
@@ -40,31 +41,32 @@ type DataItem = {
 };
 
 const AddFoodDetails = () => {
-  const {colors} = useTheme();
+  const { colors } = useTheme();
   const navigation = useNavigation();
-  const styles = React.useMemo(() => getGlobalStyles({colors}), [colors]);
+  const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
   const [itemName, setItemName] = useState('');
   const [price, setPrice] = useState('');
   const [basicDetails, setBasicDetails] = useState('');
   const [percentageInput, setPercentageInput] = useState('');
   const [images, setImages] = useState('');
-  const [imageData, setImageData] = useState<any>({
+  const [imageData, setImageData] = useState < any > ({
     uri: '',
   });
-  const [isPictureEdit, setIsPictureEdit] = useState<boolean>(false);
+  const [isPictureEdit, setIsPictureEdit] = useState < boolean > (false);
 
   const [quantityValue, setQuantityValue] = useState(0);
-  const {getCuisines, getMiscellaneous} = useAppSelector(state => state.data);
+  const { getCuisines, getMiscellaneous } = useAppSelector(state => state.data);
   const dispatch = useAppDispatch();
   const [newFolder, setNewFolder] = useState(false);
   const [showAddField, setShowAddField] = useState(false);
-  const [selectedOption, setSelectedOption] = useState<number | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [selectedOption, setSelectedOption] = useState < number | null > (null);
+  const [loading, setLoading] = useState < boolean > (false);
+  const [selectedTex, setSelectedTex] = useState(0)
   const isFocuse = useIsFocused();
 
   const [miscellaneous, setMiscellaneous] = useState(
     getMiscellaneous.map(item => {
-      return {...item, isSelect: false};
+      return { ...item, isSelect: false };
     }),
   );
 
@@ -75,9 +77,12 @@ const AddFoodDetails = () => {
   useEffect(() => {
     setMiscellaneous(
       getMiscellaneous.map(item => {
-        return {...item, isSelect: false};
+        return { ...item, isSelect: false };
       }),
     );
+    return () => {
+      setSelectedTex(0)
+    }
   }, [isFocuse]);
 
   const getCuisinesList = () => {
@@ -87,8 +92,8 @@ const AddFoodDetails = () => {
         limit: 15,
         pagination: false,
       },
-      onSuccess: (res: any) => {},
-      onFailure: (Err: any) => {},
+      onSuccess: (res: any) => { },
+      onFailure: (Err: any) => { },
     };
     dispatch(getCuisinesAction(obj));
   };
@@ -136,9 +141,9 @@ const AddFoodDetails = () => {
       });
   };
 
-  const renderImage = ({item}: any) => (
+  const renderImage = ({ item }: any) => (
     <View style={styles.imageContainer}>
-      <Image source={{uri: item.uri}} style={styles.imageView} />
+      <Image source={{ uri: item.uri }} style={styles.imageView} />
     </View>
   );
 
@@ -156,20 +161,26 @@ const AddFoodDetails = () => {
     } else {
       setLoading(true);
       let data = new FormData();
+      const texPre = selectedTex === 0 ? 0 : Number(percentageInput)
+      const listData=miscellaneous.filter(list => list.isSelect == true).map((item) => { return item.id })
+
       data.append('name', itemName);
       data.append('cuisine_id', quantityValue);
       data.append('price', price);
       data.append('description', basicDetails);
-      data.append('files[]', {
+      data.append('include_tax', selectedTex);
+      data.append('tax_percentage', texPre);
+      data.append('miscellaneous_item_ids', `[${listData}]`);
+      data.append('file', {
         uri: imageData?.uri,
         type: imageData?.mime,
         name: imageData?.name,
       });
-      console.log('data', JSON.stringify(data));
 
       let obj = {
         data,
         onSuccess: (response: any) => {
+          navigation.navigate(screenName.tab_bar_name.MenuList)
           setLoading(false);
           setImages();
           setItemName('');
@@ -177,11 +188,11 @@ const AddFoodDetails = () => {
           setQuantityValue(0);
           setBasicDetails('');
           setPercentageInput('');
-          setImageData({uri: ''});
+          setImageData({ uri: '' });
           setIsPictureEdit(false);
           setMiscellaneous(
             getMiscellaneous.map(item => {
-              return {...item, isSelect: false};
+              return { ...item, isSelect: false };
             }),
           );
           // Keyboard.dismiss()
@@ -208,15 +219,30 @@ const AddFoodDetails = () => {
   const handlePress = (value: number) => {
     const update = miscellaneous.map(item => {
       if (item?.id == value.id) {
-        return {...value, isSelect: !value?.isSelect};
+        return { ...value, isSelect: !value?.isSelect };
       } else {
-        return {...item};
+        return { ...item };
       }
     });
     setMiscellaneous(update);
   };
 
-  const renderItem: ListRenderItem<DataItem> = ({item}: any) => (
+  const handleChangeText = (text) => {
+    const value = parseFloat(text);
+    if (!isNaN(value) && value >= 0 && value <= 100) {
+      setPercentageInput(text);
+    } else if (text.length === 0) {
+      setPercentageInput('');
+    } else {
+      ToastAndroid.showWithGravity(
+        strings('addFoodList.e_Tex_Per'),
+        ToastAndroid.SHORT,
+        ToastAndroid.CENTER
+      );
+    }
+  };
+
+  const renderItem: ListRenderItem<DataItem> = ({ item }: any) => (
     <View style={styles.radioView}>
       <TouchableOpacity
         key={item.id}
@@ -288,12 +314,12 @@ const AddFoodDetails = () => {
         onBackPress={() => {
           navigation.goBack();
         }}
-        onRightPress={() => {}}
+        onRightPress={() => { }}
         mainShow={true}
         title={strings('addFoodList.add_items')}
         extraStyle={styles.headerContainer}
         isHideIcon={true}
-        // rightText={strings('addFoodList.reset')}
+      // rightText={strings('addFoodList.reset')}
       />
       <View style={styles.subContainer}>
         <KeyboardAwareScrollView
@@ -303,33 +329,40 @@ const AddFoodDetails = () => {
             {strings('addFoodList.upload_photo_video')}
           </Text>
 
+
           {!isPictureEdit ? (
-            <TouchableOpacity
-              onPress={() => {
-                selectImage();
-              }}>
-              <Image source={Icons.addItem} style={styles.addItem} />
+            <TouchableOpacity style={styles.addImageView} onPress={() => {
+              selectImage();
+            }}>
+              <Image source={Icons.addImageIcon} style={styles.addImageIcon} />
+              <Text style={styles.addImageText}>
+                {strings('addFoodList.add_food_photo')}
+              </Text>
+              <Text style={styles.upToText}>
+                {strings('addFoodList.upToMb')}
+              </Text>
             </TouchableOpacity>
           ) : (
-            <TouchableOpacity
-              onPress={() => {
-                selectImage();
-              }}>
-              <Image
-                source={{uri: imageData.uri}}
-                style={[styles.addItem, {resizeMode: 'stretch'}]}
-              />
+            <TouchableOpacity style={styles.addImageView} onPress={() => {
+              selectImage();
+            }}>
+              <Image source={{ uri: imageData.uri }} style={{
+                width: '100%',
+                height: '100%',
+                resizeMode: 'stretch',
+                borderRadius: 16,
+              }} />
             </TouchableOpacity>
           )}
-          <View style={styles.uploadImage}>
-            {/* <TouchableOpacity
+          {/* <View style={styles.uploadImage}> */}
+          {/* <TouchableOpacity
               style={styles.addImage}
               onPress={selectAndCropImage}>
               <Image style={styles.addIcon} source={Icons.addImage} />
               <Text style={styles.addText}>{strings('addFoodList.add')}</Text>
             </TouchableOpacity> */}
 
-            {/* <FlatList
+          {/* <FlatList
               data={images}
               renderItem={renderImage}
               keyExtractor={item => item.id}
@@ -337,7 +370,7 @@ const AddFoodDetails = () => {
               horizontal
               style={styles.imageList}
             /> */}
-          </View>
+          {/* </View> */}
           <Input
             value={itemName}
             placeholder={strings('addFoodList.item_name')}
@@ -371,52 +404,32 @@ const AddFoodDetails = () => {
           />
           {/* </View> */}
 
-          <Text style={[styles.textStyle, {marginTop: 20}]}>
+          <Text style={[styles.textStyle]}>
             {strings('addFoodList.PriceWithTax')}
           </Text>
-          <TouchableOpacity
-            style={{flexDirection: 'row', alignItems: 'center', gap: 5}}>
-            <View
-              style={{
-                width: 24,
-                height: 24,
-                // borderWidth: 1,
-                justifyContent: 'center',
-                alignItems: 'center',
-                borderRadius: 24 / 2,
-                backgroundColor: colors.blue,
-              }}>
-              <Image source={Icons.ic_check} style={styles.ic_check} />
-            </View>
-            <Text style={styles.text1}>
-              {strings('addFoodList.Inclusiveinvoice')}
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              gap: 5,
-              marginTop: 10,
-              marginBottom: 6,
-            }}>
-            <View
-              style={{
-                width: 24,
-                height: 24,
-                borderWidth: 1,
-                justifyContent: 'center',
-                alignItems: 'center',
-                borderRadius: 24 / 2,
-                // backgroundColor: colors.blue,
-                borderColor: colors.title_dec,
-              }}>
-              <Image source={Icons.ic_check} style={styles.ic_check} />
-            </View>
-            <Text style={styles.text1}>
-              {strings('addFoodList.Exclusiveinvoice')}
-            </Text>
-          </TouchableOpacity>
+          {options.map((option, index) => (
+            <TouchableOpacity
+              key={index}
+              style={{ flexDirection: 'row', alignItems: 'center', gap: 10, marginTop: index === 0 ? 0 : 16 }}
+              onPress={() => setSelectedTex(index)}
+            >
+              <View
+                style={{
+                  width: 20,
+                  height: 20,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  borderRadius: 10,
+                  backgroundColor: selectedTex === index ? colors.blue : 'transparent',
+                  borderColor: selectedTex === index ? colors.blue : colors.title_dec,
+                  borderWidth: selectedTex === index ? 0 : 1,
+                }}
+              >
+                {selectedTex === index && <Image source={option.icon} style={styles.ic_check} />}
+              </View>
+              <Text style={styles.text1}>{option.label}</Text>
+            </TouchableOpacity>
+          ))}
 
           <Text style={styles.textStyle}>
             {strings('addFoodList.TaxPercentage')}
@@ -433,10 +446,11 @@ const AddFoodDetails = () => {
             ]}>
             <TextInput
               value={percentageInput}
-              onChangeText={(t: string) => setPercentageInput(t)}
+              onChangeText={handleChangeText}
               placeholder={strings('addFoodList.add_basic')}
               style={styles.inputTaxPercentage}
               placeholderTextColor={colors.title_dec100}
+              keyboardType="numeric"
             />
             <Image source={Icons.pertenge} style={styles.pertenge} />
           </View>
@@ -448,16 +462,24 @@ const AddFoodDetails = () => {
             <FlatList
               data={miscellaneous}
               renderItem={renderItem}
-              horizontal
+              horizontal={false}
               keyExtractor={item => item.value}
-              showsHorizontalScrollIndicator={false}
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={{gap:12}}
             />
           </View>
 
-          <Text style={styles.basicText}>
-            {strings('addFoodList.Description')}
-          </Text>
-          <TextInput
+          <Input
+            value={basicDetails}
+            placeholder={strings('addFoodList.Adddescription')}
+            label={strings('addFoodList.Description')}
+            onChangeText={(t: string) => setBasicDetails(t)}
+            extraStyle={styles.inputView}
+            inputStyle={styles.inputStyle}
+            isShowLabel={true}
+          />
+
+          {/* <TextInput
             value={basicDetails}
             onChangeText={(t: string) => setBasicDetails(t)}
             placeholder={strings('addFoodList.Adddescription')}
@@ -473,7 +495,7 @@ const AddFoodDetails = () => {
             multiline
             maxLength={200}
             placeholderTextColor={colors.gray_300}
-          />
+          /> */}
           {/* <PrimaryButton
             extraStyle={styles.saveChangeButton}
             onPress={onPressAddItem}
@@ -481,21 +503,6 @@ const AddFoodDetails = () => {
             titleStyle={styles.saveText}
             isLoading={loading}
           /> */}
-          <PrimaryButton
-            extraStyle={styles.submitButton}
-            onPress={() => navigation.navigate(screenName.MiscellaneousList)}
-            title={'Miscellaneous'}
-            titleStyle={styles.submitText}
-            isLoading={loading}
-          />
-          <Spacer height={10} />
-          <PrimaryButton
-            extraStyle={styles.submitButton}
-            onPress={() => navigation.navigate(screenName.ItemMastersList)}
-            title={'Miscellaneous'}
-            titleStyle={styles.submitText}
-            isLoading={loading}
-          />
           <View style={styles.buttonContainer}>
             <PrimaryButton
               extraStyle={styles.submitButton}
@@ -524,17 +531,17 @@ const AddFoodDetails = () => {
 export default AddFoodDetails;
 
 const getGlobalStyles = (props: any) => {
-  const {colors} = props;
+  const { colors } = props;
   return StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: colors.white,
+      backgroundColor: colors.bg_white,
     },
     headerContainer: {
-      backgroundColor: colors.white,
+      backgroundColor: colors.bg_white,
     },
     subContainer: {
-      marginHorizontal: wp(16),
+      marginHorizontal: wp(20),
     },
     addItem: {
       width: SCREEN_WIDTH * 0.9,
@@ -556,6 +563,28 @@ const getGlobalStyles = (props: any) => {
     uploadText: {
       ...commonFontStyle(500, 18, colors.black),
       lineHeight: 20,
+    },
+    addImageView: {
+      backgroundColor: colors.cards_bg,
+      width: SCREEN_WIDTH * 0.892,
+      height: hp(161),
+      borderWidth: 1,
+      borderColor: colors.image_bg,
+      borderRadius: 16,
+      borderStyle: 'dashed',
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginTop: hp(8)
+    },
+    addImageIcon: {
+      width: 54,
+      height: 54,
+      resizeMode: 'contain'
+    },
+    addImageText: {
+      paddingTop: hp(16),
+      paddingBottom: hp(8),
+      ...commonFontStyle(700, 15, colors.text_orange),
     },
     uploadImage: {
       paddingTop: hp(16),
@@ -593,8 +622,6 @@ const getGlobalStyles = (props: any) => {
       backgroundColor: colors.white,
       borderWidth: 1,
       borderColor: colors.border_line4,
-      // height: hp(42),
-      // width: wp(115),
       paddingHorizontal: wp(16),
     },
     dropDownStyle: {
@@ -612,8 +639,8 @@ const getGlobalStyles = (props: any) => {
       backgroundColor: colors.image_Bg_gray,
     },
     basicText: {
-      ...commonFontStyle(400, 14, colors.Title_Text),
-      paddingTop: hp(40),
+      ...commonFontStyle(500, 14, colors.black),
+      paddingTop: hp(16),
     },
     basicInput: {
       height: hp(136),
@@ -622,20 +649,11 @@ const getGlobalStyles = (props: any) => {
       borderRadius: 8,
       padding: 15,
       textAlignVertical: 'top',
-      marginTop: hp(20),
+      marginTop: hp(8),
       color: colors.black,
     },
-    saveChangeButton: {
-      marginTop: hp(49),
-      borderRadius: 12,
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    saveText: {
-      ...commonFontStyle(400, 18, colors.white),
-    },
     spacerView: {
-      height: isIos ? hp(210) : hp(170),
+      height: isIos ? hp(210) : hp(110),
     },
     boxStyle: {
       borderWidth: 1,
@@ -661,7 +679,7 @@ const getGlobalStyles = (props: any) => {
     },
     radioView: {
       flexDirection: 'row',
-      paddingTop: hp(15),
+      marginTop:hp(12)
     },
     radioContainer: {
       flexDirection: 'row',
@@ -692,9 +710,9 @@ const getGlobalStyles = (props: any) => {
     checkbox: {
       height: hp(22),
       width: wp(22),
-      borderRadius: 2,
-      borderWidth: 2,
-      borderColor: colors.Border_gray,
+      borderRadius: 6,
+      borderWidth: 1,
+      borderColor: colors.text_border,
       alignItems: 'center',
       justifyContent: 'center',
     },
@@ -715,8 +733,8 @@ const getGlobalStyles = (props: any) => {
     },
     textStyle: {
       ...commonFontStyle(500, 14, colors.black),
-      marginTop: 15,
-      marginBottom: 10,
+      marginTop: hp(16),
+      marginBottom: hp(8),
     },
     PercentageInput: {
       borderWidth: 1,
@@ -748,7 +766,7 @@ const getGlobalStyles = (props: any) => {
       justifyContent: 'space-between',
       alignItems: 'center',
       // paddingHorizontal: wp(20),
-      paddingTop: hp(40),
+      paddingTop: hp(25),
     },
     submitButton: {
       flex: 1,

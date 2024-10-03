@@ -90,6 +90,7 @@ export const Icons = {
   ic_cart: require('../assets/Icons/ic_cart.png'),
   ic_dec: require('../assets/Icons/ic_dec.png'),
   thankIcon: require('../assets/Icons/thank_icon.png'),
+  addImageIcon: require('../assets/Icons/image_icons.png'),
 
   //tab
   ic_home: require('../assets/Icons/ic_home.png'),

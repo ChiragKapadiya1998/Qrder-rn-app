@@ -24,7 +24,6 @@ export const getMenuAction =
     let headers = {
       Authorization: await getAsyncToken(),
     };
-    dispatch({type: IS_LOADING, payload: true});
     return makeAPIRequest({
       method: GET,
       url: api.getMenu,
@@ -33,19 +32,15 @@ export const getMenuAction =
     })
       .then(async (response: any) => {
         if (response.status === 200 || response.status === 201) {
-          console.log('response?.data', response?.data);
           let Data = {
             ...response?.data?.data,
             current_page: request?.data?.page,
           };
           dispatch({type: GET_MENU_DATA, payload: Data});
-
-          dispatch({type: IS_LOADING, payload: false});
           if (request.onSuccess) request.onSuccess(response.data);
         }
       })
       .catch(error => {
-        dispatch({type: IS_LOADING, payload: false});
         if (request.onFailure) request.onFailure(error.response);
       });
   };

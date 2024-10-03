@@ -166,31 +166,32 @@ const Profile = (props: Props) => {
               iconName: Icons.profileIcon,
               screens: screenName.EditProfile,
             },
-            // {
-            //   title: strings('profileScreen.menu'),
-            //   iconName: Icons.menuIcon,
-            //   screens: ""
-            // },
-            {
-              title: strings('profileScreen.inventory'),
-              iconName: Icons.inventory,
-              screens: '',
-            },
-            {
-              title: strings('profileScreen.ItemMasters'),
-              iconName: Icons.inventory,
-              screens: screenName.ItemMastersList,
-            },
-            {
-              title: strings('profileScreen.Miscellaneous'),
-              iconName: Icons.inventory,
-              screens: screenName.MiscellaneousList,
-            },
             {
               title: strings('profileScreen.Cuisines'),
               iconName: Icons.inventory,
               screens: screenName.CuisinesNameList,
             },
+            {
+              title: strings('profileScreen.menu'),
+              iconName: Icons.inventory,
+              screens: screenName.tab_bar_name.MenuList
+            },
+            {
+              title: strings('addFoodList.Miscellaneousitems'),
+              iconName: Icons.inventory,
+              screens: screenName.MiscellaneousList,
+            },
+            // {
+            //   title: strings('profileScreen.inventory'),
+            //   iconName: Icons.inventory,
+            //   screens: '',
+            // },
+            {
+              title: strings('profileScreen.ItemMasters'),
+              iconName: Icons.inventory,
+              screens: screenName.ItemMastersList,
+            },
+           
             {
               title: strings('profileScreen.recipes_master'),
               iconName: Icons.inventory,

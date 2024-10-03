@@ -13,6 +13,7 @@ export const screenName = {
   tab_bar_name: {
     Home: 'Home',
     FoodList: 'FoodList',
+    MenuList:'MenuList',
     AddFoodDetails: 'AddFoodDetails',
     Notification: 'Notification',
     Profile: 'Profile',
@@ -28,6 +29,7 @@ export const screenName = {
   CuisinesNameList: 'CuisinesNameList',
   NewPassword: 'NewPassword',
   EditFoodDetails: 'EditFoodDetails',
+  EditMenuList:'EditMenuList',
   OrderHistory: 'OrderHistory',
   CuisinesEdit: 'CuisinesEdit',
   CuisinesAdd: 'CuisinesAdd',
@@ -42,6 +44,7 @@ export const screenName = {
   AddItemMasters: 'AddItemMasters',
   EditItemMasters: 'EditItemMasters',
   MyOrders: 'MyOrders',
+
 
   //chefSignUp
 

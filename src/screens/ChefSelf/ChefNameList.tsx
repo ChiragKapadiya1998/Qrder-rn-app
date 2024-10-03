@@ -3,37 +3,39 @@ import {
   Image,
   StatusBar,
   StyleSheet,
+  Text,
   TextInput,
+  TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   useFocusEffect,
   useNavigation,
   useTheme,
 } from '@react-navigation/native';
-import {commonFontStyle, hp, wp} from '../../theme/fonts';
-import {useAppDispatch, useAppSelector} from '../../redux/hooks';
+import { commonFontStyle, hp, wp } from '../../theme/fonts';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import HomeHeader from '../../compoment/HomeHeader';
-import {strings} from '../../i18n/i18n';
+import { strings } from '../../i18n/i18n';
 import NoDataFound from '../../compoment/NoDataFound';
 import Spacer from '../../compoment/Spacer';
 import ChefNameCardList from '../../compoment/ChefNameCardList';
 import DleleteModal from '../../compoment/DeleteModal';
-import {screenName} from '../../navigation/screenNames';
-import {Icons} from '../../utils/images';
-import {deleteChefAction, getChefsAction} from '../../actions/chefsAction';
+import { screenName } from '../../navigation/screenNames';
+import { Icons } from '../../utils/images';
+import { deleteChefAction, getChefsAction } from '../../actions/chefsAction';
 import Loader from '../../compoment/Loader';
 
 type Props = {};
 
 const ChefNameList = (props: Props) => {
-  const {colors, isDark} = useTheme();
+  const { colors, isDark } = useTheme();
   const navigation = useNavigation();
   const dispatch = useAppDispatch();
-  const styles = React.useMemo(() => getGlobalStyles({colors}), [colors]);
-  const {isDarkTheme} = useAppSelector(state => state.common);
-  const {getChefsData} = useAppSelector(state => state.data);
+  const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
+  const { isDarkTheme } = useAppSelector(state => state.common);
+  const { getChefsData } = useAppSelector(state => state.data);
   const [visible, setVisible] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectItem, setSelectItem] = useState([]);
@@ -45,7 +47,7 @@ const ChefNameList = (props: Props) => {
       getChefsList();
     }, []),
   );
-  
+
   useEffect(() => {
     getChefsList();
   }, [getChefsData?.length]);
@@ -53,8 +55,8 @@ const ChefNameList = (props: Props) => {
   const removeChef = () => {
     let UserInfo = {
       params: selectItem?.id,
-      onSuccess: (res: any) => {},
-      onFailure: (Err: any) => {},
+      onSuccess: (res: any) => { },
+      onFailure: (Err: any) => { },
     };
     dispatch(deleteChefAction(UserInfo));
   };
@@ -86,13 +88,50 @@ const ChefNameList = (props: Props) => {
     dispatch(getChefsAction(obj));
   };
 
-  const onSearchBar = (text:string) => {
+  const onSearchBar = (text: string) => {
     setSearchQuery(text);
     const filteredItems = getChefsData?.filter((f: any) =>
       f?.name?.toLowerCase()?.match(text?.toLowerCase()),
     );
     setGetAllData(filteredItems);
   };
+
+  const onPressedit = (item) => {
+    navigation.navigate(screenName.ChefEditName, { itemData: item })
+  };
+
+  const onDeleteChef = (item) => {
+    setVisible(true);
+    setSelectItem(item);
+  }
+
+  const renderItem = ({ item, index }) => {
+    const isLastItem = index === getAllData.length - 1;
+    return (
+      <View style={[styles.boxView]}>
+        <View style={styles.subBoxView}>
+          <View style={styles.containers}>
+            <View style={[styles.leftView, !isLastItem && styles.withBorder]}>
+              <View style={[styles.viewStyle, { flex: 1 }]}>
+                <Text numberOfLines={1} style={styles.titleText}>
+                  {item?.name || item?.menu_name}
+                </Text>
+              </View>
+              <View style={styles.viewStyle}>
+                <TouchableOpacity onPress={() => onPressedit(item)}>
+                  <Image source={Icons.editItemIcon} style={styles.editIcon} />
+                </TouchableOpacity>
+                <Spacer width={8} />
+                <TouchableOpacity onPress={() => onDeleteChef(item)}>
+                  <Image source={Icons.deleteItemIcon} style={styles.editIcon} />
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </View>
+      </View>
+    )
+  }
 
   return (
     <View style={styles.container}>
@@ -107,24 +146,25 @@ const ChefNameList = (props: Props) => {
         }}
         onRightPress={() => {
           navigation.navigate(screenName.ChefSignUp);
+          // setNewFolder(true)
         }}
         mainShow={true}
         title={strings('ChefNameList.chef_list')}
         extraStyle={styles.headerContainer}
-        rightText={strings('ChefNameList.Chef_SignUp')}
-        isHideIcon={true}
-        rightTextStyle={styles.rightTextStyle}
+        createText={strings('CuisinesNameList.create')}
+        isShowIcon={false}
+        isCreateIcon={true}
       />
-      <View style={{marginHorizontal: wp(16)}}>
+      <View style={{ marginHorizontal: wp(16) }}>
         <View style={styles.searchInputContainer}>
+          <Image source={Icons.search} style={styles.searchIcon} />
           <TextInput
             style={styles.searchInput}
-            placeholder={strings('ChefNameList.Search')}
+            placeholder={strings('CuisinesNameList.Search')}
             value={searchQuery}
             onChangeText={text => onSearchBar(text)}
-            placeholderTextColor={colors.gray_300}
+            placeholderTextColor={colors.text_gray1}
           />
-          <Image source={Icons.search} style={styles.searchIcon} />
         </View>
 
         {loading ? (
@@ -134,24 +174,22 @@ const ChefNameList = (props: Props) => {
             onEndReachedThreshold={0.3}
             data={getAllData}
             ListEmptyComponent={<NoDataFound />}
-            renderItem={({item, index}) => {
+            ListHeaderComponent={() => {
               return (
-                <ChefNameCardList
-                  item={item}
-                  setDelete={() => {
-                    setVisible(true);
-                    setSelectItem(item);
-                  }}
-                />
-              );
-            }}
-            showsVerticalScrollIndicator={false}
-            ListFooterComponent={() => {
-              return (
-                <View>
-                  <Spacer height={140} />
+                <View style={styles.headerList}>
+                  <Text style={styles.nameText}>
+                    {strings('CuisinesNameList.names')}
+                  </Text>
+                  <Text style={styles.nameText}>
+                    {strings('CuisinesNameList.action')}
+                  </Text>
                 </View>
               );
+            }}
+            renderItem={renderItem}
+            showsVerticalScrollIndicator={false}
+            ListFooterComponent={() => {
+              return <View style={{ height: 150 }} />;
             }}
           />
         )}
@@ -171,39 +209,84 @@ const ChefNameList = (props: Props) => {
 export default ChefNameList;
 
 const getGlobalStyles = (props: any) => {
-  const {colors} = props;
+  const { colors } = props;
   return StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: colors.white,
+      backgroundColor: colors.bg_white,
     },
     headerContainer: {
-      backgroundColor: colors.white,
-    },
-    rightTextStyle: {
-      textDecorationLine: 'underline',
+      backgroundColor: colors.bg_white,
     },
     searchInputContainer: {
-      borderColor: colors.black,
-      borderWidth: 1,
-      borderRadius: 5,
-      backgroundColor: colors.card_bg,
+      borderRadius: 15,
+      backgroundColor: colors.cards_bg,
       flexDirection: 'row',
       alignItems: 'center',
-      marginTop: hp(10),
-      marginBottom: hp(15),
-      paddingHorizontal: 10,
+      paddingHorizontal: wp(14),
     },
     searchInput: {
       flex: 1,
       color: colors.black,
-      paddingVertical: 5,
+      height: hp(44),
     },
     searchIcon: {
-      width: 14,
-      height: 14,
-      marginLeft: 10,
-      tintColor: colors.black,
+      width: 20,
+      height: 20,
+      tintColor: colors.border,
+    },
+    headerList: {
+      backgroundColor: colors.cards_bg,
+      height: hp(42),
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      paddingHorizontal: wp(16),
+      marginTop: hp(16),
+      borderRadius: 8,
+      flexDirection: 'row',
+    },
+    nameText: {
+      ...commonFontStyle(500, 16, colors.black),
+    },
+    boxView: {},
+    subBoxView: {
+      flexDirection: 'row',
+    },
+    containers: {
+      flex: 1,
+    },
+    leftView: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      paddingVertical: hp(12),
+      paddingHorizontal: wp(16),
+    },
+    withBorder: {
+      borderBottomWidth: 1,
+      borderColor: colors.image_bg,
+    },
+    imageStyle: {
+      width: 16,
+      height: 16,
+      borderRadius: 16,
+      borderWidth: 1,
+      borderColor: colors.text_gray,
+      resizeMode: 'cover',
+      marginRight: wp(8),
+    },
+    editIcon: {
+      width: 16,
+      height: 16,
+      resizeMode: 'contain',
+    },
+    viewStyle: {
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    titleText: {
+      flex: 1,
+      ...commonFontStyle(400, 14, colors.title_dec100),
     },
   });
 };

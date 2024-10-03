@@ -7,38 +7,38 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
-import {useNavigation, useRoute, useTheme} from '@react-navigation/native';
-import {commonFontStyle, hp, wp} from '../../theme/fonts';
+import React, { useEffect, useState } from 'react';
+import { useNavigation, useRoute, useTheme } from '@react-navigation/native';
+import { commonFontStyle, hp, wp } from '../../theme/fonts';
 import HomeHeader from '../../compoment/HomeHeader';
-import {strings} from '../../i18n/i18n';
-import {useAppDispatch, useAppSelector} from '../../redux/hooks';
-import {Icons} from '../../utils/images';
+import { strings } from '../../i18n/i18n';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import { Icons } from '../../utils/images';
 import Input from '../../compoment/Input';
-import {emailCheck, errorToast} from '../../utils/commonFunction';
+import { emailCheck, errorToast } from '../../utils/commonFunction';
 import ImageCropPicker from 'react-native-image-crop-picker';
 import PrimaryButton from '../../compoment/PrimaryButton';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import CCDropDown from '../../compoment/CCDropDown';
 import Spacer from '../../compoment/Spacer';
-import {getAsyncUserInfo} from '../../utils/asyncStorageManager';
-import {chefsNameEdit} from '../../actions/chefsAction';
+import { getAsyncUserInfo } from '../../utils/asyncStorageManager';
+import { chefsNameEdit } from '../../actions/chefsAction';
 
 type Props = {};
 
 const ChefEditName = (props: Props) => {
   const route = useRoute();
-  const {itemData} = route.params;
-  const {colors, isDark} = useTheme();
+  const { itemData } = route?.params;
+  const { colors, isDark } = useTheme();
   const navigation = useNavigation();
   const dispatch = useAppDispatch();
-  const styles = React.useMemo(() => getGlobalStyles({colors}), [colors]);
-  const {isDarkTheme} = useAppSelector(state => state.common);
-  const {getCuisines} = useAppSelector(state => state.data);
-  const [name, setName] = useState<string>(itemData?.name);
-  const [email, setEmail] = useState<string>(itemData.email);
+  const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
+  const { isDarkTheme } = useAppSelector(state => state.common);
+  const { getCuisines } = useAppSelector(state => state.data);
+  const [name, setName] = useState < string > (itemData?.name);
+  const [email, setEmail] = useState < string > (itemData.email);
   const [quantityValue, setQuantityValue] = useState(0);
-  const [number, setNumber] = useState<string>(itemData.number);
+  const [number, setNumber] = useState < string > (itemData.number);
   const [salary, setSalary] = useState(itemData.salary.toString());
   const [photoUri, setPhotoUri] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -135,72 +135,65 @@ const ChefEditName = (props: Props) => {
       <KeyboardAwareScrollView
         keyboardShouldPersistTaps={'handled'}
         contentContainerStyle={styles.contentContainerStyle}>
-        <View style={styles.subContainer}>
-          <View style={styles.profileContainer}>
-            <View>
-              <Image
-                source={photoUri ? {uri: photoUri} : Icons.profileImage}
-                style={styles.profilImage}
-              />
-              <TouchableOpacity
-                activeOpacity={0.9}
-                onPress={selectImage}
-                style={styles.editImage}>
-                <Image source={Icons.editPencial} style={styles.profileIcon} />
-              </TouchableOpacity>
-            </View>
+        {/* <View style={styles.profileContainer}>
+          <View>
+            <Image
+              source={photoUri ? { uri: photoUri } : Icons.profileImage}
+              style={styles.profilImage}
+            />
+            <TouchableOpacity activeOpacity={0.9} onPress={selectImage} style={styles.editImage}>
+              <Image source={Icons.editPencial} style={styles.profileIcon} />
+            </TouchableOpacity>
           </View>
-          <View style={styles.inputView}>
-            <Input
-              value={name}
-              placeholder={strings('sign_up.p_name')}
-              label={strings('sign_up.name')}
-              onChangeText={(t: string) => setName(t)}
-              isShowLabel={true}
-            />
-            <Input
-              value={email}
-              placeholder={strings('sign_up.p_email')}
-              label={strings('sign_up.email')}
-              onChangeText={(t: string) => setEmail(t)}
-              isShowLabel={true}
-            />
-            <CCDropDown
-              data={getCuisines}
-              label={strings('chefSignUp.select_cusine')}
-              labelField={'name'}
-              valueField={'id'}
-              placeholder={strings('addFoodList.select_cusine')}
-              //   DropDownStyle={styles.dropDownStyle}
-              value={quantityValue}
-              setValue={setQuantityValue}
-              extraStyle={styles.extraStyle}
-              isShowLabel={true}
-            />
-            <Input
-              value={number}
-              placeholder={strings('sign_up.p_enter_number')}
-              keyboardType="number-pad"
-              label={strings('PersonalInfo.phone_number')}
-              onChangeText={(t: string) => setNumber(t)}
-              maxLength={10}
-              isShowLabel={true}
-            />
-            <Input
-              value={salary}
-              placeholder={strings('chefSignUp.p_salary')}
-              label={strings('chefSignUp.salary')}
-              keyboardType="number-pad"
-              onChangeText={(t: string) => setSalary(t)}
-              isShowLabel={true}
-            />
-          </View>
-          <PrimaryButton
-            extraStyle={styles.signupButton}
-            onPress={onPressEditDone}
-            title={strings('PersonalInfo.save')}
-          />
-        </View>
+        </View> */}
+        <Input
+          value={name}
+          placeholder={strings('sign_up.p_name')}
+          label={strings('sign_up.first_name')}
+          onChangeText={(t: string) => setName(t)}
+          isShowLabel={true}
+        />
+        <Input
+          value={email}
+          placeholder={strings('sign_up.p_email')}
+          label={strings('sign_up.email_address')}
+          onChangeText={(t: string) => setEmail(t)}
+          isShowLabel={true}
+        />
+        <CCDropDown
+          data={getCuisines}
+          label={strings('addFoodList.select_cusine')}
+          placeholder={strings('addFoodList.select_cusine')}
+          labelField={'name'}
+          valueField={'id'}
+          DropDownStyle={styles.dropDownStyle}
+          value={quantityValue}
+          setValue={setQuantityValue}
+          extraStyle={styles.extraStyle}
+          isShowLabel={true}
+        />
+        <Input
+          value={number}
+          keyboardType="number-pad"
+          placeholder={strings('sign_up.p_enter_phone')}
+          label={strings('chefSignUp.phone_Number')}
+          onChangeText={(t: string) => setNumber(t)}
+          maxLength={10}
+          isShowLabel={true}
+        />
+        <Input
+          value={salary}
+          placeholder={strings('chefSignUp.p_salary')}
+          label={strings('chefSignUp.salary')}
+          keyboardType="number-pad"
+          onChangeText={(t: string) => setSalary(t)}
+          isShowLabel={true}
+        />
+        <PrimaryButton
+          extraStyle={styles.signupButton}
+          onPress={onPressEditDone}
+          title={strings('PersonalInfo.save_details')}
+        />
         <Spacer height={10} />
       </KeyboardAwareScrollView>
     </View>
@@ -210,52 +203,53 @@ const ChefEditName = (props: Props) => {
 export default ChefEditName;
 
 const getGlobalStyles = (props: any) => {
-  const {colors} = props;
+  const { colors } = props;
   return StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: colors.white,
+      backgroundColor: colors.bg_white,
     },
     headerContainer: {
-      backgroundColor: colors.white,
+      backgroundColor: colors.bg_white,
+      // paddingBottom:hp(3)
     },
     contentContainerStyle: {
-      marginHorizontal: wp(16),
+      marginHorizontal: wp(20),
     },
     rightTextStyle: {
       textDecorationLine: 'underline',
       textTransform: 'uppercase',
     },
-    subContainer: {
-      marginTop: hp(6),
-    },
     profileContainer: {
       justifyContent: 'center',
       alignItems: 'center',
+      paddingTop: hp(3),
     },
     profilImage: {
-      width: wp(130),
-      height: wp(130),
-      borderRadius: wp(50),
+      width: wp(99),
+      height: wp(99),
+      borderRadius: wp(99),
+      borderColor: colors.text_orange,
+      borderWidth: 1,
+      backgroundColor: colors.bg_orange200,
     },
     editImage: {
-      width: wp(41),
-      height: wp(41),
-      borderRadius: wp(40),
+      width: wp(30),
+      height: wp(30),
+      borderRadius: wp(15),
       backgroundColor: colors.Primary_Orange,
+      borderColor: colors.white,
+      borderWidth: 2,
       alignItems: 'center',
       justifyContent: 'center',
       position: 'absolute',
-      bottom: 0,
+      bottom: 2,
       right: 0,
     },
     profileIcon: {
       width: 16,
       height: 16,
       resizeMode: 'contain',
-    },
-    inputView: {
-      marginTop: hp(6),
     },
     loader: {
       alignItems: 'center',
@@ -267,19 +261,23 @@ const getGlobalStyles = (props: any) => {
       ...commonFontStyle(700, 20, colors.Title_Text),
     },
     signupButton: {
-      marginTop: hp(24),
-      borderRadius: 12,
+      marginTop: hp(28),
+      borderRadius: 15,
       alignItems: 'center',
       justifyContent: 'center',
     },
     dropDownStyle: {
-      borderColor: colors.inputColor,
-      backgroundColor: colors.inputColor,
-      height: hp(60),
-      borderRadius: 10,
+      borderColor: colors.text_orange,
+      backgroundColor: colors.input_bg,
+      height: hp(56),
+      borderRadius: 32,
+      paddingHorizontal: wp(25),
     },
-    extraStyle: {
-      marginTop: hp(24),
+    otherStyle: {
+      marginTop: hp(8),
+    },
+    inputStyle: {
+      borderColor: colors.text_border,
     },
   });
 };

@@ -3,6 +3,8 @@ import {navigationRef} from '../navigation/mainNavigator';
 import {CommonActions} from '@react-navigation/native';
 import moment from 'moment';
 import ImageCropPicker from 'react-native-image-crop-picker';
+import { Icons } from './images';
+import { strings } from '../i18n/i18n';
 
 export const dispatchNavigation = (name: string) => {
   navigationRef.dispatch(
@@ -34,3 +36,8 @@ export const openImagePicker = ({params, onSucess, onFail}: any) => {
       });
   } catch (error) {}
 };
+
+export const options = [
+  { label: strings('addFoodList.Inclusiveinvoice'), icon: Icons.ic_check },
+  { label: strings('addFoodList.Exclusiveinvoice'), icon: Icons.ic_check },
+];

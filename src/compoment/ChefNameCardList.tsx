@@ -6,6 +6,7 @@ import { Icons } from '../utils/images';
 import { Menu, MenuDivider, MenuItem } from 'react-native-material-menu';
 import { strings } from '../i18n/i18n';
 import { screenName } from '../navigation/screenNames';
+import Spacer from './Spacer';
 
 export interface ListObj {
     title: string;
@@ -28,13 +29,7 @@ const ChefNameCardList = ({ item, setDelete }: ItemProps) => {
     const [visible, setVisible] = useState(false);
 
     const onPressedit = () => {
-        hideMenu();
-        const clear = setTimeout(() => {
-            navigation.navigate(screenName.ChefEditName, { itemData: item })
-        }, 500);
-        return () => {
-            clearTimeout(clear);
-        };
+        navigation.navigate(screenName.ChefEditName, { itemData: item })
     };
 
     const hideMenu = () => setVisible(false);
@@ -46,48 +41,27 @@ const ChefNameCardList = ({ item, setDelete }: ItemProps) => {
     };
 
     return (
-        <View style={styles.boxView}>
-            <TouchableOpacity activeOpacity={0.5} style={styles.subBoxView}>
-                {!item?.profile_image ? <Image source={item?.profile_image} style={styles.imageView}/> : <View
-                    style={[
-                        styles.imageView,
-                        { backgroundColor: colors.image_Bg_gray },
-                    ]}
-                />}
-               
+        <View style={[styles.boxView]}>
+            <View style={styles.subBoxView}>
                 <View style={styles.container}>
-                    <View style={styles.leftView}>
-                        <Text style={styles.titleText}> {item?.name}</Text>
-                        <View style={styles.rightContainers}>
-                            <Menu
-                                visible={visible}
-                                style={styles.boxMenu}
-                                anchor={
-                                    <TouchableOpacity onPress={showMenu} style={{ paddingRight: 8 }}>
-                                        <Image source={Icons.optionIcon} style={styles.optionIcon} />
-                                    </TouchableOpacity>
-                                }
-                                onRequestClose={hideMenu}>
-                                <MenuItem textStyle={styles.menuTextStyle} onPress={onPressedit}>
-                                    {strings('myMenuList.edit')}
-                                </MenuItem>
-                                <MenuDivider />
-                                <MenuItem
-                                    textStyle={{ ...styles.menuTextStyle, color: colors.black }}
-                                    onPress={() => {
-                                        hideMenu();
-                                        setTimeout(() => {
-                                            onPressDelete();
-                                        }, 500);
-                                    }}>
-                                    {strings('myMenuList.delete')}
-                                </MenuItem>
-                            </Menu>
+                    <View style={[styles.leftView]}>
+                        <View style={[styles.viewStyle, { flex: 1 }]}>
+                            <Text numberOfLines={1} style={styles.titleText}>
+                                {item?.name || item?.menu_name}
+                            </Text>
+                        </View>
+                        <View style={styles.viewStyle}>
+                            <TouchableOpacity onPress={() => onPressedit()}>
+                                <Image source={Icons.editItemIcon} style={styles.editIcon} />
+                            </TouchableOpacity>
+                            <Spacer width={8} />
+                            <TouchableOpacity onPress={() => onPressDelete()}>
+                                <Image source={Icons.deleteItemIcon} style={styles.editIcon} />
+                            </TouchableOpacity>
                         </View>
                     </View>
-                    <Text style={styles.breakfastText}> {item?.cuisine_name}</Text>
                 </View>
-            </TouchableOpacity>
+            </View>
         </View>
     )
 }
@@ -97,40 +71,45 @@ const getGlobalStyles = (props: any) => {
     const { colors } = props;
     return StyleSheet.create({
         boxView: {
-            marginTop: hp(20),
+            // marginTop: hp(20),
         },
         subBoxView: {
             flexDirection: 'row',
-            alignItems:'center'
-        },
-        imageView: {
-            width: wp(50),
-            height: wp(50),
-            borderRadius: wp(50)/2,
         },
         container: {
-            marginLeft: wp(8),
-            flex: 1
+            flex: 1,
         },
         leftView: {
             flexDirection: 'row',
             justifyContent: 'space-between',
+            alignItems: 'center',
+            paddingVertical: hp(12),
+            paddingHorizontal: wp(16),
+            borderBottomWidth: 1,
+            borderColor: colors.image_bg
+        },
+        imageStyle: {
+            width: 16,
+            height: 16,
+            borderRadius: 16,
+            borderWidth: 1,
+            borderColor: colors.text_gray,
+            resizeMode: 'cover',
+            marginRight: wp(8),
+        },
+        editIcon: {
+            width: 16,
+            height: 16,
+            resizeMode: 'contain',
+        },
+        viewStyle: {
+            flexDirection: 'row',
+            alignItems: 'center',
         },
         titleText: {
-            ...commonFontStyle(700, 16, colors.headerText),
+            flex: 1,
+            ...commonFontStyle(400, 14, colors.title_dec100),
         },
-        optionIcon: {
-            width: wp(24),
-            height: hp(24),
-        },
-        breakfastText: {
-            ...commonFontStyle(400, 14, colors.Primary_Orange),
-        },
-        menuTextStyle: {
-            ...commonFontStyle(400, 16, colors.black),
-        },
-        boxMenu: {
-            backgroundColor: colors.card_bg
-        }
     });
 };
+
