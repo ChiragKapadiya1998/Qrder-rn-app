@@ -1,5 +1,5 @@
 //import liraries
-import React, {useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   FlatList,
   ScrollView,
@@ -10,13 +10,16 @@ import {
 } from 'react-native';
 
 import ReactNativeModal from 'react-native-modal';
-import {SCREEN_HEIGHT, commonFontStyle, hp, wp} from '../theme/fonts';
-import {useTheme} from '@react-navigation/native';
+import { SCREEN_HEIGHT, commonFontStyle, hp, wp } from '../theme/fonts';
+import { useIsFocused, useTheme } from '@react-navigation/native';
 import PrimaryButton from './PrimaryButton';
-import {strings} from '../i18n/i18n';
+import { strings } from '../i18n/i18n';
 import CCDropDown from './CCDropDown';
-import {useAppSelector} from '../redux/hooks';
+import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import Spacer from './Spacer';
+import { formatDate } from '../utils/globalFunctions';
+import { getOrdersRequestAction, getRunningOrderAction, orderCompletedAction, orderDeclinedAction, orderRequestAccpet } from '../actions/allOrdersAction';
+import NoDataFound from './NoDataFound';
 
 export type OrderModal = {
   isVisible: boolean;
@@ -35,19 +38,126 @@ const OrderModal = ({
   onPressYes,
   isRunning = false,
 }: OrderModal) => {
-  const {colors} = useTheme();
-  const styles = React.useMemo(() => getGlobalStyles({colors}), [colors]);
-  const [selectedChefs, setSelectedChefs] = useState('');
-  const {getChefsData} = useAppSelector(state => state.data);
+  const { colors } = useTheme();
+  const dispatch = useAppDispatch();
+  const isFocuse = useIsFocused();
+  const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
+  const { isRunningOrder, isOrderRequest } = useAppSelector(state => state.orders);
 
-  const onPressDone = () => {};
-  const onCancelBtn = () => {};
+  useEffect(() => {
+    getRunningOrder()
+    getOrderRequest()
+  }, [isFocuse])
 
-  const handleChefSelection = (value: string, index: number) => {
-    setSelectedChefs(prevState => ({
-      ...prevState,
-      [index]: value,
-    }));
+
+  const getRunningOrder = () => {
+    let obj = {
+      onSuccess: () => { },
+      onFailure: () => { },
+    };
+    dispatch(getRunningOrderAction(obj));
+  };
+
+
+  const getOrderRequest = () => {
+    let obj = {
+      onSuccess: () => { },
+      onFailure: () => { },
+    };
+    dispatch(getOrdersRequestAction(obj));
+  };
+
+  const onOrderAccpet = (id: number) => {
+    let UserInfo = {
+      data: id,
+      onSuccess: (res: any) => { },
+      onFailure: (Err: any) => { },
+    };
+    dispatch(orderRequestAccpet(UserInfo));
+  }
+
+  const onOrderCompleted = (id: number) => {
+    let UserInfo = {
+      data: id,
+      onSuccess: () => { },
+      onFailure: () => { },
+    };
+    dispatch(orderCompletedAction(UserInfo));
+  }
+
+  const onCancelBtn = (id: number) => {
+    let UserInfo = {
+      data: id,
+      onSuccess: () => { },
+      onFailure: () => { },
+    };
+    dispatch(orderDeclinedAction(UserInfo));
+  };
+
+
+  const renderItem = ({ item, index }) => {
+    const formattedDate = formatDate(item.created_at);
+
+    return (
+      <View style={styles.listContainer}>
+        <View style={{ flexDirection: 'row' }}>
+          <View style={styles.imageView}>
+            <Text style={styles.imageText}>#{index + 1}</Text>
+          </View>
+
+          <View style={styles.rightContainer}>
+            <Text numberOfLines={1} style={styles.breakText}>{`${strings('orderModal.invoice_id')} : ${item.order_id}`}</Text>
+            <Text style={styles.titleStyle}>{item.name}</Text>
+            {item.table_number !== null ?
+              <Text style={styles.idText}>{`${strings('orderModal.table_no')} : ${item.table_number}`}</Text> : null}
+            <View style={styles.priceView}>
+              <Text style={styles.priceText}>{`₹${item.total}`}</Text>
+              <Text style={styles.dateText}>{formattedDate}</Text>
+            </View>
+          </View>
+
+          <TouchableOpacity style={styles.diningView}>
+            <Text style={styles.diningText}>{item.order_type === 1 ? strings('orderModal.dining') : strings('orderModal.parcel')}</Text>
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.btnContainer}>
+          {isRunning ? (
+            <View style={{ flexDirection: 'row' }}>
+              <PrimaryButton
+                extraStyle={styles.accpetBtn}
+                title={strings('orderModal.completed')}
+                titleStyle={styles.accpetText}
+                onPress={() => onOrderCompleted(item.id)}
+              />
+              <Spacer width={16} />
+              <PrimaryButton
+                extraStyle={styles.cancelBtn}
+                title={strings('orderModal.cancel')}
+                titleStyle={styles.cancelText}
+                onPress={() => onCancelBtn(item.id)}
+              />
+            </View>
+          ) : (
+            <View style={{ flexDirection: 'row' }}>
+              <PrimaryButton
+                extraStyle={styles.accpetBtn}
+                title={strings('orderModal.accpet')}
+                titleStyle={styles.accpetText}
+                onPress={() => onOrderAccpet(item.id)}
+              />
+              <Spacer width={16} />
+              <PrimaryButton
+                extraStyle={styles.cancelBtn}
+                title={strings('orderModal.declined')}
+                titleStyle={styles.cancelText}
+                onPress={() => onCancelBtn(item.id)}
+              />
+            </View>
+          )}
+        </View>
+      </View>
+    );
   };
 
   return (
@@ -59,98 +169,24 @@ const OrderModal = ({
       animationOutTiming={1000}
       onBackButtonPress={onPressCancel}
       onBackdropPress={onPressCancel}
-      style={{justifyContent: 'flex-end', margin: 0}}>
+      style={{ justifyContent: 'flex-end', margin: 0 }}>
       <View style={styles.container}>
         <View style={styles.lineStyle} />
         <View style={styles.headerView}>
           <Text style={styles.titleText}>
             {isRunning
-              ? `${20} ${strings('orderModal.running_orders')}`
-              : `${5} ${strings('orderModal.order_request')}`}
+              ? `${strings('orderModal.running_orders')}`
+              : `${isOrderRequest?.length ? isOrderRequest?.length : ''} ${strings('orderModal.order_request')}`}
           </Text>
 
-          <ScrollView showsVerticalScrollIndicator={false}>
-            {[1, 2, 3, 4, 5, 6].map((value, index) => {
-              return (
-                <View style={styles.listContainer}>
-                  <View style={{flexDirection: 'row'}}>
-                    <View style={styles.imageView}>
-                      <Text style={styles.imageText}>#{index + 1}</Text>
-                    </View>
-
-                    <View style={styles.rightContainer}>
-                      <Text style={styles.breakText}>Invoice ID: #32053</Text>
-                      <Text style={styles.titleStyle}>Kartik Patel</Text>
-                      <Text style={styles.idText}>Table No: 32</Text>
-                      <View style={styles.priceView}>
-                        <Text
-                          style={[
-                            styles.priceText,
-                            // { marginTop: isRunning ? hp(0) : hp(14) },
-                          ]}>
-                          ₹60
-                        </Text>
-                        <Text
-                          style={[
-                            styles.dateText,
-                            // { marginTop: isRunning ? hp(0) : hp(14) },
-                          ]}>
-                          18 January 2024
-                        </Text>
-                      </View>
-                    </View>
-                    <TouchableOpacity style={styles.diningView}>
-                      <Text style={styles.diningText}>Dining</Text>
-                    </TouchableOpacity>
-                  </View>
-
-                  <View
-                    style={[
-                      styles.btnContainer,
-                      // { bottom: isRunning ? 0 : 2 },
-                    ]}>
-                    {isRunning ? (
-                      <View style={{flexDirection: 'row'}}>
-                        <PrimaryButton
-                          extraStyle={styles.cancelBtn}
-                          title={strings('orderModal.cancel')}
-                          titleStyle={styles.cancelText}
-                          onPress={() => onCancelBtn()}
-                        />
-                      </View>
-                    ) : (
-                      <View style={{flexDirection: 'row'}}>
-                        <PrimaryButton
-                          extraStyle={styles.accpetBtn}
-                          title={strings('orderModal.accpet')}
-                          titleStyle={styles.accpetText}
-                          onPress={() => onCancelBtn()}
-                        />
-                        <Spacer width={16} />
-                        <PrimaryButton
-                          extraStyle={styles.cancelBtn}
-                          title={strings('orderModal.declined')}
-                          titleStyle={styles.cancelText}
-                          onPress={() => onCancelBtn()}
-                        />
-                      </View>
-                      // <CCDropDown
-                      //   data={getChefsData}
-                      //   label={''}
-                      //   labelField={'name'}
-                      //   valueField={'id'}
-                      //   placeholder={strings('orderModal.select_chef')}
-                      //   DropDownStyle={styles.dropDownStyle}
-                      //   value={selectedChefs[index]}
-                      //   setValue={value => handleChefSelection(value, index)}
-                      // />
-                    )}
-                  </View>
-                </View>
-              );
-            })}
-            <View style={{height: 60}} />
-          </ScrollView>
+          <FlatList
+            data={isRunning ? isRunningOrder : isOrderRequest}
+            renderItem={renderItem}
+            keyExtractor={(item, index) => index.toString()}
+            showsVerticalScrollIndicator={false}
+            ListFooterComponent={<View style={{ height: 60 }} />}
+            ListEmptyComponent={<NoDataFound />}
+          />
         </View>
       </View>
     </ReactNativeModal>
@@ -158,7 +194,7 @@ const OrderModal = ({
 };
 
 const getGlobalStyles = (props: any) => {
-  const {colors} = props;
+  const { colors } = props;
 
   return StyleSheet.create({
     container: {

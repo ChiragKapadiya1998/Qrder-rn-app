@@ -11,6 +11,7 @@ interface makeAPIRequestProps {
   data?: any;
   headers?: any;
   params?: any;
+  isBaseUrl?: any
 }
 
 export const makeAPIRequest = ({
@@ -19,18 +20,19 @@ export const makeAPIRequest = ({
   data,
   headers,
   params,
+  isBaseUrl
 }: makeAPIRequestProps) =>
   new Promise((resolve, reject) => {
     const option = {
       method,
-      baseURL: api.BASE_URL,
+      baseURL: isBaseUrl ? api.BASE_URL1 : api.BASE_URL,
       url,
       data,
       headers,
       params,
     };
-    console.log("option",option);
-    
+    console.log("option", option);
+
     axios(option)
       .then((response) => {
         // console.log("response-->", response);

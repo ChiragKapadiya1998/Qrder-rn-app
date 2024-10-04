@@ -68,6 +68,8 @@ import AddItemMasters from '../screens/Chef/AddItemMasters';
 import EditItemMasters from '../screens/Chef/EditItemMasters';
 import MyOrders from '../screens/ChefSettings/MyOrders';
 import EditMenuList from '../screens/Chef/EditMenuList';
+import TermCondition from '../screens/ChefSettings/TermCondition';
+import PrivacyPolicy from '../screens/ChefSettings/PrivacyPolicy';
 
 const Drawer = createDrawerNavigator();
 const { StatusBarManager } = NativeModules;
@@ -388,6 +390,24 @@ const StackNavigator: FC = () => {
         })}
         name={screenName.AddRecipesMasters}
         component={AddRecipesMasters}
+      />
+      <Stack.Screen
+        options={({ navigation }) => ({
+          ...headerStyleTransparent,
+          headerShown: false,
+          headerTitle: '',
+        })}
+        name={screenName.TermCondition}
+        component={TermCondition}
+      />
+      <Stack.Screen
+        options={({ navigation }) => ({
+          ...headerStyleTransparent,
+          headerShown: false,
+          headerTitle: '',
+        })}
+        name={screenName.PrivacyPolicy}
+        component={PrivacyPolicy}
       />
       {/* // chefSell */}
 

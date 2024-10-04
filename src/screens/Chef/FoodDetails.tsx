@@ -9,8 +9,8 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useState} from 'react';
-import {useNavigation, useTheme} from '@react-navigation/native';
+import React, { useState } from 'react';
+import { useNavigation, useTheme } from '@react-navigation/native';
 import {
   commonFontStyle,
   hp,
@@ -18,27 +18,27 @@ import {
   SCREEN_WIDTH,
   wp,
 } from '../../theme/fonts';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import {strings} from '../../i18n/i18n';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { strings } from '../../i18n/i18n';
 import HomeHeader from '../../compoment/HomeHeader';
 import Swiper from 'react-native-swiper';
-import {Icons} from '../../utils/images';
-import {useAppDispatch, useAppSelector} from '../../redux/hooks';
-import {screenName} from '../../navigation/screenNames';
+import { Icons } from '../../utils/images';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import { screenName } from '../../navigation/screenNames';
 import PrimaryButton from '../../compoment/PrimaryButton';
-import {addCardAction, getCardAction} from '../../actions/cardAction';
-import {miscellData} from '../../utils/commonFunction';
+import { addCardAction, getCardAction } from '../../actions/cardAction';
+import { miscellData } from '../../utils/commonFunction';
 import Spacer from '../../compoment/Spacer';
 
-const FoodDetails = ({route}) => {
-  const {itemData, showChef, showAddToCard} = route?.params;
-  const {colors} = useTheme();
+const FoodDetails = ({ route }) => {
+  const { itemData, showChef, showAddToCard } = route?.params;
+  const { colors } = useTheme();
   const navigation = useNavigation();
   const dispatch = useAppDispatch();
-  const styles = React.useMemo(() => getGlobalStyles({colors}), [colors]);
-  const {isDarkTheme} = useAppSelector(state => state.common);
+  const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
+  const { isDarkTheme } = useAppSelector(state => state.common);
   const [basicDetails, setBasicDetails] = useState('');
-  const {name, price, cuisine_name, description, id, image} = itemData;
+  const { name, price, cuisine_name, description, id, image } = itemData;
   const [selectedItems, setSelectedItems] = useState([]);
   const [foodDelivery, setFoodDelivery] = useState([]);
 
@@ -60,8 +60,8 @@ const FoodDetails = ({route}) => {
       },
       onSuccess: () => {
         let obj = {
-          onSuccess: () => {},
-          onFailure: () => {},
+          onSuccess: () => { },
+          onFailure: () => { },
         };
         dispatch(getCardAction(obj));
       },
@@ -74,7 +74,7 @@ const FoodDetails = ({route}) => {
     dispatch(addCardAction(obj));
   };
 
-  const renderItem = ({item}) => {
+  const renderItem = ({ item }) => {
     const isSelected = selectedItems.includes(item.id);
     const select = isSelected ? colors.text_orange : colors.title_dec100;
     return (
@@ -85,18 +85,18 @@ const FoodDetails = ({route}) => {
           <View
             style={[
               styles.checkbox,
-              {backgroundColor: isSelected ? colors.blue : 'transparent'},
+              { backgroundColor: isSelected ? colors.blue : 'transparent' },
             ]}>
             {isSelected && (
               <Image source={Icons.ic_check} style={styles.ic_check} />
             )}
           </View>
-          <Text style={[styles.text1, {color: select}]}>{item.name}</Text>
+          <Text style={[styles.text1, { color: select }]}>{item.name}</Text>
         </TouchableOpacity>
         <Text
           style={[
             styles.priceTextStyle,
-            {color: select},
+            { color: select },
           ]}>{`₹${item.price}`}</Text>
       </View>
     );
@@ -124,18 +124,18 @@ const FoodDetails = ({route}) => {
       <KeyboardAwareScrollView
         keyboardShouldPersistTaps={'handled'}
         contentContainerStyle={styles.contentContainerStyle}>
-        <View style={{alignItems: 'center', justifyContent: 'center'}}>
-          <Image source={{uri: image}} style={styles.imageStyle} />
+        <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+          <Image source={{ uri: image }} style={styles.imageStyle} />
         </View>
         <View style={styles.headingView}>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <Text style={styles.foodText}>{name}</Text>
             {/* <View style={styles.rateView}>
               <Image source={Icons.star} style={styles.starStyle} />
               <Text style={styles.rateText}>4.9</Text>
             </View> */}
           </View>
-          <Text style={styles.leftText}>{cuisine_name}</Text>
+          {cuisine_name ? <Text style={styles.leftText}>{cuisine_name}</Text> : ''}
           <Text style={styles.priceText}>{`₹${price}`}</Text>
           {showAddToCard ? (
             <View style={styles.addItemView}>
@@ -207,7 +207,7 @@ const FoodDetails = ({route}) => {
         <FlatList
           data={miscellData}
           renderItem={renderItem}
-          contentContainerStyle={{gap: 10}}
+          contentContainerStyle={{ gap: 10 }}
           keyExtractor={item => item.id}
         />
 
@@ -280,7 +280,7 @@ const FoodDetails = ({route}) => {
 export default FoodDetails;
 
 const getGlobalStyles = (props: any) => {
-  const {colors} = props;
+  const { colors } = props;
   return StyleSheet.create({
     container: {
       flex: 1,
@@ -489,7 +489,7 @@ const getGlobalStyles = (props: any) => {
       justifyContent: 'space-between',
       backgroundColor: colors.cards_bg,
       shadowColor: '#000',
-      shadowOffset: {width: 0, height: 2},
+      shadowOffset: { width: 0, height: 2 },
       shadowOpacity: 0.5,
       shadowRadius: 4,
       elevation: 15,

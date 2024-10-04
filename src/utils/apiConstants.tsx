@@ -1,7 +1,8 @@
 export const api = {
   // BASE_URL: 'https://qrder.in/api/',
+  // BASE_URL1: 'https://qrder.in/',
   BASE_URL:
-    'https://97f1-2405-201-201f-9802-911a-b0cf-9f90-e378.ngrok-free.app/api/',
+    'https://c849-2405-201-201f-9802-845c-2a5d-48a2-fe2.ngrok-free.app/api/',
 
   // Auth
   login: 'login',
@@ -28,6 +29,16 @@ export const api = {
   menuMasters: 'menu-masters',
   recipeMaster: 'recipe-master',
   recipeMenu: 'recipe-menu',
+  updateDiscount: 'update-discount',
+  getDiscount: 'discount',
+  getSupportType: 'support-type',
+  addSupport: 'support',
+  getRunningOrders: 'running-orders',
+  getOrderRequests: 'order-requests',
+  acceptOrder: 'order-accepted',
+  orderDeclined: 'order-declined',
+  orderCompleted: 'order-completed',
+  ordersHistory: 'orders',
 
   //student
   studentRegister: 'student-register',
@@ -37,7 +48,7 @@ export const api = {
   cuisineMenu: 'canteen-menu',
   canteenCuisine: 'canteen-cuisine',
   getStudentMenu: 'cuisine-menu',
-  waterBottle: 'water-bottle',
+  waterBottle: 'add/water-bottle',
 };
 
 export const POST = 'POST';

@@ -179,6 +179,13 @@ export default {
     order_request: 'Order Request',
     accpet: 'Accpet',
     declined: 'declined',
+    invoice_id:'Invoice ID',
+    table_no:'Table No',
+    dining:'Dining',
+    parcel:'Parcel',
+    completed:'Complete',
+    start_date:'Start Date',
+    end_date:'End Date'
   },
   ordersList: {
     myOrders: 'My Orders',
@@ -228,9 +235,9 @@ export default {
     food_review: 'Food Review',
     give_food_rating: 'Give Food Rating',
     buy_now: 'Buy Now',
-    add_food_photo:'Add Food Photo',
-    upToMb:'(up to 12 Mb)',
-    e_Tex_Per:"Please enter a percentage between 0% and 100%"
+    add_food_photo: 'Add Food Photo',
+    upToMb: '(up to 12 Mb)',
+    e_Tex_Per: "Please enter a percentage between 0% and 100%"
   },
   foodDetails: {
     food_Details: 'Food Details',
@@ -393,6 +400,10 @@ export default {
     enter_text: 'Enter text',
     enter_discount: 'Enter Discount',
     enter_lot_size: 'Enter lot size',
+    e_discount: 'Please Enter Discount',
+    e_lot_size: 'Please Enter lot size',
+    e_type_support: 'Please Select Type Support',
+    e_enter_text: 'Please Enter text'
   },
   recipesMaster: {
     edit_recipes_master: 'Edit Recipes Master',
@@ -455,7 +466,7 @@ export default {
     go_to_home: 'Go to Home',
     address: 'Address',
   },
-  menuList:{
-    menu:'Menu'
-  }
+  menuList: {
+    menu: 'Menu'
+  },
 };

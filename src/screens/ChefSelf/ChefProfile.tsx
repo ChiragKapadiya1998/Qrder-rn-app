@@ -103,6 +103,7 @@ const ChefProfile = (props: Props) => {
       />
       <KeyboardAwareScrollView
         keyboardShouldPersistTaps={'handled'}
+        showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.contentContainerStyle}>
         <TouchableOpacity
           onPress={() => onPressNavigation('EditProfile')}
@@ -170,12 +171,12 @@ const ChefProfile = (props: Props) => {
             {
               title: strings('profileScreen.privacy_policy'),
               iconName: Icons.privacyIcon,
-              screens: '',
+              screens: screenName.PrivacyPolicy,
             },
             {
               title: strings('profileScreen.term_condition'),
               iconName: Icons.termIcon,
-              screens: '',
+              screens: screenName.TermCondition,
             },
             {
               title: strings('profileScreen.settings'),
@@ -204,12 +205,12 @@ const ChefProfile = (props: Props) => {
           }}
           styleProp={styles.boxCotainer}
         /> */}
-        <Spacer height={hp(90)} />
+        <Spacer height={hp(50)} />
       </KeyboardAwareScrollView>
 
       <LogOutModal
         title={strings('Settings.logoutDes')}
-        rightText={strings('Settings.delete')}
+        rightText={strings('CuisinesNameList.submit')}
         leftText={strings('Settings.cancel')}
         visible={visible}
         closeModal={() => closeModal()}

@@ -1,46 +1,51 @@
 import {
+  ActivityIndicator,
   FlatList,
-  Image,
+  RefreshControl,
+  ScrollView,
   StatusBar,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
+  Image,
 } from 'react-native';
-import React, {useEffect, useRef, useState} from 'react';
-import {useIsFocused, useNavigation, useTheme} from '@react-navigation/native';
+import React, { useEffect, useRef, useState } from 'react';
+import { useIsFocused, useNavigation, useTheme } from '@react-navigation/native';
 import HomeHeader from '../../compoment/HomeHeader';
-import {commonFontStyle, hp, SCREEN_WIDTH, wp} from '../../theme/fonts';
-import {strings} from '../../i18n/i18n';
+import { commonFontStyle, hp, SCREEN_WIDTH, wp } from '../../theme/fonts';
+import { strings } from '../../i18n/i18n';
 import MenuCardList from '../../compoment/MenuCardList';
-import {getCuisinesAction} from '../../actions/cuisinesAction';
-import {useAppDispatch, useAppSelector} from '../../redux/hooks';
+import { getCuisinesAction } from '../../actions/cuisinesAction';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import {
   getCuisinesMenuListAction,
   getMenuAction,
 } from '../../actions/menuAction';
-import {GET_EMPTY_MENU_LIST} from '../../redux/actionTypes';
-import {Icons} from '../../utils/images';
+import { GET_EMPTY_MENU_LIST } from '../../redux/actionTypes';
+import { Icons } from '../../utils/images';
+import { screenName } from '../../navigation/screenNames';
 
 type Props = {};
 
-const ChefMenuList = (props: Props) => {
-  const {colors} = useTheme();
+const MyMenuList = (props: Props) => {
+  const { colors } = useTheme();
   const navigation = useNavigation();
   const isFocuse = useIsFocused();
-  const styles = React.useMemo(() => getGlobalStyles({colors}), [colors]);
+  const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
   const [tabSelection, setTabSelection] = useState(strings('myMenuList.all'));
   const [refreshing, setRefreshing] = React.useState(false);
   const [cuisineId, setCuisineId] = React.useState(0);
   const dispatch = useAppDispatch();
-  const {getCuisines, getMenuData, allMenuCount} = useAppSelector(
+  const { getCuisines, getMenuData, allMenuCount } = useAppSelector(
     state => state.data,
   );
-  const {isDarkTheme} = useAppSelector(state => state.common);
+  const { isDarkTheme } = useAppSelector(state => state.common);
   const [page, setPage] = useState(1);
   const [loadingMore, setLoadingMore] = useState(false);
   const [loading, setLoading] = useState(true);
   const [onEndReached, setOnEndReached] = useState(true);
+  const [photoUri, setPhotoUri] = useState(null);
   const refFlatList = useRef();
 
   const onRefresh = React.useCallback(() => {
@@ -54,7 +59,11 @@ const ChefMenuList = (props: Props) => {
 
   useEffect(() => {
     getCuisinesList(1);
-    getMenuList(1);
+    if (tabSelection === 'All') {
+      getMenuList(1);
+    } else {
+      getAllCuisinesMenuList(cuisineId, 1);
+    }
   }, [isFocuse]);
 
   const getCuisinesList = (pages: number) => {
@@ -64,8 +73,8 @@ const ChefMenuList = (props: Props) => {
         limit: 5,
         pagination: false,
       },
-      onSuccess: (res: any) => {},
-      onFailure: (Err: any) => {},
+      onSuccess: (res: any) => { },
+      onFailure: (Err: any) => { },
     };
     dispatch(getCuisinesAction(obj));
   };
@@ -133,7 +142,7 @@ const ChefMenuList = (props: Props) => {
     setTabSelection(item.name);
     setCuisineId(item.id);
     setLoading(true);
-    dispatch({type: GET_EMPTY_MENU_LIST, payload: false});
+    dispatch({ type: GET_EMPTY_MENU_LIST, payload: false });
     setTimeout(() => {
       if (item.name === 'All') {
         getMenuList(1);
@@ -143,7 +152,7 @@ const ChefMenuList = (props: Props) => {
     }, 100);
   };
 
-  const renderItem = ({item}) => {
+  const renderItem = ({ item }) => {
     const selectColor =
       tabSelection === item.name ? colors.text_orange : colors.text_gray;
     return (
@@ -152,16 +161,16 @@ const ChefMenuList = (props: Props) => {
           onPress={() => onTabChange(item)}
           style={styles.cuisineView}>
           {item.name === 'All' ? (
-            <View style={[styles.allImage, {borderColor: selectColor}]}>
+            <View style={[styles.allImage, { borderColor: selectColor }]}>
               <Image
                 source={Icons.allIcon}
-                style={[styles.allIconImage, {tintColor: selectColor}]}
+                style={[styles.allIconImage, { tintColor: selectColor }]}
               />
             </View>
           ) : (
             <Image
-              source={item.name === 'All' ? Icons.allIcon : {uri: item.image}}
-              style={[styles.profilImage, {borderColor: selectColor}]}
+              source={item.name === 'All' ? Icons.allIcon : { uri: item.image }}
+              style={[styles.profilImage, { borderColor: selectColor }]}
             />
           )}
           <Text
@@ -181,6 +190,8 @@ const ChefMenuList = (props: Props) => {
     );
   };
 
+  console.log('getCuisines', getCuisines);
+
   return (
     <View style={styles.container}>
       <StatusBar
@@ -193,34 +204,35 @@ const ChefMenuList = (props: Props) => {
         }}
         onRightPress={() => {
           console.log('dee');
+          navigation.navigate(screenName.CuisinesNameList);
         }}
         mainShow={true}
         title={strings('myMenuList.my_menu')}
         extraStyle={styles.headerContainer}
-        isShowIcon={false}
+        isShowIcon={true}
+        isHideIcon={true}
+        rightText={strings('home.see_all')}
       />
 
       {getCuisines && getCuisines.length !== 0 && (
         <View style={styles.tabMainView}>
           <FlatList
             data={[
-              {name: 'All', label: strings('myMenuList.all'), page: 0, id: 0},
+              { name: 'All', label: strings('myMenuList.all'), page: 0, id: 0 },
               ...getCuisines,
             ]}
             horizontal
             showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{ gap: 16 }}
             keyExtractor={(item, index) => `${item.id}-${index}`}
             onEndReachedThreshold={0.5}
-            contentContainerStyle={{gap: 16}}
             renderItem={renderItem}
           />
-          <View style={styles.underlineAll} />
         </View>
       )}
 
       <View style={styles.boxContainer}>
         <MenuCardList
-          showChef={true}
           onRefresh={() => {
             onRefresh();
           }}
@@ -238,62 +250,30 @@ const ChefMenuList = (props: Props) => {
   );
 };
 
-export default ChefMenuList;
+export default MyMenuList;
 
 const getGlobalStyles = (props: any) => {
-  const {colors} = props;
+  const { colors } = props;
   return StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: colors.white,
+      backgroundColor: colors.bg_white,
     },
     headerContainer: {
-      backgroundColor: colors.white,
+      backgroundColor: colors.bg_white,
     },
     tabMainView: {
       flexDirection: 'row',
-      marginBottom: hp(24),
-      marginHorizontal: wp(24),
+      marginHorizontal: wp(20),
     },
-    tabItemView: {
-      flex: 1,
-      marginTop: hp(14),
-      alignItems: 'center',
-      marginRight: 20,
-      flexDirection: 'row',
-      paddingVertical: hp(5),
-      paddingHorizontal: wp(10),
-      borderRadius: 50,
-    },
-    ongoingText: {
-      ...commonFontStyle(700, 14, colors.gray_200),
-    },
-    historyText: {
-      ...commonFontStyle(700, 14, colors.gray_200),
-    },
-    selectUnderline: {
-      height: 2,
-      backgroundColor: colors.headerText3,
-      marginTop: hp(16),
-      width: wp(45),
-    },
-    underlineAll: {
-      height: 1,
-      width: SCREEN_WIDTH,
-      backgroundColor: colors.card_bg,
-      position: 'absolute',
-      bottom: 0,
-      zIndex: -1,
-    },
-    boxContainer: {
-      flex: 1,
-      marginHorizontal: wp(16),
-    },
-    imageView: {
+    allIconImage: {
       width: wp(30),
       height: wp(30),
-      borderRadius: wp(30),
-      marginRight: wp(8),
+      resizeMode: 'contain',
+    },
+    cuisineView: {
+      alignItems: 'center',
+      justifyContent: 'center',
     },
     allImage: {
       width: wp(48),
@@ -319,17 +299,8 @@ const getGlobalStyles = (props: any) => {
       ...commonFontStyle(600, 14, colors.black),
     },
     boxContainer: {
-      // flex: 1,
+      flex: 1,
       marginHorizontal: wp(20),
-    },
-    cuisineView: {
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    allIconImage: {
-      width: wp(30),
-      height: wp(30),
-      resizeMode: 'contain',
     },
   });
 };

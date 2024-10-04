@@ -1,6 +1,8 @@
 import {
   DECREMENT,
   GET_CITY_DATA,
+  GET_DISCOUNT,
+  GET_SUPPORT_TYPE,
   INCREMENT,
   IS_LOADING,
   IS_LOADING_NEW,
@@ -17,6 +19,8 @@ const initialState = {
   searchCity: [],
   selectedRole: '',
   isLanguage: 'en',
+  discount: 0,
+  getSupport:[],
   getCity: [
     {
       id: 1041,
@@ -68,25 +72,31 @@ const initialState = {
 export default function (state = initialState, action: any) {
   switch (action.type) {
     case IS_LOADING: {
-      return {...state, isLoading: action.payload};
+      return { ...state, isLoading: action.payload };
     }
     case IS_LOADING_NEW: {
-      return {...state, isLoadingNew: action.payload};
+      return { ...state, isLoadingNew: action.payload };
     }
     case SET_APP_THEME: {
-      return {...state, isDarkTheme: action.payload};
+      return { ...state, isDarkTheme: action.payload };
     }
     case GET_CITY_DATA: {
-      return {...state, getCity: action.payload};
+      return { ...state, getCity: action.payload };
     }
     case SEARCH_CITY: {
-      return {...state, searchCity: action.payload};
+      return { ...state, searchCity: action.payload };
     }
     case SELECT_ROLE: {
-      return {...state, selectedRole: action.payload};
+      return { ...state, selectedRole: action.payload };
     }
     case SET_APP_LANGUAGE: {
-      return {...state, isLanguage: action.payload};
+      return { ...state, isLanguage: action.payload };
+    }
+    case GET_DISCOUNT: {
+      return { ...state, discount: action.payload };
+    }
+    case GET_SUPPORT_TYPE: {
+      return { ...state, getSupport: action.payload };
     }
     default:
       return state;

@@ -8,6 +8,9 @@ import { Icons } from '../utils/images';
 import { strings } from '../i18n/i18n';
 import Spacer from './Spacer';
 import Input from './Input';
+import { waterBottleAction } from '../actions/commonAction';
+import { errorToast } from '../utils/commonFunction';
+import { useAppDispatch } from '../redux/hooks';
 type Props = {
     visible?: boolean;
     closeModal: () => void;
@@ -17,17 +20,64 @@ type Props = {
     rightText: string;
     isShowDiscount?: boolean;
     isShowLogOut?: boolean;
-    isShowLotSize?: boolean
+    isShowLotSize?: boolean;
+    setDiscountText?: any;
+    discountText?: string;
+    loading?: boolean;
+    setLoading?: boolean
 };
 
-const GeneralModal = ({ visible, closeModal, title, onPressDelete, leftText, rightText, isShowDiscount = false, isShowLogOut = false, isShowLotSize = false }: Props) => {
+const GeneralModal = ({
+    visible,
+    closeModal,
+    title,
+    onPressDelete,
+    leftText,
+    rightText,
+    isShowDiscount = false,
+    isShowLogOut = false,
+    isShowLotSize = false,
+    setDiscountText,
+    discountText,
+    loading,
+    setLoading
+}: Props) => {
     const { colors, isDark } = useTheme();
+    const dispatch = useAppDispatch();
     const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
-    const [discountText, setDiscountText] = useState < string > ('');
     const [lotSizeText, setLotSizeText] = useState < string > ('');
-    const [selectedIndex, setSelectedIndex] = useState(null);
+    const [selectedOption, setSelectedOption] = useState('500ml');
 
     const options = ['500ml', '1000ml'];
+
+    const onOrderBottle = () => {
+        if (lotSizeText.trim().length === 0) {
+            errorToast(strings('supportText.e_lot_size'));
+        } else {
+            setLoading(true)
+            let data = new FormData();
+            data.append('lot_size', lotSizeText);
+            data.append('size', selectedOption);
+
+            let userInfo = {
+                data,
+                onSuccess: (res) => {
+                    closeModal()
+                    setLotSizeText('')
+                    setSelectedIndex('')
+                    setLoading(false)
+                },
+                onFailure: (Err: any) => {
+                    if (Err !== undefined) {
+                        setLoading(false)
+                        errorToast(Err?.data?.message);
+                    }
+                    setLoading(false)
+                },
+            };
+            dispatch(waterBottleAction(userInfo));
+        }
+    }
 
     return (
         <View>
@@ -68,7 +118,7 @@ const GeneralModal = ({ visible, closeModal, title, onPressDelete, leftText, rig
                                 {options.map((option, index) => (
                                     <TouchableOpacity
                                         key={index}
-                                        onPress={() => setSelectedIndex(index)}
+                                        onPress={() => setSelectedOption(option)} // Set the option value on press
                                         style={{ flexDirection: 'row', alignItems: 'center', marginTop: index > 0 ? 16 : 0, gap: 10 }}
                                     >
                                         <View
@@ -79,12 +129,12 @@ const GeneralModal = ({ visible, closeModal, title, onPressDelete, leftText, rig
                                                 alignItems: 'center',
                                                 borderRadius: 10,
                                                 borderWidth: 1,
-                                                borderColor: selectedIndex === index ? colors.white : colors.title_dec,
-                                                backgroundColor: selectedIndex === index ? colors.blue : colors.input_bg,
+                                                borderColor: selectedOption === option ? colors.white : colors.title_dec, // Check if the current option is selected
+                                                backgroundColor: selectedOption === option ? colors.blue : colors.input_bg,
                                             }}
                                         >
-                                            {selectedIndex === index && (
-                                                <Image source={Icons.ic_check} style={styles.ic_check} />
+                                            {selectedOption === option && (
+                                                <Image source={Icons.ic_check} style={styles.ic_check} /> // Show check icon if option is selected
                                             )}
                                         </View>
                                         <Text style={styles.text1}>
@@ -109,13 +159,15 @@ const GeneralModal = ({ visible, closeModal, title, onPressDelete, leftText, rig
                                 title={leftText}
                                 titleStyle={styles.cancelText}
                                 onPress={closeModal}
+
                             />
                             <Spacer width={16} />
                             <PrimaryButton
                                 extraStyle={styles.accpetBtn}
                                 title={rightText}
                                 titleStyle={styles.accpetText}
-                                onPress={onPressDelete}
+                                onPress={() => isShowLotSize ? onOrderBottle() : onPressDelete()}
+                                isLoading={loading}
                             />
                         </View>
                     </View>

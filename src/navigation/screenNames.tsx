@@ -44,6 +44,8 @@ export const screenName = {
   AddItemMasters: 'AddItemMasters',
   EditItemMasters: 'EditItemMasters',
   MyOrders: 'MyOrders',
+  TermCondition:'TermCondition',
+  PrivacyPolicy:'PrivacyPolicy',
 
 
   //chefSignUp

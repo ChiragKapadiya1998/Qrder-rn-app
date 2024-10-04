@@ -6,6 +6,7 @@ import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
 import { USER_LOGOUT } from './actionTypes';
 import commonReducer from './reducer/commonReducer';
 import dataReducer from './reducer/dataReducer';
+import ordersReducer from './reducer/ordersReducer';
 
 
 const middleware = [thunk];
@@ -14,6 +15,7 @@ const middleware = [thunk];
 const reducers = combineReducers({
   common: commonReducer,
   data: dataReducer,
+  orders: ordersReducer
 });
 
 const rootReducer = (state: any, action: any) => {

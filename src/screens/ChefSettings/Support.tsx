@@ -1,5 +1,5 @@
 import { Alert, Image, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigation, useRoute, useTheme } from '@react-navigation/native'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import HomeHeader from '../../compoment/HomeHeader';
@@ -9,6 +9,9 @@ import Input from '../../compoment/Input';
 import PrimaryButton from '../../compoment/PrimaryButton';
 import { commonFontStyle, hp, wp } from '../../theme/fonts';
 import CCDropDown from '../../compoment/CCDropDown';
+import { addSupportDetails, getSupportAction } from '../../actions/commonAction';
+import { errorToast } from '../../utils/commonFunction';
+import { getAsyncUserInfo } from '../../utils/asyncStorageManager';
 
 type Props = {};
 
@@ -18,12 +21,58 @@ const Support = (props: Props) => {
     const navigation = useNavigation();
     const dispatch = useAppDispatch();
     const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
-    const { isDarkTheme } = useAppSelector(state => state.common);
-    const [names, setName] = useState < string > ('');
+    const { isDarkTheme, getSupport } = useAppSelector(state => state.common);
+    const [supportType, setSupportType] = useState < string > ('');
     const [description, setDescription] = useState < string > ('');
-    const [lastName, setLastName] = useState('');
-    const { getCuisines } = useAppSelector(state => state.data);
+    const [loading, setLoading] = useState(false);
 
+    useEffect(() => {
+        getSupportType()
+    }, [])
+
+    const getSupportType = () => {
+        let obj = {
+            onSuccess: (res: any) => { },
+            onFailure: (Err: any) => { },
+        };
+        dispatch(getSupportAction(obj));
+    }
+
+
+    const onPressSupport = async () => {
+        if (supportType.trim().length === 0) {
+            errorToast(strings('supportText.e_type_support'));
+        } else if (description.trim().length === 0) {
+            errorToast(strings('supportText.e_enter_text'));
+        } else {
+            setLoading(true)
+            const userDetails = await getAsyncUserInfo()
+
+            let data = new FormData();
+
+            data.append('user_id', userDetails.id);
+            data.append('support_type', supportType);
+            data.append('description', description);
+
+            let userInfo = {
+                data,
+                onSuccess: (res) => {
+                    setSupportType('');
+                    setDescription('');
+                    setLoading(false)
+                    navigation.goBack()
+                },
+                onFailure: (Err: any) => {
+                    if (Err !== undefined) {
+                        setLoading(false)
+                        errorToast(Err?.data?.message);
+                    }
+                    setLoading(false)
+                },
+            };
+            dispatch(addSupportDetails(userInfo));
+        }
+    }
 
     return (
         <View style={styles.container}>
@@ -44,14 +93,14 @@ const Support = (props: Props) => {
                 keyboardShouldPersistTaps={'handled'}>
                 <View style={styles.subContainer}>
                     <CCDropDown
-                        data={getCuisines}
+                        data={getSupport}
                         label={strings('supportText.type_support')}
                         labelField={'name'}
-                        valueField={'id'}
+                        valueField={'name'}
                         placeholder={strings('supportText.p_support')}
                         DropDownStyle={styles.dropDownStyle}
-                        value={names}
-                        setValue={setName}
+                        value={supportType}
+                        setValue={setSupportType}
                         extraStyle={styles.otherStyle}
                         isShowLabel={true}
                     />
@@ -65,7 +114,7 @@ const Support = (props: Props) => {
                         placeholder={strings('supportText.enter_text')}
                         style={[styles.basicInput, {
                             borderColor:
-                            description?.length == 0 ? colors.border : colors.text_orange,
+                                description?.length == 0 ? colors.border : colors.text_orange,
                         },]}
                         multiline
                         maxLength={200}
@@ -77,8 +126,9 @@ const Support = (props: Props) => {
             <View style={{ bottom: 8, paddingHorizontal: wp(20) }}>
                 <PrimaryButton
                     extraStyle={styles.signupButton}
-                    onPress={() => { }}
+                    onPress={() => onPressSupport()}
                     title={strings('PersonalInfo.save_details')}
+                    isLoading={loading}
                 />
             </View>
         </View >

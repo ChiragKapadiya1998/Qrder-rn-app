@@ -7,44 +7,47 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useCallback, useEffect, useState} from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   useFocusEffect,
   useNavigation,
   useTheme,
 } from '@react-navigation/native';
 import HomeHeader from '../../compoment/HomeHeader';
-import {strings} from '../../i18n/i18n';
-import {commonFontStyle, hp, wp} from '../../theme/fonts';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import {Icons} from '../../utils/images';
+import { strings } from '../../i18n/i18n';
+import { commonFontStyle, hp, wp } from '../../theme/fonts';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { Icons } from '../../utils/images';
 import TitleList from '../../compoment/TitleListComponent';
 import Spacer from '../../compoment/Spacer';
 import ImagePicker from 'react-native-image-crop-picker';
 import Loader from '../../compoment/Loader';
-import {screenName} from '../../navigation/screenNames';
-import {clearAsync, getAsyncUserInfo} from '../../utils/asyncStorageManager';
-import {dispatchNavigation} from '../../utils/globalFunctions';
-import {useAppDispatch, useAppSelector} from '../../redux/hooks';
-import {GoogleSignin} from '@react-native-google-signin/google-signin';
+import { screenName } from '../../navigation/screenNames';
+import { clearAsync, getAsyncUserInfo } from '../../utils/asyncStorageManager';
+import { dispatchNavigation } from '../../utils/globalFunctions';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import GeneralModal from '../../compoment/GeneralModal';
-import {USER_LOGOUT} from '../../redux/actionTypes';
+import { USER_LOGOUT } from '../../redux/actionTypes';
+import { addDiscountAction } from '../../actions/commonAction';
+import { errorToast } from '../../utils/commonFunction';
 
 type Props = {};
 
 const Profile = (props: Props) => {
-  const {colors, isDark} = useTheme();
+  const { colors, isDark } = useTheme();
   const navigation = useNavigation();
-  const styles = React.useMemo(() => getGlobalStyles({colors}), [colors]);
-  const {isDarkTheme} = useAppSelector(state => state.common);
+  const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
+  const { isDarkTheme } = useAppSelector(state => state.common);
   const [loading, setLoading] = useState(false);
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
   const [visible, setVisible] = useState(false);
-  const [userData, setUserData] = useState<any>({});
+  const [userData, setUserData] = useState < any > ({});
   const [photoUri, setPhotoUri] = useState(null);
   const [discountModal, setDiscountModal] = useState(false);
   const [lotSizeModal, setLotSizeModal] = useState(false);
+  const [discountText, setDiscountText] = useState < string > ('');
   const dispatch = useAppDispatch();
 
   const fetchUserInfo = async () => {
@@ -54,7 +57,7 @@ const Profile = (props: Props) => {
       setName(userList.name || '');
       setNumber(userList.number || '');
       setPhotoUri(userList?.profile_image);
-    } catch (error) {}
+    } catch (error) { }
   };
 
   useFocusEffect(
@@ -83,7 +86,7 @@ const Profile = (props: Props) => {
 
   const onPressNavigation = list => {
     if (list == screenName.EditProfile) {
-      navigation.navigate(list, {hideEdit: false, userData: userData});
+      navigation.navigate(list, { hideEdit: false, userData: userData });
     } else if (list === 'log Out') {
       setVisible(true);
     } else if (list === 'Discount') {
@@ -103,14 +106,42 @@ const Profile = (props: Props) => {
 
   const onPressLogOut = async () => {
     clearAsync();
-    dispatch({type: USER_LOGOUT});
+    dispatch({ type: USER_LOGOUT });
     dispatchNavigation(screenName.SignInScreen);
     await GoogleSignin.signOut();
     setVisible(false);
   };
 
   const onPressDiscount = () => {
-    setDiscountModal(false);
+    try {
+      if (discountText.trim().length === 0) {
+        errorToast(strings('supportText.e_discount'));
+      } else {
+        setLoading(true)
+        let data = new FormData();
+        data.append('discount', discountText);
+
+        let userInfo = {
+          data,
+          onSuccess: (res) => {
+            setDiscountModal(false);
+            setDiscountText('');
+            setLoading(false)
+          },
+          onFailure: (Err: any) => {
+            if (Err !== undefined) {
+              setLoading(false)
+              errorToast(Err?.data?.message);
+            }
+            setLoading(false)
+          },
+        };
+        dispatch(addDiscountAction(userInfo));
+      }
+    } catch {
+      setLoading(false)
+    }
+
   };
 
   return (
@@ -141,7 +172,7 @@ const Profile = (props: Props) => {
           <View style={styles.profileView}>
             <View style={styles.profileBox}>
               <Image
-                source={photoUri ? {uri: photoUri} : Icons.profileImage}
+                source={photoUri ? { uri: photoUri } : Icons.profileImage}
                 style={styles.profilImage}
               />
               {/* <View style={styles.profilImage} /> */}
@@ -191,7 +222,7 @@ const Profile = (props: Props) => {
               iconName: Icons.inventory,
               screens: screenName.ItemMastersList,
             },
-           
+
             {
               title: strings('profileScreen.recipes_master'),
               iconName: Icons.inventory,
@@ -247,12 +278,12 @@ const Profile = (props: Props) => {
             {
               title: strings('profileScreen.privacy_policy'),
               iconName: Icons.privacyIcon,
-              screens: '',
+              screens: screenName.PrivacyPolicy,
             },
             {
               title: strings('profileScreen.term_condition'),
               iconName: Icons.termIcon,
-              screens: '',
+              screens: screenName.TermCondition,
             },
             {
               title: strings('profileScreen.settings'),
@@ -286,7 +317,7 @@ const Profile = (props: Props) => {
 
       <GeneralModal
         title={strings('Settings.logoutDes')}
-        rightText={strings('Settings.delete')}
+        rightText={strings('CuisinesNameList.submit')}
         leftText={strings('Settings.cancel')}
         visible={visible}
         closeModal={() => closeModal()}
@@ -301,6 +332,9 @@ const Profile = (props: Props) => {
         closeModal={() => closeModal()}
         onPressDelete={() => onPressDiscount()}
         isShowDiscount={true}
+        discountText={discountText}
+        setDiscountText={setDiscountText}
+        loading={loading}
       />
       <GeneralModal
         title={strings('Settings.logoutDes')}
@@ -308,8 +342,9 @@ const Profile = (props: Props) => {
         leftText={strings('Settings.cancel')}
         visible={lotSizeModal}
         closeModal={() => closeModal()}
-        onPressDelete={() => onPressDiscount()}
+        // onPressDelete={() => onOrderBottle()}
         isShowLotSize={true}
+        setLoading={setLoading}
       />
     </View>
   );
@@ -318,7 +353,7 @@ const Profile = (props: Props) => {
 export default Profile;
 
 const getGlobalStyles = (props: any) => {
-  const {colors} = props;
+  const { colors } = props;
   return StyleSheet.create({
     container: {
       flex: 1,

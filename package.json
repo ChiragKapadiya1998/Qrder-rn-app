@@ -32,7 +32,7 @@
     "react-native-confirmation-code-field": "^7.4.0",
     "react-native-contacts": "^7.0.8",
     "react-native-country-codes-picker": "^2.3.5",
-    "react-native-date-picker": "^5.0.4",
+    "react-native-date-picker": "^5.0.7",
     "react-native-element-dropdown": "^2.12.1",
     "react-native-gesture-handler": "^2.16.2",
     "react-native-gifted-charts": "^1.4.16",

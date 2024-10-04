@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     FlatList,
     Image,
+    Modal,
     StatusBar,
     StyleSheet,
     Text,
@@ -12,52 +13,106 @@ import {
 import { useNavigation, useTheme } from '@react-navigation/native';
 import { strings } from '../../i18n/i18n';
 import { commonFontStyle, hp, wp } from '../../theme/fonts';
-import { useAppSelector } from '../../redux/hooks';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import HomeHeader from '../../compoment/HomeHeader';
 import { Icons } from '../../utils/images';
 import HomeDropDown from '../../compoment/HomeDropDown';
+import { getAllOrderAction, getAllOrderFilterAction } from '../../actions/allOrdersAction';
+import { formatDate, formatDateToDDMMYYYY } from '../../utils/globalFunctions';
+import { getAsyncRole } from '../../utils/asyncStorageManager';
+import DatePicker from 'react-native-date-picker';
 
 const OrderHistory = () => {
     const { colors } = useTheme();
     const navigation = useNavigation();
+    const dispatch = useAppDispatch();
     const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
-    const [selectedChefs, setSelectedChefs] = useState('');
     const { isDarkTheme } = useAppSelector(state => state.common);
-    const [dropDownValue, setdropDownValue] = useState(strings('home.daily'));
+    const { allOrderHistory } = useAppSelector(state => state.orders);
+    const [isRole, setIsRole] = useState('');
+    const [startDate, setStartDate] = useState(null);
+    const [endDate, setEndDate] = useState(null);
+    const [isDatePickerVisible, setIsDatePickerVisible] = useState(false);
+    const [isSelectingStartDate, setIsSelectingStartDate] = useState(true);
 
-    const onCancelBtn = () => {};
+    useEffect(() => {
+        getAllOrdersHistory()
+        getUserInfo()
+    }, [])
 
-    const data = [1, 2, 3, 4, 5, 6];
 
-    const renderItem = ({ item, index }) => (
-        <View style={styles.listContainer}>
-            <View style={{ flexDirection: 'row' }}>
-                <View style={styles.imageView}>
-                    <Text style={styles.imageText}>#{index + 1}</Text>
-                </View>
+    const getAllOrdersHistory = () => {
+        let obj = {
+            onSuccess: () => { },
+            onFailure: () => { },
+        };
+        dispatch(getAllOrderAction(obj));
+    };
 
-                <View style={styles.rightContainer}>
-                    <Text style={styles.breakText}>Invoice ID: #32053</Text>
-                    <Text style={styles.titleStyle}>Kartik Patel</Text>
-                    <Text style={styles.idText}>Table No: 32</Text>
-                    <View style={styles.priceView}>
-                        <Text style={styles.priceText}>₹60</Text>
-                        <Text style={styles.dateText}>18 January 2024</Text>
+    const getAllOrdersFilter = (data) => {
+        let obj = {
+            params: { start_date: formatDateToDDMMYYYY(startDate), end_date: formatDateToDDMMYYYY(data) },
+            onSuccess: () => { },
+            onFailure: () => { },
+        };
+        dispatch(getAllOrderFilterAction(obj));
+    };
+
+    const getUserInfo = async () => {
+        let isRole = await getAsyncRole();
+        setIsRole(isRole)
+    };
+
+    const handleDatePickerOpen = (isStartDate) => {
+        setIsSelectingStartDate(isStartDate);
+        setIsDatePickerVisible(true);
+    };
+
+    const handleDateConfirm = (selectedDate) => {
+        if (isSelectingStartDate) {
+            setStartDate(selectedDate);
+        } else {
+            setEndDate(selectedDate);
+            getAllOrdersFilter(selectedDate)
+        }
+        setIsDatePickerVisible(false);
+    };
+    const onCancelBtn = () => { };
+
+    const renderItem = ({ item, index }) => {
+        const formattedDate = formatDate(item.created_at);
+        return (
+            <View style={styles.listContainer}>
+                <View style={{ flexDirection: 'row' }}>
+                    <View style={styles.imageView}>
+                        <Text style={styles.imageText}>#{index + 1}</Text>
                     </View>
-                </View>
-                <TouchableOpacity style={styles.diningView}>
-                    <Text style={styles.diningText}>Dining</Text>
-                </TouchableOpacity>
-            </View>
 
-            <View style={styles.btnContainer}>
-                <TouchableOpacity onPress={onCancelBtn} style={styles.cancelBtn}>
-                    <Image style={styles.invoiveIcon} source={Icons.invoiceIcon} />
-                    <Text style={styles.cancelText}>{strings('profileScreen.download_invoice')}</Text>
-                </TouchableOpacity>
+                    <View style={styles.rightContainer}>
+                        <Text numberOfLines={1} style={styles.breakText}>{`${strings('orderModal.invoice_id')} : ${item.order_id}`}</Text>
+                        <Text style={styles.titleStyle}>{item.name}</Text>
+                        {item.table_number !== null ?
+                            <Text style={styles.idText}>{`${strings('orderModal.table_no')} : ${item.table_number}`}</Text> : null}
+                        <View style={styles.priceView}>
+                            <Text style={styles.priceText}>{`₹${item.total}`}</Text>
+                            <Text style={styles.dateText}>{formattedDate}</Text>
+                        </View>
+                    </View>
+
+                    <TouchableOpacity style={styles.diningView}>
+                        <Text style={styles.diningText}>{item.order_type === 1 ? strings('orderModal.dining') : strings('orderModal.parcel')}</Text>
+                    </TouchableOpacity>
+                </View>
+                {isRole === 'Admin' || isRole === 'Staff' ? null :
+                    <View style={styles.btnContainer}>
+                        <TouchableOpacity onPress={onCancelBtn} style={styles.cancelBtn}>
+                            <Image style={styles.invoiveIcon} source={Icons.invoiceIcon} />
+                            <Text style={styles.cancelText}>{strings('profileScreen.download_invoice')}</Text>
+                        </TouchableOpacity>
+                    </View>}
             </View>
-        </View>
-    );
+        )
+    }
 
     return (
         <View style={styles.container}>
@@ -65,26 +120,55 @@ const OrderHistory = () => {
             <HomeHeader
                 onBackPress={() => navigation.goBack()}
                 mainShow={true}
+                onRightPress={() => {
+                    getAllOrdersHistory()
+                    setStartDate(null)
+                    setEndDate(null)
+                }}
                 title={strings('profileScreen.order_history')}
                 isShowIcon={false}
                 extraStyle={styles.headerContainer}
                 isHideIcon={true}
                 rightTextStyle={styles.rightTextStyle}
+                isShowIcon={true}
+                isHideIcon={true}
+                rightText={strings('addFoodList.reset')}
             />
             <View style={styles.headerView}>
-                <HomeDropDown
-                    value={dropDownValue}
-                    onChangeText={(text) => setdropDownValue(text)}
-                    isShowDate={true}
-                />
+                <View style={styles.datePickerContainer}>
+
+                    <TouchableOpacity onPress={() => handleDatePickerOpen(true)} style={styles.dateButton}>
+                        <Text style={styles.dateText}>
+                            {startDate ? `${formatDateToDDMMYYYY(startDate)}` : strings('orderModal.start_date')}
+                        </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => handleDatePickerOpen(false)} style={styles.dateButton}>
+                        <Text style={styles.dateText}>
+                            {endDate ? `${formatDateToDDMMYYYY(endDate)}` : strings('orderModal.end_date')}
+                        </Text>
+                    </TouchableOpacity>
+                </View>
+
                 <FlatList
-                    data={data}
+                    data={allOrderHistory}
                     renderItem={renderItem}
                     keyExtractor={(item, index) => index.toString()}
                     showsVerticalScrollIndicator={false}
-                    contentContainerStyle={{ paddingBottom: hp(160) }} 
+                    contentContainerStyle={{ paddingBottom: hp(200) }}
                 />
             </View>
+            <Modal transparent={true} visible={isDatePickerVisible} animationType="slide">
+                <View style={styles.modalContainer}>
+                    <DatePicker
+                        modal
+                        open={isDatePickerVisible}
+                        date={isSelectingStartDate ? (startDate || new Date()) : (endDate || new Date())}
+                        onConfirm={handleDateConfirm}
+                        onCancel={() => setIsDatePickerVisible(false)}
+                        mode="date"
+                    />
+                </View>
+            </Modal>
         </View>
     );
 };
@@ -156,8 +240,8 @@ const getGlobalStyles = (props: any) => {
             height: hp(42),
             marginTop: hp(16),
             backgroundColor: colors.btn_bg,
-            borderColor:colors.border_gray,
-            borderWidth:1,
+            borderColor: colors.border_gray,
+            borderWidth: 1,
             borderRadius: wp(42),
             alignItems: 'center',
             justifyContent: 'center',
@@ -184,6 +268,33 @@ const getGlobalStyles = (props: any) => {
             height: hp(18),
             resizeMode: 'contain',
             marginRight: wp(8),
+        },
+        datePickerContainer: {
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            marginVertical: hp(10),
+        },
+        dateButton: {
+            backgroundColor: colors.cards_bg,
+            paddingVertical: hp(10),
+            paddingHorizontal: wp(20),
+            borderRadius: 10,
+        },
+        dateText: {
+            ...commonFontStyle(600, 14, colors.black),
+        },
+        modalContainer: {
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        },
+        listContainer: {
+            marginTop: hp(8),
+            backgroundColor: colors.cards_bg,
+            paddingVertical: hp(16),
+            paddingHorizontal: wp(16),
+            borderRadius: 16,
         },
     });
 };

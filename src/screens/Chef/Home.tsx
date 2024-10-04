@@ -10,9 +10,10 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useCallback, useEffect, useState} from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   useFocusEffect,
+  useIsFocused,
   useNavigation,
   useTheme,
 } from '@react-navigation/native';
@@ -35,23 +36,26 @@ import {
   statusBarHeight,
   wp,
 } from '../../theme/fonts';
-import {Icons} from '../../utils/images';
+import { Icons } from '../../utils/images';
 import OrderModal from '../../compoment/OrderModal';
-import {screenName} from '../../navigation/screenNames';
-import {strings} from '../../i18n/i18n';
-import {useAppDispatch, useAppSelector} from '../../redux/hooks';
-import {getCuisinesAction} from '../../actions/cuisinesAction';
-import {getChefsAction} from '../../actions/chefsAction';
-import {getMiscellaneousAction} from '../../actions/menuAction';
-import {light_theme} from '../../theme/colors';
+import { screenName } from '../../navigation/screenNames';
+import { strings } from '../../i18n/i18n';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import { getCuisinesAction } from '../../actions/cuisinesAction';
+import { getChefsAction } from '../../actions/chefsAction';
+import { getMiscellaneousAction } from '../../actions/menuAction';
+import { light_theme } from '../../theme/colors';
+import { getDiscountAction } from '../../actions/commonAction';
+import { getOrdersRequestAction, getRunningOrderAction } from '../../actions/allOrdersAction';
 
 type Props = {};
 
 const Home = (props: Props) => {
-  const {colors, isDark} = useTheme();
+  const { colors, isDark } = useTheme();
   const navigation = useNavigation();
-  const styles = React.useMemo(() => getGlobalStyles({colors}), [colors]);
-  const {isDarkTheme} = useAppSelector(state => state.common);
+  const isFocuse = useIsFocused();
+  const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
+  const { isDarkTheme, discount } = useAppSelector(state => state.common);
   const [value, setValue] = useState('');
   const [runningOrderModal, setRunninOrderModal] = useState(false);
   const [orderRequestModal, setOrderRequestModal] = useState(false);
@@ -62,7 +66,7 @@ const Home = (props: Props) => {
     setValue(Status);
   };
 
-  console.log('value', value);
+  console.log('value', discount);
 
   const getCurrentLocation = async () => {
     await requestLocationPermission(
@@ -96,8 +100,13 @@ const Home = (props: Props) => {
     getCurrentLocation();
     getCuisinesList();
     getChefsList();
-    getMiscellaneousList();
+    getMiscellaneousList()
   }, []);
+
+  useEffect(() => {
+    getDiscount()
+  }, [isFocuse])
+
 
   const getCuisinesList = () => {
     let obj = {
@@ -106,8 +115,8 @@ const Home = (props: Props) => {
         limit: 15,
         pagination: false,
       },
-      onSuccess: (res: any) => {},
-      onFailure: (Err: any) => {},
+      onSuccess: (res: any) => { },
+      onFailure: (Err: any) => { },
     };
     dispatch(getCuisinesAction(obj));
   };
@@ -119,20 +128,27 @@ const Home = (props: Props) => {
         limit: 10,
         pagination: false,
       },
-      onSuccess: (res: any) => {},
-      onFailure: (Err: any) => {},
+      onSuccess: (res: any) => { },
+      onFailure: (Err: any) => { },
     };
     dispatch(getMiscellaneousAction(obj));
   };
 
   const getChefsList = () => {
     let obj = {
-      onSuccess: (res: any) => {},
-      onFailure: (Err: any) => {},
+      onSuccess: (res: any) => { },
+      onFailure: (Err: any) => { },
     };
     dispatch(getChefsAction(obj));
   };
 
+  const getDiscount = () => {
+    let obj = {
+      onSuccess: (res: any) => { },
+      onFailure: (Err: any) => { },
+    };
+    dispatch(getDiscountAction(obj));
+  }
   const onPressLocation = () => {
     // @ts-ignore
     // navigate(screenName.Map_Location);
@@ -146,15 +162,15 @@ const Home = (props: Props) => {
         backgroundColor={colors.white}
       />
       <HomeHeader
-        onPressProfile={() => {}}
-        onPressCart={() => {}}
+        onPressProfile={() => { }}
+        onPressCart={() => { }}
         location={value}
         onPressLocation={onPressLocation}
         onRightPressNotification={() => {
           navigation.navigate(screenName.tab_bar_name?.Notification);
         }}
       />
-      <ScrollView style={{flex: 1}}>
+      <ScrollView style={{ flex: 1 }}>
         <ImageBackground
           source={Icons.banner}
           resizeMode="stretch"
@@ -167,21 +183,22 @@ const Home = (props: Props) => {
             alignSelf: 'center',
             top: -10,
           }}>
-          <ImageBackground
-            source={Icons.ic_dec}
-            resizeMode="contain"
-            style={{
-              width: 90,
-              height: 90,
-              alignSelf: 'flex-end',
-              marginRight: SCREEN_WIDTH * 0.1,
-              justifyContent: 'center',
-              alignItems: 'center',
-              flexDirection: 'row',
-            }}>
-            <Text style={styles.bannerText}>50%</Text>
-            <Text style={styles.bannerText1}>{'OFF'}</Text>
-          </ImageBackground>
+          {discount === 0 ? null :
+            <ImageBackground
+              source={Icons.ic_dec}
+              resizeMode="contain"
+              style={{
+                width: 90,
+                height: 90,
+                alignSelf: 'flex-end',
+                marginRight: SCREEN_WIDTH * 0.1,
+                justifyContent: 'center',
+                alignItems: 'center',
+                flexDirection: 'row',
+              }}>
+              <Text style={styles.bannerText}>{`${discount}%`}</Text>
+              <Text style={styles.bannerText1}>{'OFF'}</Text>
+            </ImageBackground>}
         </ImageBackground>
         <View style={styles.headerCard}>
           <CardView
@@ -257,7 +274,7 @@ const Home = (props: Props) => {
             }}
           />
         </CardView> */}
-        <View style={{height: 100}} />
+        <View style={{ height: 100 }} />
 
         {runningOrderModal && (
           <OrderModal
@@ -281,7 +298,7 @@ const Home = (props: Props) => {
 export default Home;
 
 const getGlobalStyles = (props: any) => {
-  const {colors} = props;
+  const { colors } = props;
   return StyleSheet.create({
     container: {
       flex: 1,

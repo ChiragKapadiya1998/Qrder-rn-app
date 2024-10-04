@@ -9,6 +9,8 @@ import {
   GET_CANTEEN_CUISINE_LIST,
   GET_CANTEEN_MENU_LIST,
   GET_CITY_DATA,
+  GET_DISCOUNT,
+  GET_SUPPORT_TYPE,
   GET_UNIVERSITIES_CANTEEN_LIST,
   GET_UNIVERSITIES_LIST,
   INCREMENT,
@@ -19,6 +21,7 @@ import {
   USER_INFO,
 } from '../redux/actionTypes';
 import { getAsyncToken, setAsyncToken, setAsyncUserInfo } from '../utils/asyncStorageManager';
+import { successToast } from '../utils/commonFunction';
 
 export const getCityAction =
   (request: any): ThunkAction<void, RootState, unknown, AnyAction> =>
@@ -265,5 +268,126 @@ export const getStudentMenuListAction =
         .catch(error => {
           dispatch({ type: IS_LOADING, payload: false });
           if (request.onFailure) request.onFailure(error.response);
+        });
+    };
+
+export const addDiscountAction =
+  (request: any): ThunkAction<void, RootState, unknown, AnyAction> =>
+    async dispatch => {
+      let headers = {
+        'Content-Type': 'multipart/form-data',
+        Authorization: await getAsyncToken(),
+      };
+      return makeAPIRequest({
+        method: POST,
+        url: api.updateDiscount,
+        headers: headers,
+        data: request.data,
+      })
+        .then(async (response: any) => {
+          if (response?.data?.success === true) {
+            successToast(response?.data?.message);
+            if (request.onSuccess) request.onSuccess(response.data);
+          } else {
+            if (request.onFailure) request.onFailure(response.data);
+          }
+        })
+        .catch(error => {
+          if (request.onFailure) request.onFailure(error?.response?.data);
+        });
+    };
+
+export const getDiscountAction =
+  (request: any): ThunkAction<void, RootState, unknown, AnyAction> =>
+    async dispatch => {
+      let headers = {
+        Authorization: await getAsyncToken(),
+      };
+      return makeAPIRequest({
+        method: GET,
+        url: api.getDiscount,
+        headers: headers,
+      })
+        .then(async (response: any) => {
+          if (response.status === 200 || response.status === 201) {
+            dispatch({ type: GET_DISCOUNT, payload: response?.data?.discount });
+            if (request.onSuccess) request.onSuccess(response.data?.discount);
+          }
+        })
+        .catch(error => {
+          if (request.onFailure) request.onFailure(error.response);
+        });
+    };
+export const waterBottleAction =
+  (request: any): ThunkAction<void, RootState, unknown, AnyAction> =>
+    async dispatch => {
+      let headers = {
+        'Content-Type': 'multipart/form-data',
+        Authorization: await getAsyncToken(),
+      };
+      return makeAPIRequest({
+        method: POST,
+        url: api.waterBottle,
+        headers: headers,
+        data: request.data,
+        isBaseUrl: true
+      })
+        .then(async (response: any) => {
+          if (response?.data?.success === true) {
+            successToast(response?.data?.message);
+            if (request.onSuccess) request.onSuccess(response.data);
+          } else {
+            if (request.onFailure) request.onFailure(response.data);
+          }
+        })
+        .catch(error => {
+          if (request.onFailure) request.onFailure(error?.response?.data);
+        });
+    };
+export const getSupportAction =
+  (request: any): ThunkAction<void, RootState, unknown, AnyAction> =>
+    async dispatch => {
+      let headers = {
+        Authorization: await getAsyncToken(),
+      };
+      return makeAPIRequest({
+        method: GET,
+        url: api.getSupportType,
+        headers: headers,
+      })
+        .then(async (response: any) => {
+          if (response.status === 200 || response.status === 201) {
+            dispatch({ type: GET_SUPPORT_TYPE, payload: response?.data?.data });
+            if (request.onSuccess) request.onSuccess(response.data?.data);
+          }
+        })
+        .catch(error => {
+          if (request.onFailure) request.onFailure(error.response);
+        });
+    };
+
+export const addSupportDetails =
+  (request: any): ThunkAction<void, RootState, unknown, AnyAction> =>
+    async dispatch => {
+      let headers = {
+        'Content-Type': 'multipart/form-data',
+        Authorization: await getAsyncToken(),
+      };
+      return makeAPIRequest({
+        method: POST,
+        url: api.addSupport,
+        headers: headers,
+        data: request.data,
+      })
+        .then(async (response: any) => {
+          if (response?.data?.success === true) {
+            successToast(response?.data?.message);
+            if (request.onSuccess) request.onSuccess(response.data);
+          } else {
+            if (request.onFailure) request.onFailure(response.data);
+          }
+        })
+        .catch(error => {
+          if (request.onFailure) request.onFailure(error?.response?.data);
         });
     };

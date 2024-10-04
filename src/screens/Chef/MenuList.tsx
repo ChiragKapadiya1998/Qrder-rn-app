@@ -139,8 +139,7 @@ const MenuList = (props: Props) => {
         setVisible(true);
         setSelectItem(item);
     }
-
-console.log("====<><><",currentData.current)
+    
     const renderItem = ({ item, index }) => {
         const isLastItem = index === currentData.current.length - 1;
         return (
