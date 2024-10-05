@@ -23,6 +23,7 @@ import { formatDate, formatDateToDDMMYYYY } from '../../utils/globalFunctions';
 import { getAsyncRole } from '../../utils/asyncStorageManager';
 import DatePicker from 'react-native-date-picker';
 import Spacer from '../../compoment/Spacer';
+import NoDataFound from '../../compoment/NoDataFound';
 
 const OrderHistory = () => {
     const { colors } = useTheme();
@@ -166,6 +167,7 @@ const OrderHistory = () => {
                     renderItem={renderItem}
                     keyExtractor={(item, index) => index.toString()}
                     showsVerticalScrollIndicator={false}
+                    ListEmptyComponent={<NoDataFound />}
                     ListFooterComponent={() => {
                         return <View style={{height: 100}} />;
                       }}

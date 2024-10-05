@@ -5,7 +5,7 @@ import { makeAPIRequest } from '../utils/apiGlobal';
 import { DELETE, GET, POST, PUT, api } from '../utils/apiConstants';
 import { successToast } from '../utils/commonFunction';
 import { getAsyncToken } from '../utils/asyncStorageManager';
-import { ACCPET_ORDER_REQUESTS, GET_ALL_ORDER, GET_ALL_STUDENT_ORDER, GET_ORDER_REQUESTS, GET_RUNNING_ORDERS, ORDER_DECLINED, RUNNING_ORDER_COMPLETED } from '../redux/actionTypes';
+import { ACCPET_ORDER_REQUESTS, GET_ALL_MY_ORDER, GET_ALL_ORDER, GET_ALL_STUDENT_ORDER, GET_ORDER_REQUESTS, GET_RUNNING_ORDERS, ORDER_DECLINED, RUNNING_ORDER_COMPLETED } from '../redux/actionTypes';
 
 export const getRunningOrderAction =
     (request: any): ThunkAction<void, RootState, unknown, AnyAction> =>
@@ -203,6 +203,28 @@ export const allStudentOrderFilterAction =
                 .then(async (response: any) => {
                     if (response.status === 200 || response.status === 201) {
                         dispatch({ type: GET_ALL_STUDENT_ORDER, payload: response?.data?.data });
+                        if (request.onSuccess) request.onSuccess(response.data?.data);
+                    }
+                })
+                .catch(error => {
+                    if (request.onFailure) request.onFailure(error.response);
+                });
+        };
+
+export const allMyOrderAction =
+    (request: any): ThunkAction<void, RootState, unknown, AnyAction> =>
+        async dispatch => {
+            let headers = {
+                Authorization: await getAsyncToken(),
+            };
+            return makeAPIRequest({
+                method: GET,
+                url: `${api.myOrders}/${request.data}`,
+                headers: headers,
+            })
+                .then(async (response: any) => {
+                    if (response.status === 200 || response.status === 201) {
+                        dispatch({ type: GET_ALL_MY_ORDER, payload: response?.data?.data });
                         if (request.onSuccess) request.onSuccess(response.data?.data);
                     }
                 })

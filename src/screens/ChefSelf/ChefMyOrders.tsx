@@ -1,25 +1,45 @@
 import { Alert, Image, StatusBar, StyleSheet, Text, TouchableOpacity, View, ScrollView, FlatList } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigation, useRoute, useTheme } from '@react-navigation/native';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import HomeHeader from '../../compoment/HomeHeader';
 import { strings } from '../../i18n/i18n';
 import { commonFontStyle, hp, wp } from '../../theme/fonts';
 import ThankYouModal from '../../compoment/ThankYouModal';
+import { getAsyncUserInfo } from '../../utils/asyncStorageManager';
+import { allMyOrderAction } from '../../actions/allOrdersAction';
 
 
-const MyOrders = () => {
+const ChefMyOrders = () => {
     const { colors } = useTheme();
     const route = useRoute();
+    const { itemData } = route?.params;
     const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
     const navigation = useNavigation();
     const { isDarkTheme } = useAppSelector(state => state.common);
+    const { allMyOrder } = useAppSelector(state => state.orders);
     const [isOpenModal, setIsOpenModal] = useState(false);
     const dispatch = useAppDispatch();
-
+    const { address, name, number, order_type ,id} = itemData
     const goback = () => {
         navigation.goBack();
     }
+    console.log("=====>>><<<", allMyOrder)
+
+    useEffect(()=>{
+        getAllMyOrder()
+    },[])
+
+    const getAllMyOrder = () => {
+        let UserInfo = {
+          data: id,
+          onSuccess: () => { },
+          onFailure: () => { },
+        };
+        dispatch(allMyOrderAction(UserInfo));
+      }
+
+      
 
     const onPressGoToHome = () => {
         setIsOpenModal(false)
@@ -49,61 +69,28 @@ const MyOrders = () => {
                 extraStyle={styles.headerContainer}
                 createText={strings('profileScreen.download_invoice')}
                 isShowIcon={false}
-                isCreateIcon={true}
+                isCreateIcon={false}
                 isShowInvoice={true}
             />
             <ScrollView style={styles.subContainer} showsVerticalScrollIndicator={false}>
-                <Text style={styles.orederText}>{strings('myOrders.order_details')}</Text>
-                <View style={styles.orderBox}>
-                    <View style={[styles.comanStyle]}>
-                        <Text style={styles.priText}>{strings('myOrders.order_id')}</Text>
-                        <Text style={[styles.priText, { color: colors.black }]}>{'#326589'}</Text>
-                    </View>
-                    <View style={[styles.comanStyle, { marginVertical: hp(12) }]}>
-                        <Text style={styles.priText}>{strings('myOrders.user_name')}</Text>
-                        <Text style={[styles.priText, { color: colors.black }]}>{`Kartik Patel`}</Text>
-                    </View>
-                    <View style={styles.comanStyle}>
-                        <Text style={styles.priText}>{strings('myOrders.phone_number')}</Text>
-                        <Text style={[styles.priText, { color: colors.black }]}>{'+91 123 456 7890'}</Text>
-                    </View>
-                    <View style={[styles.comanStyle, { marginVertical: hp(12) }]}>
-                        <Text style={styles.priText}>{strings('myOrders.subtotal')}</Text>
-                        <Text style={[styles.priText, { color: colors.black }]}>{`₹${250}`}</Text>
-                    </View>
-                    <View style={[styles.comanStyle]}>
-                        <Text style={styles.priText}>{strings('myOrders.discount')}</Text>
-                        <Text style={[styles.priText, { color: colors.red_text }]}>{`-₹${250}`}</Text>
-                    </View>
-                    <View style={[styles.comanStyle, { marginVertical: hp(12) }]}>
-                        <Text style={styles.priText}>{strings('myOrders.tax')}</Text>
-                        <Text style={[styles.priText, { color: colors.black }]}>{`₹${250}`}</Text>
-                    </View>
-                    <View style={[styles.comanStyle]}>
-                        <Text style={styles.priText}>{strings('myOrders.platform_free')}</Text>
-                        <Text style={[styles.priText, { color: colors.black }]}>{`₹${25}`}</Text>
-                    </View>
-                    <View style={[styles.comanStyle, { marginTop: hp(12) }]}>
-                        <Text style={styles.priText}>{strings('myOrders.created_date')}</Text>
-                        <Text style={[styles.priText, { color: colors.green_text }]}>{'18 January 2024'}</Text>
-                    </View>
-                    <View style={styles.borderLine} />
-                    <View style={styles.comanStyle}>
-                        <Text style={styles.priText}>{strings('foodCart.total_pay')}</Text>
-                        <Text style={styles.totalPrice}>{`₹${250}`}</Text>
-                    </View>
-                </View>
-
                 <Text style={styles.addressText}>{strings('myOrders.address_details')}</Text>
                 <View style={styles.cardContainer}>
                     <View style={styles.boxView}>
-                        <Text style={styles.textStyle}>{strings('myOrders.canteen_address')}</Text>
-                        <Text style={styles.nameText}>{'Room 500 hostel'}</Text>
+                        <Text style={styles.textStyle}>{strings('myOrders.user_name')}</Text>
+                        <Text style={styles.nameText}>{name}</Text>
+                    </View>
+                    {address !== null ? <View style={[styles.boxView, { marginTop: hp(12) }]}>
+                        <Text style={styles.textStyle}>{strings('myOrders.address')}</Text>
+                        <Text style={styles.nameText}>{address}</Text>
+                    </View> : null}
+                    <View style={[styles.boxView, { marginTop: hp(12) }]}>
+                        <Text style={styles.textStyle}>{strings('myOrders.phone_number')}</Text>
+                        <Text style={styles.nameText}>{number}</Text>
                     </View>
                     <View style={[styles.boxView, { marginTop: hp(12) }]}>
                         <Text style={styles.textStyle}>{strings('myOrders.dining_parcel')}</Text>
                         <View style={styles.diningView}>
-                            <Text style={[styles.diningText]}>Dining</Text>
+                            <Text style={styles.diningText}>{order_type === 1 ? strings('orderModal.dining') : strings('orderModal.parcel')}</Text>
                         </View>
                     </View>
                 </View>
@@ -140,7 +127,7 @@ const MyOrders = () => {
         </View>
     );
 }
-export default MyOrders
+export default ChefMyOrders
 
 const getGlobalStyles = (props: any) => {
     const { colors } = props;

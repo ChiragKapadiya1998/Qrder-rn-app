@@ -54,6 +54,7 @@ const ChefHome = () => {
   const navigation = useNavigation();
   const isFocuse = useIsFocused();
 
+  console.log("=====<><><>", isRunningOrder)
   const GetStatus = async () => {
     const Status = await getAsyncLocation();
     setValue(Status);
@@ -167,9 +168,9 @@ const ChefHome = () => {
     return (
       <View style={styles.listContainer}>
         <View style={{ flexDirection: 'row' }}>
-          <View style={styles.imageView}>
+          <TouchableOpacity style={styles.imageView} onPress={() => navigation.navigate(screenName.ChefMyOrders, { itemData: item })}>
             <Text style={styles.imageText}>#{index + 1}</Text>
-          </View>
+          </TouchableOpacity>
 
           <View style={styles.rightContainer}>
             <Text numberOfLines={1} style={styles.breakText}>{`${strings('orderModal.invoice_id')} : ${item.order_id}`}</Text>

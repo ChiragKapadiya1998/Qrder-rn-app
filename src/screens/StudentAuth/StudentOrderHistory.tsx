@@ -71,22 +71,22 @@ const StudentOrderHistory = () => {
 
   const handleDateConfirm = (selectedDate) => {
     if (isSelectingStartDate) {
-        setStartDate(selectedDate);
+      setStartDate(selectedDate);
     } else {
-        if (!startDate) {
-          Alert.alert(
-            'error',
-            strings('orderModal.e_start_data'),
-            [{ text: strings('orderModal.ok'), onPress: () => setIsDatePickerVisible(false) }]
+      if (!startDate) {
+        Alert.alert(
+          'error',
+          strings('orderModal.e_start_data'),
+          [{ text: strings('orderModal.ok'), onPress: () => setIsDatePickerVisible(false) }]
         );
-            return;
-        }
-        
-        setEndDate(selectedDate);
-        getAllOrdersFilter(selectedDate);
+        return;
+      }
+
+      setEndDate(selectedDate);
+      getAllOrdersFilter(selectedDate);
     }
     setIsDatePickerVisible(false);
-};
+  };
   const onCancelBtn = () => { };
 
   const renderItem = ({ item, index }) => {
@@ -164,7 +164,10 @@ const StudentOrderHistory = () => {
           renderItem={renderItem}
           keyExtractor={(item, index) => index.toString()}
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ paddingBottom: hp(100) }}
+          ListEmptyComponent={<NoDataFound />}
+          ListFooterComponent={() => {
+            return <View style={{ height: 100 }} />;
+          }}
         />
       </View>
       <Modal transparent={true} visible={isDatePickerVisible} animationType="slide">

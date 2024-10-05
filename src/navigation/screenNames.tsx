@@ -63,6 +63,7 @@ export const screenName = {
     ChefProfile: 'ChefProfile',
   },
   ChefNotification: 'ChefNotification',
+  ChefMyOrders:'ChefMyOrders',
 
   // student
 

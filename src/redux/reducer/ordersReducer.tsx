@@ -1,10 +1,11 @@
-import { ACCPET_ORDER_REQUESTS, GET_ALL_ORDER, GET_ALL_STUDENT_ORDER, GET_ORDER_REQUESTS, GET_RUNNING_ORDERS, ORDER_COMPLETED, ORDER_DECLINED, RUNNING_ORDER_COMPLETED } from "../actionTypes";
+import { ACCPET_ORDER_REQUESTS, GET_ALL_MY_ORDER, GET_ALL_ORDER, GET_ALL_STUDENT_ORDER, GET_ORDER_REQUESTS, GET_RUNNING_ORDERS, ORDER_COMPLETED, ORDER_DECLINED, RUNNING_ORDER_COMPLETED } from "../actionTypes";
 
 const initialState = {
     isRunningOrder: [],
     isOrderRequest: [],
     allOrderHistory: [],
-    allStudentOrderHistory: []
+    allStudentOrderHistory: [],
+    allMyOrder: []
 };
 
 export default function (state = initialState, action: any) {
@@ -44,6 +45,9 @@ export default function (state = initialState, action: any) {
         }
         case GET_ALL_STUDENT_ORDER: {
             return { ...state, allStudentOrderHistory: action.payload };
+        }
+        case GET_ALL_MY_ORDER: {
+            return { ...state, allMyOrder: action.payload };
         }
         default:
             return state;
