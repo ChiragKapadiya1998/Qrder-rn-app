@@ -5,6 +5,7 @@ import {makeAPIRequest} from '../utils/apiGlobal';
 import {DELETE, GET, POST, api} from '../utils/apiConstants';
 import {
   DELETE_MENU_DATA,
+  GET_DASHBOARD_LIST,
   GET_EMPTY_MENU_LIST,
   GET_MENU_DATA,
   GET_MISCELLANEOUS,
@@ -182,6 +183,34 @@ export const getMiscellaneousAction =
               ...response?.data?.data,
               current_page: request?.data?.page,
             },
+          });
+          if (request.onSuccess) request.onSuccess(response?.data?.data);
+        }
+      })
+      .catch(error => {
+        if (request.onFailure) request.onFailure(error.response);
+      });
+  };
+
+export const getDashboardAction =
+  (request: any): ThunkAction<void, RootState, unknown, AnyAction> =>
+  async dispatch => {
+    let headers = {
+      Authorization: await getAsyncToken(),
+    };
+    return makeAPIRequest({
+      method: GET,
+      url: `${api.dashboard}`,
+      headers: headers,
+      params: request?.params,
+    })
+      .then(async (response: any) => {
+        console.log('response?.data?.data', response?.data?.data);
+
+        if (response.status === 200 || response.status === 201) {
+          dispatch({
+            type: GET_DASHBOARD_LIST,
+            payload: response?.data,
           });
           if (request.onSuccess) request.onSuccess(response?.data?.data);
         }

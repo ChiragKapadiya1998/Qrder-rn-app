@@ -1,655 +1,689 @@
 import {
-    Alert,
-    FlatList,
-    Image,
-    Keyboard,
-    ListRenderItem,
-    StyleSheet,
-    Text,
-    TextInput,
-    ToastAndroid,
-    TouchableOpacity,
-    View,
+  Alert,
+  FlatList,
+  Image,
+  Keyboard,
+  ListRenderItem,
+  StyleSheet,
+  Text,
+  TextInput,
+  ToastAndroid,
+  TouchableOpacity,
+  View,
 } from 'react-native';
-import React, { useEffect, useState } from 'react';
-import { useIsFocused, useNavigation, useRoute, useTheme } from '@react-navigation/native';
+import React, {useEffect, useState} from 'react';
+import {
+  useIsFocused,
+  useNavigation,
+  useRoute,
+  useTheme,
+} from '@react-navigation/native';
 import HomeHeader from '../../compoment/HomeHeader';
-import { strings } from '../../i18n/i18n';
+import {strings} from '../../i18n/i18n';
 import Input from '../../compoment/Input';
-import { commonFontStyle, hp, isIos, SCREEN_WIDTH, wp } from '../../theme/fonts';
-import { Icons } from '../../utils/images';
+import {commonFontStyle, hp, isIos, SCREEN_WIDTH, wp} from '../../theme/fonts';
+import {Icons} from '../../utils/images';
 import ImagePicker from 'react-native-image-crop-picker';
 import CCDropDown from '../../compoment/CCDropDown';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import PrimaryButton from '../../compoment/PrimaryButton';
-import { useAppDispatch, useAppSelector } from '../../redux/hooks';
-import { addMenuAction, updateManuAction } from '../../actions/menuAction';
-import { errorToast } from '../../utils/commonFunction';
+import {useAppDispatch, useAppSelector} from '../../redux/hooks';
+import {addMenuAction, updateManuAction} from '../../actions/menuAction';
+import {errorToast} from '../../utils/commonFunction';
 import moment = require('moment');
 import AddFolderModal from '../../compoment/AddFolderModal';
 import Spacer from '../../compoment/Spacer';
-import { getCuisinesAction } from '../../actions/cuisinesAction';
-import { screenName } from '../../navigation/screenNames';
+import {getCuisinesAction} from '../../actions/cuisinesAction';
+import {screenName} from '../../navigation/screenNames';
 import ImageCropPicker from 'react-native-image-crop-picker';
-import { openImagePicker, options } from '../../utils/globalFunctions';
+import {openImagePicker, options} from '../../utils/globalFunctions';
 
 type DataItem = {
-    id: number;
-    name: string;
-    price: string;
-    tenant_id: string;
+  id: number;
+  name: string;
+  price: string;
+  tenant_id: string;
 };
 
 const EditMenuList = () => {
-    const { colors } = useTheme();
-    const navigation = useNavigation();
-    const route = useRoute();
-    const { itemData } = route?.params;
-    const { miscellaneous_items } = itemData;
-    const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
-    const [itemName, setItemName] = useState(itemData?.name);
-    const [price, setPrice] = useState(itemData?.price);
-    const [basicDetails, setBasicDetails] = useState(itemData?.description);
-    const [selectedTex, setSelectedTex] = useState(itemData?.include_tax)
-    const [percentageInput, setPercentageInput] = useState(String(itemData?.tax_percentage));
-    const [images, setImages] = useState('');
-    const [imageData, setImageData] = useState < any > ({
-        uri: itemData.image ? itemData?.image : '',
+  const {colors} = useTheme();
+  const navigation = useNavigation();
+  const route = useRoute();
+  const {itemData} = route?.params;
+  const {miscellaneous_items} = itemData;
+  const styles = React.useMemo(() => getGlobalStyles({colors}), [colors]);
+  const [itemName, setItemName] = useState(itemData?.name);
+  const [price, setPrice] = useState(itemData?.price);
+  const [basicDetails, setBasicDetails] = useState(itemData?.description);
+  const [selectedTex, setSelectedTex] = useState(itemData?.include_tax);
+  const [percentageInput, setPercentageInput] = useState(
+    String(itemData?.tax_percentage),
+  );
+  const [images, setImages] = useState('');
+  const [imageData, setImageData] = useState<any>({
+    uri: itemData.image ? itemData?.image : '',
+  });
+  const [isPictureEdit, setIsPictureEdit] = useState<boolean>(
+    itemData.image ? true : false,
+  );
+
+  console.log('itemData.image', itemData.image);
+  console.log('itemData.image2', imageData);
+
+  const [quantityValue, setQuantityValue] = useState(0);
+  const {getCuisines, getMiscellaneous} = useAppSelector(state => state.data);
+  const dispatch = useAppDispatch();
+  const [newFolder, setNewFolder] = useState(false);
+  const [showAddField, setShowAddField] = useState(false);
+  const [selectedOption, setSelectedOption] = useState<number | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const isFocuse = useIsFocused();
+  const [miscellaneous, setMiscellaneous] = useState([]);
+
+  useEffect(() => {
+    const selectedIds = new Set(miscellaneous_items.map(item => item.id));
+    console.log('Selected IDs: ', selectedIds);
+    const updatedMiscellaneous = getMiscellaneous.map(item => ({
+      ...item,
+      isSelect: selectedIds.has(item.id),
+    }));
+
+    console.log('Updated Miscellaneous: ', updatedMiscellaneous);
+    setMiscellaneous(updatedMiscellaneous);
+  }, [isFocuse]);
+
+  const toggleSelectItem = itemId => {
+    setMiscellaneous(prevState =>
+      prevState.map(item =>
+        item.id === itemId ? {...item, isSelect: !item.isSelect} : item,
+      ),
+    );
+  };
+  // const [miscellaneous, setMiscellaneous] = useState(
+  //     getMiscellaneous.map(item => {
+  //         return { ...item, isSelect: false };
+  //     }),
+  // );
+
+  useEffect(() => {
+    const filteredItem = getCuisines.find(
+      (item: any) => item.name === itemData.cuisine_name,
+    );
+    if (filteredItem) {
+      setQuantityValue(filteredItem.id);
+    }
+  }, [getCuisines, itemData.cuisine_name]);
+
+  useEffect(() => {
+    getCuisinesList();
+  }, [showAddField]);
+
+  // useEffect(() => {
+  //     setMiscellaneous(
+  //         getMiscellaneous.map(item => {
+  //             return { ...item, isSelect: false };
+  //         }),
+  //     );
+  // }, [isFocuse]);
+
+  const getCuisinesList = () => {
+    let obj = {
+      data: {
+        page: 1,
+        limit: 15,
+        pagination: false,
+      },
+      onSuccess: (res: any) => {},
+      onFailure: (Err: any) => {},
+    };
+    dispatch(getCuisinesAction(obj));
+  };
+
+  const selectImage = () => {
+    openImagePicker({
+      onSucess: res => {
+        setImageData(res);
+        setIsPictureEdit(true);
+      },
     });
-    const [isPictureEdit, setIsPictureEdit] = useState < boolean > (itemData.image ? true : false);
+  };
 
-    const [quantityValue, setQuantityValue] = useState(0);
-    const { getCuisines, getMiscellaneous } = useAppSelector(state => state.data);
-    const dispatch = useAppDispatch();
-    const [newFolder, setNewFolder] = useState(false);
-    const [showAddField, setShowAddField] = useState(false);
-    const [selectedOption, setSelectedOption] = useState < number | null > (null);
-    const [loading, setLoading] = useState < boolean > (false);
-    const isFocuse = useIsFocused();
-    const [miscellaneous, setMiscellaneous] = useState([]);
+  const renderImage = ({item}: any) => (
+    <View style={styles.imageContainer}>
+      <Image source={{uri: item.uri}} style={styles.imageView} />
+    </View>
+  );
 
-    useEffect(() => {
-        const selectedIds = new Set(miscellaneous_items.map(item => item.id));
-        console.log("Selected IDs: ", selectedIds);
-        const updatedMiscellaneous = getMiscellaneous.map(item => ({
-            ...item,
-            isSelect: selectedIds.has(item.id),
-        }));
-
-        console.log("Updated Miscellaneous: ", updatedMiscellaneous);
-        setMiscellaneous(updatedMiscellaneous);
-    }, [isFocuse]);
-
-    const toggleSelectItem = (itemId) => {
-        setMiscellaneous(prevState =>
-            prevState.map(item =>
-                item.id === itemId
-                    ? { ...item, isSelect: !item.isSelect }
-                    : item
-            )
-        );
-    };
-    // const [miscellaneous, setMiscellaneous] = useState(
-    //     getMiscellaneous.map(item => {
-    //         return { ...item, isSelect: false };
-    //     }),
-    // );
-
-    useEffect(() => {
-        const filteredItem = getCuisines.find((item: any) => item.name === itemData.cuisine_name);
-        if (filteredItem) {
-            setQuantityValue(filteredItem.id);
-        }
-
-    }, [getCuisines, itemData.cuisine_name]);
-
-    useEffect(() => {
-        getCuisinesList();
-    }, [showAddField]);
-
-    // useEffect(() => {
-    //     setMiscellaneous(
-    //         getMiscellaneous.map(item => {
-    //             return { ...item, isSelect: false };
-    //         }),
-    //     );
-    // }, [isFocuse]);
-
-    const getCuisinesList = () => {
-        let obj = {
-            data: {
-                page: 1,
-                limit: 15,
-                pagination: false,
-            },
-            onSuccess: (res: any) => { },
-            onFailure: (Err: any) => { },
-        };
-        dispatch(getCuisinesAction(obj));
-    };
-
-    const selectImage = () => {
-        openImagePicker({
-            onSucess: res => {
-                setImageData(res);
-                setIsPictureEdit(true);
-            },
+  const onPressEditItem = () => {
+    if (imageData.uri == '') {
+      errorToast(strings('addFoodList.selectImg'));
+    } else if (itemName.trim().length === 0) {
+      errorToast(strings('addFoodList.item_name_error'));
+    } else if (price.trim().length === 0) {
+      errorToast(strings('addFoodList.price_error'));
+    } else if (quantityValue == 0) {
+      errorToast(strings('addFoodList.cuisines_error'));
+    } else if (basicDetails.trim().length === 0) {
+      errorToast(strings('addFoodList.basicDetails'));
+    } else {
+      setLoading(true);
+      let data = new FormData();
+      const texPre = selectedTex === 0 ? 0 : Number(percentageInput);
+      const listData = miscellaneous
+        .filter(list => list.isSelect == true)
+        .map(item => {
+          return item.id;
         });
-    };
 
-    const renderImage = ({ item }: any) => (
-        <View style={styles.imageContainer}>
-            <Image source={{ uri: item.uri }} style={styles.imageView} />
+      data.append('name', itemName);
+      data.append('cuisine_id', quantityValue);
+      data.append('price', price);
+      data.append('description', basicDetails);
+      data.append('include_tax', selectedTex);
+      data.append('tax_percentage', texPre);
+      data.append('miscellaneous_item_ids', `[${listData}]`);
+      console.log(
+        'imageData?.uri !== itemData.image',
+        imageData?.uri !== itemData.image,
+      );
+
+      if (imageData?.uri !== itemData.image) {
+        data.append('file', {
+          uri: imageData?.uri,
+          type: imageData?.mime,
+          name: imageData?.name,
+        });
+      }
+      console.log('data', data);
+
+      let obj = {
+        params: itemData?.id,
+        data,
+        onSuccess: (response: any) => {
+          navigation.navigate(screenName.tab_bar_name.MenuList);
+          setLoading(false);
+        },
+        onFailure: (Err: any) => {
+          setLoading(false);
+          if (Err != undefined) {
+            Alert.alert(Err?.data?.message);
+          }
+        },
+      };
+      dispatch(updateManuAction(obj));
+    }
+  };
+
+  const onRightPress = () => {
+    setImages('');
+    setItemName('');
+    setPrice('');
+    setQuantityValue(0);
+    setBasicDetails('');
+  };
+
+  const handlePress = (value: number) => {
+    const update = miscellaneous.map(item => {
+      if (item?.id == value.id) {
+        return {...value, isSelect: !value?.isSelect};
+      } else {
+        return {...item};
+      }
+    });
+    setMiscellaneous(update);
+  };
+
+  const handleChangeText = text => {
+    const value = parseFloat(text);
+    if (!isNaN(value) && value >= 0 && value <= 100) {
+      setPercentageInput(text);
+    } else if (text.length === 0) {
+      setPercentageInput('');
+    } else {
+      ToastAndroid.showWithGravity(
+        strings('addFoodList.e_Tex_Per'),
+        ToastAndroid.SHORT,
+        ToastAndroid.CENTER,
+      );
+    }
+  };
+  const renderItem = ({item}) => (
+    <View style={styles.radioView}>
+      <TouchableOpacity
+        style={styles.radioContainer}
+        onPress={() => toggleSelectItem(item.id)}>
+        <View
+          style={[styles.checkbox, item.isSelect && styles.selectedCheckbox]}>
+          {item.isSelect && (
+            <Image style={styles.ic_check} source={Icons.ic_check} />
+          )}
         </View>
-    );
+        <Text style={styles.radioText}>{item.name}</Text>
+      </TouchableOpacity>
+      <Spacer width={12} />
+    </View>
+  );
 
-    const onPressEditItem = () => {
-        if (imageData.uri == '') {
-            errorToast(strings('addFoodList.selectImg'));
-        } else if (itemName.trim().length === 0) {
-            errorToast(strings('addFoodList.item_name_error'));
-        } else if (price.trim().length === 0) {
-            errorToast(strings('addFoodList.price_error'));
-        } else if (quantityValue == 0) {
-            errorToast(strings('addFoodList.cuisines_error'));
-        } else if (basicDetails.trim().length === 0) {
-            errorToast(strings('addFoodList.basicDetails'));
-        } else {
-            setLoading(true);
-            let data = new FormData();
-            const texPre = selectedTex === 0 ? 0 : Number(percentageInput)
-            const listData = miscellaneous.filter(list => list.isSelect == true).map((item) => { return item.id })
+  return (
+    <View style={styles.container}>
+      <HomeHeader
+        onBackPress={() => {
+          navigation.goBack();
+        }}
+        onRightPress={() => {}}
+        mainShow={true}
+        title={strings('editFoodDetails.editItems')}
+        extraStyle={styles.headerContainer}
+        isHideIcon={true}
+      />
+      <View style={styles.subContainer}>
+        <KeyboardAwareScrollView
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps={'handled'}>
+          <Text style={styles.uploadText}>
+            {strings('addFoodList.upload_photo_video')}
+          </Text>
 
-
-            data.append('name', itemName);
-            data.append('cuisine_id', quantityValue);
-            data.append('price', price);
-            data.append('description', basicDetails);
-            data.append('include_tax', selectedTex);
-            data.append('tax_percentage', texPre);
-            data.append('miscellaneous_item_ids', `[${listData}]`);
-
-            if (imageData?.uri !== itemData.image) {
-                data.append('file', {
-                    uri: imageData?.uri,
-                    type: imageData?.mime,
-                    name: imageData?.name,
-                });
-            }
-            let obj = {
-                params: itemData?.id,
-                data,
-                onSuccess: (response: any) => {
-                    navigation.navigate(screenName.tab_bar_name.MenuList)
-                    setLoading(false);
-
-                },
-                onFailure: (Err: any) => {
-                    setLoading(false);
-                    if (Err != undefined) {
-                        Alert.alert(Err?.data?.message);
-                    }
-                },
-            };
-            dispatch(updateManuAction(obj));
-        }
-    };
-
-    const onRightPress = () => {
-        setImages('');
-        setItemName('');
-        setPrice('');
-        setQuantityValue(0);
-        setBasicDetails('');
-    };
-
-    const handlePress = (value: number) => {
-        const update = miscellaneous.map(item => {
-            if (item?.id == value.id) {
-                return { ...value, isSelect: !value?.isSelect };
-            } else {
-                return { ...item };
-            }
-        });
-        setMiscellaneous(update);
-    };
-
-    const handleChangeText = (text) => {
-        const value = parseFloat(text);
-        if (!isNaN(value) && value >= 0 && value <= 100) {
-            setPercentageInput(text);
-        } else if (text.length === 0) {
-            setPercentageInput('');
-        } else {
-            ToastAndroid.showWithGravity(
-                strings('addFoodList.e_Tex_Per'),
-                ToastAndroid.SHORT,
-                ToastAndroid.CENTER
-            );
-        }
-    };
-    const renderItem = ({ item }) => (
-        <View style={styles.radioView}>
+          {!isPictureEdit ? (
             <TouchableOpacity
-                style={styles.radioContainer}
-                onPress={() => toggleSelectItem(item.id)}>
-                <View style={[styles.checkbox, item.isSelect && styles.selectedCheckbox]}>
-                    {item.isSelect && (
-                        <Image style={styles.ic_check} source={Icons.ic_check} />
-                    )}
-                </View>
-                <Text style={styles.radioText}>{item.name}</Text>
+              style={styles.addImageView}
+              onPress={() => {
+                selectImage();
+              }}>
+              <Image source={Icons.addImageIcon} style={styles.addImageIcon} />
+              <Text style={styles.addImageText}>
+                {strings('addFoodList.add_food_photo')}
+              </Text>
+              <Text style={styles.upToText}>
+                {strings('addFoodList.upToMb')}
+              </Text>
             </TouchableOpacity>
-            <Spacer width={12} />
-        </View>
-    );
-
-    return (
-        <View style={styles.container}>
-            <HomeHeader
-                onBackPress={() => {
-                    navigation.goBack();
+          ) : (
+            <TouchableOpacity
+              style={styles.addImageView}
+              onPress={() => {
+                selectImage();
+              }}>
+              <Image
+                source={{uri: imageData.uri}}
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  resizeMode: 'stretch',
+                  borderRadius: 16,
                 }}
-                onRightPress={() => { }}
-                mainShow={true}
-                title={strings('editFoodDetails.editItems')}
-                extraStyle={styles.headerContainer}
-                isHideIcon={true}
+              />
+            </TouchableOpacity>
+          )}
+          <Input
+            value={itemName}
+            placeholder={strings('addFoodList.item_name')}
+            label={strings('addFoodList.item_name')}
+            onChangeText={(t: string) => setItemName(t)}
+            extraStyle={styles.inputView}
+            inputStyle={styles.inputStyle}
+            isShowLabel={true}
+          />
+          <Input
+            value={price}
+            placeholder={strings('addFoodList.Addprice')}
+            label={strings('addFoodList.price')}
+            onChangeText={(t: string) => setPrice(t)}
+            extraStyle={styles.priceInput}
+            inputStyle={styles.priceInputStyle}
+            keyboardType="number-pad"
+            isShowLabel={true}
+          />
+          <CCDropDown
+            data={getCuisines}
+            label={strings('addFoodList.SelectCuisine')}
+            labelField={'name'}
+            valueField={'id'}
+            placeholder={strings('addFoodList.SelectCuisine')}
+            DropDownStyle={styles.dropDownStyle}
+            value={quantityValue}
+            setValue={setQuantityValue}
+            isShowLabel={true}
+          />
+          <Text style={[styles.textStyle]}>
+            {strings('addFoodList.PriceWithTax')}
+          </Text>
+
+          {options.map((option, index) => (
+            <TouchableOpacity
+              key={index}
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                gap: 10,
+                marginTop: index === 0 ? 0 : 16,
+              }}
+              onPress={() => setSelectedTex(index)}>
+              <View
+                style={{
+                  width: 20,
+                  height: 20,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  borderRadius: 10,
+                  backgroundColor:
+                    selectedTex === index ? colors.blue : 'transparent',
+                  borderColor:
+                    selectedTex === index ? colors.blue : colors.title_dec,
+                  borderWidth: selectedTex === index ? 0 : 1,
+                }}>
+                {selectedTex === index && (
+                  <Image source={option.icon} style={styles.ic_check} />
+                )}
+              </View>
+              <Text style={styles.text1}>{option.label}</Text>
+            </TouchableOpacity>
+          ))}
+
+          <Text style={styles.textStyle}>
+            {strings('addFoodList.TaxPercentage')}
+          </Text>
+          <View
+            style={[
+              styles.PercentageInput,
+              {
+                borderColor:
+                  percentageInput?.length == 0
+                    ? colors.border_line4
+                    : colors.text_orange,
+              },
+            ]}>
+            <TextInput
+              value={percentageInput}
+              onChangeText={handleChangeText}
+              placeholder={strings('addFoodList.add_basic')}
+              style={styles.inputTaxPercentage}
+              placeholderTextColor={colors.title_dec100}
+              keyboardType="numeric"
             />
-            <View style={styles.subContainer}>
-                <KeyboardAwareScrollView
-                    showsVerticalScrollIndicator={false}
-                    keyboardShouldPersistTaps={'handled'}>
-                    <Text style={styles.uploadText}>
-                        {strings('addFoodList.upload_photo_video')}
-                    </Text>
+            <Image source={Icons.pertenge} style={styles.pertenge} />
+          </View>
 
-                    {!isPictureEdit ? (
-                        <TouchableOpacity style={styles.addImageView} onPress={() => {
-                            selectImage();
-                        }}>
-                            <Image source={Icons.addImageIcon} style={styles.addImageIcon} />
-                            <Text style={styles.addImageText}>
-                                {strings('addFoodList.add_food_photo')}
-                            </Text>
-                            <Text style={styles.upToText}>
-                                {strings('addFoodList.upToMb')}
-                            </Text>
-                        </TouchableOpacity>
-                    ) : (
-                        <TouchableOpacity style={styles.addImageView} onPress={() => {
-                            selectImage();
-                        }}>
-                            <Image source={{ uri: imageData.uri }} style={{
-                                width: '100%',
-                                height: '100%',
-                                resizeMode: 'stretch',
-                                borderRadius: 16,
-                            }} />
-                        </TouchableOpacity>
-                    )}
-                    <Input
-                        value={itemName}
-                        placeholder={strings('addFoodList.item_name')}
-                        label={strings('addFoodList.item_name')}
-                        onChangeText={(t: string) => setItemName(t)}
-                        extraStyle={styles.inputView}
-                        inputStyle={styles.inputStyle}
-                        isShowLabel={true}
-                    />
-                    <Input
-                        value={price}
-                        placeholder={strings('addFoodList.Addprice')}
-                        label={strings('addFoodList.price')}
-                        onChangeText={(t: string) => setPrice(t)}
-                        extraStyle={styles.priceInput}
-                        inputStyle={styles.priceInputStyle}
-                        keyboardType="number-pad"
-                        isShowLabel={true}
-                    />
-                    <CCDropDown
-                        data={getCuisines}
-                        label={strings('addFoodList.SelectCuisine')}
-                        labelField={'name'}
-                        valueField={'id'}
-                        placeholder={strings('addFoodList.SelectCuisine')}
-                        DropDownStyle={styles.dropDownStyle}
-                        value={quantityValue}
-                        setValue={setQuantityValue}
-                        isShowLabel={true}
-                    />
-                    <Text style={[styles.textStyle]}>
-                        {strings('addFoodList.PriceWithTax')}
-                    </Text>
+          <View>
+            <Text style={styles.miscellaneousText}>
+              {strings('addFoodList.Miscellaneousitems')}
+            </Text>
+            <FlatList
+              data={miscellaneous}
+              renderItem={renderItem}
+              horizontal={true}
+              keyExtractor={item => item.value}
+              showsVerticalScrollIndicator={false}
+            />
+          </View>
 
-                    {options.map((option, index) => (
-                        <TouchableOpacity
-                            key={index}
-                            style={{ flexDirection: 'row', alignItems: 'center', gap: 10, marginTop: index === 0 ? 0 : 16 }}
-                            onPress={() => setSelectedTex(index)}
-                        >
-                            <View
-                                style={{
-                                    width: 20,
-                                    height: 20,
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                    borderRadius: 10,
-                                    backgroundColor: selectedTex === index ? colors.blue : 'transparent',
-                                    borderColor: selectedTex === index ? colors.blue : colors.title_dec,
-                                    borderWidth: selectedTex === index ? 0 : 1,
-                                }}
-                            >
-                                {selectedTex === index && <Image source={option.icon} style={styles.ic_check} />}
-                            </View>
-                            <Text style={styles.text1}>{option.label}</Text>
-                        </TouchableOpacity>
-                    ))}
+          <Input
+            value={basicDetails}
+            placeholder={strings('addFoodList.Adddescription')}
+            label={strings('addFoodList.Description')}
+            onChangeText={(t: string) => setBasicDetails(t)}
+            extraStyle={styles.inputView}
+            inputStyle={styles.inputStyle}
+            isShowLabel={true}
+          />
 
-                    <Text style={styles.textStyle}>
-                        {strings('addFoodList.TaxPercentage')}
-                    </Text>
-                    <View
-                        style={[
-                            styles.PercentageInput,
-                            {
-                                borderColor:
-                                    percentageInput?.length == 0
-                                        ? colors.border_line4
-                                        : colors.text_orange,
-                            },
-                        ]}>
-                        <TextInput
-                            value={percentageInput}
-                            onChangeText={handleChangeText}
-                            placeholder={strings('addFoodList.add_basic')}
-                            style={styles.inputTaxPercentage}
-                            placeholderTextColor={colors.title_dec100}
-                            keyboardType="numeric"
-                        />
-                        <Image source={Icons.pertenge} style={styles.pertenge} />
-                    </View>
-
-                    <View>
-                        <Text style={styles.miscellaneousText}>
-                            {strings('addFoodList.Miscellaneousitems')}
-                        </Text>
-                        <FlatList
-                            data={miscellaneous}
-                            renderItem={renderItem}
-                            horizontal={true}
-                            keyExtractor={item => item.value}
-                            showsVerticalScrollIndicator={false}
-                        />
-                    </View>
-
-                    <Input
-                        value={basicDetails}
-                        placeholder={strings('addFoodList.Adddescription')}
-                        label={strings('addFoodList.Description')}
-                        onChangeText={(t: string) => setBasicDetails(t)}
-                        extraStyle={styles.inputView}
-                        inputStyle={styles.inputStyle}
-                        isShowLabel={true}
-                    />
-
-                    <View style={styles.buttonContainer}>
-                        <PrimaryButton
-                            extraStyle={styles.submitButton}
-                            onPress={onPressEditItem}
-                            title={strings('CuisinesNameList.submit')}
-                            titleStyle={styles.submitText}
-                            isLoading={loading}
-                        />
-                        <Spacer width={16} />
-                        <PrimaryButton
-                            extraStyle={styles.cancelBtn}
-                            onPress={() => {
-                                navigation.goBack();
-                            }}
-                            title={strings('CuisinesNameList.cancel')}
-                            titleStyle={styles.cancelText}
-                        />
-                    </View>
-                    <View style={styles.spacerView} />
-                </KeyboardAwareScrollView>
-            </View>
-        </View>
-    );
+          <View style={styles.buttonContainer}>
+            <PrimaryButton
+              extraStyle={styles.submitButton}
+              onPress={onPressEditItem}
+              title={strings('CuisinesNameList.submit')}
+              titleStyle={styles.submitText}
+              isLoading={loading}
+            />
+            <Spacer width={16} />
+            <PrimaryButton
+              extraStyle={styles.cancelBtn}
+              onPress={() => {
+                navigation.goBack();
+              }}
+              title={strings('CuisinesNameList.cancel')}
+              titleStyle={styles.cancelText}
+            />
+          </View>
+          <View style={styles.spacerView} />
+        </KeyboardAwareScrollView>
+      </View>
+    </View>
+  );
 };
 
 export default EditMenuList;
 
 const getGlobalStyles = (props: any) => {
-    const { colors } = props;
-    return StyleSheet.create({
-        container: {
-            flex: 1,
-            backgroundColor: colors.bg_white,
-        },
-        headerContainer: {
-            backgroundColor: colors.bg_white,
-        },
-        subContainer: {
-            marginHorizontal: wp(20),
-        },
-        addItem: {
-            width: SCREEN_WIDTH * 0.9,
-            height: 190,
-            resizeMode: 'contain',
-            marginTop: hp(8),
-            borderRadius: 10,
-        },
-        inputView: {
-            marginTop: hp(6),
-        },
-        inputStyle: {
-            backgroundColor: colors.white,
-            borderWidth: 1,
-            borderColor: colors.border_line4,
-            // height: hp(50),
-            paddingHorizontal: wp(16),
-        },
-        addImageView: {
-            backgroundColor: colors.cards_bg,
-            width: SCREEN_WIDTH * 0.892,
-            height: hp(161),
-            borderWidth: 1,
-            borderColor: colors.image_bg,
-            borderRadius: 16,
-            borderStyle: 'dashed',
-            alignItems: 'center',
-            justifyContent: 'center',
-            marginTop: hp(8)
-        },
-        addImageIcon: {
-            width: 54,
-            height: 54,
-            resizeMode: 'contain'
-        },
-        addImageText: {
-            paddingTop: hp(16),
-            paddingBottom: hp(8),
-            ...commonFontStyle(700, 15, colors.text_orange),
-        },
-        upToText: {
-            ...commonFontStyle(500, 12, colors.title_dec100),
-        },
-        uploadText: {
-            ...commonFontStyle(500, 18, colors.black),
-            lineHeight: 20,
-        },
-        uploadImage: {
-            paddingTop: hp(16),
-            flexDirection: 'row',
-        },
-        addImage: {
-            width: wp(110),
-            height: wp(101),
-            borderRadius: 20,
-            borderColor: colors.border_line4,
-            borderWidth: 1,
-            borderStyle: 'dashed',
-            alignItems: 'center',
-            justifyContent: 'center',
-        },
-        addIcon: {
-            width: wp(42),
-            height: wp(42),
-            resizeMode: 'cover',
-        },
-        addText: {
-            ...commonFontStyle(400, 13, colors.dropDownText),
-        },
-        imageList: {
-            flexGrow: 0,
-        },
-        itemPrice: {
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-        },
-        priceInput: {
-            marginTop: hp(40),
-        },
-        priceInputStyle: {
-            backgroundColor: colors.white,
-            borderWidth: 1,
-            borderColor: colors.border_line4,
-            paddingHorizontal: wp(16),
-        },
-        dropDownStyle: {
-            borderColor: colors.border_line4,
-            // width: wp(137),
-            height: hp(55),
-        },
-        imageContainer: {
-            marginHorizontal: 10,
-        },
-        imageView: {
-            width: wp(110),
-            height: wp(101),
-            borderRadius: 20,
-            backgroundColor: colors.image_Bg_gray,
-        },
-        basicText: {
-            ...commonFontStyle(500, 14, colors.black),
-            paddingTop: hp(16),
-        },
-        basicInput: {
-            height: hp(136),
-            borderColor: colors.border_line4,
-            borderWidth: 1,
-            borderRadius: 8,
-            padding: 15,
-            textAlignVertical: 'top',
-            marginTop: hp(8),
-            color: colors.black,
-        },
-        spacerView: {
-            height: isIos ? hp(210) : hp(80),
-        },
-        miscellaneousText: {
-            ...commonFontStyle(500, 14, colors.black),
-            paddingTop: hp(20),
-        },
-        radioView: {
-            flexDirection: 'row',
-            marginTop: hp(12)
-        },
-        radioContainer: {
-            flexDirection: 'row',
-            alignItems: 'center',
-        },
-        selectedRadioButton: {
-            borderColor: colors.Primary_Orange,
-        },
-        radioText: {
-            marginLeft: 8,
-            ...commonFontStyle(400, 14, colors.Title_Text),
-        },
-        checkbox: {
-            height: hp(22),
-            width: wp(22),
-            borderRadius: 6,
-            borderWidth: 1,
-            borderColor: colors.text_border,
-            alignItems: 'center',
-            justifyContent: 'center',
-        },
-        selectedCheckbox: {
-            // borderColor: colors.black,
-            backgroundColor: colors.blue,
-        },
-        checkboxInner: {
-            width: 10,
-            height: 10,
-            backgroundColor: colors.white,
-        },
-        checkIcon: {
-            width: wp(18),
-            height: hp(18),
-            resizeMode: 'contain',
-            tintColor: colors.black,
-        },
-        textStyle: {
-            ...commonFontStyle(500, 14, colors.black),
-            marginTop: hp(16),
-            marginBottom: hp(8),
-        },
-        PercentageInput: {
-            borderWidth: 1,
-            flexDirection: 'row',
-            alignItems: 'center',
-            height: hp(56),
-            borderRadius: 32,
-            borderColor: colors.border_line4,
-            paddingHorizontal: 20,
-        },
-        inputTaxPercentage: {
-            ...commonFontStyle(400, 14, colors.black),
-            flex: 1,
-        },
-        pertenge: {
-            width: 20,
-            height: 20,
-        },
-        ic_check: {
-            width: 11,
-            height: 11,
-        },
-        text1: {
-            ...commonFontStyle(500, 14, colors.title_dec),
-        },
+  const {colors} = props;
+  return StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: colors.bg_white,
+    },
+    headerContainer: {
+      backgroundColor: colors.bg_white,
+    },
+    subContainer: {
+      marginHorizontal: wp(20),
+    },
+    addItem: {
+      width: SCREEN_WIDTH * 0.9,
+      height: 190,
+      resizeMode: 'contain',
+      marginTop: hp(8),
+      borderRadius: 10,
+    },
+    inputView: {
+      marginTop: hp(6),
+    },
+    inputStyle: {
+      backgroundColor: colors.white,
+      borderWidth: 1,
+      borderColor: colors.border_line4,
+      // height: hp(50),
+      paddingHorizontal: wp(16),
+    },
+    addImageView: {
+      backgroundColor: colors.cards_bg,
+      width: SCREEN_WIDTH * 0.892,
+      height: hp(161),
+      borderWidth: 1,
+      borderColor: colors.image_bg,
+      borderRadius: 16,
+      borderStyle: 'dashed',
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginTop: hp(8),
+    },
+    addImageIcon: {
+      width: 54,
+      height: 54,
+      resizeMode: 'contain',
+    },
+    addImageText: {
+      paddingTop: hp(16),
+      paddingBottom: hp(8),
+      ...commonFontStyle(700, 15, colors.text_orange),
+    },
+    upToText: {
+      ...commonFontStyle(500, 12, colors.title_dec100),
+    },
+    uploadText: {
+      ...commonFontStyle(500, 18, colors.black),
+      lineHeight: 20,
+    },
+    uploadImage: {
+      paddingTop: hp(16),
+      flexDirection: 'row',
+    },
+    addImage: {
+      width: wp(110),
+      height: wp(101),
+      borderRadius: 20,
+      borderColor: colors.border_line4,
+      borderWidth: 1,
+      borderStyle: 'dashed',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    addIcon: {
+      width: wp(42),
+      height: wp(42),
+      resizeMode: 'cover',
+    },
+    addText: {
+      ...commonFontStyle(400, 13, colors.dropDownText),
+    },
+    imageList: {
+      flexGrow: 0,
+    },
+    itemPrice: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+    },
+    priceInput: {
+      marginTop: hp(40),
+    },
+    priceInputStyle: {
+      backgroundColor: colors.white,
+      borderWidth: 1,
+      borderColor: colors.border_line4,
+      paddingHorizontal: wp(16),
+    },
+    dropDownStyle: {
+      borderColor: colors.border_line4,
+      // width: wp(137),
+      height: hp(55),
+    },
+    imageContainer: {
+      marginHorizontal: 10,
+    },
+    imageView: {
+      width: wp(110),
+      height: wp(101),
+      borderRadius: 20,
+      backgroundColor: colors.image_Bg_gray,
+    },
+    basicText: {
+      ...commonFontStyle(500, 14, colors.black),
+      paddingTop: hp(16),
+    },
+    basicInput: {
+      height: hp(136),
+      borderColor: colors.border_line4,
+      borderWidth: 1,
+      borderRadius: 8,
+      padding: 15,
+      textAlignVertical: 'top',
+      marginTop: hp(8),
+      color: colors.black,
+    },
+    spacerView: {
+      height: isIos ? hp(210) : hp(80),
+    },
+    miscellaneousText: {
+      ...commonFontStyle(500, 14, colors.black),
+      paddingTop: hp(20),
+    },
+    radioView: {
+      flexDirection: 'row',
+      marginTop: hp(12),
+    },
+    radioContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    selectedRadioButton: {
+      borderColor: colors.Primary_Orange,
+    },
+    radioText: {
+      marginLeft: 8,
+      ...commonFontStyle(400, 14, colors.Title_Text),
+    },
+    checkbox: {
+      height: hp(22),
+      width: wp(22),
+      borderRadius: 6,
+      borderWidth: 1,
+      borderColor: colors.text_border,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    selectedCheckbox: {
+      // borderColor: colors.black,
+      backgroundColor: colors.blue,
+    },
+    checkboxInner: {
+      width: 10,
+      height: 10,
+      backgroundColor: colors.white,
+    },
+    checkIcon: {
+      width: wp(18),
+      height: hp(18),
+      resizeMode: 'contain',
+      tintColor: colors.black,
+    },
+    textStyle: {
+      ...commonFontStyle(500, 14, colors.black),
+      marginTop: hp(16),
+      marginBottom: hp(8),
+    },
+    PercentageInput: {
+      borderWidth: 1,
+      flexDirection: 'row',
+      alignItems: 'center',
+      height: hp(56),
+      borderRadius: 32,
+      borderColor: colors.border_line4,
+      paddingHorizontal: 20,
+    },
+    inputTaxPercentage: {
+      ...commonFontStyle(400, 14, colors.black),
+      flex: 1,
+    },
+    pertenge: {
+      width: 20,
+      height: 20,
+    },
+    ic_check: {
+      width: 11,
+      height: 11,
+    },
+    text1: {
+      ...commonFontStyle(500, 14, colors.title_dec),
+    },
 
-        buttonContainer: {
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            paddingTop: hp(25),
-        },
-        submitButton: {
-            flex: 1,
-            borderRadius: 15,
-            alignItems: 'center',
-            justifyContent: 'center',
-        },
-        cancelBtn: {
-            flex: 1,
-            borderRadius: 15,
-            alignItems: 'center',
-            justifyContent: 'center',
-            backgroundColor: colors.white,
-            borderColor: colors.text_gray,
-            borderWidth: 1,
-        },
-        submitText: {
-            ...commonFontStyle(600, 18, colors.defult_white),
-        },
-        cancelText: {
-            ...commonFontStyle(600, 18, colors.title_dec100),
-        },
-        upToText: {
-            ...commonFontStyle(500, 12, colors.title_dec100),
-          }
-    });
+    buttonContainer: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      paddingTop: hp(25),
+    },
+    submitButton: {
+      flex: 1,
+      borderRadius: 15,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    cancelBtn: {
+      flex: 1,
+      borderRadius: 15,
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: colors.white,
+      borderColor: colors.text_gray,
+      borderWidth: 1,
+    },
+    submitText: {
+      ...commonFontStyle(600, 18, colors.defult_white),
+    },
+    cancelText: {
+      ...commonFontStyle(600, 18, colors.title_dec100),
+    },
+    upToText: {
+      ...commonFontStyle(500, 12, colors.title_dec100),
+    },
+  });
 };

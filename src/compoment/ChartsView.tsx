@@ -1,4 +1,5 @@
 import {
+  ActivityIndicator,
   ImageBackground,
   ReturnKeyType,
   StyleSheet,
@@ -7,7 +8,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useIsFocused, useNavigation, useTheme} from '@react-navigation/native';
 import {
   commonFontStyle,
@@ -21,6 +22,10 @@ import HomeDropDown from './HomeDropDown';
 import {BarChart, LineChart} from 'react-native-gifted-charts';
 import {strings} from '../i18n/i18n';
 import {screenName} from '../navigation/screenNames';
+import {useAppDispatch, useAppSelector} from '../redux/hooks';
+import {getDashboardAction} from '../actions/menuAction';
+import {chartData, finedDate, groupByMonth} from '../utils/commonFunction';
+import moment from 'moment';
 
 type Props = {
   placeholder: string;
@@ -70,6 +75,11 @@ const ChartsView = ({
   const styles = React.useMemo(() => getGlobalStyles({colors}), [colors]);
   const [dropDownValue, setdropDownValue] = useState(strings('home.daily'));
   const [pointerIndex, setpointerIndex] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
+  const {getDashboardData} = useAppSelector(state => state.data);
+  const [convertedData, setConvertedData] = useState(getDashboardData?.data);
+  console.log('convertedData', convertedData);
+  const dispatch = useAppDispatch();
 
   const [selectedType, setselectedType] = useState({
     lable: '24 h',
@@ -78,15 +88,44 @@ const ChartsView = ({
   });
 
   const isFocuse = useIsFocused();
-  const data2 = [
-    {value: 20000, label: 'M'},
-    {value: 50000, label: 'T'},
-    {value: 15000, label: 'W'},
-    {value: 60000, label: 'T'},
-    {value: 40000, label: 'F'},
-    {value: 15000, label: 'S'},
-    {value: 25000, label: 'Today'},
-  ];
+
+  function financial(x) {
+    return Number.parseFloat(x).toFixed(0);
+  }
+
+  useEffect(() => {
+    getDashboard(finedDate(dropDownValue));
+  }, []);
+
+  const getDashboard = item => {
+    console.log('item', item);
+    setIsLoading(true);
+    let obj = {
+      params: {
+        start_date: item?.start_date,
+        end_date: item?.end_date,
+      },
+      onSuccess: (res: any) => {
+        setIsLoading(false);
+      },
+      onFailure: (Err: any) => {
+        setIsLoading(false);
+      },
+    };
+    dispatch(getDashboardAction(obj));
+  };
+
+  const onChangeFilter = text => {
+    setdropDownValue(text);
+    getDashboard(finedDate(text));
+  };
+
+  console.log(
+    'dadasdasdasdas',
+    financial(getDashboardData?.total_revenue) == 0 ||
+      getDashboardData?.data == 0 ||
+      getDashboardData?.data == undefined,
+  );
 
   return (
     <View style={styles.container}>
@@ -97,96 +136,72 @@ const ChartsView = ({
               {strings('home.total_revenue')}
             </Text>
             <Text numberOfLines={1} style={styles.labelTextStyle1}>
-              {'₹80,000'}
+              {`₹${
+                financial(getDashboardData?.total_revenue) !== 'NaN'
+                  ? financial(getDashboardData?.total_revenue)
+                  : 0
+              }`}
             </Text>
           </View>
         </View>
         <HomeDropDown
           value={dropDownValue}
           onChangeText={(text: any) => {
-            setdropDownValue(text);
+            onChangeFilter(text);
           }}
         />
       </View>
       <View style={{left: -8, marginTop: 20}}>
-        {/* <BarChart
-          curved
-          isAnimated
-          animationDuration={1500}
-          areaChart
-          data={selectedType.data}
-          width={SCREEN_WIDTH * 0.82}
-          height={SCREEN_HEIGHT * 0.1}
-          hideDataPoints
-          adjustToWidth={false}
-          color={colors.Primary_Orange}
-          thickness={2}
-          startFillColor="rgba(251, 109, 58, 0)"
-          endFillColor="rgba(251, 109, 58, 0)"
-          startOpacity={0.2}
-          endOpacity={0.1}
-          initialSpacing={7}
-          hideRules
-          hideYAxisText
-          hideAxesAndRules
-          xAxisLabelTextStyle={{
-            ...commonFontStyle(400, 11, colors.dropDownText),
-          }}
-          pointerConfig={{
-            hidePointer1: false,
-            pointerStripColor: colors.Primary_Orange,
-            pointerStripWidth: 2,
-            autoAdjustPointerLabelPosition: false,
-            pointerComponent: () => (
-              <View
-                style={{
-                  borderWidth: 3,
-                  height: 10,
-                  width: 10,
-                  borderRadius: 10 / 2,
-                  borderColor: colors.Primary_Orange,
-                }}
-              />
-            ),
-            pointerLabelComponent: item => {
-              return (
-                <ImageBackground
-                  resizeMode="contain"
-                  source={Icons.chartBg}
-                  style={{
-                    height: 33,
-                    width: 70,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    // marginTop:20
-                  }}>
-                  <Text style={{color: 'white', fontWeight: 'bold'}}>
-                    {selectedType?.data[0].value}
-                  </Text>
-                </ImageBackground>
-              );
-            },
-          }}
-          getPointerProps={(e: any) => {
-            setpointerIndex(e.pointerIndex == -1 ? 0 : e.pointerIndex);
-          }}
-        /> */}
-        <BarChart
-          data={data2}
-          barWidth={30}
-          adjustToWidth={false}
-          barBorderRadius={5}
-          frontColor={colors.Primary_Orange}
-          yAxisTextStyle={{color: colors.black}}
-          xAxisLabelTextStyle={{color: colors.black}}
-          noOfSections={4} // Number of sections on the Y-axis
-          yAxisLabelTexts={['0', '20K', '40K', '60K', '70K', '80K']}
-          // isAnimated
-          width={SCREEN_WIDTH * 0.7}
-          height={SCREEN_HEIGHT * 0.18}
-          yAxisThickness={0}
-          xAxisThickness={0}
-        />
+        {isLoading ? (
+          <View
+            style={{
+              height: SCREEN_HEIGHT * 0.18,
+              alignItems: 'center',
+            }}>
+            <ActivityIndicator
+              color={colors.Primary_Orange}
+              size={'small'}
+              style={{marginTop: SCREEN_HEIGHT * 0.05}}
+            />
+          </View>
+        ) : financial(getDashboardData?.total_revenue) == 0 ||
+          getDashboardData?.data == 0 ||
+          getDashboardData?.data == undefined ? (
+          <BarChart
+            data={chartData(getDashboardData?.data, dropDownValue)}
+            barWidth={30}
+            maxValue={1}
+            adjustToWidth={false}
+            barBorderRadius={5}
+            frontColor={colors.Primary_Orange}
+            yAxisTextStyle={{color: colors.black}}
+            xAxisLabelTextStyle={{color: colors.black}}
+            noOfSections={4} // Number of sections on the Y-axis
+            yAxisLabelTexts={['0', '20K', '40K', '60K', '70K', '80K']}
+            isAnimated
+            width={SCREEN_WIDTH * 0.7}
+            height={SCREEN_HEIGHT * 0.18}
+            yAxisThickness={0}
+            xAxisThickness={0}
+          />
+        ) : (
+          <BarChart
+            data={chartData(getDashboardData?.data, dropDownValue)}
+            barWidth={30}
+            adjustToWidth={false}
+            barBorderRadius={5}
+            frontColor={colors.Primary_Orange}
+            yAxisTextStyle={{color: colors.black}}
+            xAxisLabelTextStyle={{color: colors.black}}
+            noOfSections={4} // Number of sections on the Y-axis
+            // yAxisLabelTexts={['0', '20K', '40K', '60K', '70K', '80K']}
+            isAnimated
+            width={SCREEN_WIDTH * 0.7}
+            height={SCREEN_HEIGHT * 0.18}
+            yAxisThickness={0}
+            xAxisThickness={0}
+          />
+        )}
       </View>
     </View>
   );

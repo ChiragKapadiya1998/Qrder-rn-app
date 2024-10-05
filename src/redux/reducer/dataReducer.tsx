@@ -10,6 +10,7 @@ import {
   GET_CHEFS_DATA,
   GET_CITY_DATA,
   GET_CUISINES_DATA,
+  GET_DASHBOARD_LIST,
   GET_EMPTY_CANTEEN_LIST,
   GET_EMPTY_MENU_LIST,
   GET_MENU_DATA,
@@ -40,6 +41,7 @@ const initialState = {
   getMenuMasters: [],
   getRecipesMasters: [],
   getRecipesMenu: [],
+  getDashboardData: [],
 };
 
 export default function (state = initialState, action: any) {
@@ -192,6 +194,12 @@ export default function (state = initialState, action: any) {
       return {
         ...state,
         getRecipesMenu: action.payload.data,
+      };
+    }
+    case GET_DASHBOARD_LIST: {
+      return {
+        ...state,
+        getDashboardData: action.payload,
       };
     }
     default:
