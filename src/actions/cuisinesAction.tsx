@@ -91,23 +91,31 @@ export const editCuisinesAction =
   async dispatch => {
     let headers = {
       Authorization: await getAsyncToken(),
+      'Content-Type': 'multipart/form-data',
     };
+    dispatch({type: IS_LOADING_NEW, payload: true});
+
     dispatch({type: IS_LOADING, payload: true});
     return makeAPIRequest({
-      method: PUT,
-      url: `${api.getCuisines}/${request?.id}`,
+      method: POST,
+      url: `${api.getCuisinesUpdate}/${request?.id}`,
       headers: headers,
       data: request.data,
     })
       .then(async (response: any) => {
         if (response?.data?.success) {
+          dispatch({type: IS_LOADING_NEW, payload: true});
+
           dispatch({type: IS_LOADING, payload: false});
           if (request.onSuccess) request.onSuccess(response.data);
         } else {
+          dispatch({type: IS_LOADING_NEW, payload: true});
+
           if (request.onFailure) request.onFailure(response.data);
         }
       })
       .catch(error => {
+        dispatch({type: IS_LOADING_NEW, payload: false});
         dispatch({type: IS_LOADING, payload: false});
         if (request.onFailure) request.onFailure(error?.response?.data);
       });

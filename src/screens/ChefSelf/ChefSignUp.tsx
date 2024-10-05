@@ -27,7 +27,7 @@ import {
 import {chefsSignUp} from '../../actions/chefsAction';
 import Spacer from '../../compoment/Spacer';
 import {getAsyncUserInfo} from '../../utils/asyncStorageManager';
-import {dispatchNavigation} from '../../utils/globalFunctions';
+import {dispatchNavigation, openImagePicker} from '../../utils/globalFunctions';
 import HomeHeader from '../../compoment/HomeHeader';
 import {Icons} from '../../utils/images';
 
@@ -49,7 +49,9 @@ const ChefSignUp = (props: Props) => {
   const [loading, setLoading] = useState(false);
   const {getCuisines} = useAppSelector(state => state.data);
   const {isDarkTheme} = useAppSelector(state => state.common);
-
+  const [imageData, setImageData] = useState<any>({
+    uri: '',
+  });
   const navigation = useNavigation();
   const dispatch = useAppDispatch();
 
@@ -94,7 +96,11 @@ const ChefSignUp = (props: Props) => {
       data.append('password', password);
       data.append('confirmed', rePassword);
       data.append('salary', salary);
-
+      data.append('file', {
+        uri: imageData?.uri,
+        type: imageData?.mime,
+        name: imageData?.name,
+      });
       let obj = {
         data,
         onSuccess: (response: any) => {
@@ -121,21 +127,31 @@ const ChefSignUp = (props: Props) => {
     navigation.goBack();
   };
 
+  // const selectImage = () => {
+  //   setLoading(true);
+  //   ImageCropPicker.openPicker({
+  //     width: 100,
+  //     height: 100,
+  //     cropping: true,
+  //   })
+  //     .then(image => {
+  //       setPhotoUri(image.path);
+  //       setLoading(false);
+  //     })
+  //     .catch(error => {
+  //       console.log(error);
+  //       setLoading(false);
+  //     });
+  // };
+
   const selectImage = () => {
-    setLoading(true);
-    ImageCropPicker.openPicker({
-      width: 100,
-      height: 100,
-      cropping: true,
-    })
-      .then(image => {
-        setPhotoUri(image.path);
-        setLoading(false);
-      })
-      .catch(error => {
-        console.log(error);
-        setLoading(false);
-      });
+    openImagePicker({
+      onSucess: res => {
+        console.log('res', res);
+        setImageData(res);
+        // setIsPictureEdit(true);
+      },
+    });
   };
 
   return (
@@ -159,18 +175,22 @@ const ChefSignUp = (props: Props) => {
         keyboardShouldPersistTaps={'handled'}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.contentContainerStyle}>
-        {/* <View style={styles.profileContainer}>
+        <View style={styles.profileContainer}>
           <View>
             <Image
-              source={photoUri ? { uri: photoUri } : Icons.profileImage}
+              source={
+                imageData?.uri ? {uri: imageData?.uri} : Icons.profileImage
+              }
               style={styles.profilImage}
             />
-            <TouchableOpacity activeOpacity={0.9} onPress={selectImage} style={styles.editImage}>
+            <TouchableOpacity
+              activeOpacity={0.9}
+              onPress={selectImage}
+              style={styles.editImage}>
               <Image source={Icons.editPencial} style={styles.profileIcon} />
             </TouchableOpacity>
           </View>
-
-        </View> */}
+        </View>
         <Input
           value={name}
           placeholder={strings('sign_up.p_name')}

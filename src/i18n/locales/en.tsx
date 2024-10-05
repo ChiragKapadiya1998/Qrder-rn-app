@@ -179,15 +179,15 @@ export default {
     order_request: 'Order Request',
     accpet: 'Accpet',
     declined: 'declined',
-    invoice_id:'Invoice ID',
-    table_no:'Table No',
-    dining:'Dining',
-    parcel:'Parcel',
-    completed:'Complete',
-    start_date:'Start Date',
-    end_date:'End Date',
-    e_start_data:'Please Select Start Data',
-    ok:'Ok'
+    invoice_id: 'Invoice ID',
+    table_no: 'Table No',
+    dining: 'Dining',
+    parcel: 'Parcel',
+    completed: 'Complete',
+    start_date: 'Start Date',
+    end_date: 'End Date',
+    e_start_data: 'Please Select Start Data',
+    ok: 'Ok',
   },
   ordersList: {
     myOrders: 'My Orders',
@@ -238,8 +238,8 @@ export default {
     give_food_rating: 'Give Food Rating',
     buy_now: 'Buy Now',
     add_food_photo: 'Add Food Photo',
-    upToMb: '(up to 12 Mb)',
-    e_Tex_Per: "Please enter a percentage between 0% and 100%"
+    upToMb: '(up to 2 Mb)',
+    e_Tex_Per: 'Please enter a percentage between 0% and 100%',
   },
   foodDetails: {
     food_Details: 'Food Details',
@@ -248,9 +248,9 @@ export default {
     description: 'Description',
     no_data_found: 'No Data Found',
     food_cart: 'Food Cart',
-    e_decrement:'Cannot have less than 1 item.',
-    e_food_customization:'Please Enter Food Customization Text',
-    Food_customization:'Food Customization'
+    e_decrement: 'Cannot have less than 1 item.',
+    e_food_customization: 'Please Enter Food Customization Text',
+    Food_customization: 'Food Customization',
   },
   profileScreen: {
     profile: 'Profile',
@@ -408,7 +408,7 @@ export default {
     e_discount: 'Please Enter Discount',
     e_lot_size: 'Please Enter lot size',
     e_type_support: 'Please Select Type Support',
-    e_enter_text: 'Please Enter text'
+    e_enter_text: 'Please Enter text',
   },
   recipesMaster: {
     edit_recipes_master: 'Edit Recipes Master',
@@ -472,6 +472,6 @@ export default {
     address: 'Address',
   },
   menuList: {
-    menu: 'Menu'
+    menu: 'Menu',
   },
 };
