@@ -37,8 +37,8 @@ const StudentSignUp = (props: Props) => {
   const [hostelAddress, setHostelAddress] = useState('');
   const [password, setPassword] = useState('');
   const [rePassword, setRePassword] = useState('');
-  const [isShowPassword, setIsShowPassword] = useState<boolean>(true);
-  const [isShowRePassword, setisShowRePassword] = useState<boolean>(true);
+  const [isShowPassword, setIsShowPassword] = useState < boolean > (true);
+  const [isShowRePassword, setisShowRePassword] = useState < boolean > (true);
   const { getUniversitiesData } = useAppSelector(state => state.data);
   const [selectRole, setSelectRole] = useState('');
 

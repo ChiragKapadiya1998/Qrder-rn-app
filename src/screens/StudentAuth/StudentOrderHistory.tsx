@@ -25,7 +25,7 @@ const StudentOrderHistory = (props: Props) => {
   const { isDarkTheme } = useAppSelector(state => state.common);
   const { getCardData } = useAppSelector(state => state.data);
   const [userData, setUserData] = useState<any>({});
-
+console.log("----------------",getCardData)
   useEffect(() => {
     fetchUserInfo()
   }, [])

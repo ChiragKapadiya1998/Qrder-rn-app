@@ -10,24 +10,87 @@ import {
 } from 'react-native';
 import React, { useState } from 'react';
 import { useNavigation, useTheme } from '@react-navigation/native';
-import { useAppSelector } from '../../redux/hooks';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import HomeHeader from '../../compoment/HomeHeader';
 import { strings } from '../../i18n/i18n';
 import { commonFontStyle, hp, wp } from '../../theme/fonts';
 import { Icons } from '../../utils/images';
 import Input from '../../compoment/Input';
 import PrimaryButton from '../../compoment/PrimaryButton';
+import { deleteCardAction, getCardAction, updateQuantityAction } from '../../actions/cardAction';
+import { decrement, increment } from '../../actions/commonAction';
 
 const FoodCart = () => {
     const { colors } = useTheme();
     const navigation = useNavigation();
+    const dispatch = useAppDispatch();
     const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
     const { getCardData } = useAppSelector(state => state.data);
     const { isDarkTheme } = useAppSelector(state => state.common);
     const [address, setAddress] = useState('');
     const [loading, setLoading] = useState(false);
 
-    const cardData = [1, 2,];
+
+    console.log("=======================", getCardData)
+
+    const deleteCardItem = (id: number) => {
+        let cardInfo = {
+            data: id,
+            onSuccess: () => {
+                let obj = {
+                    onSuccess: () => {
+                    },
+                    onFailure: () => {
+                    },
+                };
+                dispatch(getCardAction(obj));
+            },
+            onFailure: (Err: any) => {
+                if (Err != undefined) {
+                    Alert.alert('Warning', Err?.message);
+                }
+            },
+        };
+        dispatch(deleteCardAction(cardInfo));
+    }
+
+    const incrementQuenty = (cardId: number, item) => {
+        let updateObj = {
+            data: {
+                quantity: item?.quantity + 1
+            },
+            params: cardId,
+            onSuccess: (res: any) => {
+                dispatch(increment(res.data?.menu_id))
+            },
+            onFailure: (Err: any) => {
+                if (Err != undefined) {
+                    Alert.alert('Warning', Err?.message);
+                }
+            },
+        };
+        dispatch(updateQuantityAction(updateObj));
+    }
+
+    const decrementQuenty = (cardId: number, item) => {
+        let updateObj = {
+            data: {
+                quantity: item?.quantity - 1
+            },
+            params: cardId,
+            onSuccess: (res: any) => {
+                dispatch(decrement(res.data?.menu_id));
+
+            },
+            onFailure: (Err: any) => {
+                if (Err != undefined) {
+                    Alert.alert('Warning', Err?.message);
+                }
+            },
+        };
+        dispatch(updateQuantityAction(updateObj));
+    }
+
 
     return (
         <View style={styles.container}>
@@ -47,22 +110,30 @@ const FoodCart = () => {
 
             <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: hp(100) }}>
                 <FlatList
-                    data={cardData}
+                    data={getCardData}
                     renderItem={({ item }) => (
                         <View style={styles.headingView}>
                             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <View style={styles.imageStyle} />
+                                <Image source={{ uri: item.image }} style={styles.imageStyle} />
                                 <View style={{ marginLeft: wp(10), flex: 1 }}>
-                                    <Text style={styles.foodText}>{'Item Name'}</Text>
-                                    <Text numberOfLines={1} style={styles.leftText}>{'Description'}</Text>
+                                    <Text style={styles.titleText}> {item?.name}</Text>
+                                    <Text numberOfLines={1} style={styles.leftText}>{item?.description}</Text>
                                     <View style={styles.addContiner}>
-                                        <Text style={styles.priceText}>{`₹${300}`}</Text>
+                                        <Text style={styles.priceText}>{`₹${parseFloat(item.price).toString()}`}</Text>
                                         <View style={styles.addItemView}>
-                                            <TouchableOpacity onPress={() => handleDecrement(item)}>
+                                            <TouchableOpacity onPress={() => {
+                                                if (item?.quantity > 1) {
+                                                    decrementQuenty(item?.id, item)
+                                                } else {
+                                                    deleteCardItem(item?.id);
+                                                }
+                                            }}>
                                                 <Image source={Icons.minus} style={styles.decrementIcons} />
                                             </TouchableOpacity>
-                                            <Text style={styles.countText}>{3}</Text>
-                                            <TouchableOpacity onPress={() => handleIncrement(item)}>
+                                            <Text style={styles.countText}>{item?.quantity}</Text>
+                                            <TouchableOpacity onPress={() => {
+                                                incrementQuenty(item?.id, item)
+                                            }}>
                                                 <Image source={Icons.plus} style={styles.plusIcons} />
                                             </TouchableOpacity>
                                         </View>
@@ -145,7 +216,6 @@ const getGlobalStyles = (props: any) => {
             height: 89,
             borderRadius: 16,
             resizeMode: 'contain',
-            backgroundColor: 'red',
         },
         foodText: {
             ...commonFontStyle(600, 14, colors.black),
@@ -226,6 +296,9 @@ const getGlobalStyles = (props: any) => {
         },
         submitText: {
             ...commonFontStyle(600, 18, colors.defult_white),
+        },
+        titleText: {
+            ...commonFontStyle(600, 14, colors.black),
         },
     });
 };

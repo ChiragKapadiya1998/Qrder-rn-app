@@ -737,17 +737,6 @@ const getGlobalStyles = (props: any) => {
       // borderColor: colors.black,
       backgroundColor: colors.blue,
     },
-    checkboxInner: {
-      width: 10,
-      height: 10,
-      backgroundColor: colors.white,
-    },
-    checkIcon: {
-      width: wp(18),
-      height: hp(18),
-      resizeMode: 'contain',
-      tintColor: colors.black,
-    },
     textStyle: {
       ...commonFontStyle(500, 14, colors.black),
       marginTop: hp(16),

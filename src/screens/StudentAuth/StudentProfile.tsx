@@ -183,12 +183,12 @@ const StudentProfile = (props: Props) => {
             {
               title: strings('profileScreen.privacy_policy'),
               iconName: Icons.privacyIcon,
-              screens: '',
+              screens: screenName.PrivacyPolicy,
             },
             {
               title: strings('profileScreen.term_condition'),
               iconName: Icons.termIcon,
-              screens: '',
+              screens: screenName.TermCondition,
             },
             {
               title: strings('profileScreen.settings'),

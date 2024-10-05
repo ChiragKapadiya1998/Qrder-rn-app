@@ -107,16 +107,16 @@ const SignInScreen = (props: Props) => {
   };
 
   const onPressSignUp = () => {
-    console.log('adas', selectedRole);
-    navigation.navigate(screenName.SignUpScreen);
-    // if (selectRole == 'Admin') {
-    //   navigation.navigate(screenName.SignUpScreen);
-    //   return;
-    // }
-    // if (selectRole == 'Student') {
-    //   navigation.navigate(screenName.StudentSignUp);
-    //   return;
-    // }
+    // console.log('adas', selectedRole);
+    // navigation.navigate(screenName.SignUpScreen);
+    if (selectRole == 'Admin') {
+      navigation.navigate(screenName.SignUpScreen);
+      return;
+    }
+    if (selectRole == 'Student') {
+      navigation.navigate(screenName.StudentSignUp);
+      return;
+    }
   };
 
   const googlesignIn = async () => {

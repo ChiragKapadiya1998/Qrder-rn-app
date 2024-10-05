@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigation, useTheme } from '@react-navigation/native';
 import {
   commonFontStyle,
@@ -26,8 +26,8 @@ import { Icons } from '../../utils/images';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { screenName } from '../../navigation/screenNames';
 import PrimaryButton from '../../compoment/PrimaryButton';
-import { addCardAction, getCardAction } from '../../actions/cardAction';
-import { miscellData } from '../../utils/commonFunction';
+import { addCardAction, getCardAction, updateQuantityAction } from '../../actions/cardAction';
+import { errorToast, miscellData } from '../../utils/commonFunction';
 import Spacer from '../../compoment/Spacer';
 
 const FoodDetails = ({ route }) => {
@@ -40,23 +40,55 @@ const FoodDetails = ({ route }) => {
   const [basicDetails, setBasicDetails] = useState('');
   const { name, price, cuisine_name, description, id, image } = itemData;
   const [selectedItems, setSelectedItems] = useState([]);
-  const [foodDelivery, setFoodDelivery] = useState([]);
+  const [foodDelivery, setFoodDelivery] = useState < string > ('');
+  const [quantity, setQuantity] = useState(1);
+  const [totalPrice, setTotalPrice] = useState(price);
+  const [activeButton, setActiveButton] = useState('increment');
 
-  const toggleSelection = id => {
-    if (selectedItems.includes(id)) {
-      setSelectedItems(prevSelected =>
-        prevSelected.filter(item => item !== id),
-      );
+
+  useEffect(() => {
+    setTotalPrice(quantity * price);
+  }, [quantity, price]);
+
+  const incrementQuantity = () => {
+    setQuantity(prevQuantity => prevQuantity + 1);
+    setActiveButton('increment');
+  };
+
+  const decrementQuantity = () => {
+    if (quantity > 1) {
+      setQuantity(prevQuantity => prevQuantity - 1);
+      setActiveButton('decrement');
     } else {
-      setSelectedItems(prevSelected => [...prevSelected, id]);
+      errorToast(strings('foodDetails.e_decrement'));
+      setActiveButton('increment');
     }
   };
+
+
+  const toggleSelection = (list) => {
+    if (selectedItems.some(item => item.id === list.id)) {
+      setSelectedItems(prevSelected =>
+        prevSelected.filter(item => item.id !== list.id),
+      );
+    } else {
+      setSelectedItems(prevSelected => [...prevSelected, { id: list.id, quantity: 1, price: list.price }]);
+    }
+  };
+
+  const miscellPrices = useMemo(() => {
+    return selectedItems.reduce((total, item) => {
+      return total + (parseFloat(item.price) * item.quantity);
+    }, 0);
+  }, [selectedItems]);
 
   const onPressAddCard = () => {
     let obj = {
       data: {
         menu_id: id,
         quantity: 1,
+        description: foodDelivery,
+        miscellaneous_items: selectedItems
       },
       onSuccess: () => {
         let obj = {
@@ -75,13 +107,13 @@ const FoodDetails = ({ route }) => {
   };
 
   const renderItem = ({ item }) => {
-    const isSelected = selectedItems.includes(item.id);
-    const select = isSelected ? colors.text_orange : colors.title_dec100;
+    const isSelected = selectedItems.some(selectedItem => selectedItem.id === item.id);
+    const selectColor = isSelected ? colors.text_orange : colors.title_dec100;
     return (
       <View style={styles.itemContainer}>
         <TouchableOpacity
           style={styles.checkboxContainer}
-          onPress={() => toggleSelection(item.id)}>
+          onPress={() => toggleSelection(item)}>
           <View
             style={[
               styles.checkbox,
@@ -91,17 +123,18 @@ const FoodDetails = ({ route }) => {
               <Image source={Icons.ic_check} style={styles.ic_check} />
             )}
           </View>
-          <Text style={[styles.text1, { color: select }]}>{item.name}</Text>
+          <Text style={[styles.text1, { color: selectColor }]}>{item.name}</Text>
         </TouchableOpacity>
         <Text
           style={[
             styles.priceTextStyle,
-            { color: select },
+            { color: selectColor },
           ]}>{`₹${item.price}`}</Text>
       </View>
     );
   };
 
+  const total = miscellPrices + totalPrice
   return (
     <View style={styles.container}>
       <StatusBar
@@ -136,21 +169,21 @@ const FoodDetails = ({ route }) => {
             </View> */}
           </View>
           {cuisine_name ? <Text style={styles.leftText}>{cuisine_name}</Text> : ''}
-          <Text style={styles.priceText}>{`₹${price}`}</Text>
+          <Text style={styles.priceText}>{`₹${totalPrice}`}</Text>
           {showAddToCard ? (
             <View style={styles.addItemView}>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={decrementQuantity}>
                 <Image
                   source={Icons.decrementIcon}
-                  style={styles.decrementIcons}
+                  style={[styles.decrementIcons, { tintColor: activeButton === 'decrement' ? colors.text_orange : colors.title_dec100 }]}
                 />
               </TouchableOpacity>
 
-              <Text style={styles.countText}>{3}</Text>
-              <TouchableOpacity>
+              <Text style={styles.countText}>{quantity}</Text>
+              <TouchableOpacity onPress={incrementQuantity}>
                 <Image
                   source={Icons.incrementIcon}
-                  style={styles.decrementIcons}
+                  style={[styles.decrementIcons, { tintColor: activeButton === 'increment' ? colors.text_orange : colors.title_dec100 }]}
                 />
               </TouchableOpacity>
             </View>
@@ -204,12 +237,13 @@ const FoodDetails = ({ route }) => {
         <Text style={styles.miscellText}>
           {strings('addFoodList.Miscellaneousitems')}
         </Text>
-        <FlatList
-          data={miscellData}
-          renderItem={renderItem}
-          contentContainerStyle={{ gap: 10 }}
-          keyExtractor={item => item.id}
-        />
+        {itemData?.miscellaneous_items ?
+          <FlatList
+            data={itemData?.miscellaneous_items}
+            renderItem={renderItem}
+            contentContainerStyle={{ gap: 10 }}
+            keyExtractor={item => item.id}
+          /> : null}
 
         {!showAddToCard && (
           <>
@@ -263,7 +297,7 @@ const FoodDetails = ({ route }) => {
             <Text style={styles.pricesText}>
               {strings('addFoodList.price')}
             </Text>
-            <Text style={styles.prText}>{`₹${price}`}</Text>
+            <Text style={styles.prText}>{`₹${total}`}</Text>
           </View>
           <PrimaryButton
             extraStyle={styles.buyNowBtn}

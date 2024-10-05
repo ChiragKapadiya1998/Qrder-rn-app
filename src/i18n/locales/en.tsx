@@ -246,6 +246,7 @@ export default {
     description: 'Description',
     no_data_found: 'No Data Found',
     food_cart: 'Food Cart',
+    e_decrement:'Cannot have less than 1 item.'
   },
   profileScreen: {
     profile: 'Profile',

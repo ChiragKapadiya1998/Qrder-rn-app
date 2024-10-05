@@ -7,28 +7,41 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useEffect} from 'react';
-import {useIsFocused, useNavigation, useTheme} from '@react-navigation/native';
-import {useAppDispatch, useAppSelector} from '../../redux/hooks';
+import React, { useEffect, useState } from 'react';
+import { useIsFocused, useNavigation, useTheme } from '@react-navigation/native';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import HomeHeader from '../../compoment/HomeHeader';
-import {strings} from '../../i18n/i18n';
-import {commonFontStyle, hp, SCREEN_WIDTH, wp} from '../../theme/fonts';
+import { strings } from '../../i18n/i18n';
+import { commonFontStyle, hp, SCREEN_WIDTH, wp } from '../../theme/fonts';
 import Spacer from '../../compoment/Spacer';
 import NoDataFound from '../../compoment/NoDataFound';
-import {screenName} from '../../navigation/screenNames';
-import {getCardAction} from '../../actions/cardAction';
+import { screenName } from '../../navigation/screenNames';
+import { getCardAction } from '../../actions/cardAction';
 import CardView from '../../compoment/CardView';
-import {getUniversityDataAction} from '../../actions/commonAction';
-import {getAsyncUserInfo} from '../../utils/asyncStorageManager';
+import { getUniversityDataAction } from '../../actions/commonAction';
+import { getAsyncUserInfo } from '../../utils/asyncStorageManager';
+import { Icons } from '../../utils/images';
 
 const StudentHome = () => {
-  const {colors} = useTheme();
+  const { colors } = useTheme();
   const navigation = useNavigation();
   const isFocuse = useIsFocused();
-  const styles = React.useMemo(() => getGlobalStyles({colors}), [colors]);
-  const {isDarkTheme} = useAppSelector(state => state.common);
-  const {getUniversityCanteenData} = useAppSelector(state => state.data);
+  const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
+  const { isDarkTheme } = useAppSelector(state => state.common);
+  const { getUniversityCanteenData } = useAppSelector(state => state.data);
   const dispatch = useAppDispatch();
+  const [selectedItems, setSelectedItems] = useState<any[]>([]);
+
+  const handlePress = (item: any, isCheckbox: boolean) => {
+    if (isCheckbox) {
+      onSelectCheckbox(item);
+      setTimeout(()=>{
+        onPressCanteen(item);
+      },500)
+    } else {
+      onPressCanteen(item);
+    }
+  };
 
   const onPressCanteen = (item: any) => {
     navigation.navigate(screenName.StudentMenuList, {
@@ -37,59 +50,102 @@ const StudentHome = () => {
     });
   };
 
+  const onSelectCheckbox = (item: any) => {
+    if (selectedItems.includes(item.id)) {
+      setSelectedItems(prev => prev.filter(id => id !== item.id));
+    } else {
+      setSelectedItems(prev => [...prev, item.id]);
+    }
+  };
+
   useEffect(() => {
     getCardDatas();
     onGetData();
+    if (isFocuse) {
+      setSelectedItems([]);
+    }
   }, [isFocuse]);
 
   const onGetData = async () => {
     const userDetails = await getAsyncUserInfo();
-    console.log('userDetails', userDetails);
-
+    console.log('userDetails', userDetails.university_id);
     let obj = {
-      // params:selectRole,
-      onSuccess: (res: any) => {},
-      onFailure: (Err: any) => {},
+      params: userDetails.university_id,
+      onSuccess: (res: any) => { },
+      onFailure: (Err: any) => { },
     };
-    // dispatch(getUniversityDataAction(obj));
+    dispatch(getUniversityDataAction(obj));
   };
 
   const getCardDatas = () => {
     let obj = {
-      onSuccess: () => {},
-      onFailure: () => {},
+      onSuccess: () => { },
+      onFailure: () => { },
     };
     dispatch(getCardAction(obj));
   };
 
-  const renderItem = ({item, index}: any) => {
-    const containerWidth = (SCREEN_WIDTH - 40) / 2;
-    const containerHeight = 120;
-    const xPosition = index % 2 === 0 ? 0 : 10;
-
+  const renderItem = ({ item, index }) => {
+    const isLastItem = index === getUniversityCanteenData.length - 1;
+    const isSelected = selectedItems.includes(item.id); 
     return (
-      <TouchableOpacity
-        activeOpacity={0.7}
-        onPress={() => {
-          onPressCanteen(item);
-        }}
-        style={{
-          width: containerWidth,
-          marginLeft: xPosition,
-          marginTop: 10,
-        }}>
-        <Image
-          style={[
-            styles.renderContainer,
-            {
-              height: containerHeight,
-              backgroundColor: colors.image_Bg_gray,
-            },
-          ]}></Image>
-        <Text style={styles.textStyle}>{item?.restaurant_name}</Text>
-      </TouchableOpacity>
-    );
-  };
+       <View style={[styles.boxView]}>
+        <TouchableOpacity
+          onPress={() => handlePress(item, false)}
+          style={styles.subBoxView}>
+          <View style={styles.containers}>
+            <View style={[styles.leftView, !isLastItem && styles.withBorder]}>
+              <View style={[styles.viewStyle, { flex: 1 }]}>
+                <Text numberOfLines={1} style={styles.titleText}>
+                  {item.restaurant_name}
+                </Text>
+              </View>
+              <View style={styles.viewStyle}>
+                <TouchableOpacity
+                  onPress={() => handlePress(item, true)}
+                  style={[
+                    styles.checkbox,
+                    isSelected && styles.selectedCheckbox,
+                  ]}>
+                  {isSelected && (
+                    <Image style={styles.ic_check} source={Icons.ic_check} />
+                  )}
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </TouchableOpacity>
+      </View>
+    )
+  }
+  // const renderItem = ({ item, index }: any) => {
+  //   const containerWidth = (SCREEN_WIDTH - 40) / 2;
+  //   const containerHeight = 120;
+  //   const xPosition = index % 2 === 0 ? 0 : 10;
+
+  //   return (
+  //     <TouchableOpacity
+  //       activeOpacity={0.7}
+  //       onPress={() => {
+  //         onPressCanteen(item);
+  //       }}
+  //       style={{
+  //         width: containerWidth,
+  //         marginLeft: xPosition,
+  //         marginTop: 10,
+  //       }}>
+  //       <Image
+  //         style={[
+  //           styles.renderContainer,
+  //           {
+  //             height: containerHeight,
+  //             backgroundColor: colors.image_Bg_gray,
+  //           },
+  //         ]}></Image>
+  //       <Text style={styles.textStyle}>{item?.restaurant_name}</Text>
+  //     </TouchableOpacity>
+  //   );
+  // };
 
   return (
     <View style={styles.container}>
@@ -108,28 +164,21 @@ const StudentHome = () => {
           navigation.navigate(screenName.ChefNotification);
         }}
       />
-      <View style={{marginHorizontal: wp(20)}}>
+      <View style={{ marginHorizontal: wp(20) }}>
         <CardView containerStyle={styles.headerView} isDisabled={true}>
           <Text style={styles.headerSubText}>
             {strings('StudentSignUp.ListofCanteen')}
           </Text>
         </CardView>
         <FlatList
-          numColumns={2}
-          windowSize={10}
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicator={false}
-          columnWrapperStyle={styles.columnWrapperStyle}
           data={getUniversityCanteenData}
-          initialNumToRender={10}
-          onEndReachedThreshold={0.1}
-          nestedScrollEnabled={true}
           renderItem={renderItem}
           ListEmptyComponent={<NoDataFound />}
           ListFooterComponent={() => {
             return (
               <View>
-                {/* {true && <Loader size={'small'} />} */}
                 <Spacer height={150} />
               </View>
             );
@@ -143,40 +192,84 @@ const StudentHome = () => {
 export default StudentHome;
 
 const getGlobalStyles = (props: any) => {
-  const {colors} = props;
+  const { colors } = props;
   return StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: colors.white,
+      backgroundColor: colors.bg_white,
     },
     headerContainer: {
-      backgroundColor: colors.white,
-    },
-    columnWrapperStyle: {
-      justifyContent: 'space-between',
-    },
-    renderContainer: {
-      borderRadius: 16,
-      backgroundColor: colors.image_Bg_gray,
-    },
-    textStyle: {
-      paddingTop: hp(8),
-      paddingLeft: 7,
-      ...commonFontStyle(700, 12, colors.Title_Text),
+      backgroundColor: colors.bg_white,
     },
     headerView: {
       // flex: 1,
       justifyContent: 'flex-start',
-      backgroundColor: colors.Primary_BG,
+      backgroundColor: colors.cards_bg,
       flexDirection: 'row',
       alignItems: 'flex-start',
-      paddingHorizontal: 16,
-      paddingVertical: 12,
+      paddingHorizontal: wp(16),
+      paddingVertical: hp(12),
       marginHorizontal: 0,
+      borderRadius: 8
     },
     headerSubText: {
       ...commonFontStyle(500, 18, colors.black),
       marginLeft: 10,
+    },
+    boxView: {},
+    subBoxView: {
+      flexDirection: 'row',
+    },
+    containers: {
+      flex: 1,
+    },
+    leftView: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      paddingVertical: hp(16),
+    },
+    withBorder: {
+      borderBottomWidth: 1,
+      borderColor: colors.image_bg,
+    },
+    imageStyle: {
+      width: 16,
+      height: 16,
+      borderRadius: 16,
+      borderWidth: 1,
+      borderColor: colors.text_gray,
+      resizeMode: 'cover',
+      marginRight: wp(8),
+    },
+    editIcon: {
+      width: 16,
+      height: 16,
+      resizeMode: 'contain',
+    },
+    viewStyle: {
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    titleText: {
+      flex: 1,
+      ...commonFontStyle(500, 14, colors.title_dec100),
+    },
+    checkbox: {
+      height: hp(22),
+      width: wp(22),
+      borderRadius: 11,
+      borderWidth: 1,
+      borderColor: colors.text_border,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    selectedCheckbox: {
+      backgroundColor: colors.blue,
+    },
+    ic_check: {
+      width: 12,
+      height: 12,
     },
   });
 };

@@ -34,13 +34,61 @@ const CartMenuCardList = ({ onRefresh, refreshing, loadMoreData, loadingMore, on
 
   return (
     <View>
-      {loading ? (
+
+      {currentData.current && (
+        <FlatList
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+          data={currentData.current}
+          onMomentumScrollBegin={onMomentumScrollBegin}
+          numColumns={2}
+          windowSize={10}
+          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
+          columnWrapperStyle={styles.columnWrapperStyle}
+          contentContainerStyle={{ gap: 11 }}
+          keyExtractor={(item, index) => `${item.id}-${index}`}
+          // ListFooterComponent={() => (
+          //   <View>
+          //     {hasMoreItems && !loadingMore && (
+          //       <TouchableOpacity
+          //         onPress={loadMoreData}
+          //         style={[styles.seeMoreButton]}
+          //       >
+          //         <Text style={styles.seeMoreText}>
+          //           {strings('CardMenuList.see_more')}
+          //         </Text>
+          //       </TouchableOpacity>
+          //     )}
+          //     {loadingMore && (
+          //       <View style={styles.seeMoreButton}>
+          //         <ActivityIndicator size={'small'} color={colors.black} />
+          //       </View>
+
+          //     )}
+          //     <View style={{ height: hp(150)}} />
+          //   </View>
+          // )}
+          ListEmptyComponent={!loading && (
+            <NoDataFound />
+          )}
+          renderItem={({ item ,index}) => (
+              <CartMenuItems
+                item={item}
+                index={index}
+              />
+            )}
+          showsVerticalScrollIndicator={false}
+        // onEndReached={loadMoreData}
+        />
+      )}
+
+
+      {/* {loading ? (
         <Loader />
       ) : (
         <>
-          <Text style={styles.itemsText}>
-            {currentData.current?.length ? `${strings('CardMenuList.total')} ${currentData.current?.length} ${strings('CardMenuList.items')}` : null}
-          </Text>
           <FlatList
             refreshControl={
               <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
@@ -65,7 +113,7 @@ const CartMenuCardList = ({ onRefresh, refreshing, loadMoreData, loadingMore, on
             onMomentumScrollBegin={onMomentumScrollBegin}
           />
         </>
-      )}
+      )} */}
     </View>
   );
 };
@@ -86,6 +134,9 @@ const getGlobalStyles = (props: any) => {
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
+    },
+    columnWrapperStyle: {
+      justifyContent: 'center',
     },
   });
 };
