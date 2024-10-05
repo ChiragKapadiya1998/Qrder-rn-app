@@ -39,6 +39,7 @@ export const api = {
   orderDeclined: 'order-declined',
   orderCompleted: 'order-completed',
   ordersHistory: 'orders',
+  studentOrder:'student-orders',
 
   //student
   studentRegister: 'student-register',

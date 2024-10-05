@@ -156,7 +156,7 @@ const StudentProfile = (props: Props) => {
             {
               title: strings('profileScreen.order_history'),
               iconName: Icons.inventory,
-              screens: screenName.OrderHistory,
+              screens: screenName.student_tab_bar.StudentOrderHistory,
             },
             {
               title: strings('profileScreen.notifications'),
@@ -209,7 +209,7 @@ const StudentProfile = (props: Props) => {
 
       <LogOutModal
         title={strings('Settings.logoutDes')}
-        rightText={strings('Settings.delete')}
+        rightText={strings('CuisinesNameList.submit')}
         leftText={strings('Settings.cancel')}
         visible={visible}
         closeModal={() => closeModal()}

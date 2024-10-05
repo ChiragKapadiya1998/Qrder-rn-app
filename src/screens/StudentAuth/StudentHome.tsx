@@ -30,14 +30,14 @@ const StudentHome = () => {
   const { isDarkTheme } = useAppSelector(state => state.common);
   const { getUniversityCanteenData } = useAppSelector(state => state.data);
   const dispatch = useAppDispatch();
-  const [selectedItems, setSelectedItems] = useState<any[]>([]);
+  const [selectedItems, setSelectedItems] = useState < any[] > ([]);
 
   const handlePress = (item: any, isCheckbox: boolean) => {
     if (isCheckbox) {
       onSelectCheckbox(item);
-      setTimeout(()=>{
+      setTimeout(() => {
         onPressCanteen(item);
-      },500)
+      }, 500)
     } else {
       onPressCanteen(item);
     }
@@ -87,9 +87,9 @@ const StudentHome = () => {
 
   const renderItem = ({ item, index }) => {
     const isLastItem = index === getUniversityCanteenData.length - 1;
-    const isSelected = selectedItems.includes(item.id); 
+    const isSelected = selectedItems.includes(item.id);
     return (
-       <View style={[styles.boxView]}>
+      <View style={[styles.boxView]}>
         <TouchableOpacity
           onPress={() => handlePress(item, false)}
           style={styles.subBoxView}>
@@ -165,7 +165,7 @@ const StudentHome = () => {
         }}
       />
       <View style={{ marginHorizontal: wp(20) }}>
-        <CardView containerStyle={styles.headerView} isDisabled={true}>
+        <CardView containerStyle={styles.headerView} onPress={() => { }} isDisabled={true}>
           <Text style={styles.headerSubText}>
             {strings('StudentSignUp.ListofCanteen')}
           </Text>
@@ -253,7 +253,7 @@ const getGlobalStyles = (props: any) => {
     },
     titleText: {
       flex: 1,
-      ...commonFontStyle(500, 14, colors.title_dec100),
+      ...commonFontStyle(500, 14, colors.black),
     },
     checkbox: {
       height: hp(22),

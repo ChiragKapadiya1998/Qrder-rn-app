@@ -33,6 +33,11 @@ const FoodCart = () => {
 
     console.log("=======================", getCardData)
 
+    const totalPrice = getCardData.reduce((acc, item) => {
+        return acc + (Number(item.price) * item.quantity);
+    }, 0);
+
+
     const deleteCardItem = (id: number) => {
         let cardInfo = {
             data: id,
@@ -117,6 +122,9 @@ const FoodCart = () => {
                                 <Image source={{ uri: item.image }} style={styles.imageStyle} />
                                 <View style={{ marginLeft: wp(10), flex: 1 }}>
                                     <Text style={styles.titleText}> {item?.name}</Text>
+                                    <TouchableOpacity style={styles.closeView} onPress={() => deleteCardItem(item?.id)}>
+                                        <Image style={styles.closeIcon} source={Icons.deleteMins} />
+                                    </TouchableOpacity>
                                     <Text numberOfLines={1} style={styles.leftText}>{item?.description}</Text>
                                     <View style={styles.addContiner}>
                                         <Text style={styles.priceText}>{`₹${parseFloat(item.price).toString()}`}</Text>
@@ -128,7 +136,7 @@ const FoodCart = () => {
                                                     deleteCardItem(item?.id);
                                                 }
                                             }}>
-                                                <Image source={Icons.minus} style={styles.decrementIcons} />
+                                                <Image source={item?.quantity > 1 ? Icons.minus : Icons.deleteMins} style={styles.decrementIcons} />
                                             </TouchableOpacity>
                                             <Text style={styles.countText}>{item?.quantity}</Text>
                                             <TouchableOpacity onPress={() => {
@@ -150,8 +158,10 @@ const FoodCart = () => {
                 <View style={{ paddingHorizontal: wp(20), marginTop: hp(16) }}>
                     <Text style={styles.summaryText}>{strings('foodCart.summary')}</Text>
                     <View style={[styles.comanStyle, { marginTop: hp(8) }]}>
-                        <Text style={styles.priText}>{strings('foodCart.price') + `${2}` + strings('foodCart.item')}</Text>
-                        <Text style={[styles.priText, { color: colors.black }]}>{`₹${300}`}</Text>
+                        <Text style={styles.priText}>
+                            {`${strings('foodCart.price')} (${getCardData.length} ${strings('foodCart.item')})`}
+                        </Text>
+                        <Text style={[styles.priText, { color: colors.black }]}>{`₹${totalPrice.toFixed(2)}`}</Text>
                     </View>
                     <View style={[styles.comanStyle, { marginVertical: hp(12) }]}>
                         <Text style={styles.priText}>{strings('foodCart.discount')}</Text>
@@ -164,7 +174,7 @@ const FoodCart = () => {
                     <View style={styles.borderLine} />
                     <View style={styles.comanStyle}>
                         <Text style={styles.priText}>{strings('foodCart.total_pay')}</Text>
-                        <Text style={styles.totalPrice}>{`₹${250}`}</Text>
+                        <Text style={styles.totalPrice}>{`₹${totalPrice.toFixed(2)}`}</Text>
                     </View>
 
                     {/* Address Input */}
@@ -299,6 +309,23 @@ const getGlobalStyles = (props: any) => {
         },
         titleText: {
             ...commonFontStyle(600, 14, colors.black),
+        },
+        closeView: {
+            position: 'absolute',
+            right: 0,
+            top: -8,
+            width: 24,
+            height: 24,
+            borderRadius: 5,
+            backgroundColor: colors.border,
+            alignItems: 'center',
+            justifyContent: 'center'
+        },
+        closeIcon: {
+            width: 18,
+            height: 18,
+            resizeMode: 'contain',
+            tintColor: colors.text_orange,
         },
     });
 };

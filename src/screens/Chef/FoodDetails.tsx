@@ -83,27 +83,36 @@ const FoodDetails = ({ route }) => {
   }, [selectedItems]);
 
   const onPressAddCard = () => {
-    let obj = {
-      data: {
-        menu_id: id,
-        quantity: 1,
-        description: foodDelivery,
-        miscellaneous_items: selectedItems
-      },
-      onSuccess: () => {
-        let obj = {
-          onSuccess: () => { },
-          onFailure: () => { },
-        };
-        dispatch(getCardAction(obj));
-      },
-      onFailure: (Err: any) => {
-        if (Err != undefined) {
-          Alert.alert('Warning', Err?.message);
-        }
-      },
-    };
-    dispatch(addCardAction(obj));
+    if (foodDelivery.trim().length === 0) {
+      errorToast(strings('foodDetails.e_food_customization'))
+    } else {
+      let obj = {
+        data: {
+          menu_id: id,
+          quantity: 1,
+          description: foodDelivery,
+          miscellaneous_items: selectedItems
+        },
+        onSuccess: () => {
+          let obj = {
+            onSuccess: () => { 
+              setFoodDelivery('')
+              setQuantity(1)
+              setActiveButton('increment');
+              setSelectedItems([])
+            },
+            onFailure: () => { },
+          };
+          dispatch(getCardAction(obj));
+        },
+        onFailure: (Err: any) => {
+          if (Err != undefined) {
+            Alert.alert('Warning', Err?.message);
+          }
+        },
+      };
+      dispatch(addCardAction(obj));
+    }
   };
 
   const renderItem = ({ item }) => {
@@ -156,6 +165,7 @@ const FoodDetails = ({ route }) => {
       />
       <KeyboardAwareScrollView
         keyboardShouldPersistTaps={'handled'}
+        showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.contentContainerStyle}>
         <View style={{ alignItems: 'center', justifyContent: 'center' }}>
           <Image source={{ uri: image }} style={styles.imageStyle} />
@@ -261,7 +271,7 @@ const FoodDetails = ({ route }) => {
         {showAddToCard && (
           <>
             <Text style={styles.foodReviewText}>
-              {strings('addFoodList.FooddeliveryCustomization')}
+              {strings('foodDetails.Food_customization')}
             </Text>
             <TextInput
               value={foodDelivery}

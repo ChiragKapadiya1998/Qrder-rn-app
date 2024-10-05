@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
+    Alert,
     FlatList,
     Image,
     Modal,
@@ -21,6 +22,7 @@ import { getAllOrderAction, getAllOrderFilterAction } from '../../actions/allOrd
 import { formatDate, formatDateToDDMMYYYY } from '../../utils/globalFunctions';
 import { getAsyncRole } from '../../utils/asyncStorageManager';
 import DatePicker from 'react-native-date-picker';
+import Spacer from '../../compoment/Spacer';
 
 const OrderHistory = () => {
     const { colors } = useTheme();
@@ -72,11 +74,21 @@ const OrderHistory = () => {
         if (isSelectingStartDate) {
             setStartDate(selectedDate);
         } else {
+            if (!startDate) {
+              Alert.alert(
+                'error',
+                strings('orderModal.e_start_data'),
+                [{ text: strings('orderModal.ok'), onPress: () => setIsDatePickerVisible(false) }]
+            );
+                return;
+            }
+            
             setEndDate(selectedDate);
-            getAllOrdersFilter(selectedDate)
+            getAllOrdersFilter(selectedDate);
         }
         setIsDatePickerVisible(false);
     };
+
     const onCancelBtn = () => { };
 
     const renderItem = ({ item, index }) => {
@@ -154,7 +166,9 @@ const OrderHistory = () => {
                     renderItem={renderItem}
                     keyExtractor={(item, index) => index.toString()}
                     showsVerticalScrollIndicator={false}
-                    contentContainerStyle={{ paddingBottom: hp(200) }}
+                    ListFooterComponent={() => {
+                        return <View style={{height: 100}} />;
+                      }}
                 />
             </View>
             <Modal transparent={true} visible={isDatePickerVisible} animationType="slide">
@@ -178,6 +192,7 @@ const getGlobalStyles = (props: any) => {
 
     return StyleSheet.create({
         container: {
+            flex:1,
             backgroundColor: colors.bg_white,
         },
         headerContainer: {

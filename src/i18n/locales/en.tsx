@@ -185,7 +185,9 @@ export default {
     parcel:'Parcel',
     completed:'Complete',
     start_date:'Start Date',
-    end_date:'End Date'
+    end_date:'End Date',
+    e_start_data:'Please Select Start Data',
+    ok:'Ok'
   },
   ordersList: {
     myOrders: 'My Orders',
@@ -246,7 +248,9 @@ export default {
     description: 'Description',
     no_data_found: 'No Data Found',
     food_cart: 'Food Cart',
-    e_decrement:'Cannot have less than 1 item.'
+    e_decrement:'Cannot have less than 1 item.',
+    e_food_customization:'Please Enter Food Customization Text',
+    Food_customization:'Food Customization'
   },
   profileScreen: {
     profile: 'Profile',
