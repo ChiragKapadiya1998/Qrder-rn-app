@@ -28,6 +28,7 @@ export default {
     password: 'Password',
     remember_me: 'Remember me',
     forgot_password: 'Forgot Password?',
+    forgot_passwords: 'Forgot Password',
     dont_have_account: 'Don’t have any account? ',
     sign_in: 'SIGN IN',
     or: 'Or continue with',
@@ -251,6 +252,7 @@ export default {
     e_decrement: 'Cannot have less than 1 item.',
     e_food_customization: 'Please Enter Food Customization Text',
     Food_customization: 'Food Customization',
+    item:'Item'
   },
   profileScreen: {
     profile: 'Profile',

@@ -1,15 +1,16 @@
 import {
+  ActivityIndicator,
   StatusBar,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
-import {useNavigation, useRoute, useTheme} from '@react-navigation/native';
-import {commonFontStyle, wp, hp} from '../../theme/fonts';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import {errorToast, infoToast} from '../../utils/commonFunction';
+import React, { useEffect, useState } from 'react';
+import { useNavigation, useRoute, useTheme } from '@react-navigation/native';
+import { commonFontStyle, wp, hp } from '../../theme/fonts';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { errorToast, infoToast } from '../../utils/commonFunction';
 import {
   CodeField,
   Cursor,
@@ -18,30 +19,31 @@ import {
 } from 'react-native-confirmation-code-field';
 import PrimaryButton from '../../compoment/PrimaryButton';
 import LoginHeader from '../../compoment/LoginHeader';
-import {strings} from '../../i18n/i18n';
-import {useAppDispatch} from '../../redux/hooks';
-import {sendEmailOtp, sendForgotEmail} from '../../actions/authAction';
-import {screenName} from '../../navigation/screenNames';
-import {ColorProperties} from 'react-native-reanimated/lib/typescript/Colors';
+import { strings } from '../../i18n/i18n';
+import { useAppDispatch } from '../../redux/hooks';
+import { sendEmailOtp, sendForgotEmail } from '../../actions/authAction';
+import { screenName } from '../../navigation/screenNames';
+import { ColorProperties } from 'react-native-reanimated/lib/typescript/Colors';
 
 type Props = {};
 const CELL_COUNT = 6;
 
-const VerificationCode = ({route}) => {
-  const {email, otpNumber} = route.params;
-  const {colors} = useTheme();
+const VerificationCode = ({ route }) => {
+  const { email, otpNumber } = route.params;
+  const { colors } = useTheme();
   const navigation = useNavigation();
   const dispatch = useAppDispatch();
-  const styles = React.useMemo(() => getGlobalStyles({colors}), [colors]);
-  const [value, setValue] = useState<string>('');
-  const ref = useBlurOnFulfill({value, cellCount: CELL_COUNT});
+  const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
+  const [value, setValue] = useState < string > ('');
+  const ref = useBlurOnFulfill({ value, cellCount: CELL_COUNT });
   const [props, getCellOnLayoutHandler] = useClearByFocusCell({
     value,
     setValue,
   });
-  const [timer, setTimer] = useState<number>(50);
-  const [isResendDisabled, setIsResendDisabled] = useState<boolean>(true);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [timer, setTimer] = useState < number > (50);
+  const [isResendDisabled, setIsResendDisabled] = useState < boolean > (true);
+  const [loading, setLoading] = useState < boolean > (false);
+  const [loader, setLoader] = useState < boolean > (false);
 
   useEffect(() => {
     if (timer > 0) {
@@ -58,11 +60,11 @@ const VerificationCode = ({route}) => {
     } else {
       setLoading(true);
       let data = {
-        data: {email, otp: value},
+        data: { email, otp: value },
         onSuccess: () => {
           setValue('');
           setLoading(false);
-          //   navigation.navigate(screenName.NewPassword, {emailId: email});
+          navigation.navigate(screenName.NewPassword, { emailId: email });
         },
         onFailure: Err => {
           setLoading(false);
@@ -76,13 +78,17 @@ const VerificationCode = ({route}) => {
   };
 
   const onResendPress = () => {
+    setLoader(true);
     let userInfo = {
-      data: {email},
+      data: { email },
       onSuccess: () => {
+        setLoader(false);
         setTimer(50);
         setIsResendDisabled(true);
       },
-      onFailure: () => {},
+      onFailure: () => { 
+        setLoader(false);
+      },
     };
     dispatch(sendForgotEmail(userInfo));
   };
@@ -92,8 +98,8 @@ const VerificationCode = ({route}) => {
       <StatusBar barStyle="light-content" backgroundColor={colors.Primary_Bg} />
 
       <LoginHeader
-        title={strings('Phone_number_verification.verification')}
-        description={strings('Phone_number_verification.verification_dec')}
+        title={''}
+        description={''}
         email={email}
         isBack={true}
         onPress={navigation.goBack}
@@ -103,6 +109,10 @@ const VerificationCode = ({route}) => {
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.contentContainerStyle}>
+          <View style={{marginBottom:hp(30)}}>
+          <Text style={styles.loginText}>{strings('Phone_number_verification.verification')}</Text>
+          <Text style={styles.desText}>{strings('Phone_number_verification.verification_dec')}</Text>
+          </View>
           <CodeField
             ref={ref}
             {...props}
@@ -112,7 +122,7 @@ const VerificationCode = ({route}) => {
             keyboardType="number-pad"
             textContentType="oneTimeCode"
             rootStyle={styles.codeFieldRoot}
-            renderCell={({index, symbol, isFocused}) => (
+            renderCell={({ index, symbol, isFocused }) => (
               <View
                 key={index}
                 style={[styles.cellRoot, isFocused && styles.focusedCell]}
@@ -145,9 +155,10 @@ const VerificationCode = ({route}) => {
             style={styles.sendButton}
             onPress={onResendPress}
             disabled={isResendDisabled}>
-            <Text style={styles.sendText}>
-              {strings('Phone_number_verification.send_again')}
-            </Text>
+            {loader ? <ActivityIndicator size="small" color={colors.black} /> :
+              <Text style={styles.sendText}>
+                {strings('Phone_number_verification.send_again')}
+              </Text>}
           </TouchableOpacity>
         </KeyboardAwareScrollView>
       </View>
@@ -158,15 +169,14 @@ const VerificationCode = ({route}) => {
 export default VerificationCode;
 
 const getGlobalStyles = (props: any) => {
-  const {colors} = props;
+  const { colors } = props;
   return StyleSheet.create({
     container: {
       flex: 1,
       backgroundColor: colors.bg_white,
-      paddingHorizontal: hp(2),
     },
     bottomContainer: {
-      flex: 2,
+      flex: 2.5,
       backgroundColor: colors.bg_white,
     },
     contentContainerStyle: {
@@ -236,5 +246,17 @@ const getGlobalStyles = (props: any) => {
       ...commonFontStyle(600, 18, colors.text_gray),
       textAlign: 'center',
     },
+    loginText: {
+      textAlign:'center',
+      ...commonFontStyle(800, 20, colors.black),
+    },
+    desText: {
+      textAlign:'center',
+      ...commonFontStyle(400, 14, colors.title_dec),
+      marginTop: hp(5),
+    },
+    emailText: {
+      ...commonFontStyle(700, 14, colors.white),
+    }
   });
 };

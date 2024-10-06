@@ -54,7 +54,6 @@ const ChefHome = () => {
   const navigation = useNavigation();
   const isFocuse = useIsFocused();
 
-  console.log("=====<><><>", isRunningOrder)
   const GetStatus = async () => {
     const Status = await getAsyncLocation();
     setValue(Status);

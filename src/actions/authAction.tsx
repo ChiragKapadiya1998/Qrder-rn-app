@@ -128,9 +128,9 @@ export const sendForgotEmail =
       data: request.data,
     })
       .then(async (response: any) => {
-        if (response?.data?.success) {
-          if (request.onSuccess) request.onSuccess(response.data);
+        if (response?.data) {
           successToast(response?.data?.message);
+          if (request.onSuccess) request.onSuccess(response.data);
         } else {
           if (request.onFailure) request.onFailure(response.data);
         }

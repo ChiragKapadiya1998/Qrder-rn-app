@@ -168,7 +168,7 @@ const FoodDetails = ({route}) => {
         mainShow={true}
         title={name || strings('foodDetails.food_Details')}
         extraStyle={styles.headerContainer}
-        isHideIcon={!showChef && !showAddToCard ? false : true}
+        isHideIcon={showAddToCard ? false : true}
       />
       <KeyboardAwareScrollView
         keyboardShouldPersistTaps={'handled'}

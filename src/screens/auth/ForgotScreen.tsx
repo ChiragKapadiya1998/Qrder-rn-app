@@ -1,7 +1,7 @@
-import { StatusBar, StyleSheet, View } from 'react-native';
+import { StatusBar, StyleSheet, Text, View } from 'react-native';
 import React, { useState } from 'react';
 import { useNavigation, useTheme } from '@react-navigation/native';
-import { hp, wp } from '../../theme/fonts';
+import { commonFontStyle, hp, wp } from '../../theme/fonts';
 import Input from '../../compoment/Input';
 import PrimaryButton from '../../compoment/PrimaryButton';
 import { screenName } from '../../navigation/screenNames';
@@ -20,7 +20,7 @@ const ForgotScreen = (props: Props) => {
   const dispatch = useAppDispatch();
   const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
   const [email, setEmail] = useState('');
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState < boolean > (false);
 
   const onPressBack = () => {
     navigation.goBack();
@@ -38,7 +38,7 @@ const ForgotScreen = (props: Props) => {
           data: {
             email: email,
           },
-          onSuccess: () => {
+          onSuccess: (res) => {
             setEmail('');
             setLoading(false)
             navigation.navigate(screenName.VerificationCode, { email: email });
@@ -66,8 +66,8 @@ const ForgotScreen = (props: Props) => {
       />
 
       <LoginHeader
-        title={strings('login.forgot_password')}
-        description={strings('login.login_dec')}
+        title={''}
+        description={''}
         isBack={true}
         onPress={() => onPressBack()}
       />
@@ -76,6 +76,10 @@ const ForgotScreen = (props: Props) => {
         <KeyboardAwareScrollView
           keyboardShouldPersistTaps={'handled'}
           contentContainerStyle={styles.contentContainerStyle}>
+          <View style={{ marginBottom: hp(20) }}>
+            <Text style={styles.loginText}>{strings('login.forgot_passwords')}</Text>
+            <Text style={styles.desText}>{strings('login.login_dec')}</Text>
+          </View>
           <Input
             value={email}
             placeholder={strings('login.enter_email_Id')}
@@ -104,7 +108,7 @@ const getGlobalStyles = (props: any) => {
       backgroundColor: colors.bg_white,
     },
     bottomContainer: {
-      flex: 2,
+      flex: 2.5,
       backgroundColor: colors.bg_white,
     },
     contentContainerStyle: {
@@ -115,6 +119,15 @@ const getGlobalStyles = (props: any) => {
       borderRadius: 20,
       alignItems: 'center',
       justifyContent: 'center',
+    },
+    loginText: {
+      textAlign:'center',
+      ...commonFontStyle(800, 20, colors.black),
+    },
+    desText: {
+      textAlign:'center',
+      ...commonFontStyle(400, 14, colors.title_dec),
+      marginTop: hp(5),
     },
   });
 };

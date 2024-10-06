@@ -1,8 +1,8 @@
-import {Keyboard, StatusBar, StyleSheet, View} from 'react-native';
-import React, {useRef, useState} from 'react';
-import {useNavigation, useRoute, useTheme} from '@react-navigation/native';
-import {wp, hp} from '../../theme/fonts';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import { Keyboard, StatusBar, StyleSheet, Text, View } from 'react-native';
+import React, { useRef, useState } from 'react';
+import { useNavigation, useRoute, useTheme } from '@react-navigation/native';
+import { wp, hp, commonFontStyle } from '../../theme/fonts';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import {
   errorToast,
   numberCheck,
@@ -11,28 +11,28 @@ import {
 } from '../../utils/commonFunction';
 import PrimaryButton from '../../compoment/PrimaryButton';
 import LoginHeader from '../../compoment/LoginHeader';
-import {strings} from '../../i18n/i18n';
-import {useAppDispatch} from '../../redux/hooks';
+import { strings } from '../../i18n/i18n';
+import { useAppDispatch } from '../../redux/hooks';
 import Input from '../../compoment/Input';
-import {screenName} from '../../navigation/screenNames';
-import {updatePassword} from '../../actions/authAction';
-import {getAsyncRole} from '../../utils/asyncStorageManager';
+import { screenName } from '../../navigation/screenNames';
+import { updatePassword } from '../../actions/authAction';
+import { getAsyncRole } from '../../utils/asyncStorageManager';
 
 type Props = {};
 
 const NewPassword = () => {
-  const {params} = useRoute<any>();
-  const {colors} = useTheme();
+  const { params } = useRoute < any > ();
+  const { colors } = useTheme();
   const navigation = useNavigation();
   const dispatch = useAppDispatch();
-  const styles = React.useMemo(() => getGlobalStyles({colors}), [colors]);
-  const [password, setPassword] = useState<string>('');
-  const [confirmPassword, setConfirmPassword] = useState<string>('');
-  const [isShowPassword, setIsShowPassword] = useState<boolean>(true);
+  const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
+  const [password, setPassword] = useState < string > ('');
+  const [confirmPassword, setConfirmPassword] = useState < string > ('');
+  const [isShowPassword, setIsShowPassword] = useState < boolean > (true);
   const [isShowConfirmPassword, setIsShowConfirmPassword] =
-    useState<boolean>(true);
+    useState < boolean > (true);
 
-  const passwordRef = useRef<any>(null);
+  const passwordRef = useRef < any > (null);
 
   const onSignUpPress = () => {
     if (password.trim().length === 0) {
@@ -62,7 +62,7 @@ const NewPassword = () => {
           setConfirmPassword('');
           setPassword('');
           setTimeout(() => {
-            navigation.navigate(screenName.SignInScreen, {role: isRole});
+            navigation.navigate(screenName.SignInScreen, { role: isRole });
           }, 1000);
         },
         onFailure: (Err: any) => {
@@ -86,8 +86,8 @@ const NewPassword = () => {
         backgroundColor={colors.Primary_Bg}
       />
       <LoginHeader
-        title={strings('login.ressetPassword')}
-        description={strings('Phone_number_verification.verification_dec')}
+        title={''}
+        description={''}
         email={params?.emailId}
         isBack={true}
         onPress={() => onPressBack()}
@@ -97,6 +97,10 @@ const NewPassword = () => {
           keyboardShouldPersistTaps={'handled'}
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.contentContainerStyle}>
+          <View style={{ marginBottom: hp(30) }}>
+            <Text style={styles.loginText}>{strings('login.ressetPassword')}</Text>
+            <Text style={styles.desText}>{strings('Phone_number_verification.verification_dec')}</Text>
+          </View>
           <Input
             value={password}
             returnKeyType="done"
@@ -134,14 +138,14 @@ const NewPassword = () => {
 export default NewPassword;
 
 const getGlobalStyles = (props: any) => {
-  const {colors} = props;
+  const { colors } = props;
   return StyleSheet.create({
     container: {
       flex: 1,
       backgroundColor: colors.bg_white,
     },
     bottomContainer: {
-      flex: 2,
+      flex: 2.5,
       backgroundColor: colors.bg_white,
     },
     contentContainerStyle: {
@@ -152,6 +156,15 @@ const getGlobalStyles = (props: any) => {
       borderRadius: 20,
       alignItems: 'center',
       justifyContent: 'center',
+    },
+    loginText: {
+      textAlign:'center',
+      ...commonFontStyle(800, 20, colors.black),
+    },
+    desText: {
+      textAlign:'center',
+      ...commonFontStyle(400, 14, colors.title_dec),
+      marginTop: hp(5),
     },
   });
 };

@@ -8,6 +8,8 @@ import { commonFontStyle, hp, wp } from '../../theme/fonts';
 import ThankYouModal from '../../compoment/ThankYouModal';
 import { getAsyncUserInfo } from '../../utils/asyncStorageManager';
 import { allMyOrderAction } from '../../actions/allOrdersAction';
+import NoDataFound from '../../compoment/NoDataFound';
+import { GET_ALL_MY_ORDER } from '../../redux/actionTypes';
 
 
 const ChefMyOrders = () => {
@@ -17,29 +19,36 @@ const ChefMyOrders = () => {
     const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
     const navigation = useNavigation();
     const { isDarkTheme } = useAppSelector(state => state.common);
-    const { allMyOrder } = useAppSelector(state => state.orders);
+    // const { allMyOrder } = useAppSelector(state => state.orders);
     const [isOpenModal, setIsOpenModal] = useState(false);
     const dispatch = useAppDispatch();
-    const { address, name, number, order_type ,id} = itemData
+    const [myOrderData,setMyOrderData] = useState({})
+    const [isLoading, setIsLoading] = useState(true);
+
     const goback = () => {
         navigation.goBack();
+        setMyOrderData({})
     }
-    console.log("=====>>><<<", allMyOrder)
 
-    useEffect(()=>{
+    useEffect(() => {
         getAllMyOrder()
-    },[])
+    }, [])
 
     const getAllMyOrder = () => {
         let UserInfo = {
-          data: id,
-          onSuccess: () => { },
-          onFailure: () => { },
+            data: itemData?.id,
+            onSuccess: (res) => { 
+                setMyOrderData(res)
+                setIsLoading(false)
+            },
+            onFailure: () => { 
+                setIsLoading(false)
+            },
         };
         dispatch(allMyOrderAction(UserInfo));
-      }
+    }
 
-      
+
 
     const onPressGoToHome = () => {
         setIsOpenModal(false)
@@ -77,44 +86,51 @@ const ChefMyOrders = () => {
                 <View style={styles.cardContainer}>
                     <View style={styles.boxView}>
                         <Text style={styles.textStyle}>{strings('myOrders.user_name')}</Text>
-                        <Text style={styles.nameText}>{name}</Text>
+                        <Text style={styles.nameText}>{myOrderData?.name}</Text>
                     </View>
-                    {address !== null ? <View style={[styles.boxView, { marginTop: hp(12) }]}>
+                    {!isLoading && myOrderData?.address !== null ? <View style={[styles.boxView, { marginTop: hp(12) }]}>
                         <Text style={styles.textStyle}>{strings('myOrders.address')}</Text>
-                        <Text style={styles.nameText}>{address}</Text>
+                        <Text style={styles.nameText}>{myOrderData?.address}</Text>
                     </View> : null}
                     <View style={[styles.boxView, { marginTop: hp(12) }]}>
                         <Text style={styles.textStyle}>{strings('myOrders.phone_number')}</Text>
-                        <Text style={styles.nameText}>{number}</Text>
+                        <Text style={styles.nameText}>{myOrderData?.number}</Text>
                     </View>
                     <View style={[styles.boxView, { marginTop: hp(12) }]}>
                         <Text style={styles.textStyle}>{strings('myOrders.dining_parcel')}</Text>
                         <View style={styles.diningView}>
-                            <Text style={styles.diningText}>{order_type === 1 ? strings('orderModal.dining') : strings('orderModal.parcel')}</Text>
+                            <Text style={styles.diningText}>{myOrderData?.order_type === 1 ? strings('orderModal.dining') : strings('orderModal.parcel')}</Text>
                         </View>
                     </View>
                 </View>
                 <Text style={[styles.addressText, { marginTop: hp(20) }]}>{strings('myOrders.items')}</Text>
-                <FlatList
-                    data={[1, 2, 3, 4]}
-                    renderItem={({ item }) => (
-                        <View style={styles.headingView}>
-                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <View style={styles.imageStyle} />
-                                <View style={{ marginLeft: wp(10), flex: 1 }}>
-                                    <Text style={styles.itemText}>{'Item : 1'}</Text>
-                                    <Text style={styles.foodText}>{'Item Name'}</Text>
-                                    <Text numberOfLines={1} style={styles.leftText}>{'Description'}</Text>
-                                    <View style={styles.addContiner}>
-                                        <Text style={styles.priceText}>{`₹${300}`}</Text>
+                {!isLoading && 
+                    <FlatList
+                        data={myOrderData.items}
+                        renderItem={({ item }) => (
+                            <View style={styles.headingView}>
+                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                    <Image source={{ uri: item?.menu?.image }} style={styles.imageStyle} />
+                                    <View style={{ marginLeft: wp(10), flex: 1 }}>
+                                    <Text style={styles.itemText}>{`${strings('foodDetails.item')} :  ${1}`}</Text>
+                                        <Text style={styles.foodText}>{item?.menu?.name}</Text>
+                                        {item?.description !== null ? (
+                                            <Text numberOfLines={1} style={styles.leftText}>
+                                                {item?.description}
+                                            </Text>
+                                        ) : null}
+                                        <View style={styles.addContiner}>
+                                            <Text style={styles.priceText}>{`₹${item?.menu?.price}`}</Text>
+                                        </View>
                                     </View>
                                 </View>
                             </View>
-                        </View>
-                    )}
-                    keyExtractor={(item) => item.toString()}
-                    contentContainerStyle={styles.containerView}
-                />
+                        )}
+                        keyExtractor={(item) => item.toString()}
+                        contentContainerStyle={styles.containerView}
+                        ListEmptyComponent={<NoDataFound />}
+                    />}
+
             </ScrollView>
             <ThankYouModal
                 title={strings('myOrders.thank_you_des')}
@@ -215,8 +231,7 @@ const getGlobalStyles = (props: any) => {
             width: 89,
             height: 89,
             borderRadius: 16,
-            resizeMode: 'contain',
-            backgroundColor: 'red',
+            resizeMode: 'contain'
         },
         itemText: {
             ...commonFontStyle(400, 10, colors.text_orange),
@@ -235,6 +250,14 @@ const getGlobalStyles = (props: any) => {
         },
         leftText: {
             ...commonFontStyle(500, 12, colors.title_dec100),
+        },
+        emptyContainer: {
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+        },
+        emptyText: {
+            ...commonFontStyle(500, 16, colors.title_dec100),
         },
     });
 };

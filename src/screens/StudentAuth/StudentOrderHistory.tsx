@@ -27,6 +27,7 @@ import {getAsyncRole} from '../../utils/asyncStorageManager';
 import DatePicker from 'react-native-date-picker';
 import {errorToast} from '../../utils/commonFunction';
 import NoDataFound from '../../compoment/NoDataFound';
+import { screenName } from '../../navigation/screenNames';
 
 const StudentOrderHistory = () => {
   const {colors} = useTheme();
@@ -102,9 +103,9 @@ const StudentOrderHistory = () => {
     return (
       <View style={styles.listContainer}>
         <View style={{flexDirection: 'row'}}>
-          <View style={styles.imageView}>
+          <TouchableOpacity style={styles.imageView} onPress={() => navigation.navigate(screenName.MyOrders, { itemData: item })}>
             <Text style={styles.imageText}>#{index + 1}</Text>
-          </View>
+          </TouchableOpacity>
 
           <View style={styles.rightContainer}>
             <Text numberOfLines={1} style={styles.breakText}>{`${strings(

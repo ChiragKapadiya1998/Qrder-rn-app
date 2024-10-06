@@ -1,24 +1,53 @@
 import { Alert, Image, StatusBar, StyleSheet, Text, TouchableOpacity, View, ScrollView, FlatList } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigation, useRoute, useTheme } from '@react-navigation/native';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import HomeHeader from '../../compoment/HomeHeader';
 import { strings } from '../../i18n/i18n';
 import { commonFontStyle, hp, wp } from '../../theme/fonts';
 import ThankYouModal from '../../compoment/ThankYouModal';
+import { allMyOrderAction } from '../../actions/allOrdersAction';
+import { GET_ALL_MY_ORDER } from '../../redux/actionTypes';
+import { formatDate } from '../../utils/globalFunctions';
+import NoDataFound from '../../compoment/NoDataFound';
 
 
 const MyOrders = () => {
     const { colors } = useTheme();
     const route = useRoute();
+    const { itemData } = route?.params;
     const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
     const navigation = useNavigation();
     const { isDarkTheme } = useAppSelector(state => state.common);
+    const { allMyOrder } = useAppSelector(state => state.orders);
     const [isOpenModal, setIsOpenModal] = useState(false);
     const dispatch = useAppDispatch();
+    const [myOrderData, setMyOrderData] = useState({})
+    const [isLoading, setIsLoading] = useState(true);
+
 
     const goback = () => {
         navigation.goBack();
+        dispatch({ type: GET_ALL_MY_ORDER, payload: [] });
+        setMyOrderData({})
+    }
+
+    useEffect(() => {
+        getAllMyOrder()
+    }, [])
+
+    const getAllMyOrder = () => {
+        let UserInfo = {
+            data: itemData?.id,
+            onSuccess: (res) => {
+                setMyOrderData(res)
+                setIsLoading(false)
+            },
+            onFailure: () => {
+                setIsLoading(false)
+            },
+        };
+        dispatch(allMyOrderAction(UserInfo));
     }
 
     const onPressGoToHome = () => {
@@ -41,8 +70,6 @@ const MyOrders = () => {
                 }}
                 onRightPress={() => {
                     setIsOpenModal(true)
-                    // navigation.navigate(screenName.AddItemMasters);
-                    // setNewFolder(true)
                 }}
                 mainShow={true}
                 title={strings('myOrders.my_orders')}
@@ -57,23 +84,23 @@ const MyOrders = () => {
                 <View style={styles.orderBox}>
                     <View style={[styles.comanStyle]}>
                         <Text style={styles.priText}>{strings('myOrders.order_id')}</Text>
-                        <Text style={[styles.priText, { color: colors.black }]}>{'#326589'}</Text>
+                        <Text style={[styles.priText, { color: colors.black }]}>{allMyOrder?.order_id}</Text>
                     </View>
                     <View style={[styles.comanStyle, { marginVertical: hp(12) }]}>
                         <Text style={styles.priText}>{strings('myOrders.user_name')}</Text>
-                        <Text style={[styles.priText, { color: colors.black }]}>{`Kartik Patel`}</Text>
+                        <Text style={[styles.priText, { color: colors.black }]}>{allMyOrder?.name}</Text>
                     </View>
                     <View style={styles.comanStyle}>
                         <Text style={styles.priText}>{strings('myOrders.phone_number')}</Text>
-                        <Text style={[styles.priText, { color: colors.black }]}>{'+91 123 456 7890'}</Text>
+                        <Text style={[styles.priText, { color: colors.black }]}>{allMyOrder?.number}</Text>
                     </View>
                     <View style={[styles.comanStyle, { marginVertical: hp(12) }]}>
                         <Text style={styles.priText}>{strings('myOrders.subtotal')}</Text>
-                        <Text style={[styles.priText, { color: colors.black }]}>{`₹${250}`}</Text>
+                        <Text style={[styles.priText, { color: colors.black }]}>{`₹${allMyOrder?.subtotal}`}</Text>
                     </View>
                     <View style={[styles.comanStyle]}>
                         <Text style={styles.priText}>{strings('myOrders.discount')}</Text>
-                        <Text style={[styles.priText, { color: colors.red_text }]}>{`-₹${250}`}</Text>
+                        <Text style={[styles.priText, { color: colors.red_text }]}>{`-₹${allMyOrder?.discount}`}</Text>
                     </View>
                     <View style={[styles.comanStyle, { marginVertical: hp(12) }]}>
                         <Text style={styles.priText}>{strings('myOrders.tax')}</Text>
@@ -85,49 +112,56 @@ const MyOrders = () => {
                     </View>
                     <View style={[styles.comanStyle, { marginTop: hp(12) }]}>
                         <Text style={styles.priText}>{strings('myOrders.created_date')}</Text>
-                        <Text style={[styles.priText, { color: colors.green_text }]}>{'18 January 2024'}</Text>
+                        <Text style={[styles.priText, { color: colors.green_text }]}>{formatDate(allMyOrder?.created_at)}</Text>
                     </View>
                     <View style={styles.borderLine} />
                     <View style={styles.comanStyle}>
                         <Text style={styles.priText}>{strings('foodCart.total_pay')}</Text>
-                        <Text style={styles.totalPrice}>{`₹${250}`}</Text>
+                        <Text style={styles.totalPrice}>{`₹${allMyOrder?.total}`}</Text>
                     </View>
                 </View>
 
                 <Text style={styles.addressText}>{strings('myOrders.address_details')}</Text>
                 <View style={styles.cardContainer}>
-                    <View style={styles.boxView}>
-                        <Text style={styles.textStyle}>{strings('myOrders.canteen_address')}</Text>
-                        <Text style={styles.nameText}>{'Room 500 hostel'}</Text>
-                    </View>
-                    <View style={[styles.boxView, { marginTop: hp(12) }]}>
+                    {!isLoading && allMyOrder?.address !== null ? <View style={[styles.boxView,{marginBottom: hp(12)}]}>
+                        <Text style={styles.textStyle}>{strings('myOrders.address')}</Text>
+                        <Text style={styles.nameText}>{allMyOrder?.address}</Text>
+                    </View> : null}
+                    <View style={[styles.boxView]}>
                         <Text style={styles.textStyle}>{strings('myOrders.dining_parcel')}</Text>
                         <View style={styles.diningView}>
-                            <Text style={[styles.diningText]}>Dining</Text>
+                        <Text style={styles.diningText}>{allMyOrder?.order_type === 1 ? strings('orderModal.dining') : strings('orderModal.parcel')}</Text>
                         </View>
                     </View>
                 </View>
-                <Text style={[styles.addressText, { marginTop: hp(20) }]}>{strings('myOrders.items')}</Text>
-                <FlatList
-                    data={[1, 2, 3, 4]}
-                    renderItem={({ item }) => (
-                        <View style={styles.headingView}>
-                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <View style={styles.imageStyle} />
-                                <View style={{ marginLeft: wp(10), flex: 1 }}>
-                                    <Text style={styles.itemText}>{'Item : 1'}</Text>
-                                    <Text style={styles.foodText}>{'Item Name'}</Text>
-                                    <Text numberOfLines={1} style={styles.leftText}>{'Description'}</Text>
-                                    <View style={styles.addContiner}>
-                                        <Text style={styles.priceText}>{`₹${300}`}</Text>
+                <Text style={[styles.addressText]}>{strings('myOrders.items')}</Text>
+                {!isLoading &&  allMyOrder?.items && 
+                    <FlatList
+                        data={allMyOrder.items}
+                        renderItem={({ item }) => (
+                            <View style={styles.headingView}>
+                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                    <Image source={{ uri: item?.menu?.image }} style={styles.imageStyle} />
+                                    <View style={{ marginLeft: wp(10), flex: 1 }}>
+                                    <Text style={styles.itemText}>{`${strings('foodDetails.item')} :  ${1}`}</Text>
+                                        <Text style={styles.foodText}>{item?.menu?.name}</Text>
+                                        {item?.description !== null ? (
+                                            <Text numberOfLines={1} style={styles.leftText}>
+                                                {item?.description}
+                                            </Text>
+                                        ) : null}
+                                        <View style={styles.addContiner}>
+                                            <Text style={styles.priceText}>{`₹${item?.menu?.price}`}</Text>
+                                        </View>
                                     </View>
                                 </View>
                             </View>
-                        </View>
-                    )}
-                    keyExtractor={(item) => item.toString()}
-                    contentContainerStyle={styles.containerView}
-                />
+                        )}
+                        keyExtractor={(item) => item.toString()}
+                        contentContainerStyle={styles.containerView}
+                        ListEmptyComponent={<NoDataFound />}
+                    />}
+
             </ScrollView>
             <ThankYouModal
                 title={strings('myOrders.thank_you_des')}
@@ -157,7 +191,6 @@ const getGlobalStyles = (props: any) => {
             marginHorizontal: wp(20)
         },
         orederText: {
-            marginBottom: hp(20),
             ...commonFontStyle(600, 18, colors.black),
         },
         orderBox: {
@@ -187,6 +220,7 @@ const getGlobalStyles = (props: any) => {
             justifyContent: 'space-between'
         },
         addressText: {
+            marginTop: hp(20),
             ...commonFontStyle(600, 18, colors.black),
         },
         cardContainer: {
@@ -229,7 +263,6 @@ const getGlobalStyles = (props: any) => {
             height: 89,
             borderRadius: 16,
             resizeMode: 'contain',
-            backgroundColor: 'red',
         },
         itemText: {
             ...commonFontStyle(400, 10, colors.text_orange),

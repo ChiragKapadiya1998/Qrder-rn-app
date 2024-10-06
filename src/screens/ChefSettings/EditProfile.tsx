@@ -58,7 +58,8 @@ const EditProfile = (props: Props) => {
     userData.profile_image ? true : false,
   );
 
-  const [salary, setSalary] = useState(userData?.salary.toString());
+  const [salary, setSalary] = useState(userData?.salary ? userData.salary.toString() : '');
+
 
   console.log(
     'userDatadasda',
