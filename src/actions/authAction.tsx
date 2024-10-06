@@ -2,9 +2,10 @@ import {ThunkAction} from 'redux-thunk';
 import {RootState} from '../redux/hooks';
 import {AnyAction} from 'redux';
 import {makeAPIRequest} from '../utils/apiGlobal';
-import {POST, api} from '../utils/apiConstants';
+import {GET, POST, api} from '../utils/apiConstants';
 import {
   getAsyncToken,
+  getAsyncUserInfo,
   setAsyncToken,
   setAsyncUserInfo,
 } from '../utils/asyncStorageManager';
@@ -208,7 +209,7 @@ export const googleEmailAction =
         if (response?.data?.success === true) {
           await setAsyncToken(response?.data?.data?.token);
           await setAsyncUserInfo(response?.data?.data?.user);
-          if (request.onSuccess) request.onSuccess(response.data);
+          if (request.onSuccess) request.onSuccess(response?.data?.data?.user);
         } else {
           if (request.onFailure) request.onFailure(response.data);
         }
@@ -233,11 +234,64 @@ export const updateProfile =
       data: request.data,
     })
       .then(async (response: any) => {
-        console.log('response?.data', response?.data);
-
-        if (response?.data?.data) {
+        if (response?.data?.success) {
+          successToast(response?.data?.message);
           await setAsyncUserInfo(response?.data?.data?.user);
           if (request.onSuccess) request.onSuccess(response.data);
+        } else {
+          if (request.onFailure) request.onFailure(response.data);
+        }
+      })
+      .catch(error => {
+        errorToast('User not found');
+        if (request.onFailure) request.onFailure(error.response);
+      });
+  };
+
+export const universityUpdateAction =
+  (request: any): ThunkAction<void, RootState, unknown, AnyAction> =>
+  async dispatch => {
+    let headers = {
+      'Content-Type': 'multipart/form-data',
+      Authorization: await getAsyncToken(),
+    };
+    return makeAPIRequest({
+      method: POST,
+      url: api.universityUpdate,
+      headers: headers,
+      data: request.data,
+    })
+      .then(async (response: any) => {
+        if (response?.data?.message) {
+          if (request.onSuccess) request.onSuccess(response.data);
+        } else {
+          if (request.onFailure) request.onFailure(response.data);
+        }
+      })
+      .catch(error => {
+        errorToast('User not found');
+        if (request.onFailure) request.onFailure(error.response);
+      });
+  };
+
+export const getUserAction =
+  (request: any): ThunkAction<void, RootState, unknown, AnyAction> =>
+  async dispatch => {
+    let headers = {
+      Authorization: await getAsyncToken(),
+    };
+    let userDetails = await getAsyncUserInfo();
+
+    return makeAPIRequest({
+      method: GET,
+      url: `${api.getUser}/${userDetails?.id}`,
+      headers: headers,
+    })
+      .then(async (response: any) => {
+        console.log('getUserAction response?.data', response?.data?.data);
+        if (response?.data?.success === true) {
+          await setAsyncUserInfo(response?.data?.data);
+          if (request.onSuccess) request.onSuccess(response?.data?.data);
         } else {
           if (request.onFailure) request.onFailure(response.data);
         }

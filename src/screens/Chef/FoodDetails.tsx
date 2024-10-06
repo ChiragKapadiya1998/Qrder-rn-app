@@ -9,8 +9,8 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, { useEffect, useMemo, useState } from 'react';
-import { useNavigation, useTheme } from '@react-navigation/native';
+import React, {useEffect, useMemo, useState} from 'react';
+import {useNavigation, useTheme} from '@react-navigation/native';
 import {
   commonFontStyle,
   hp,
@@ -18,33 +18,36 @@ import {
   SCREEN_WIDTH,
   wp,
 } from '../../theme/fonts';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { strings } from '../../i18n/i18n';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import {strings} from '../../i18n/i18n';
 import HomeHeader from '../../compoment/HomeHeader';
 import Swiper from 'react-native-swiper';
-import { Icons } from '../../utils/images';
-import { useAppDispatch, useAppSelector } from '../../redux/hooks';
-import { screenName } from '../../navigation/screenNames';
+import {Icons} from '../../utils/images';
+import {useAppDispatch, useAppSelector} from '../../redux/hooks';
+import {screenName} from '../../navigation/screenNames';
 import PrimaryButton from '../../compoment/PrimaryButton';
-import { addCardAction, getCardAction, updateQuantityAction } from '../../actions/cardAction';
-import { errorToast, miscellData } from '../../utils/commonFunction';
+import {
+  addCardAction,
+  getCardAction,
+  updateQuantityAction,
+} from '../../actions/cardAction';
+import {errorToast, miscellData} from '../../utils/commonFunction';
 import Spacer from '../../compoment/Spacer';
 
-const FoodDetails = ({ route }) => {
-  const { itemData, showChef, showAddToCard } = route?.params;
-  const { colors } = useTheme();
+const FoodDetails = ({route}) => {
+  const {itemData, showChef, showAddToCard} = route?.params;
+  const {colors} = useTheme();
   const navigation = useNavigation();
   const dispatch = useAppDispatch();
-  const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
-  const { isDarkTheme } = useAppSelector(state => state.common);
+  const styles = React.useMemo(() => getGlobalStyles({colors}), [colors]);
+  const {isDarkTheme} = useAppSelector(state => state.common);
   const [basicDetails, setBasicDetails] = useState('');
-  const { name, price, cuisine_name, description, id, image } = itemData;
+  const {name, price, cuisine_name, description, id, image} = itemData;
   const [selectedItems, setSelectedItems] = useState([]);
-  const [foodDelivery, setFoodDelivery] = useState < string > ('');
+  const [foodDelivery, setFoodDelivery] = useState<string>('');
   const [quantity, setQuantity] = useState(1);
   const [totalPrice, setTotalPrice] = useState(price);
   const [activeButton, setActiveButton] = useState('increment');
-
 
   useEffect(() => {
     setTotalPrice(quantity * price);
@@ -65,43 +68,45 @@ const FoodDetails = ({ route }) => {
     }
   };
 
-
-  const toggleSelection = (list) => {
+  const toggleSelection = list => {
     if (selectedItems.some(item => item.id === list.id)) {
       setSelectedItems(prevSelected =>
         prevSelected.filter(item => item.id !== list.id),
       );
     } else {
-      setSelectedItems(prevSelected => [...prevSelected, { id: list.id, quantity: 1, price: list.price }]);
+      setSelectedItems(prevSelected => [
+        ...prevSelected,
+        {id: list.id, quantity: 1, price: list.price},
+      ]);
     }
   };
 
   const miscellPrices = useMemo(() => {
     return selectedItems.reduce((total, item) => {
-      return total + (parseFloat(item.price) * item.quantity);
+      return total + parseFloat(item.price) * item.quantity;
     }, 0);
   }, [selectedItems]);
 
   const onPressAddCard = () => {
     if (foodDelivery.trim().length === 0) {
-      errorToast(strings('foodDetails.e_food_customization'))
+      errorToast(strings('foodDetails.e_food_customization'));
     } else {
       let obj = {
         data: {
           menu_id: id,
           quantity: 1,
           description: foodDelivery,
-          miscellaneous_items: selectedItems
+          miscellaneous_items: selectedItems,
         },
         onSuccess: () => {
           let obj = {
-            onSuccess: () => { 
-              setFoodDelivery('')
-              setQuantity(1)
+            onSuccess: () => {
+              setFoodDelivery('');
+              setQuantity(1);
               setActiveButton('increment');
-              setSelectedItems([])
+              setSelectedItems([]);
             },
-            onFailure: () => { },
+            onFailure: () => {},
           };
           dispatch(getCardAction(obj));
         },
@@ -115,8 +120,10 @@ const FoodDetails = ({ route }) => {
     }
   };
 
-  const renderItem = ({ item }) => {
-    const isSelected = selectedItems.some(selectedItem => selectedItem.id === item.id);
+  const renderItem = ({item}) => {
+    const isSelected = selectedItems.some(
+      selectedItem => selectedItem.id === item.id,
+    );
     const selectColor = isSelected ? colors.text_orange : colors.title_dec100;
     return (
       <View style={styles.itemContainer}>
@@ -126,24 +133,24 @@ const FoodDetails = ({ route }) => {
           <View
             style={[
               styles.checkbox,
-              { backgroundColor: isSelected ? colors.blue : 'transparent' },
+              {backgroundColor: isSelected ? colors.blue : 'transparent'},
             ]}>
             {isSelected && (
               <Image source={Icons.ic_check} style={styles.ic_check} />
             )}
           </View>
-          <Text style={[styles.text1, { color: selectColor }]}>{item.name}</Text>
+          <Text style={[styles.text1, {color: selectColor}]}>{item.name}</Text>
         </TouchableOpacity>
         <Text
           style={[
             styles.priceTextStyle,
-            { color: selectColor },
+            {color: selectColor},
           ]}>{`₹${item.price}`}</Text>
       </View>
     );
   };
 
-  const total = miscellPrices + totalPrice
+  const total = miscellPrices + totalPrice;
   return (
     <View style={styles.container}>
       <StatusBar
@@ -161,31 +168,43 @@ const FoodDetails = ({ route }) => {
         mainShow={true}
         title={name || strings('foodDetails.food_Details')}
         extraStyle={styles.headerContainer}
-        isHideIcon={showAddToCard ? false : true}
+        isHideIcon={!showChef && !showAddToCard ? false : true}
       />
       <KeyboardAwareScrollView
         keyboardShouldPersistTaps={'handled'}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.contentContainerStyle}>
-        <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-          <Image source={{ uri: image }} style={styles.imageStyle} />
+        <View style={{alignItems: 'center', justifyContent: 'center'}}>
+          <Image source={{uri: image}} style={styles.imageStyle} />
         </View>
         <View style={styles.headingView}>
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <Text style={styles.foodText}>{name}</Text>
             {/* <View style={styles.rateView}>
               <Image source={Icons.star} style={styles.starStyle} />
               <Text style={styles.rateText}>4.9</Text>
             </View> */}
           </View>
-          {cuisine_name ? <Text style={styles.leftText}>{cuisine_name}</Text> : ''}
+          {cuisine_name ? (
+            <Text style={styles.leftText}>{cuisine_name}</Text>
+          ) : (
+            ''
+          )}
           <Text style={styles.priceText}>{`₹${totalPrice}`}</Text>
           {showAddToCard ? (
             <View style={styles.addItemView}>
               <TouchableOpacity onPress={decrementQuantity}>
                 <Image
                   source={Icons.decrementIcon}
-                  style={[styles.decrementIcons, { tintColor: activeButton === 'decrement' ? colors.text_orange : colors.title_dec100 }]}
+                  style={[
+                    styles.decrementIcons,
+                    {
+                      tintColor:
+                        activeButton === 'decrement'
+                          ? colors.text_orange
+                          : colors.title_dec100,
+                    },
+                  ]}
                 />
               </TouchableOpacity>
 
@@ -193,7 +212,15 @@ const FoodDetails = ({ route }) => {
               <TouchableOpacity onPress={incrementQuantity}>
                 <Image
                   source={Icons.incrementIcon}
-                  style={[styles.decrementIcons, { tintColor: activeButton === 'increment' ? colors.text_orange : colors.title_dec100 }]}
+                  style={[
+                    styles.decrementIcons,
+                    {
+                      tintColor:
+                        activeButton === 'increment'
+                          ? colors.text_orange
+                          : colors.title_dec100,
+                    },
+                  ]}
                 />
               </TouchableOpacity>
             </View>
@@ -247,15 +274,16 @@ const FoodDetails = ({ route }) => {
         <Text style={styles.miscellText}>
           {strings('addFoodList.Miscellaneousitems')}
         </Text>
-        {itemData?.miscellaneous_items ?
+        {itemData?.miscellaneous_items ? (
           <FlatList
             data={itemData?.miscellaneous_items}
             renderItem={renderItem}
-            contentContainerStyle={{ gap: 10 }}
+            contentContainerStyle={{gap: 10}}
             keyExtractor={item => item.id}
-          /> : null}
+          />
+        ) : null}
 
-        {!showAddToCard && (
+        {!showChef && !showAddToCard && (
           <>
             <Text style={styles.foodReviewText}>
               {strings('addFoodList.food_review')}
@@ -324,7 +352,7 @@ const FoodDetails = ({ route }) => {
 export default FoodDetails;
 
 const getGlobalStyles = (props: any) => {
-  const { colors } = props;
+  const {colors} = props;
   return StyleSheet.create({
     container: {
       flex: 1,
@@ -533,7 +561,7 @@ const getGlobalStyles = (props: any) => {
       justifyContent: 'space-between',
       backgroundColor: colors.cards_bg,
       shadowColor: '#000',
-      shadowOffset: { width: 0, height: 2 },
+      shadowOffset: {width: 0, height: 2},
       shadowOpacity: 0.5,
       shadowRadius: 4,
       elevation: 15,

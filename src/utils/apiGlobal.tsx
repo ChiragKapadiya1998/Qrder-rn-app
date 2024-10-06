@@ -1,9 +1,9 @@
-import axios from "axios";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { api } from "./apiConstants";
-import { clearAsync } from "./asyncStorageManager";
-import { navigationRef } from "../navigation/mainNavigator";
-import { screenName } from "../navigation/screenNames";
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {api} from './apiConstants';
+import {clearAsync} from './asyncStorageManager';
+import {navigationRef} from '../navigation/mainNavigator';
+import {screenName} from '../navigation/screenNames';
 
 interface makeAPIRequestProps {
   method?: any;
@@ -11,7 +11,7 @@ interface makeAPIRequestProps {
   data?: any;
   headers?: any;
   params?: any;
-  isBaseUrl?: any
+  isBaseUrl?: any;
 }
 
 export const makeAPIRequest = ({
@@ -20,7 +20,7 @@ export const makeAPIRequest = ({
   data,
   headers,
   params,
-  isBaseUrl
+  isBaseUrl,
 }: makeAPIRequestProps) =>
   new Promise((resolve, reject) => {
     const option = {
@@ -31,10 +31,10 @@ export const makeAPIRequest = ({
       headers,
       params,
     };
-    console.log("option", option);
+    console.log('option', option);
 
     axios(option)
-      .then((response) => {
+      .then(response => {
         // console.log("response-->", response);
         if (response.status === 200 || response.status === 201) {
           resolve(response);
@@ -42,14 +42,14 @@ export const makeAPIRequest = ({
           reject(response);
         }
       })
-      .catch((error) => {
-        console.log("error?.response?", error);
+      .catch(error => {
+        console.log('error?.response?', error);
         if (error?.response?.status === 401) {
           clearAsync();
           // errorToast(error?.response?.data?.message);
           navigationRef?.current?.reset({
             index: 1,
-            routes: [{ name: screenName.LoginSignupScreen }],
+            routes: [{name: screenName.LoginSignupScreen}],
           });
         } else {
           // infoToast("Something went wrong, please try again.");

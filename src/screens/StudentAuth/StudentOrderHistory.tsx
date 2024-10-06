@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Alert,
   FlatList,
@@ -11,26 +11,30 @@ import {
   View,
 } from 'react-native';
 
-import { useNavigation, useTheme } from '@react-navigation/native';
-import { strings } from '../../i18n/i18n';
-import { commonFontStyle, hp, wp } from '../../theme/fonts';
-import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import {useNavigation, useTheme} from '@react-navigation/native';
+import {strings} from '../../i18n/i18n';
+import {commonFontStyle, hp, wp} from '../../theme/fonts';
+import {useAppDispatch, useAppSelector} from '../../redux/hooks';
 import HomeHeader from '../../compoment/HomeHeader';
-import { Icons } from '../../utils/images';
+import {Icons} from '../../utils/images';
 import HomeDropDown from '../../compoment/HomeDropDown';
-import { allStudentOrderFilterAction, getAllStudentOrder } from '../../actions/allOrdersAction';
-import { formatDate, formatDateToDDMMYYYY } from '../../utils/globalFunctions';
-import { getAsyncRole } from '../../utils/asyncStorageManager';
+import {
+  allStudentOrderFilterAction,
+  getAllStudentOrder,
+} from '../../actions/allOrdersAction';
+import {formatDate, formatDateToDDMMYYYY} from '../../utils/globalFunctions';
+import {getAsyncRole} from '../../utils/asyncStorageManager';
 import DatePicker from 'react-native-date-picker';
-import { errorToast } from '../../utils/commonFunction';
+import {errorToast} from '../../utils/commonFunction';
+import NoDataFound from '../../compoment/NoDataFound';
 
 const StudentOrderHistory = () => {
-  const { colors } = useTheme();
+  const {colors} = useTheme();
   const navigation = useNavigation();
   const dispatch = useAppDispatch();
-  const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
-  const { isDarkTheme } = useAppSelector(state => state.common);
-  const { allStudentOrderHistory } = useAppSelector(state => state.orders);
+  const styles = React.useMemo(() => getGlobalStyles({colors}), [colors]);
+  const {isDarkTheme} = useAppSelector(state => state.common);
+  const {allStudentOrderHistory} = useAppSelector(state => state.orders);
   const [isRole, setIsRole] = useState('');
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
@@ -38,47 +42,51 @@ const StudentOrderHistory = () => {
   const [isSelectingStartDate, setIsSelectingStartDate] = useState(true);
 
   useEffect(() => {
-    getAllOrdersHistory()
-    getUserInfo()
-  }, [])
+    getAllOrdersHistory();
+    getUserInfo();
+  }, []);
 
   const getAllOrdersHistory = () => {
     let obj = {
-      onSuccess: () => { },
-      onFailure: () => { },
+      onSuccess: () => {},
+      onFailure: () => {},
     };
     dispatch(getAllStudentOrder(obj));
   };
 
-  const getAllOrdersFilter = (data) => {
+  const getAllOrdersFilter = data => {
     let obj = {
-      params: { start_date: formatDateToDDMMYYYY(startDate), end_date: formatDateToDDMMYYYY(data) },
-      onSuccess: () => { },
-      onFailure: () => { },
+      params: {
+        start_date: formatDateToDDMMYYYY(startDate),
+        end_date: formatDateToDDMMYYYY(data),
+      },
+      onSuccess: () => {},
+      onFailure: () => {},
     };
     dispatch(allStudentOrderFilterAction(obj));
   };
 
   const getUserInfo = async () => {
     let isRole = await getAsyncRole();
-    setIsRole(isRole)
+    setIsRole(isRole);
   };
 
-  const handleDatePickerOpen = (isStartDate) => {
+  const handleDatePickerOpen = isStartDate => {
     setIsSelectingStartDate(isStartDate);
     setIsDatePickerVisible(true);
   };
 
-  const handleDateConfirm = (selectedDate) => {
+  const handleDateConfirm = selectedDate => {
     if (isSelectingStartDate) {
       setStartDate(selectedDate);
     } else {
       if (!startDate) {
-        Alert.alert(
-          'error',
-          strings('orderModal.e_start_data'),
-          [{ text: strings('orderModal.ok'), onPress: () => setIsDatePickerVisible(false) }]
-        );
+        Alert.alert('error', strings('orderModal.e_start_data'), [
+          {
+            text: strings('orderModal.ok'),
+            onPress: () => setIsDatePickerVisible(false),
+          },
+        ]);
         return;
       }
 
@@ -87,22 +95,27 @@ const StudentOrderHistory = () => {
     }
     setIsDatePickerVisible(false);
   };
-  const onCancelBtn = () => { };
+  const onCancelBtn = () => {};
 
-  const renderItem = ({ item, index }) => {
+  const renderItem = ({item, index}) => {
     const formattedDate = formatDate(item.created_at);
     return (
       <View style={styles.listContainer}>
-        <View style={{ flexDirection: 'row' }}>
+        <View style={{flexDirection: 'row'}}>
           <View style={styles.imageView}>
             <Text style={styles.imageText}>#{index + 1}</Text>
           </View>
 
           <View style={styles.rightContainer}>
-            <Text numberOfLines={1} style={styles.breakText}>{`${strings('orderModal.invoice_id')} : ${item.order_id}`}</Text>
+            <Text numberOfLines={1} style={styles.breakText}>{`${strings(
+              'orderModal.invoice_id',
+            )} : ${item.order_id}`}</Text>
             <Text style={styles.titleStyle}>{item.name}</Text>
-            {item.table_number !== null ?
-              <Text style={styles.idText}>{`${strings('orderModal.table_no')} : ${item.table_number}`}</Text> : null}
+            {item.table_number !== null ? (
+              <Text style={styles.idText}>{`${strings(
+                'orderModal.table_no',
+              )} : ${item.table_number}`}</Text>
+            ) : null}
             <View style={styles.priceView}>
               <Text style={styles.priceText}>{`₹${item.total}`}</Text>
               <Text style={styles.dateText}>{formattedDate}</Text>
@@ -110,30 +123,40 @@ const StudentOrderHistory = () => {
           </View>
 
           <TouchableOpacity style={styles.diningView}>
-            <Text style={styles.diningText}>{item.order_type === 1 ? strings('orderModal.dining') : strings('orderModal.parcel')}</Text>
+            <Text style={styles.diningText}>
+              {item.order_type === 1
+                ? strings('orderModal.dining')
+                : strings('orderModal.parcel')}
+            </Text>
           </TouchableOpacity>
         </View>
-        {isRole === 'Admin' || isRole === 'Staff' ? null :
+        {isRole === 'Admin' || isRole === 'Staff' ? null : (
           <View style={styles.btnContainer}>
             <TouchableOpacity onPress={onCancelBtn} style={styles.cancelBtn}>
               <Image style={styles.invoiveIcon} source={Icons.invoiceIcon} />
-              <Text style={styles.cancelText}>{strings('profileScreen.download_invoice')}</Text>
+              <Text style={styles.cancelText}>
+                {strings('profileScreen.download_invoice')}
+              </Text>
             </TouchableOpacity>
-          </View>}
+          </View>
+        )}
       </View>
-    )
-  }
+    );
+  };
 
   return (
     <View style={styles.container}>
-      <StatusBar barStyle={isDarkTheme ? 'light-content' : 'dark-content'} backgroundColor={colors.white} />
+      <StatusBar
+        barStyle={isDarkTheme ? 'light-content' : 'dark-content'}
+        backgroundColor={colors.white}
+      />
       <HomeHeader
         onBackPress={() => navigation.goBack()}
         mainShow={true}
         onRightPress={() => {
-          getAllOrdersHistory()
-          setStartDate(null)
-          setEndDate(null)
+          getAllOrdersHistory();
+          setStartDate(null);
+          setEndDate(null);
         }}
         title={strings('profileScreen.order_history')}
         isShowIcon={false}
@@ -146,15 +169,22 @@ const StudentOrderHistory = () => {
       />
       <View style={styles.headerView}>
         <View style={styles.datePickerContainer}>
-
-          <TouchableOpacity onPress={() => handleDatePickerOpen(true)} style={styles.dateButton}>
+          <TouchableOpacity
+            onPress={() => handleDatePickerOpen(true)}
+            style={styles.dateButton}>
             <Text style={styles.dateText}>
-              {startDate ? `${formatDateToDDMMYYYY(startDate)}` : strings('orderModal.start_date')}
+              {startDate
+                ? `${formatDateToDDMMYYYY(startDate)}`
+                : strings('orderModal.start_date')}
             </Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => handleDatePickerOpen(false)} style={styles.dateButton}>
+          <TouchableOpacity
+            onPress={() => handleDatePickerOpen(false)}
+            style={styles.dateButton}>
             <Text style={styles.dateText}>
-              {endDate ? `${formatDateToDDMMYYYY(endDate)}` : strings('orderModal.end_date')}
+              {endDate
+                ? `${formatDateToDDMMYYYY(endDate)}`
+                : strings('orderModal.end_date')}
             </Text>
           </TouchableOpacity>
         </View>
@@ -166,16 +196,23 @@ const StudentOrderHistory = () => {
           showsVerticalScrollIndicator={false}
           ListEmptyComponent={<NoDataFound />}
           ListFooterComponent={() => {
-            return <View style={{ height: 100 }} />;
+            return <View style={{height: 100}} />;
           }}
         />
       </View>
-      <Modal transparent={true} visible={isDatePickerVisible} animationType="slide">
+      <Modal
+        transparent={true}
+        visible={isDatePickerVisible}
+        animationType="slide">
         <View style={styles.modalContainer}>
           <DatePicker
             modal
             open={isDatePickerVisible}
-            date={isSelectingStartDate ? (startDate || new Date()) : (endDate || new Date())}
+            date={
+              isSelectingStartDate
+                ? startDate || new Date()
+                : endDate || new Date()
+            }
             onConfirm={handleDateConfirm}
             onCancel={() => setIsDatePickerVisible(false)}
             mode="date"
@@ -187,7 +224,7 @@ const StudentOrderHistory = () => {
 };
 
 const getGlobalStyles = (props: any) => {
-  const { colors } = props;
+  const {colors} = props;
 
   return StyleSheet.create({
     container: {

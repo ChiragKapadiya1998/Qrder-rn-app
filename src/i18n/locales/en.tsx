@@ -297,6 +297,7 @@ export default {
     salary: 'Salary',
     p_salary: 'Please Enter Salary',
     create_chef: 'Create Chef',
+    Cuisine: 'Cuisine',
   },
   PersonalInfo: {
     personal_Info: 'Personal Info',

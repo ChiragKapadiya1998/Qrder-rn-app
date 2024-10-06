@@ -44,6 +44,7 @@ export const Icons = {
   crmIcon: require('../assets/Icons/crmIcon.png'),
   settingsIcon: require('../assets/Icons/settings_icon.png'),
   logout: require('../assets/Icons/logout_icon.png'),
+  ic_log: require('../assets/Icons/ic_log.png'),
   optionIcon: require('../assets/Icons/optionIcon.png'),
   checkIcon: require('../assets/Icons/checkIcon.png'),
   close: require('../assets/Icons/close.png'),

@@ -1,52 +1,62 @@
-import { StatusBar, StyleSheet, Text, View } from 'react-native';
-import React, { useEffect, useState } from 'react';
-import { useNavigation, useTheme } from '@react-navigation/native';
-import { commonFontStyle, hp, wp } from '../../theme/fonts';
+import {StatusBar, StyleSheet, Text, View} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {useNavigation, useTheme} from '@react-navigation/native';
+import {commonFontStyle, hp, wp} from '../../theme/fonts';
 import PrimaryButton from '../../compoment/PrimaryButton';
-import { screenName } from '../../navigation/screenNames';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import {screenName} from '../../navigation/screenNames';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import LoginHeader from '../../compoment/LoginHeader';
-import { strings } from '../../i18n/i18n';
+import {strings} from '../../i18n/i18n';
 import CCDropDown from '../../compoment/CCDropDown';
-import { DropDownData, DropDownDatas, errorToast } from '../../utils/commonFunction';
-import { useAppDispatch, useAppSelector } from '../../redux/hooks';
-import { getUniversitiesDataAction, getUniversityDataAction, selectRoleAction } from '../../actions/commonAction';
+import {
+  DropDownData,
+  DropDownDatas,
+  errorToast,
+} from '../../utils/commonFunction';
+import {useAppDispatch, useAppSelector} from '../../redux/hooks';
+import {
+  getUniversitiesDataAction,
+  getUniversityDataAction,
+  selectRoleAction,
+} from '../../actions/commonAction';
+import {universityUpdateAction} from '../../actions/authAction';
+import {dispatchNavigation} from '../../utils/globalFunctions';
 
 type Props = {};
 
 const StudentSelect = (props: Props) => {
-  const { colors, isDark } = useTheme();
+  const {colors, isDark} = useTheme();
   const navigation = useNavigation();
   const dispatch = useAppDispatch();
-  const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
+  const styles = React.useMemo(() => getGlobalStyles({colors}), [colors]);
   const [selectUniversity, setSelectUniversity] = useState('');
-  const { getUniversitiesData } = useAppSelector(state => state.data);
+  const {getUniversitiesData} = useAppSelector(state => state.data);
 
   const onPressSelect = () => {
     if (selectUniversity == '') {
       errorToast(strings('StudentSignUp.error_university'));
     } else {
+      let data = new FormData();
+      data.append('university_id', selectUniversity);
       let obj = {
-        params: selectUniversity,
+        data,
         onSuccess: (res: any) => {
-          navigation.navigate(screenName.StudentBottomBar)
+          dispatchNavigation(screenName.StudentBottomBar);
         },
-        onFailure: (Err: any) => { },
+        onFailure: (Err: any) => {},
       };
-      dispatch(getUniversityDataAction(obj));
+      dispatch(universityUpdateAction(obj));
     }
-
   };
 
-
   useEffect(() => {
-    getUniversitiesDataPress()
+    getUniversitiesDataPress();
   }, []);
 
   const getUniversitiesDataPress = () => {
     let obj = {
-      onSuccess: (res: any) => { },
-      onFailure: (Err: any) => { },
+      onSuccess: (res: any) => {},
+      onFailure: (Err: any) => {},
     };
     dispatch(getUniversitiesDataAction(obj));
   };
@@ -60,8 +70,10 @@ const StudentSelect = (props: Props) => {
       <KeyboardAwareScrollView
         keyboardShouldPersistTaps={'handled'}
         contentContainerStyle={styles.contentContainerStyle}>
-          <Text style={styles.selectText}>{strings('StudentSignUp.select_university')}</Text>
-          <Text style={styles.desText}>{strings('sign_up.sign_dec')}</Text>
+        <Text style={styles.selectText}>
+          {strings('StudentSignUp.select_university')}
+        </Text>
+        <Text style={styles.desText}>{strings('sign_up.sign_dec')}</Text>
         <CCDropDown
           data={getUniversitiesData}
           label={strings('StudentSignUp.university_name')}
@@ -87,17 +99,16 @@ const StudentSelect = (props: Props) => {
 export default StudentSelect;
 
 const getGlobalStyles = (props: any) => {
-  const { colors } = props;
+  const {colors} = props;
   return StyleSheet.create({
     container: {
       flex: 1,
       backgroundColor: colors.bg_white,
-
     },
     contentContainerStyle: {
       flex: 1,
       paddingHorizontal: wp(20),
-      justifyContent: 'center'
+      justifyContent: 'center',
     },
     dropDownStyle: {
       borderColor: colors.input_border,
@@ -107,13 +118,13 @@ const getGlobalStyles = (props: any) => {
       paddingHorizontal: wp(25),
       marginTop: hp(20),
     },
-    selectText:{
+    selectText: {
       ...commonFontStyle(800, 20, colors.black),
-      textAlign:'center'
+      textAlign: 'center',
     },
-    desText:{
+    desText: {
       ...commonFontStyle(400, 14, colors.text_gray),
-      textAlign:'center'
+      textAlign: 'center',
     },
     otherStyle: {
       marginTop: hp(8),

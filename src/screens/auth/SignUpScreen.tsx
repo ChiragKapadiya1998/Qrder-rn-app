@@ -1,5 +1,6 @@
 import {
   Alert,
+  Image,
   ScrollView,
   StatusBar,
   StyleSheet,
@@ -9,7 +10,7 @@ import {
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useNavigation, useTheme} from '@react-navigation/native';
-import {commonFontStyle, hp, wp} from '../../theme/fonts';
+import {commonFontStyle, hp, isIos, wp} from '../../theme/fonts';
 import Input from '../../compoment/Input';
 import PrimaryButton from '../../compoment/PrimaryButton';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
@@ -29,6 +30,7 @@ import {
 import {dispatchNavigation} from '../../utils/globalFunctions';
 import {
   canteenRegisterSignUp,
+  googleEmailAction,
   studentUserSignUp,
   userSignUp,
 } from '../../actions/authAction';
@@ -41,7 +43,12 @@ import {
 import debounce from 'lodash/debounce';
 import CCDropDown from '../../compoment/CCDropDown';
 import {setAsyncRole} from '../../utils/asyncStorageManager';
-
+import {
+  GoogleSignin,
+  statusCodes,
+} from '@react-native-google-signin/google-signin';
+import {Icons} from '../../utils/images';
+import {GOOGLE_WEB_CLINET_ID} from '../../utils/apiConstants';
 type Props = {};
 
 const SignUpScreen = (props: Props) => {
@@ -389,6 +396,59 @@ const SignUpScreen = (props: Props) => {
     // setFilteredData(filteredData);
   };
 
+  const googlesignIn = async () => {
+    GoogleSignin.configure({
+      webClientId: GOOGLE_WEB_CLINET_ID,
+      offlineAccess: false,
+    });
+    try {
+      let user = await GoogleSignin.getCurrentUser();
+      console.log(user);
+      if (user !== null && Object.keys(user).length !== 0) {
+        await GoogleSignin.revokeAccess();
+        await GoogleSignin.signOut();
+      }
+      await GoogleSignin.hasPlayServices();
+      const userInfo = await GoogleSignin.signIn();
+      console.log('GoogleSignin userInfo', userInfo);
+
+      let googleUser = {
+        ...userInfo,
+        user: {
+          ...userInfo.user,
+          role: selectRole.toLowerCase(),
+        },
+      };
+      let userObj = {
+        data: googleUser,
+        onSuccess: async res => {
+          await setAsyncRole(selectRole);
+          if (res?.university_id) {
+            dispatchNavigation(screenName.StudentBottomBar);
+          } else {
+            dispatchNavigation(screenName.StudentSelect);
+          }
+        },
+        onFailure: (Err: any) => {
+          if (Err != undefined) {
+            errorToast(Err?.message);
+          }
+        },
+      };
+      dispatch(googleEmailAction(userObj));
+    } catch (error: any) {
+      if (error?.code === statusCodes?.SIGN_IN_CANCELLED) {
+        errorToast(strings('googleSignIn.user_cancelled'));
+      } else if (error?.code === statusCodes?.IN_PROGRESS) {
+        errorToast(strings('googleSignIn.error_text'));
+      } else if (error?.code === statusCodes?.PLAY_SERVICES_NOT_AVAILABLE) {
+        errorToast(strings('googleSignIn.play_services'));
+      } else {
+        errorToast(strings('googleSignIn.something_went'));
+      }
+    }
+  };
+
   return (
     <View style={styles.container}>
       <StatusBar
@@ -643,6 +703,25 @@ const SignUpScreen = (props: Props) => {
             }}
             title={strings('sign_up.sign_up')}
           />
+          {selectRole == 'Student' ? (
+            <Text style={styles.orContinueText}>{strings('login.or')}</Text>
+          ) : null}
+          {selectRole == 'Student' ? (
+            <View>
+              <TouchableOpacity onPress={googlesignIn} style={styles.roundView}>
+                <Image style={styles.twitterIcon} source={Icons.google} />
+                <Text style={styles.googleText}>{strings('login.google')}</Text>
+              </TouchableOpacity>
+              {isIos && (
+                <TouchableOpacity style={[styles.roundView]}>
+                  <Image style={styles.appleIcon} source={Icons.apple} />
+                  <Text style={styles.googleText}>
+                    {strings('login.apple')}
+                  </Text>
+                </TouchableOpacity>
+              )}
+            </View>
+          ) : null}
           <Spacer height={20} />
         </KeyboardAwareScrollView>
       </View>
@@ -722,6 +801,41 @@ const getGlobalStyles = (props: any) => {
     },
     extraDropStyle: {
       marginTop: hp(12),
+    },
+    roundView: {
+      height: wp(48),
+      borderRadius: wp(60) / 2,
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginTop: hp(12),
+      backgroundColor: colors.defult_white,
+      borderWidth: 1,
+      flexDirection: 'row',
+      borderColor: colors.input_border1,
+    },
+    facebookIcon: {
+      height: hp(18),
+      width: wp(9),
+      resizeMode: 'contain',
+    },
+    twitterIcon: {
+      height: wp(18),
+      width: wp(17),
+      resizeMode: 'contain',
+    },
+    googleText: {
+      ...commonFontStyle(700, 15, colors.text_gray),
+      paddingLeft: wp(10),
+    },
+    appleIcon: {
+      height: hp(18),
+      width: wp(14),
+      resizeMode: 'contain',
+    },
+    orContinueText: {
+      ...commonFontStyle(400, 14, colors.title_dec),
+      marginTop: hp(12),
+      textAlign: 'center',
     },
   });
 };

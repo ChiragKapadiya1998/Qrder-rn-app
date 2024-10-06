@@ -64,6 +64,7 @@ const Input = ({
   setShowListView,
   searchData,
   isShowLabel = false,
+  editable,
   ...rest
 }: Props) => {
   const {colors} = useTheme();
@@ -107,6 +108,7 @@ const Input = ({
           maxLength={maxLength}
           keyboardType={keyboardType}
           onFocus={onFocus}
+          editable={editable}
         />
         {isShowEyeIcon ? (
           <TouchableOpacity onPress={onPressEye}>

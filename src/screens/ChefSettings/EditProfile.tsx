@@ -22,6 +22,7 @@ import {updateLocale} from 'moment';
 import {updateProfile} from '../../actions/authAction';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import Spacer from '../../compoment/Spacer';
+import {openImagePicker} from '../../utils/globalFunctions';
 
 type Props = {};
 
@@ -45,23 +46,33 @@ const EditProfile = (props: Props) => {
   const [address, setAddress] = useState<string>(userData.address);
   const [photoUri, setPhotoUri] = useState(userData.profile_image);
   const [loading, setLoading] = useState(false);
-  console.log('userData', userData);
-  console.log('userData', userData?.role);
+  const {getCuisines} = useAppSelector(state => state.data);
+  const [quantityValue, setQuantityValue] = useState(
+    getCuisines?.filter(item => item?.id == userData.cuisine_id)?.[0]?.name,
+  );
+
+  const [imageData, setImageData] = useState<any>({
+    uri: userData.profile_image ? userData.profile_image : '',
+  });
+  const [isPictureEdit, setIsPictureEdit] = useState<boolean>(
+    userData.profile_image ? true : false,
+  );
+
+  const [salary, setSalary] = useState(userData?.salary.toString());
+
+  console.log(
+    'userDatadasda',
+    getCuisines?.filter(item => item?.id == userData.cuisine_id)?.[0]?.name,
+  );
 
   const selectImage = () => {
-    ImageCropPicker.openPicker({
-      width: 100,
-      height: 100,
-      cropping: true,
-    })
-      .then(image => {
-        setPhotoUri(image.path);
-        setLoading(false);
-      })
-      .catch(error => {
-        console.log(error);
-        setLoading(false);
-      });
+    openImagePicker({
+      onSucess: res => {
+        console.log('res', res);
+        setImageData(res);
+        setIsPictureEdit(true);
+      },
+    });
   };
 
   const onPressStudentEditDone = () => {
@@ -83,13 +94,17 @@ const EditProfile = (props: Props) => {
       data.append('last_name', lastName);
       data.append('email', emails);
       data.append('number', numbers);
+      if (imageData?.uri !== userData.profile_image) {
+        data.append('file', {
+          uri: imageData?.uri,
+          type: imageData?.mime,
+          name: imageData?.name,
+        });
+      }
       let obj = {
         data,
         onSuccess: (response: any) => {
           navigation.goBack();
-          setEmail('');
-          setName('');
-          setNumber('');
         },
         onFailure: (Err: any) => {
           if (Err != undefined) {
@@ -126,11 +141,13 @@ const EditProfile = (props: Props) => {
       data.append('number', numbers);
       //   data.append('restaurant_name', restaurant);
       data.append('address', address);
-      data.append('image', {
-        uri: photoUri?.uri,
-        type: photoUri?.mime,
-        name: photoUri?.name,
-      });
+      if (imageData?.uri !== userData.profile_image) {
+        data.append('profile_image', {
+          uri: imageData?.uri,
+          type: imageData?.mime,
+          name: imageData?.name,
+        });
+      }
       let obj = {
         data,
         onSuccess: (response: any) => {
@@ -174,10 +191,23 @@ const EditProfile = (props: Props) => {
         <View style={styles.subContainer}>
           <View style={styles.profileContainer}>
             <View>
-              <Image
-                source={photoUri ? {uri: photoUri} : Icons.profileImage}
-                style={styles.profilImage}
-              />
+              {imageData?.uri ? (
+                <View style={styles.profilImage}>
+                  <Image
+                    source={{uri: imageData?.uri}}
+                    style={styles.profilImage}
+                  />
+                </View>
+              ) : (
+                <Image
+                  source={Icons.profileImage}
+                  style={[
+                    styles.profilImage,
+                    {backgroundColor: colors.bg_orange200},
+                  ]}
+                />
+              )}
+
               {userData.role !== 'staff' ? (
                 <TouchableOpacity
                   activeOpacity={0.9}
@@ -199,6 +229,7 @@ const EditProfile = (props: Props) => {
               onChangeText={(t: string) => setName(t)}
               isShowLabel={true}
               inputStyle={styles.inputStyle}
+              editable={userData.role == 'staff' ? false : true}
             />
             {userData.role !== 'staff' ? (
               <Input
@@ -236,7 +267,19 @@ const EditProfile = (props: Props) => {
               onChangeText={(t: string) => setEmail(t)}
               isShowLabel={true}
               inputStyle={styles.inputStyle}
+              editable={userData.role == 'staff' ? false : true}
             />
+            {userData.role == 'staff' ? (
+              <Input
+                value={quantityValue}
+                placeholder={strings('chefSignUp.Cuisine')}
+                label={strings('chefSignUp.Cuisine')}
+                onChangeText={(t: string) => setLastName(t)}
+                isShowLabel={true}
+                inputStyle={styles.inputStyle}
+                editable={false}
+              />
+            ) : null}
             <Input
               value={numbers}
               placeholder={strings('sign_up.p_enter_phone')}
@@ -246,7 +289,20 @@ const EditProfile = (props: Props) => {
               maxLength={10}
               isShowLabel={true}
               inputStyle={styles.inputStyle}
+              editable={userData.role == 'staff' ? false : true}
             />
+
+            {userData.role == 'staff' ? (
+              <Input
+                value={salary}
+                placeholder={strings('chefSignUp.p_salary')}
+                label={strings('chefSignUp.salary')}
+                onChangeText={(t: string) => setLastName(t)}
+                isShowLabel={true}
+                inputStyle={styles.inputStyle}
+                editable={false}
+              />
+            ) : null}
             {userData.role === 'student' || userData.role === 'staff' ? null : (
               <Input
                 value={address}
@@ -255,6 +311,7 @@ const EditProfile = (props: Props) => {
                 onChangeText={(t: string) => setAddress(t)}
                 isShowLabel={true}
                 inputStyle={styles.inputStyle}
+                editable={false}
               />
             )}
           </View>
@@ -309,7 +366,6 @@ const getGlobalStyles = (props: any) => {
       borderRadius: wp(99),
       borderColor: colors.text_orange,
       borderWidth: 1,
-      backgroundColor: colors.bg_orange200,
     },
     editImage: {
       width: wp(30),

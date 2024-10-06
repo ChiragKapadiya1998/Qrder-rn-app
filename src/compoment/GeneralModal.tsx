@@ -109,7 +109,7 @@ const GeneralModal = ({
             {isShowLogOut && (
               <>
                 <View style={styles.logoIcon}>
-                  <Image source={Icons.logotLogo} style={styles.logoutIcon} />
+                  <Image source={Icons.ic_log} style={styles.logoutIcon} />
                   <Text style={styles.logoutText}>
                     {strings('profileScreen.log_out')}
                   </Text>

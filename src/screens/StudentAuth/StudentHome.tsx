@@ -7,37 +7,38 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, { useEffect, useState } from 'react';
-import { useIsFocused, useNavigation, useTheme } from '@react-navigation/native';
-import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import React, {useEffect, useState} from 'react';
+import {useIsFocused, useNavigation, useTheme} from '@react-navigation/native';
+import {useAppDispatch, useAppSelector} from '../../redux/hooks';
 import HomeHeader from '../../compoment/HomeHeader';
-import { strings } from '../../i18n/i18n';
-import { commonFontStyle, hp, SCREEN_WIDTH, wp } from '../../theme/fonts';
+import {strings} from '../../i18n/i18n';
+import {commonFontStyle, hp, SCREEN_WIDTH, wp} from '../../theme/fonts';
 import Spacer from '../../compoment/Spacer';
 import NoDataFound from '../../compoment/NoDataFound';
-import { screenName } from '../../navigation/screenNames';
-import { getCardAction } from '../../actions/cardAction';
+import {screenName} from '../../navigation/screenNames';
+import {getCardAction} from '../../actions/cardAction';
 import CardView from '../../compoment/CardView';
-import { getUniversityDataAction } from '../../actions/commonAction';
-import { getAsyncUserInfo } from '../../utils/asyncStorageManager';
-import { Icons } from '../../utils/images';
+import {getUniversityDataAction} from '../../actions/commonAction';
+import {getAsyncUserInfo} from '../../utils/asyncStorageManager';
+import {Icons} from '../../utils/images';
+import {getUserAction} from '../../actions/authAction';
 
 const StudentHome = () => {
-  const { colors } = useTheme();
+  const {colors} = useTheme();
   const navigation = useNavigation();
   const isFocuse = useIsFocused();
-  const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
-  const { isDarkTheme } = useAppSelector(state => state.common);
-  const { getUniversityCanteenData } = useAppSelector(state => state.data);
+  const styles = React.useMemo(() => getGlobalStyles({colors}), [colors]);
+  const {isDarkTheme} = useAppSelector(state => state.common);
+  const {getUniversityCanteenData} = useAppSelector(state => state.data);
   const dispatch = useAppDispatch();
-  const [selectedItems, setSelectedItems] = useState < any[] > ([]);
+  const [selectedItems, setSelectedItems] = useState<any[]>([]);
 
   const handlePress = (item: any, isCheckbox: boolean) => {
     if (isCheckbox) {
       onSelectCheckbox(item);
       setTimeout(() => {
         onPressCanteen(item);
-      }, 500)
+      }, 500);
     } else {
       onPressCanteen(item);
     }
@@ -60,32 +61,48 @@ const StudentHome = () => {
 
   useEffect(() => {
     getCardDatas();
+    onGetDataProfile();
     onGetData();
     if (isFocuse) {
       setSelectedItems([]);
     }
   }, [isFocuse]);
 
+  const onGetDataProfile = async () => {
+    let obj = {
+      onSuccess: (res: any) => {
+        let obj = {
+          params: res.university_id,
+          onSuccess: (res: any) => {},
+          onFailure: (Err: any) => {},
+        };
+        dispatch(getUniversityDataAction(obj));
+      },
+      onFailure: (Err: any) => {},
+    };
+    dispatch(getUserAction(obj));
+  };
+
   const onGetData = async () => {
     const userDetails = await getAsyncUserInfo();
     console.log('userDetails', userDetails.university_id);
     let obj = {
       params: userDetails.university_id,
-      onSuccess: (res: any) => { },
-      onFailure: (Err: any) => { },
+      onSuccess: (res: any) => {},
+      onFailure: (Err: any) => {},
     };
     dispatch(getUniversityDataAction(obj));
   };
 
   const getCardDatas = () => {
     let obj = {
-      onSuccess: () => { },
-      onFailure: () => { },
+      onSuccess: () => {},
+      onFailure: () => {},
     };
     dispatch(getCardAction(obj));
   };
 
-  const renderItem = ({ item, index }) => {
+  const renderItem = ({item, index}) => {
     const isLastItem = index === getUniversityCanteenData.length - 1;
     const isSelected = selectedItems.includes(item.id);
     return (
@@ -95,7 +112,7 @@ const StudentHome = () => {
           style={styles.subBoxView}>
           <View style={styles.containers}>
             <View style={[styles.leftView, !isLastItem && styles.withBorder]}>
-              <View style={[styles.viewStyle, { flex: 1 }]}>
+              <View style={[styles.viewStyle, {flex: 1}]}>
                 <Text numberOfLines={1} style={styles.titleText}>
                   {item.restaurant_name}
                 </Text>
@@ -116,8 +133,8 @@ const StudentHome = () => {
           </View>
         </TouchableOpacity>
       </View>
-    )
-  }
+    );
+  };
   // const renderItem = ({ item, index }: any) => {
   //   const containerWidth = (SCREEN_WIDTH - 40) / 2;
   //   const containerHeight = 120;
@@ -164,8 +181,11 @@ const StudentHome = () => {
           navigation.navigate(screenName.ChefNotification);
         }}
       />
-      <View style={{ marginHorizontal: wp(20) }}>
-        <CardView containerStyle={styles.headerView} onPress={() => { }} isDisabled={true}>
+      <View style={{marginHorizontal: wp(20)}}>
+        <CardView
+          containerStyle={styles.headerView}
+          onPress={() => {}}
+          isDisabled={true}>
           <Text style={styles.headerSubText}>
             {strings('StudentSignUp.ListofCanteen')}
           </Text>
@@ -192,7 +212,7 @@ const StudentHome = () => {
 export default StudentHome;
 
 const getGlobalStyles = (props: any) => {
-  const { colors } = props;
+  const {colors} = props;
   return StyleSheet.create({
     container: {
       flex: 1,
@@ -210,7 +230,7 @@ const getGlobalStyles = (props: any) => {
       paddingHorizontal: wp(16),
       paddingVertical: hp(12),
       marginHorizontal: 0,
-      borderRadius: 8
+      borderRadius: 8,
     },
     headerSubText: {
       ...commonFontStyle(500, 18, colors.black),

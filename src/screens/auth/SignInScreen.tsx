@@ -10,7 +10,7 @@ import {
 import React, {useState} from 'react';
 import {useNavigation, useRoute, useTheme} from '@react-navigation/native';
 import {Icons} from '../../utils/images';
-import {commonFontStyle, h, hp, wp} from '../../theme/fonts';
+import {commonFontStyle, h, hp, isIos, wp} from '../../theme/fonts';
 import Input from '../../compoment/Input';
 import {
   DropDownData,
@@ -108,15 +108,15 @@ const SignInScreen = (props: Props) => {
 
   const onPressSignUp = () => {
     // console.log('adas', selectedRole);
-    // navigation.navigate(screenName.SignUpScreen);
-    if (selectRole == 'Admin') {
-      navigation.navigate(screenName.SignUpScreen);
-      return;
-    }
-    if (selectRole == 'Student') {
-      navigation.navigate(screenName.StudentSignUp);
-      return;
-    }
+    navigation.navigate(screenName.SignUpScreen);
+    // if (selectRole == 'Admin') {
+    //   navigation.navigate(screenName.SignUpScreen);
+    //   return;
+    // }
+    // if (selectRole == 'Student') {
+    //   navigation.navigate(screenName.StudentSignUp);
+    //   return;
+    // }
   };
 
   const googlesignIn = async () => {
@@ -144,9 +144,11 @@ const SignInScreen = (props: Props) => {
       };
       let userObj = {
         data: googleUser,
-        onSuccess: () => {
-          if (selectRole == 'Admin') {
-            dispatchNavigation(screenName.BottomTabBar);
+        onSuccess: async res => {
+          console.log('StudentBottomBarStudentBottomBarStudentBottomBar', res);
+          await setAsyncRole(selectRole);
+          if (res?.university_id) {
+            dispatchNavigation(screenName.StudentBottomBar);
           } else {
             dispatchNavigation(screenName.StudentSelect);
           }
@@ -263,10 +265,14 @@ const SignInScreen = (props: Props) => {
                 <Image style={styles.twitterIcon} source={Icons.google} />
                 <Text style={styles.googleText}>{strings('login.google')}</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={[styles.roundView]}>
-                <Image style={styles.appleIcon} source={Icons.apple} />
-                <Text style={styles.googleText}>{strings('login.apple')}</Text>
-              </TouchableOpacity>
+              {isIos && (
+                <TouchableOpacity style={[styles.roundView]}>
+                  <Image style={styles.appleIcon} source={Icons.apple} />
+                  <Text style={styles.googleText}>
+                    {strings('login.apple')}
+                  </Text>
+                </TouchableOpacity>
+              )}
             </View>
           ) : null}
         </KeyboardAwareScrollView>

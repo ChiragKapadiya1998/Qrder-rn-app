@@ -151,11 +151,11 @@ const ChefProfile = (props: Props) => {
               iconName: Icons.inventory,
               screens: screenName.OrderHistory,
             },
-            {
-              title: strings('profileScreen.notifications'),
-              iconName: Icons.notificationIcon,
-              screens: screenName.ProfileNotification,
-            },
+            // {
+            //   title: strings('profileScreen.notifications'),
+            //   iconName: Icons.notificationIcon,
+            //   screens: screenName.ProfileNotification,
+            // },
             // {
             //   title: strings('profileScreen.cuisines'),
             //   iconName: Icons.cuisine,

@@ -44,13 +44,20 @@ const StudentProfile = (props: Props) => {
   const [visible, setVisible] = useState(false);
   const [userData, setUserData] = useState<any>({});
   const dispatch = useAppDispatch();
+  console.log('photoUri', photoUri);
 
   const fetchUserInfo = async () => {
     try {
       const userList = await getAsyncUserInfo();
+      console.log(
+        'userList.original_url',
+        JSON.stringify(userList?.profile_image),
+      );
+
       setUserData(userList);
-      setName(userList.name || '');
-      setNumber(userList.number || '');
+      setName(userList?.name || '');
+      setNumber(userList?.number || '');
+      setPhotoUri(userList?.profile_image || '');
     } catch (error) {}
   };
 
@@ -128,10 +135,23 @@ const StudentProfile = (props: Props) => {
           <View style={styles.profileView}>
             <View style={styles.profileBox}>
               {/* <View style={styles.profilImage} /> */}
-              <Image
+              {/* <Image
                 source={photoUri ? {uri: photoUri} : Icons.profileImage}
                 style={styles.profilImage}
-              />
+              /> */}
+              {photoUri ? (
+                <View style={styles.profilImage}>
+                  <Image source={{uri: photoUri}} style={styles.profilImage} />
+                </View>
+              ) : (
+                <Image
+                  source={Icons.profileImage}
+                  style={[
+                    styles.profilImage,
+                    {backgroundColor: colors.bg_orange200},
+                  ]}
+                />
+              )}
               <View style={styles.userNameView}>
                 <Text style={styles.nameText}>{name}</Text>
                 <Text style={styles.numberText}>{number}</Text>
@@ -158,11 +178,11 @@ const StudentProfile = (props: Props) => {
               iconName: Icons.inventory,
               screens: screenName.student_tab_bar.StudentOrderHistory,
             },
-            {
-              title: strings('profileScreen.notifications'),
-              iconName: Icons.notificationIcon,
-              screens: screenName.ProfileNotification,
-            },
+            // {
+            //   title: strings('profileScreen.notifications'),
+            //   iconName: Icons.notificationIcon,
+            //   screens: screenName.ProfileNotification,
+            // },
           ]}
           onPressCell={onPressNavigation}
           styleProp={styles.boxCotainer}
@@ -256,7 +276,7 @@ const getGlobalStyles = (props: any) => {
       borderRadius: wp(64),
       borderColor: colors.text_orange,
       borderWidth: 1,
-      backgroundColor: colors.bg_orange200,
+      // backgroundColor: colors.bg_orange200,
     },
     userNameView: {
       marginLeft: wp(12),

@@ -20,12 +20,15 @@ import {
   onNotificationPress,
   openAppNotifiactionEvent,
 } from '../../utils/notificationHandle';
+import {getUserAction} from '../../actions/authAction';
+import {useAppDispatch} from '../../redux/hooks';
 
 type Props = {};
 
 const SplashScreen = (props: Props) => {
   const {colors, isDark} = useTheme();
   const styles = React.useMemo(() => getGlobalStyles({colors}), [colors]);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     setTimeout(() => {
@@ -44,7 +47,17 @@ const SplashScreen = (props: Props) => {
 
     if (isUser) {
       if (isRole == 'Student') {
-        dispatchNavigation(screenName.StudentBottomBar);
+        let obj = {
+          onSuccess: (res: any) => {
+            if (res?.university_id) {
+              dispatchNavigation(screenName.StudentBottomBar);
+            } else {
+              dispatchNavigation(screenName.StudentSelect);
+            }
+          },
+          onFailure: (Err: any) => {},
+        };
+        dispatch(getUserAction(obj));
       } else if (isRole == 'Staff') {
         dispatchNavigation(screenName.ChefSelfBottomBar);
       } else {

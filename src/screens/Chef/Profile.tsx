@@ -7,47 +7,47 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   useFocusEffect,
   useNavigation,
   useTheme,
 } from '@react-navigation/native';
 import HomeHeader from '../../compoment/HomeHeader';
-import { strings } from '../../i18n/i18n';
-import { commonFontStyle, hp, wp } from '../../theme/fonts';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { Icons } from '../../utils/images';
+import {strings} from '../../i18n/i18n';
+import {commonFontStyle, hp, wp} from '../../theme/fonts';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import {Icons} from '../../utils/images';
 import TitleList from '../../compoment/TitleListComponent';
 import Spacer from '../../compoment/Spacer';
 import ImagePicker from 'react-native-image-crop-picker';
 import Loader from '../../compoment/Loader';
-import { screenName } from '../../navigation/screenNames';
-import { clearAsync, getAsyncUserInfo } from '../../utils/asyncStorageManager';
-import { dispatchNavigation } from '../../utils/globalFunctions';
-import { useAppDispatch, useAppSelector } from '../../redux/hooks';
-import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import {screenName} from '../../navigation/screenNames';
+import {clearAsync, getAsyncUserInfo} from '../../utils/asyncStorageManager';
+import {dispatchNavigation} from '../../utils/globalFunctions';
+import {useAppDispatch, useAppSelector} from '../../redux/hooks';
+import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import GeneralModal from '../../compoment/GeneralModal';
-import { USER_LOGOUT } from '../../redux/actionTypes';
-import { addDiscountAction } from '../../actions/commonAction';
-import { errorToast } from '../../utils/commonFunction';
+import {USER_LOGOUT} from '../../redux/actionTypes';
+import {addDiscountAction} from '../../actions/commonAction';
+import {errorToast} from '../../utils/commonFunction';
 
 type Props = {};
 
 const Profile = (props: Props) => {
-  const { colors, isDark } = useTheme();
+  const {colors, isDark} = useTheme();
   const navigation = useNavigation();
-  const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
-  const { isDarkTheme } = useAppSelector(state => state.common);
+  const styles = React.useMemo(() => getGlobalStyles({colors}), [colors]);
+  const {isDarkTheme} = useAppSelector(state => state.common);
   const [loading, setLoading] = useState(false);
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
   const [visible, setVisible] = useState(false);
-  const [userData, setUserData] = useState < any > ({});
+  const [userData, setUserData] = useState<any>({});
   const [photoUri, setPhotoUri] = useState(null);
   const [discountModal, setDiscountModal] = useState(false);
   const [lotSizeModal, setLotSizeModal] = useState(false);
-  const [discountText, setDiscountText] = useState < string > ('');
+  const [discountText, setDiscountText] = useState<string>('');
   const dispatch = useAppDispatch();
 
   const fetchUserInfo = async () => {
@@ -57,7 +57,7 @@ const Profile = (props: Props) => {
       setName(userList.name || '');
       setNumber(userList.number || '');
       setPhotoUri(userList?.profile_image);
-    } catch (error) { }
+    } catch (error) {}
   };
 
   useFocusEffect(
@@ -86,7 +86,7 @@ const Profile = (props: Props) => {
 
   const onPressNavigation = list => {
     if (list == screenName.EditProfile) {
-      navigation.navigate(list, { hideEdit: false, userData: userData });
+      navigation.navigate(list, {hideEdit: false, userData: userData});
     } else if (list === 'log Out') {
       setVisible(true);
     } else if (list === 'Discount') {
@@ -105,11 +105,11 @@ const Profile = (props: Props) => {
   };
 
   const onPressLogOut = async () => {
+    setVisible(false);
     clearAsync();
-    dispatch({ type: USER_LOGOUT });
+    dispatch({type: USER_LOGOUT});
     dispatchNavigation(screenName.SignInScreen);
     await GoogleSignin.signOut();
-    setVisible(false);
   };
 
   const onPressDiscount = () => {
@@ -117,31 +117,30 @@ const Profile = (props: Props) => {
       if (discountText.trim().length === 0) {
         errorToast(strings('supportText.e_discount'));
       } else {
-        setLoading(true)
+        setLoading(true);
         let data = new FormData();
         data.append('discount', discountText);
 
         let userInfo = {
           data,
-          onSuccess: (res) => {
+          onSuccess: res => {
             setDiscountModal(false);
             setDiscountText('');
-            setLoading(false)
+            setLoading(false);
           },
           onFailure: (Err: any) => {
             if (Err !== undefined) {
-              setLoading(false)
+              setLoading(false);
               errorToast(Err?.data?.message);
             }
-            setLoading(false)
+            setLoading(false);
           },
         };
         dispatch(addDiscountAction(userInfo));
       }
     } catch {
-      setLoading(false)
+      setLoading(false);
     }
-
   };
 
   return (
@@ -171,10 +170,23 @@ const Profile = (props: Props) => {
           style={styles.profileContainer}>
           <View style={styles.profileView}>
             <View style={styles.profileBox}>
-              <Image
-                source={photoUri ? { uri: photoUri } : Icons.profileImage}
+              {/* <Image
+                source={photoUri ? {uri: photoUri} : Icons.profileImage}
                 style={styles.profilImage}
-              />
+              /> */}
+              {photoUri ? (
+                <View style={styles.profilImage}>
+                  <Image source={{uri: photoUri}} style={styles.profilImage} />
+                </View>
+              ) : (
+                <Image
+                  source={Icons.profileImage}
+                  style={[
+                    styles.profilImage,
+                    {backgroundColor: colors.bg_orange200},
+                  ]}
+                />
+              )}
               {/* <View style={styles.profilImage} /> */}
               <View style={styles.userNameView}>
                 <Text style={styles.nameText}>{name}</Text>
@@ -205,7 +217,7 @@ const Profile = (props: Props) => {
             {
               title: strings('profileScreen.menu'),
               iconName: Icons.inventory,
-              screens: screenName.tab_bar_name.MenuList
+              screens: screenName.tab_bar_name.MenuList,
             },
             {
               title: strings('addFoodList.Miscellaneousitems'),
@@ -222,7 +234,6 @@ const Profile = (props: Props) => {
               iconName: Icons.inventory,
               screens: screenName.ItemMastersList,
             },
-
             {
               title: strings('profileScreen.recipes_master'),
               iconName: Icons.inventory,
@@ -238,11 +249,11 @@ const Profile = (props: Props) => {
               iconName: Icons.inventory,
               screens: screenName.OrderHistory,
             },
-            {
-              title: strings('profileScreen.notifications'),
-              iconName: Icons.notificationIcon,
-              screens: screenName.ProfileNotification,
-            },
+            // {
+            //   title: strings('profileScreen.notifications'),
+            //   iconName: Icons.notificationIcon,
+            //   screens: screenName.ProfileNotification,
+            // },
             // {
             //   title: strings('profileScreen.cuisines'),
             //   iconName: Icons.cuisine,
@@ -292,7 +303,7 @@ const Profile = (props: Props) => {
             },
             {
               title: strings('profileScreen.log_out'),
-              iconName: Icons.logout,
+              iconName: Icons.ic_log,
               screens: 'log Out',
             },
           ]}
@@ -353,7 +364,7 @@ const Profile = (props: Props) => {
 export default Profile;
 
 const getGlobalStyles = (props: any) => {
-  const { colors } = props;
+  const {colors} = props;
   return StyleSheet.create({
     container: {
       flex: 1,
@@ -386,7 +397,7 @@ const getGlobalStyles = (props: any) => {
       borderRadius: wp(64),
       borderColor: colors.text_orange,
       borderWidth: 1,
-      backgroundColor: colors.bg_orange200,
+      // backgroundColor: colors.bg_orange200,
     },
     userNameView: {
       marginLeft: wp(12),

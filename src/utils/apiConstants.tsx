@@ -2,7 +2,7 @@ export const api = {
   // BASE_URL: 'https://qrder.in/api/',
   // BASE_URL1: 'https://qrder.in/',
   BASE_URL:
-    'https://47f4-2405-201-201f-9802-bd12-91f8-3d14-9e82.ngrok-free.app/api/',
+    'https://62c9-2405-201-201f-9802-e44b-2704-1089-3415.ngrok-free.app/api/',
 
   // Auth
   login: 'login',
@@ -43,7 +43,9 @@ export const api = {
   ordersHistory: 'orders',
   studentOrder: 'student-orders',
   dashboard: 'dashboard',
-  myOrders:'order',
+  myOrders: 'order',
+  universityUpdate: 'university-update',
+  getUser: 'get-user',
 
   //student
   studentRegister: 'student-register',

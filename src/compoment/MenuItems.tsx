@@ -89,9 +89,11 @@ const MenuItems = ({item, index, setDelete, showChef}: ItemProps) => {
               justifyContent: 'space-between',
             }}>
             <Text style={styles.priceText}> {`₹${item?.price}`}</Text>
-            <TouchableOpacity>
-              <Image source={Icons.ic_cart} style={styles.ic_cart} />
-            </TouchableOpacity>
+            {!showChef && (
+              <TouchableOpacity>
+                <Image source={Icons.ic_cart} style={styles.ic_cart} />
+              </TouchableOpacity>
+            )}
           </View>
         </View>
       </TouchableOpacity>
