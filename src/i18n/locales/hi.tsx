@@ -18,7 +18,7 @@ export default {
     owner: 'मालिक',
     staff: 'स्टाफ',
     student: 'विद्यार्थी',
-    error_role: "कृपया भूमिका चुनें"
+    error_role: 'कृपया भूमिका चुनें',
   },
   login: {
     login_in: 'में प्रवेश करें',
@@ -58,9 +58,9 @@ export default {
     error_re_tyre_match: 'आपका पासवर्ड और पुष्टि पासवर्ड मेल नहीं खाते.',
     role: 'भूमिका',
     select_role: 'भूमिका चुनें',
-    "error_v_confirm": "कृपया अपना पुष्टि पासवर्ड दर्ज करें",
-    "error_new_password": "कृपया अपना नया पासवर्ड दर्ज करें",
-    ressetPassword: 'पासवर्ड रीसेट'
+    error_v_confirm: 'कृपया अपना पुष्टि पासवर्ड दर्ज करें',
+    error_new_password: 'कृपया अपना नया पासवर्ड दर्ज करें',
+    ressetPassword: 'पासवर्ड रीसेट',
   },
   sign_up: {
     sign_up: 'साइन अप करें',
@@ -97,7 +97,7 @@ export default {
     p_enter_canteen: 'कैंटीन का नाम दर्ज करें',
     error_canteen: 'कृपया कैंटीन का नाम दर्ज करें',
     university_name: 'विश्वविद्यालय का नाम दर्ज करें',
-    error_university_name: 'कृपया विश्वविद्यालय का नाम दर्ज करें'
+    error_university_name: 'कृपया विश्वविद्यालय का नाम दर्ज करें',
   },
   Phone_number_verification: {
     verification: 'सत्यापन',
@@ -181,7 +181,7 @@ export default {
     add_menu: 'मेनू जोड़ें',
     add_basic: 'अपना मूल विवरण यहां लिखें...',
     add_to_card: 'कार्ड में जोड़ें',
-    miscellaneous: 'मिश्रित'
+    miscellaneous: 'मिश्रित',
   },
   foodDetails: {
     food_Details: 'भोजन का विवरण',
@@ -266,34 +266,34 @@ export default {
     edit_Chef_name: 'शेफ संपादित करें',
     error_v_salary: 'कृपया अपना वेतन दर्ज करें',
     Search: 'खोजें...',
-    Chef_SignUp: 'शेफ साइनअप'
+    Chef_SignUp: 'शेफ साइनअप',
   },
   CuisinesNameList: {
     cuisines_list: 'व्यंजन सूची',
     edit_Cuisines_name: 'व्यंजन संपादित करें',
     new_add: 'नया जोड़ें',
-    Search: 'खोजें...'
+    Search: 'खोजें...',
   },
   CardMenuList: {
     add: 'जोड़ें',
     total: 'कुल',
     items: 'वस्तुएँ',
-    see_more: 'और देखें'
+    see_more: 'और देखें',
   },
   Cart: {
-    CheckOut: "चेकआउट",
-    Cart: "कार्ट"
+    CheckOut: 'चेकआउट',
+    Cart: 'कार्ट',
   },
   googleSignIn: {
     user_cancelled: 'उपयोगकर्ता ने लॉगिन प्रक्रिया रद्द कर दी',
-    error_text: "ऑपरेशन (जैसे साइन इन) पहले से ही प्रगति पर है",
+    error_text: 'ऑपरेशन (जैसे साइन इन) पहले से ही प्रगति पर है',
     play_services: 'प्ले सेवाएँ उपलब्ध नहीं हैं या पुरानी हैं',
-    something_went: 'कुछ गलत हो गया, कृपया पुनः प्रयास करें'
+    something_went: 'कुछ गलत हो गया, कृपया पुनः प्रयास करें',
   },
   studentCheckOut: {
     your_order: 'आपका ऑर्डर',
     no_product_found: 'कोई उत्पाद नहीं मिला',
     remove: 'हटाएं',
-    sub_total: 'उप-योग'
-  }
+    sub_total: 'उप-योग',
+  },
 };

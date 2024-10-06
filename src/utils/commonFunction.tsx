@@ -137,8 +137,6 @@ export const chartData = (revenueData, filter) => {
           label: labels2[index] || 'Unknown', // Use the corresponding label
         };
       });
-      console.log('updateWeekly', updateWeekly);
-
       return updateWeekly;
       break;
     case strings('home.monthly'):
@@ -243,7 +241,7 @@ export const groupByMonth = data => {
   // Initialize an object to store revenue sums by month
   const result = {};
 
-  data.forEach(item => {
+  data?.forEach(item => {
     // Convert the date string to a Date object
     const dateObj = new Date(item.date.split('-').reverse().join('-')); // Reverse to get YYYY-MM-DD
     const monthName = monthNames[dateObj.getMonth()]; // Get the month name

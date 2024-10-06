@@ -17,11 +17,15 @@ import {useAppDispatch, useAppSelector} from '../../redux/hooks';
 import {setDarkTheme, setLanguage} from '../../utils/commonActions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {asyncKeys} from '../../utils/asyncStorageManager';
+import ToggleComponent from '../../compoment/ToggleComponent';
 
 const languages = [
   {label: 'English', value: 'en'},
-  {label: 'Gujarati', value: 'gj'},
+  {label: 'Tamil', value: 'ta'},
   {label: 'Hindi', value: 'hi'},
+  {label: 'Telugu', value: 'te'},
+  {label: 'Kanada', value: 'ka'},
+  {label: 'Malyalam', value: 'ma'},
 ];
 
 const Settings = () => {
@@ -81,19 +85,31 @@ const Settings = () => {
       <View style={styles.subContainer}>
         <View style={[styles.dropdownContainer]}>
           <Text style={styles.label}>{strings('Settings.theme')}</Text>
-          <Switch
+          {/* <Switch
             value={isDarkTheme}
             onChange={() => changeValue()}
             onMagicTap={changeValue}
             thumbColor={isDarkTheme ? colors.image_bg : colors.input_bg1}
             trackColor={{false: colors.text_gray1, true: colors.input_bg1}}
             style={{transform: [{scaleX: 1.2}, {scaleY: 1.2}]}}
+          /> */}
+          <ToggleComponent
+            value={isDarkTheme}
+            onValueChange={() => changeValue()}
           />
         </View>
         <View style={[styles.dropdownContainer, , {marginTop: hp(20)}]}>
           <Text style={styles.label}>{strings('Settings.language')}</Text>
           <Dropdown
-            style={styles.dropdown}
+            style={[
+              styles.dropdown,
+              {
+                width:
+                  selectedLanguage !== 'ma'
+                    ? SCREEN_WIDTH * 0.23
+                    : SCREEN_WIDTH * 0.27,
+              },
+            ]}
             selectedTextStyle={[
               styles.label,
               {marginLeft: 15, color: colors.text_orange, alignSelf: 'center'},
@@ -116,14 +132,6 @@ const Settings = () => {
                     <Text style={styles.deleteText}>{strings('Settings.deactivate_account')}</Text>
                 </TouchableOpacity> */}
       </View>
-      <DleleteModal
-        title={strings('Settings.deleteText')}
-        rightText={strings('Settings.yes')}
-        leftText={strings('Settings.no')}
-        visible={visible}
-        closeModal={() => closeModal()}
-        onPressDelete={() => onPressDelete()}
-      />
     </View>
   );
 };
@@ -159,7 +167,7 @@ const getGlobalStyles = props => {
       ...commonFontStyle(500, 15, colors.black),
     },
     dropdown: {
-      width: SCREEN_WIDTH * 0.25,
+      width: SCREEN_WIDTH * 0.23,
     },
     downIcon: {
       width: 22,

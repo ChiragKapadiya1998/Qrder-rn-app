@@ -1,14 +1,21 @@
-import { Alert, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import {
+  Alert,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import React from 'react';
-import { useNavigation, useTheme } from '@react-navigation/native';
-import { commonFontStyle, hp, SCREEN_WIDTH, wp } from '../theme/fonts';
-import { Icons } from '../utils/images';
-import { strings } from '../i18n/i18n';
-import { screenName } from '../navigation/screenNames';
+import {useNavigation, useTheme} from '@react-navigation/native';
+import {commonFontStyle, hp, SCREEN_WIDTH, wp} from '../theme/fonts';
+import {Icons} from '../utils/images';
+import {strings} from '../i18n/i18n';
+import {screenName} from '../navigation/screenNames';
 import PrimaryButton from './PrimaryButton';
-import { useAppDispatch } from '../redux/hooks';
+import {useAppDispatch} from '../redux/hooks';
 
-import { addCardAction, getCardAction } from '../actions/cardAction';
+import {addCardAction, getCardAction} from '../actions/cardAction';
 
 export interface ListObj {
   title: string;
@@ -20,33 +27,29 @@ export interface ListObj {
 }
 type ItemProps = {
   item: ListObj;
-  index: any
+  index: any;
 };
 
-const CartMenuItems = ({ item, index }: ItemProps) => {
-  const { colors } = useTheme();
-  const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
+const CartMenuItems = ({item, index}: ItemProps) => {
+  const {colors} = useTheme();
+  const styles = React.useMemo(() => getGlobalStyles({colors}), [colors]);
   const navigation = useNavigation();
   const dispatch = useAppDispatch();
-
 
   const containerWidth = (SCREEN_WIDTH - 56) / 2;
   const containerHeight = 100;
   const xPosition = index % 2 === 0 ? 0 : 10;
 
-
   const addToCard = (card: any) => {
     let obj = {
       data: {
         menu_id: card?.id,
-        quantity: 1
+        quantity: 1,
       },
       onSuccess: (res: any) => {
         let obj = {
-          onSuccess: () => {
-          },
-          onFailure: () => {
-          },
+          onSuccess: () => {},
+          onFailure: () => {},
         };
         dispatch(getCardAction(obj));
       },
@@ -57,8 +60,7 @@ const CartMenuItems = ({ item, index }: ItemProps) => {
       },
     };
     dispatch(addCardAction(obj));
-
-  }
+  };
 
   return (
     // <View style={styles.boxView}>
@@ -126,7 +128,7 @@ const CartMenuItems = ({ item, index }: ItemProps) => {
             },
           ]}>
           <View style={[styles.imageView]}>
-            <Image source={{ uri: item.image }} style={[styles.imageStyle]} />
+            <Image source={{uri: item.image}} style={[styles.imageStyle]} />
           </View>
           <Text numberOfLines={1} style={styles.titleText}>
             {item?.name}
@@ -141,7 +143,9 @@ const CartMenuItems = ({ item, index }: ItemProps) => {
               justifyContent: 'space-between',
             }}>
             <Text style={styles.priceText}> {`₹${item?.price}`}</Text>
-            <TouchableOpacity onPress={() => addToCard(item)} style={styles.bagContiner}>
+            <TouchableOpacity
+              onPress={() => addToCard(item)}
+              style={styles.bagContiner}>
               <Image source={Icons.bagIcon} style={styles.ic_cart} />
             </TouchableOpacity>
           </View>
@@ -153,7 +157,7 @@ const CartMenuItems = ({ item, index }: ItemProps) => {
 export default CartMenuItems;
 
 const getGlobalStyles = (props: any) => {
-  const { colors } = props;
+  const {colors} = props;
   return StyleSheet.create({
     // boxView: {
     //   marginTop: hp(20),
@@ -346,13 +350,13 @@ const getGlobalStyles = (props: any) => {
       backgroundColor: colors.border,
       borderRadius: 8,
       alignItems: 'center',
-      justifyContent: 'center'
+      justifyContent: 'center',
     },
     ic_cart: {
       width: 14,
       height: 15,
       resizeMode: 'contain',
-      tintColor: colors.defult_white
+      tintColor: colors.defult_white,
     },
   });
 };

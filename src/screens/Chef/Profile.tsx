@@ -85,6 +85,8 @@ const Profile = (props: Props) => {
   };
 
   const onPressNavigation = list => {
+    navigation.navigate(screenName.Settings);
+    return;
     if (list == screenName.EditProfile) {
       navigation.navigate(list, {hideEdit: false, userData: userData});
     } else if (list === 'log Out') {

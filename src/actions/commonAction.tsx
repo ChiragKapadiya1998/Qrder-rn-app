@@ -403,3 +403,26 @@ export const addSupportDetails =
         if (request.onFailure) request.onFailure(error?.response?.data);
       });
   };
+
+export const getRestaurantDiscountAction =
+  (request: any): ThunkAction<void, RootState, unknown, AnyAction> =>
+  async dispatch => {
+    let headers = {
+      Authorization: await getAsyncToken(),
+    };
+    return makeAPIRequest({
+      method: POST,
+      url: api.restaurantDiscount,
+      headers: headers,
+      data: request.data,
+    })
+      .then(async (response: any) => {
+        if (response.status === 200 || response.status === 201) {
+          dispatch({type: GET_DISCOUNT, payload: response?.data?.discount});
+          if (request.onSuccess) request.onSuccess(response.data?.discount);
+        }
+      })
+      .catch(error => {
+        if (request.onFailure) request.onFailure(error.response);
+      });
+  };

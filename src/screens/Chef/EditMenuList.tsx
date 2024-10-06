@@ -55,7 +55,9 @@ const EditMenuList = () => {
   const [itemName, setItemName] = useState(itemData?.name);
   const [price, setPrice] = useState(itemData?.price);
   const [basicDetails, setBasicDetails] = useState(itemData?.description);
-  const [selectedTex, setSelectedTex] = useState(itemData?.include_tax);
+  const [selectedTex, setSelectedTex] = useState(
+    itemData?.include_tax == null ? 0 : itemData?.include_tax,
+  );
   const [percentageInput, setPercentageInput] = useState(
     String(itemData?.tax_percentage),
   );
@@ -67,7 +69,7 @@ const EditMenuList = () => {
     itemData.image ? true : false,
   );
 
-  console.log('itemData.image', itemData.image);
+  console.log('itemData?.include_tax', itemData.image);
   console.log('itemData.image2', imageData);
 
   const [quantityValue, setQuantityValue] = useState(0);
@@ -175,6 +177,8 @@ const EditMenuList = () => {
           return item.id;
         });
 
+      console.log('listData', `'[${listData}]'`);
+
       data.append('name', itemName);
       data.append('cuisine_id', quantityValue);
       data.append('price', price);
@@ -182,10 +186,6 @@ const EditMenuList = () => {
       data.append('include_tax', selectedTex);
       data.append('tax_percentage', texPre);
       data.append('miscellaneous_item_ids', `[${listData}]`);
-      console.log(
-        'imageData?.uri !== itemData.image',
-        imageData?.uri !== itemData.image,
-      );
 
       if (imageData?.uri !== itemData.image) {
         data.append('file', {

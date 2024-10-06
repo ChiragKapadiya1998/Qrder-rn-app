@@ -18,7 +18,10 @@ import NoDataFound from '../../compoment/NoDataFound';
 import {screenName} from '../../navigation/screenNames';
 import {getCardAction} from '../../actions/cardAction';
 import CardView from '../../compoment/CardView';
-import {getUniversityDataAction} from '../../actions/commonAction';
+import {
+  getRestaurantDiscountAction,
+  getUniversityDataAction,
+} from '../../actions/commonAction';
 import {getAsyncUserInfo} from '../../utils/asyncStorageManager';
 import {Icons} from '../../utils/images';
 import {getUserAction} from '../../actions/authAction';
@@ -34,6 +37,7 @@ const StudentHome = () => {
   const [selectedItems, setSelectedItems] = useState<any[]>([]);
 
   const handlePress = (item: any, isCheckbox: boolean) => {
+    getDiscount(item?.id);
     if (isCheckbox) {
       onSelectCheckbox(item);
       setTimeout(() => {
@@ -57,6 +61,17 @@ const StudentHome = () => {
     } else {
       setSelectedItems(prev => [...prev, item.id]);
     }
+  };
+
+  const getDiscount = id => {
+    var data = new FormData();
+    data.append('canteen_id', id);
+    let obj = {
+      data,
+      onSuccess: (res: any) => {},
+      onFailure: (Err: any) => {},
+    };
+    dispatch(getRestaurantDiscountAction(obj));
   };
 
   useEffect(() => {

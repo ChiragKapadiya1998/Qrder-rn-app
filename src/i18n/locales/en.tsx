@@ -252,7 +252,7 @@ export default {
     e_decrement: 'Cannot have less than 1 item.',
     e_food_customization: 'Please Enter Food Customization Text',
     Food_customization: 'Food Customization',
-    item:'Item'
+    item: 'Item',
   },
   profileScreen: {
     profile: 'Profile',
@@ -399,6 +399,8 @@ export default {
     delivery_charge: 'Delivery Charge',
     free_delivery: 'Free Delivery',
     total_pay: 'Total Pay',
+    Platform_Fee: 'Platform Fee',
+    Tax: 'Tax',
   },
   supportText: {
     support: 'Support',

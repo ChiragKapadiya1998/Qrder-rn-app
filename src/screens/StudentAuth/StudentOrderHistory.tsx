@@ -27,7 +27,7 @@ import {getAsyncRole} from '../../utils/asyncStorageManager';
 import DatePicker from 'react-native-date-picker';
 import {errorToast} from '../../utils/commonFunction';
 import NoDataFound from '../../compoment/NoDataFound';
-import { screenName } from '../../navigation/screenNames';
+import {screenName} from '../../navigation/screenNames';
 
 const StudentOrderHistory = () => {
   const {colors} = useTheme();
@@ -103,7 +103,11 @@ const StudentOrderHistory = () => {
     return (
       <View style={styles.listContainer}>
         <View style={{flexDirection: 'row'}}>
-          <TouchableOpacity style={styles.imageView} onPress={() => navigation.navigate(screenName.MyOrders, { itemData: item })}>
+          <TouchableOpacity
+            style={styles.imageView}
+            onPress={() =>
+              navigation.navigate(screenName.MyOrders, {itemData: item})
+            }>
             <Text style={styles.imageText}>#{index + 1}</Text>
           </TouchableOpacity>
 
@@ -166,30 +170,35 @@ const StudentOrderHistory = () => {
         rightTextStyle={styles.rightTextStyle}
         isShowIcon={true}
         isHideIcon={true}
-        rightText={strings('addFoodList.reset')}
+        rightText={
+          allStudentOrderHistory?.length !== 0
+            ? strings('addFoodList.reset')
+            : ''
+        }
       />
       <View style={styles.headerView}>
-        <View style={styles.datePickerContainer}>
-          <TouchableOpacity
-            onPress={() => handleDatePickerOpen(true)}
-            style={styles.dateButton}>
-            <Text style={styles.dateText}>
-              {startDate
-                ? `${formatDateToDDMMYYYY(startDate)}`
-                : strings('orderModal.start_date')}
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => handleDatePickerOpen(false)}
-            style={styles.dateButton}>
-            <Text style={styles.dateText}>
-              {endDate
-                ? `${formatDateToDDMMYYYY(endDate)}`
-                : strings('orderModal.end_date')}
-            </Text>
-          </TouchableOpacity>
-        </View>
-
+        {allStudentOrderHistory?.length !== 0 && (
+          <View style={styles.datePickerContainer}>
+            <TouchableOpacity
+              onPress={() => handleDatePickerOpen(true)}
+              style={styles.dateButton}>
+              <Text style={styles.dateText}>
+                {startDate
+                  ? `${formatDateToDDMMYYYY(startDate)}`
+                  : strings('orderModal.start_date')}
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => handleDatePickerOpen(false)}
+              style={styles.dateButton}>
+              <Text style={styles.dateText}>
+                {endDate
+                  ? `${formatDateToDDMMYYYY(endDate)}`
+                  : strings('orderModal.end_date')}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        )}
         <FlatList
           data={allStudentOrderHistory}
           renderItem={renderItem}

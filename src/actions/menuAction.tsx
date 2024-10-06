@@ -73,7 +73,7 @@ export const addMenuAction =
       })
       .catch(error => {
         dispatch({type: IS_LOADING, payload: false});
-        if (request.onFailure) request.onFailure(error?.response?.data);
+        if (request.onFailure) request.onFailure(error?.response);
       });
   };
 
@@ -160,7 +160,7 @@ export const updateManuAction =
         }
       })
       .catch(error => {
-        if (request.onFailure) request.onFailure(error?.response?.data);
+        if (request.onFailure) request.onFailure(error?.response);
       });
   };
 export const getMiscellaneousAction =

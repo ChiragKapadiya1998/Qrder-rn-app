@@ -301,3 +301,30 @@ export const getUserAction =
         if (request.onFailure) request.onFailure(error.response);
       });
   };
+
+export const appleSigninAction =
+  (request: any): ThunkAction<void, RootState, unknown, AnyAction> =>
+  async dispatch => {
+    let headers = {
+      'Content-Type': 'application/json',
+    };
+    return makeAPIRequest({
+      method: POST,
+      url: api.googleEmail,
+      headers: headers,
+      data: request.data,
+    })
+      .then(async (response: any) => {
+        if (response?.data?.success === true) {
+          await setAsyncToken(response?.data?.data?.token);
+          await setAsyncUserInfo(response?.data?.data?.user);
+          if (request.onSuccess) request.onSuccess(response?.data?.data?.user);
+        } else {
+          if (request.onFailure) request.onFailure(response.data);
+        }
+      })
+      .catch(error => {
+        errorToast('User not found');
+        if (request.onFailure) request.onFailure(error.response);
+      });
+  };

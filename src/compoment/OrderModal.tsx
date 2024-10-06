@@ -1,5 +1,5 @@
 //import liraries
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   FlatList,
   ScrollView,
@@ -10,16 +10,23 @@ import {
 } from 'react-native';
 
 import ReactNativeModal from 'react-native-modal';
-import { SCREEN_HEIGHT, commonFontStyle, hp, wp } from '../theme/fonts';
-import { useIsFocused, useTheme } from '@react-navigation/native';
+import {SCREEN_HEIGHT, commonFontStyle, hp, wp} from '../theme/fonts';
+import {useIsFocused, useNavigation, useTheme} from '@react-navigation/native';
 import PrimaryButton from './PrimaryButton';
-import { strings } from '../i18n/i18n';
+import {strings} from '../i18n/i18n';
 import CCDropDown from './CCDropDown';
-import { useAppDispatch, useAppSelector } from '../redux/hooks';
+import {useAppDispatch, useAppSelector} from '../redux/hooks';
 import Spacer from './Spacer';
-import { formatDate } from '../utils/globalFunctions';
-import { getOrdersRequestAction, getRunningOrderAction, orderCompletedAction, orderDeclinedAction, orderRequestAccpet } from '../actions/allOrdersAction';
+import {formatDate} from '../utils/globalFunctions';
+import {
+  getOrdersRequestAction,
+  getRunningOrderAction,
+  orderCompletedAction,
+  orderDeclinedAction,
+  orderRequestAccpet,
+} from '../actions/allOrdersAction';
 import NoDataFound from './NoDataFound';
+import {screenName} from '../navigation/screenNames';
 
 export type OrderModal = {
   isVisible: boolean;
@@ -38,31 +45,32 @@ const OrderModal = ({
   onPressYes,
   isRunning = false,
 }: OrderModal) => {
-  const { colors } = useTheme();
+  const {colors} = useTheme();
   const dispatch = useAppDispatch();
   const isFocuse = useIsFocused();
-  const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
-  const { isRunningOrder, isOrderRequest } = useAppSelector(state => state.orders);
+  const styles = React.useMemo(() => getGlobalStyles({colors}), [colors]);
+  const {isRunningOrder, isOrderRequest} = useAppSelector(
+    state => state.orders,
+  );
+  const navigation = useNavigation();
 
   useEffect(() => {
-    getRunningOrder()
-    getOrderRequest()
-  }, [isFocuse])
-
+    getRunningOrder();
+    getOrderRequest();
+  }, [isFocuse]);
 
   const getRunningOrder = () => {
     let obj = {
-      onSuccess: () => { },
-      onFailure: () => { },
+      onSuccess: () => {},
+      onFailure: () => {},
     };
     dispatch(getRunningOrderAction(obj));
   };
 
-
   const getOrderRequest = () => {
     let obj = {
-      onSuccess: () => { },
-      onFailure: () => { },
+      onSuccess: () => {},
+      onFailure: () => {},
     };
     dispatch(getOrdersRequestAction(obj));
   };
@@ -70,46 +78,56 @@ const OrderModal = ({
   const onOrderAccpet = (id: number) => {
     let UserInfo = {
       data: id,
-      onSuccess: (res: any) => { },
-      onFailure: (Err: any) => { },
+      onSuccess: (res: any) => {},
+      onFailure: (Err: any) => {},
     };
     dispatch(orderRequestAccpet(UserInfo));
-  }
+  };
 
   const onOrderCompleted = (id: number) => {
     let UserInfo = {
       data: id,
-      onSuccess: () => { },
-      onFailure: () => { },
+      onSuccess: () => {},
+      onFailure: () => {},
     };
     dispatch(orderCompletedAction(UserInfo));
-  }
+  };
 
   const onCancelBtn = (id: number) => {
     let UserInfo = {
       data: id,
-      onSuccess: () => { },
-      onFailure: () => { },
+      onSuccess: () => {},
+      onFailure: () => {},
     };
     dispatch(orderDeclinedAction(UserInfo));
   };
+  const onPressOrder = item => {
+    navigation.navigate(screenName.MyOrders, {itemData: item});
+    onPressCancel();
+  };
 
-
-  const renderItem = ({ item, index }) => {
+  const renderItem = ({item, index}) => {
     const formattedDate = formatDate(item.created_at);
 
     return (
       <View style={styles.listContainer}>
-        <View style={{ flexDirection: 'row' }}>
-          <View style={styles.imageView}>
+        <View style={{flexDirection: 'row'}}>
+          <TouchableOpacity
+            onPress={() => onPressOrder(item)}
+            style={styles.imageView}>
             <Text style={styles.imageText}>#{index + 1}</Text>
-          </View>
+          </TouchableOpacity>
 
           <View style={styles.rightContainer}>
-            <Text numberOfLines={1} style={styles.breakText}>{`${strings('orderModal.invoice_id')} : ${item.order_id}`}</Text>
+            <Text numberOfLines={1} style={styles.breakText}>{`${strings(
+              'orderModal.invoice_id',
+            )} : ${item.order_id}`}</Text>
             <Text style={styles.titleStyle}>{item.name}</Text>
-            {item.table_number !== null ?
-              <Text style={styles.idText}>{`${strings('orderModal.table_no')} : ${item.table_number}`}</Text> : null}
+            {item.table_number !== null ? (
+              <Text style={styles.idText}>{`${strings(
+                'orderModal.table_no',
+              )} : ${item.table_number}`}</Text>
+            ) : null}
             <View style={styles.priceView}>
               <Text style={styles.priceText}>{`₹${item.total}`}</Text>
               <Text style={styles.dateText}>{formattedDate}</Text>
@@ -117,13 +135,17 @@ const OrderModal = ({
           </View>
 
           <TouchableOpacity style={styles.diningView}>
-            <Text style={styles.diningText}>{item.order_type === 1 ? strings('orderModal.dining') : strings('orderModal.parcel')}</Text>
+            <Text style={styles.diningText}>
+              {item.order_type === 1
+                ? strings('orderModal.dining')
+                : strings('orderModal.parcel')}
+            </Text>
           </TouchableOpacity>
         </View>
 
         <View style={styles.btnContainer}>
           {isRunning ? (
-            <View style={{ flexDirection: 'row' }}>
+            <View style={{flexDirection: 'row'}}>
               <PrimaryButton
                 extraStyle={styles.accpetBtn}
                 title={strings('orderModal.completed')}
@@ -139,7 +161,7 @@ const OrderModal = ({
               />
             </View>
           ) : (
-            <View style={{ flexDirection: 'row' }}>
+            <View style={{flexDirection: 'row'}}>
               <PrimaryButton
                 extraStyle={styles.accpetBtn}
                 title={strings('orderModal.accpet')}
@@ -169,14 +191,16 @@ const OrderModal = ({
       animationOutTiming={1000}
       onBackButtonPress={onPressCancel}
       onBackdropPress={onPressCancel}
-      style={{ justifyContent: 'flex-end', margin: 0 }}>
+      style={{justifyContent: 'flex-end', margin: 0}}>
       <View style={styles.container}>
         <View style={styles.lineStyle} />
         <View style={styles.headerView}>
           <Text style={styles.titleText}>
             {isRunning
               ? `${strings('orderModal.running_orders')}`
-              : `${isOrderRequest?.length ? isOrderRequest?.length : ''} ${strings('orderModal.order_request')}`}
+              : `${
+                  isOrderRequest?.length ? isOrderRequest?.length : ''
+                } ${strings('orderModal.order_request')}`}
           </Text>
 
           <FlatList
@@ -184,7 +208,7 @@ const OrderModal = ({
             renderItem={renderItem}
             keyExtractor={(item, index) => index.toString()}
             showsVerticalScrollIndicator={false}
-            ListFooterComponent={<View style={{ height: 60 }} />}
+            ListFooterComponent={<View style={{height: 60}} />}
             ListEmptyComponent={<NoDataFound />}
           />
         </View>
@@ -194,7 +218,7 @@ const OrderModal = ({
 };
 
 const getGlobalStyles = (props: any) => {
-  const { colors } = props;
+  const {colors} = props;
 
   return StyleSheet.create({
     container: {

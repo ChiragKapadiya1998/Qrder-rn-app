@@ -2304,6 +2304,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@invertase/react-native-apple-authentication@npm:^2.4.0":
+  version: 2.4.0
+  resolution: "@invertase/react-native-apple-authentication@npm:2.4.0"
+  checksum: 105dde0a27224e7f2a64d7e0a00465d43869b787359efe8672d60dc81d932189b400faf68d4ce18a57317edaa3b187224c7a2fa196e82480a55eb82feea50e7f
+  languageName: node
+  linkType: hard
+
 "@isaacs/cliui@npm:^8.0.2":
   version: 8.0.2
   resolution: "@isaacs/cliui@npm:8.0.2"
@@ -4041,6 +4048,7 @@ __metadata:
     "@babel/core": ^7.20.0
     "@babel/preset-env": ^7.20.0
     "@babel/runtime": ^7.20.0
+    "@invertase/react-native-apple-authentication": ^2.4.0
     "@notifee/react-native": ^7.8.2
     "@react-native-async-storage/async-storage": ^1.23.1
     "@react-native-community/blur": ^4.4.0
@@ -4074,6 +4082,7 @@ __metadata:
     react-native-contacts: ^7.0.8
     react-native-country-codes-picker: ^2.3.5
     react-native-date-picker: ^5.0.7
+    react-native-device-info: ^13.0.0
     react-native-element-dropdown: ^2.12.1
     react-native-gesture-handler: ^2.16.2
     react-native-gifted-charts: ^1.4.16
@@ -9720,6 +9729,15 @@ __metadata:
     react: ">= 17.0.1"
     react-native: ">= 0.64.3"
   checksum: 94191bf3ce6e88a3acc4ca5e5514eaa6fc15c61666393d85ca258dba3a3efd9145c8fd31ed0f18676d7f083e17f08c760de8193ad24367a65761330084bcdc6b
+  languageName: node
+  linkType: hard
+
+"react-native-device-info@npm:^13.0.0":
+  version: 13.0.0
+  resolution: "react-native-device-info@npm:13.0.0"
+  peerDependencies:
+    react-native: "*"
+  checksum: c86822bcdad1bb9d3b93bd750e199964c562d83e076df2f0984e24cadd19db7f8258e125ddede102be2314ed8349d2da2b671c998f70571027b84449773c583a
   languageName: node
   linkType: hard
 

@@ -52,7 +52,7 @@ const TabBarItem = ({state, navigation}: BottomTabBarProps) => {
                 tintColor: isFocused ? colors.Primary_Orange : colors.tabBar,
               }}
             />
-            {getCardData?.length !== 0 && (
+            {/* {getCardData?.length !== 0 && (
               <View
                 style={{
                   position: 'absolute',
@@ -72,7 +72,7 @@ const TabBarItem = ({state, navigation}: BottomTabBarProps) => {
                   {getCardData?.length}
                 </Text>
               </View>
-            )}
+            )} */}
           </View>
         );
 

@@ -24,15 +24,36 @@
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>CFBundleURLTypes</key>
+<array>
+  <dict>
+    <key>CFBundleURLSchemes</key>
+    <array>
+      <string>com.googleusercontent.apps.664452756526-am4q3v0r4upq81v78h3m6h0v6dkis2a6</string>
+    </array>
+  </dict>
+</array>
 	<key>NSAppTransportSecurity</key>
 	<dict>
-		<key>NSAllowsArbitraryLoads</key>
-		<false/>
-		<key>NSAllowsLocalNetworking</key>
-		<true/>
+		<key>NSExceptionDomains</key>
+		<dict>
+			<key>localhost</key>
+			<dict>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
+			</dict>
+		</dict>
 	</dict>
+	<key>NSCameraUsageDescription</key>
+	<string>Update your profile picture using the camera</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Location is required to find out where you are</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Location is required to find out where you are</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string/>
+	<string>Qrder is requires to show your current location it on the map</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Update your profile picture using the photo library</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>

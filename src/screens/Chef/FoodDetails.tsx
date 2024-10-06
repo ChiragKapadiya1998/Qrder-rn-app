@@ -94,7 +94,7 @@ const FoodDetails = ({route}) => {
       let obj = {
         data: {
           menu_id: id,
-          quantity: 1,
+          quantity: quantity,
           description: foodDelivery,
           miscellaneous_items: selectedItems,
         },
@@ -190,7 +190,7 @@ const FoodDetails = ({route}) => {
           ) : (
             ''
           )}
-          <Text style={styles.priceText}>{`₹${totalPrice}`}</Text>
+          <Text style={styles.priceText}>{`₹${price}`}</Text>
           {showAddToCard ? (
             <View style={styles.addItemView}>
               <TouchableOpacity onPress={decrementQuantity}>

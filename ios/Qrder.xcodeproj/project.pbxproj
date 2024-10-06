@@ -47,6 +47,7 @@
 		13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = PrivacyInfo.xcprivacy; path = Qrder/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		19F6CBCC0A4E27FBF8BF4A61 /* libPods-Qrder-QrderTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Qrder-QrderTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F05E8A02CA9157100003634 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "Qrder/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		1FD90D202CB27A8F00BDA83C /* Qrder.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Qrder.entitlements; path = Qrder/Qrder.entitlements; sourceTree = "<group>"; };
 		24F512A0F319431C97162896 /* OpenSans-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "OpenSans-Light.ttf"; path = "../assets/fonts/OpenSans-Light.ttf"; sourceTree = "<group>"; };
 		2B58EDB94047345B973502D0 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = Qrder/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		380A79B0E5E84E48B3B42110 /* OpenSans-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "OpenSans-Regular.ttf"; path = "../assets/fonts/OpenSans-Regular.ttf"; sourceTree = "<group>"; };
@@ -103,6 +104,7 @@
 		13B07FAE1A68108700A75B9A /* Qrder */ = {
 			isa = PBXGroup;
 			children = (
+				1FD90D202CB27A8F00BDA83C /* Qrder.entitlements */,
 				1F05E8A02CA9157100003634 /* GoogleService-Info.plist */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
@@ -521,6 +523,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = Qrder/Qrder.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Qrder/Info.plist;
@@ -548,6 +551,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = Qrder/Qrder.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				INFOPLIST_FILE = Qrder/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (

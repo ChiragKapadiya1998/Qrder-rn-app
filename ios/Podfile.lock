@@ -1387,7 +1387,11 @@ PODS:
     - React-perflogger (= 0.74.3)
     - React-utils (= 0.74.3)
   - RecaptchaInterop (100.0.0)
+  - RNAppleAuthentication (2.4.0):
+    - React-Core
   - RNCAsyncStorage (1.24.0):
+    - React-Core
+  - RNDeviceInfo (13.0.0):
     - React-Core
   - RNFBApp (20.5.0):
     - Firebase/CoreOnly (= 10.29.0)
@@ -1604,7 +1608,9 @@ DEPENDENCIES:
   - React-runtimescheduler (from `../node_modules/react-native/ReactCommon/react/renderer/runtimescheduler`)
   - React-utils (from `../node_modules/react-native/ReactCommon/react/utils`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
+  - "RNAppleAuthentication (from `../node_modules/@invertase/react-native-apple-authentication`)"
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
+  - RNDeviceInfo (from `../node_modules/react-native-device-info`)
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
   - "RNFBAuth (from `../node_modules/@react-native-firebase/auth`)"
   - "RNFBMessaging (from `../node_modules/@react-native-firebase/messaging`)"
@@ -1767,8 +1773,12 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/react/utils"
   ReactCommon:
     :path: "../node_modules/react-native/ReactCommon"
+  RNAppleAuthentication:
+    :path: "../node_modules/@invertase/react-native-apple-authentication"
   RNCAsyncStorage:
     :path: "../node_modules/@react-native-async-storage/async-storage"
+  RNDeviceInfo:
+    :path: "../node_modules/react-native-device-info"
   RNFBApp:
     :path: "../node_modules/@react-native-firebase/app"
   RNFBAuth:
@@ -1877,7 +1887,9 @@ SPEC CHECKSUMS:
   React-utils: a06061b3887c702235d2dac92dacbd93e1ea079e
   ReactCommon: f00e436b3925a7ae44dfa294b43ef360fbd8ccc4
   RecaptchaInterop: 7d1a4a01a6b2cb1610a47ef3f85f0c411434cb21
+  RNAppleAuthentication: e00c76acb03351f5544373c78fa7f359bef6d5d3
   RNCAsyncStorage: ec53e44dc3e75b44aa2a9f37618a49c3bc080a7a
+  RNDeviceInfo: 55264dd7cc939dad6e9c231a7621311f5277f1dc
   RNFBApp: 5f87753a8d8b37d229adf85cd0ff37709ffdf008
   RNFBAuth: ecbb030e0fd3551b8bc36cc85e0ebb1bcfb7685e
   RNFBMessaging: 3fa1114c0868dd21f20dfe186adf42297ea316b1

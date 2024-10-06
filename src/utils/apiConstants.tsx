@@ -46,6 +46,8 @@ export const api = {
   myOrders: 'order',
   universityUpdate: 'university-update',
   getUser: 'get-user',
+  orderCreate: 'order-create',
+  restaurantDiscount: 'restaurant-discount',
 
   //student
   studentRegister: 'student-register',

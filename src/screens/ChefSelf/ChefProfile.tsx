@@ -67,7 +67,7 @@ const ChefProfile = (props: Props) => {
     } else if (list === 'log Out') {
       setVisible(true);
     } else {
-      list !== '' && navigation.navigate(list);
+      navigation.navigate(list);
     }
   };
 

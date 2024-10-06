@@ -6,6 +6,7 @@ import {
   DELETE_MENU_DATA,
   GET_CANTEEN_CUISINE_LIST,
   GET_CANTEEN_MENU_LIST,
+  GET_CARD_EMPTY_LIST,
   GET_CARD_LIST,
   GET_CHEFS_DATA,
   GET_CITY_DATA,
@@ -201,6 +202,9 @@ export default function (state = initialState, action: any) {
         ...state,
         getDashboardData: action.payload,
       };
+    }
+    case GET_CARD_EMPTY_LIST: {
+      return {...state, getCardData: []};
     }
     default:
       return state;

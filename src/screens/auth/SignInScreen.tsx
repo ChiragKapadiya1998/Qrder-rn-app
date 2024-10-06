@@ -22,9 +22,17 @@ import {
 } from '../../utils/commonFunction';
 import PrimaryButton from '../../compoment/PrimaryButton';
 import {screenName} from '../../navigation/screenNames';
-import {dispatchNavigation} from '../../utils/globalFunctions';
+import {
+  dispatchNavigation,
+  formDataAppleLogin,
+  onAppleLogin,
+} from '../../utils/globalFunctions';
 import {useAppDispatch, useAppSelector} from '../../redux/hooks';
-import {googleEmailAction, userLogin} from '../../actions/authAction';
+import {
+  appleSigninAction,
+  googleEmailAction,
+  userLogin,
+} from '../../actions/authAction';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import LoginHeader from '../../compoment/LoginHeader';
 import {strings} from '../../i18n/i18n';
@@ -117,6 +125,29 @@ const SignInScreen = (props: Props) => {
     //   navigation.navigate(screenName.StudentSignUp);
     //   return;
     // }
+  };
+
+  const onPressAppleLogin = async () => {
+    await onAppleLogin()
+      .then(async response => {
+        let data = await formDataAppleLogin(response);
+        const obj = {
+          data,
+          onSuccess: async () => {
+            await setAsyncRole(selectRole);
+            if (res?.university_id) {
+              dispatchNavigation(screenName.StudentBottomBar);
+            } else {
+              dispatchNavigation(screenName.StudentSelect);
+            }
+          },
+          onFailure: () => {},
+        };
+        dispatch(appleSigninAction(obj));
+      })
+      .catch(err => {
+        console.log(err);
+      });
   };
 
   const googlesignIn = async () => {
@@ -266,7 +297,9 @@ const SignInScreen = (props: Props) => {
                 <Text style={styles.googleText}>{strings('login.google')}</Text>
               </TouchableOpacity>
               {isIos && (
-                <TouchableOpacity style={[styles.roundView]}>
+                <TouchableOpacity
+                  onPress={onPressAppleLogin}
+                  style={[styles.roundView]}>
                   <Image style={styles.appleIcon} source={Icons.apple} />
                   <Text style={styles.googleText}>
                     {strings('login.apple')}
