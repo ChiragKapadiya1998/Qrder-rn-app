@@ -144,6 +144,10 @@ const EditMenuList = () => {
   const selectImage = () => {
     openImagePicker({
       onSucess: res => {
+        if (res.size > 2 * 1024 * 1024) {
+          errorToast(strings('newAddText.e_up_mb'))
+          return;
+        }
         setImageData(res);
         setIsPictureEdit(true);
       },
@@ -194,7 +198,6 @@ const EditMenuList = () => {
           name: imageData?.name,
         });
       }
-      console.log('data', data);
 
       let obj = {
         params: itemData?.id,
@@ -206,7 +209,7 @@ const EditMenuList = () => {
         onFailure: (Err: any) => {
           setLoading(false);
           if (Err != undefined) {
-            Alert.alert(Err?.data?.message);
+            errorToast(Err?.data?.message);
           }
         },
       };

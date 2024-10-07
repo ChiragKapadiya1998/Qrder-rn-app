@@ -7,42 +7,42 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useCallback, useEffect, useState} from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   useFocusEffect,
   useNavigation,
   useTheme,
 } from '@react-navigation/native';
 import HomeHeader from '../../compoment/HomeHeader';
-import {strings} from '../../i18n/i18n';
-import {commonFontStyle, hp, wp} from '../../theme/fonts';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import {Icons} from '../../utils/images';
+import { strings } from '../../i18n/i18n';
+import { commonFontStyle, hp, wp } from '../../theme/fonts';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { Icons } from '../../utils/images';
 import TitleList from '../../compoment/TitleListComponent';
 import Spacer from '../../compoment/Spacer';
 import ImagePicker from 'react-native-image-crop-picker';
 import Loader from '../../compoment/Loader';
-import {screenName} from '../../navigation/screenNames';
-import {clearAsync, getAsyncUserInfo} from '../../utils/asyncStorageManager';
-import {dispatchNavigation} from '../../utils/globalFunctions';
-import {useAppDispatch, useAppSelector} from '../../redux/hooks';
-import {GoogleSignin} from '@react-native-google-signin/google-signin';
+import { screenName } from '../../navigation/screenNames';
+import { clearAsync, getAsyncUserInfo } from '../../utils/asyncStorageManager';
+import { dispatchNavigation } from '../../utils/globalFunctions';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import LogOutModal from '../../compoment/GeneralModal';
-import {USER_LOGOUT} from '../../redux/actionTypes';
+import { USER_LOGOUT } from '../../redux/actionTypes';
 
 type Props = {};
 
 const StudentProfile = (props: Props) => {
-  const {colors, isDark} = useTheme();
+  const { colors, isDark } = useTheme();
   const navigation = useNavigation();
-  const styles = React.useMemo(() => getGlobalStyles({colors}), [colors]);
-  const {isDarkTheme} = useAppSelector(state => state.common);
+  const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
+  const { isDarkTheme } = useAppSelector(state => state.common);
   const [photoUri, setPhotoUri] = useState(null);
   const [loading, setLoading] = useState(false);
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
   const [visible, setVisible] = useState(false);
-  const [userData, setUserData] = useState<any>({});
+  const [userData, setUserData] = useState < any > ({});
   const dispatch = useAppDispatch();
   console.log('photoUri', photoUri);
 
@@ -58,7 +58,7 @@ const StudentProfile = (props: Props) => {
       setName(userList?.name || '');
       setNumber(userList?.number || '');
       setPhotoUri(userList?.profile_image || '');
-    } catch (error) {}
+    } catch (error) { }
   };
 
   useFocusEffect(
@@ -87,7 +87,7 @@ const StudentProfile = (props: Props) => {
 
   const onPressNavigation = list => {
     if (list == screenName.EditProfile) {
-      navigation.navigate(list, {hideEdit: false, userData: userData});
+      navigation.navigate(list, { hideEdit: false, userData: userData });
     } else if (list === 'log Out') {
       setVisible(true);
     } else {
@@ -101,7 +101,7 @@ const StudentProfile = (props: Props) => {
 
   const onPressLogOut = async () => {
     clearAsync();
-    dispatch({type: USER_LOGOUT});
+    dispatch({ type: USER_LOGOUT });
     dispatchNavigation(screenName.SignInScreen);
     await GoogleSignin.signOut();
     setVisible(false);
@@ -141,14 +141,14 @@ const StudentProfile = (props: Props) => {
               /> */}
               {photoUri ? (
                 <View style={styles.profilImage}>
-                  <Image source={{uri: photoUri}} style={styles.profilImage} />
+                  <Image source={{ uri: photoUri }} style={styles.profilImage} />
                 </View>
               ) : (
                 <Image
                   source={Icons.profileImage}
                   style={[
                     styles.profilImage,
-                    {backgroundColor: colors.bg_orange200},
+                    { backgroundColor: colors.bg_orange200 },
                   ]}
                 />
               )}
@@ -177,6 +177,11 @@ const StudentProfile = (props: Props) => {
               title: strings('profileScreen.order_history'),
               iconName: Icons.inventory,
               screens: screenName.student_tab_bar.StudentOrderHistory,
+            },
+            {
+              title: strings('profileScreen.change_password'),
+              iconName: Icons.inventory,
+              screens: screenName.ChangePassword,
             },
             // {
             //   title: strings('profileScreen.notifications'),
@@ -243,7 +248,7 @@ const StudentProfile = (props: Props) => {
 export default StudentProfile;
 
 const getGlobalStyles = (props: any) => {
-  const {colors} = props;
+  const { colors } = props;
   return StyleSheet.create({
     container: {
       flex: 1,

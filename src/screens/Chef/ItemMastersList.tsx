@@ -62,14 +62,6 @@ const ItemMastersList = (props: Props) => {
     setVisible(false);
   };
 
-  console.log('getMenuMasters', getMenuMasters);
-
-  useFocusEffect(
-    useCallback(() => {
-      setGetAllData(getMenuMasters);
-    }, [isFocused, getMenuMasters?.length, params]),
-  );
-
   const removeMenuCardList = () => {
     let UserInfo = {
       id: selectItem?.id,
@@ -265,6 +257,7 @@ const getGlobalStyles = (props: any) => {
       marginTop: hp(16),
       borderRadius: 8,
       flexDirection: 'row',
+      marginBottom:hp(32)
     },
     nameText: {
       ...commonFontStyle(500, 14, colors.black),

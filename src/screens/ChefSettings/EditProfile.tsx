@@ -7,54 +7,54 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useState} from 'react';
-import {useNavigation, useRoute, useTheme} from '@react-navigation/native';
-import {commonFontStyle, hp, wp} from '../../theme/fonts';
+import React, { useState } from 'react';
+import { useNavigation, useRoute, useTheme } from '@react-navigation/native';
+import { commonFontStyle, hp, wp } from '../../theme/fonts';
 import HomeHeader from '../../compoment/HomeHeader';
-import {strings} from '../../i18n/i18n';
-import {useAppDispatch, useAppSelector} from '../../redux/hooks';
-import {Icons} from '../../utils/images';
+import { strings } from '../../i18n/i18n';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import { Icons } from '../../utils/images';
 import Input from '../../compoment/Input';
-import {emailCheck, errorToast} from '../../utils/commonFunction';
+import { emailCheck, errorToast } from '../../utils/commonFunction';
 import ImageCropPicker from 'react-native-image-crop-picker';
 import PrimaryButton from '../../compoment/PrimaryButton';
-import {updateLocale} from 'moment';
-import {updateProfile} from '../../actions/authAction';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import { updateLocale } from 'moment';
+import { updateProfile } from '../../actions/authAction';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Spacer from '../../compoment/Spacer';
-import {openImagePicker} from '../../utils/globalFunctions';
+import { openImagePicker } from '../../utils/globalFunctions';
 
 type Props = {};
 
 const EditProfile = (props: Props) => {
   const route = useRoute();
-  const {userData} = route?.params;
-  const {colors, isDark} = useTheme();
+  const { userData } = route?.params;
+  const { colors, isDark } = useTheme();
   const navigation = useNavigation();
   const dispatch = useAppDispatch();
-  const styles = React.useMemo(() => getGlobalStyles({colors}), [colors]);
-  const {isDarkTheme} = useAppSelector(state => state.common);
-  const [names, setName] = useState<string>(userData?.name);
+  const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
+  const { isDarkTheme } = useAppSelector(state => state.common);
+  const [names, setName] = useState < string > (userData?.name);
   const [lastName, setLastName] = useState(
     userData?.last_name ? userData?.last_name : '',
   );
-  const [restaurant, setRestaurant] = useState<string>(
+  const [restaurant, setRestaurant] = useState < string > (
     userData.restaurant_name,
   );
-  const [emails, setEmail] = useState<string>(userData.email);
-  const [numbers, setNumber] = useState<string>(userData.number);
-  const [address, setAddress] = useState<string>(userData.address);
+  const [emails, setEmail] = useState < string > (userData.email);
+  const [numbers, setNumber] = useState < string > (userData.number);
+  const [address, setAddress] = useState < string > (userData.address);
   const [photoUri, setPhotoUri] = useState(userData.profile_image);
   const [loading, setLoading] = useState(false);
-  const {getCuisines} = useAppSelector(state => state.data);
+  const { getCuisines } = useAppSelector(state => state.data);
   const [quantityValue, setQuantityValue] = useState(
     getCuisines?.filter(item => item?.id == userData.cuisine_id)?.[0]?.name,
   );
 
-  const [imageData, setImageData] = useState<any>({
+  const [imageData, setImageData] = useState < any > ({
     uri: userData.profile_image ? userData.profile_image : '',
   });
-  const [isPictureEdit, setIsPictureEdit] = useState<boolean>(
+  const [isPictureEdit, setIsPictureEdit] = useState < boolean > (
     userData.profile_image ? true : false,
   );
 
@@ -69,7 +69,6 @@ const EditProfile = (props: Props) => {
   const selectImage = () => {
     openImagePicker({
       onSucess: res => {
-        console.log('res', res);
         setImageData(res);
         setIsPictureEdit(true);
       },
@@ -195,7 +194,7 @@ const EditProfile = (props: Props) => {
               {imageData?.uri ? (
                 <View style={styles.profilImage}>
                   <Image
-                    source={{uri: imageData?.uri}}
+                    source={{ uri: imageData?.uri }}
                     style={styles.profilImage}
                   />
                 </View>
@@ -204,7 +203,7 @@ const EditProfile = (props: Props) => {
                   source={Icons.profileImage}
                   style={[
                     styles.profilImage,
-                    {backgroundColor: colors.bg_orange200},
+                    { backgroundColor: colors.bg_orange200 },
                   ]}
                 />
               )}
@@ -320,7 +319,7 @@ const EditProfile = (props: Props) => {
       </KeyboardAwareScrollView>
 
       {userData.role !== 'staff' ? (
-        <View style={{bottom: 8, paddingHorizontal: wp(20)}}>
+        <View style={{ bottom: 8, paddingHorizontal: wp(20) }}>
           <PrimaryButton
             extraStyle={styles.signupButton}
             // onPress={onPressEditDone}
@@ -340,7 +339,7 @@ const EditProfile = (props: Props) => {
 export default EditProfile;
 
 const getGlobalStyles = (props: any) => {
-  const {colors} = props;
+  const { colors } = props;
   return StyleSheet.create({
     container: {
       flex: 1,

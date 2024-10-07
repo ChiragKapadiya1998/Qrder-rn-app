@@ -103,6 +103,7 @@ const GeneralModal = ({
                 label={strings('supportText.enter_discount')}
                 onChangeText={(t: string) => setDiscountText(t)}
                 isShowLabel={true}
+                keyboardType={'number-pad'}
                 inputStyle={styles.inputStyle}
               />
             )}

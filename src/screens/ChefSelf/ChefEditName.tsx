@@ -36,10 +36,10 @@ const ChefEditName = (props: Props) => {
   const { isDarkTheme } = useAppSelector(state => state.common);
   const { getCuisines } = useAppSelector(state => state.data);
   const [name, setName] = useState < string > (itemData?.name);
-  const [email, setEmail] = useState < string > (itemData.email);
+  const [email, setEmail] = useState < string > (itemData?.email);
   const [quantityValue, setQuantityValue] = useState(0);
-  const [number, setNumber] = useState < string > (itemData.number);
-  const [salary, setSalary] = useState(itemData.salary.toString());
+  const [number, setNumber] = useState < string > (itemData?.number);
+  const [salary, setSalary] = useState(itemData?.salary.toString());
   const [photoUri, setPhotoUri] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -85,8 +85,7 @@ const ChefEditName = (props: Props) => {
     } else if (salary === 0) {
       errorToast(strings('ChefNameList.error_v_salary'));
     } else {
-      const userDetails = await getAsyncUserInfo();
-
+      setLoading(true);
       let obj = {
         data: {
           name: name,
@@ -97,6 +96,7 @@ const ChefEditName = (props: Props) => {
         },
         params: itemData?.id,
         onSuccess: (response: any) => {
+          setLoading(false);
           navigation.goBack();
           setName('');
           setEmail('');
@@ -105,6 +105,7 @@ const ChefEditName = (props: Props) => {
           setSalary(0);
         },
         onFailure: (Err: any) => {
+          setLoading(false);
           if (Err != undefined) {
             Alert.alert(Err?.message);
           }
@@ -193,6 +194,7 @@ const ChefEditName = (props: Props) => {
           extraStyle={styles.signupButton}
           onPress={onPressEditDone}
           title={strings('PersonalInfo.save_details')}
+          isLoading={loading}
         />
         <Spacer height={10} />
       </KeyboardAwareScrollView>

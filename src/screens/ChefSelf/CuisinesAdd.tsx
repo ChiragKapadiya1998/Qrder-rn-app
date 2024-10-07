@@ -7,21 +7,21 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useState} from 'react';
-import {useNavigation, useTheme} from '@react-navigation/native';
+import React, { useState } from 'react';
+import { useNavigation, useTheme } from '@react-navigation/native';
 import HomeHeader from '../../compoment/HomeHeader';
-import {useAppDispatch, useAppSelector} from '../../redux/hooks';
-import {strings} from '../../i18n/i18n';
-import {commonFontStyle, hp, SCREEN_WIDTH, wp} from '../../theme/fonts';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import { strings } from '../../i18n/i18n';
+import { commonFontStyle, hp, SCREEN_WIDTH, wp } from '../../theme/fonts';
 import Input from '../../compoment/Input';
-import {Icons} from '../../utils/images';
+import { Icons } from '../../utils/images';
 import ImageCropPicker from 'react-native-image-crop-picker';
 import PrimaryButton from '../../compoment/PrimaryButton';
 import Spacer from '../../compoment/Spacer';
-import {infoToast} from '../../utils/commonFunction';
-import {addCuisinesAction} from '../../actions/cuisinesAction';
-import {getAsyncUserInfo} from '../../utils/asyncStorageManager';
-import {openImagePicker} from '../../utils/globalFunctions';
+import { errorToast, infoToast } from '../../utils/commonFunction';
+import { addCuisinesAction } from '../../actions/cuisinesAction';
+import { getAsyncUserInfo } from '../../utils/asyncStorageManager';
+import { openImagePicker } from '../../utils/globalFunctions';
 
 export interface ListObj {
   title: string;
@@ -35,20 +35,20 @@ type ItemProps = {
   item: ListObj;
 };
 
-const CuisinesAdd = ({item}: ItemProps) => {
-  const {colors} = useTheme();
-  const styles = React.useMemo(() => getGlobalStyles({colors}), [colors]);
+const CuisinesAdd = ({ item }: ItemProps) => {
+  const { colors } = useTheme();
+  const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
   const navigation = useNavigation();
   const [visible, setVisible] = useState(false);
   const [cuisineName, seCuisineName] = useState('');
   const [photoUri, setPhotoUri] = useState(null);
   const [loading, setLoading] = useState(false);
-  const {isDarkTheme} = useAppSelector(state => state.common);
+  const { isDarkTheme } = useAppSelector(state => state.common);
   const dispatch = useAppDispatch();
-  const [imageData, setImageData] = useState<any>({
+  const [imageData, setImageData] = useState < any > ({
     uri: '',
   });
-  const [isPictureEdit, setIsPictureEdit] = useState<boolean>(false);
+  const [isPictureEdit, setIsPictureEdit] = useState < boolean > (false);
 
   const onPressNewAdd = async () => {
     if (cuisineName == '') {
@@ -111,7 +111,10 @@ const CuisinesAdd = ({item}: ItemProps) => {
   const selectImage = () => {
     openImagePicker({
       onSucess: res => {
-        console.log('res', res);
+        if (res.size > 2 * 1024 * 1024) {
+          errorToast(strings('newAddText.e_up_mb'))
+          return;
+        }
         setImageData(res);
         setIsPictureEdit(true);
       },
@@ -162,7 +165,7 @@ const CuisinesAdd = ({item}: ItemProps) => {
 
           {!isPictureEdit ? (
             <TouchableOpacity
-              style={[styles.addImageView, {borderWidth: 1}]}
+              style={[styles.addImageView, { borderWidth: 1 }]}
               onPress={() => {
                 selectImage();
               }}>
@@ -181,7 +184,7 @@ const CuisinesAdd = ({item}: ItemProps) => {
                 selectImage();
               }}>
               <Image
-                source={{uri: imageData.uri}}
+                source={{ uri: imageData.uri }}
                 style={{
                   width: '100%',
                   height: '100%',
@@ -216,7 +219,7 @@ const CuisinesAdd = ({item}: ItemProps) => {
 export default CuisinesAdd;
 
 const getGlobalStyles = (props: any) => {
-  const {colors} = props;
+  const { colors } = props;
   return StyleSheet.create({
     container: {
       flex: 1,
@@ -313,5 +316,8 @@ const getGlobalStyles = (props: any) => {
       paddingBottom: hp(8),
       ...commonFontStyle(700, 15, colors.text_orange),
     },
+    upToText: {
+      ...commonFontStyle(500, 12, colors.title_dec100),
+    }
   });
 };

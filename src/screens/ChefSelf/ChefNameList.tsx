@@ -11,6 +11,7 @@ import {
 import React, { useEffect, useState } from 'react';
 import {
   useFocusEffect,
+  useIsFocused,
   useNavigation,
   useTheme,
 } from '@react-navigation/native';
@@ -34,7 +35,7 @@ const ChefNameList = (props: Props) => {
   const navigation = useNavigation();
   const dispatch = useAppDispatch();
   const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
-  const { isDarkTheme } = useAppSelector(state => state.common);
+  const { isDarkTheme, isLoadingNew } = useAppSelector(state => state.common);
   const { getChefsData } = useAppSelector(state => state.data);
   const [visible, setVisible] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -42,15 +43,9 @@ const ChefNameList = (props: Props) => {
   const [loading, setLoading] = useState(false);
   const [getAllData, setGetAllData] = useState(getChefsData);
 
-  useFocusEffect(
-    React.useCallback(() => {
-      getChefsList();
-    }, []),
-  );
-
   useEffect(() => {
     getChefsList();
-  }, [getChefsData?.length]);
+  }, [isLoadingNew]);
 
   const removeChef = () => {
     let UserInfo = {
@@ -244,6 +239,7 @@ const getGlobalStyles = (props: any) => {
       marginTop: hp(16),
       borderRadius: 8,
       flexDirection: 'row',
+      marginBottom:hp(32)
     },
     nameText: {
       ...commonFontStyle(500, 16, colors.black),

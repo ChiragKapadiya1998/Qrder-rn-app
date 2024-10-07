@@ -61,12 +61,6 @@ const MiscellaneousList = (props: Props) => {
     setVisible(false);
   };
 
-  useFocusEffect(
-    useCallback(() => {
-      setGetAllData(getMiscellaneous);
-    }, [isFocused, getMiscellaneous?.length]),
-  );
-
   const removeMenuCardList = () => {
     let UserInfo = {
       data: selectItem?.id,
@@ -75,8 +69,6 @@ const MiscellaneousList = (props: Props) => {
         const updateData = getAllData.filter(item => {
           return item?.id !== selectItem?.id;
         });
-        console.log('updateData', updateData);
-
         setGetAllData(updateData);
       },
       onFailure: (Err: any) => {},
@@ -201,15 +193,6 @@ const MiscellaneousList = (props: Props) => {
           />
         )}
       </View>
-      {/* <AddFolderModal
-          isVisible={newFolder}
-          onClose={() => setNewFolder(false)}
-        />
-        <EditFolderModal
-          selectItem={selectItem}
-          isVisible={editFolder}
-          onClose={() => setEditFolder(false)}
-        /> */}
       <DleleteModal
         title={strings('myMenuList.are_you_sure')}
         rightText={strings('myMenuList.yes')}
@@ -260,6 +243,7 @@ const getGlobalStyles = (props: any) => {
       marginTop: hp(16),
       borderRadius: 8,
       flexDirection: 'row',
+      marginBottom:hp(32)
     },
     nameText: {
       ...commonFontStyle(500, 16, colors.black),

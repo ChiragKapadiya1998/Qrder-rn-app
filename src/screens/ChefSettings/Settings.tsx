@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   StatusBar,
   StyleSheet,
@@ -7,35 +7,36 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {useNavigation, useTheme} from '@react-navigation/native';
-import {strings} from '../../i18n/i18n';
-import {Dropdown} from 'react-native-element-dropdown';
+import { useNavigation, useTheme } from '@react-navigation/native';
+import { strings } from '../../i18n/i18n';
+import { Dropdown } from 'react-native-element-dropdown';
 import HomeHeader from '../../compoment/HomeHeader';
-import {commonFontStyle, hp, SCREEN_WIDTH, wp} from '../../theme/fonts';
+import { commonFontStyle, hp, SCREEN_HEIGHT, SCREEN_WIDTH, wp } from '../../theme/fonts';
 import DleleteModal from '../../compoment/DeleteModal';
-import {useAppDispatch, useAppSelector} from '../../redux/hooks';
-import {setDarkTheme, setLanguage} from '../../utils/commonActions';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import { setDarkTheme, setLanguage } from '../../utils/commonActions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {asyncKeys} from '../../utils/asyncStorageManager';
+import { asyncKeys } from '../../utils/asyncStorageManager';
 import ToggleComponent from '../../compoment/ToggleComponent';
+import DropdownComponent from '../../compoment/DropdownComponent';
 
 const languages = [
-  {label: 'English', value: 'en'},
-  {label: 'Tamil', value: 'ta'},
-  {label: 'Hindi', value: 'hi'},
-  {label: 'Telugu', value: 'te'},
-  {label: 'Kanada', value: 'ka'},
-  {label: 'Malyalam', value: 'ma'},
+  { label: 'English', value: 'en' },
+  { label: 'Tamil', value: 'ta' },
+  { label: 'Hindi', value: 'hi' },
+  { label: 'Telugu', value: 'te' },
+  { label: 'Kanada', value: 'ka' },
+  { label: 'Malyalam', value: 'ma' },
 ];
 
 const Settings = () => {
-  const {colors} = useTheme();
+  const { colors } = useTheme();
   const navigation = useNavigation();
   const dispatch = useAppDispatch();
-  const styles = React.useMemo(() => getGlobalStyles({colors}), [colors]);
+  const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
   const [selectedLanguage, setSelectedLanguage] = useState('en');
   const [visible, setVisible] = useState(false);
-  const {isDarkTheme, isLanguage} = useAppSelector(state => state.common);
+  const { isDarkTheme, isLanguage } = useAppSelector(state => state.common);
 
   useEffect(() => {
     const loadLanguage = async () => {
@@ -69,6 +70,10 @@ const Settings = () => {
     dispatch(setLanguage(lang));
   };
 
+  const handleChangeLanguage = (lang: string) => {
+    dispatch(setLanguage(lang));
+  };
+
   return (
     <View style={styles.container}>
       <StatusBar
@@ -98,22 +103,27 @@ const Settings = () => {
             onValueChange={() => changeValue()}
           />
         </View>
-        <View style={[styles.dropdownContainer, , {marginTop: hp(20)}]}>
+        <View style={[styles.dropdownContainer, , { marginTop: hp(20) }]}>
           <Text style={styles.label}>{strings('Settings.language')}</Text>
-          <Dropdown
+          <DropdownComponent 
+            selectedValue={selectedLanguage} 
+            data={languages} 
+            onSelect={handleChangeLanguage}
+            dropdownWidth={0.25}
+          />
+          {/* <Dropdown
             style={[
               styles.dropdown,
               {
-                width:
-                  selectedLanguage !== 'ma'
-                    ? SCREEN_WIDTH * 0.23
-                    : SCREEN_WIDTH * 0.27,
+                width: selectedLanguage === 'ma' ? SCREEN_WIDTH * 0.35 : SCREEN_WIDTH * 0.3,
               },
             ]}
             selectedTextStyle={[
-              styles.label,
-              {marginLeft: 15, color: colors.text_orange, alignSelf: 'center'},
+              styles.selectedTextStyle,
+              { color: colors.text_orange },
             ]}
+            numberOfLines={1}
+            ellipsizeMode="tail"
             data={languages}
             labelField="label"
             valueField="value"
@@ -121,11 +131,22 @@ const Settings = () => {
             value={selectedLanguage}
             onChange={item => changeLanguage(item.value)}
             iconStyle={styles.downIcon}
-            containerStyle={{backgroundColor: colors.cards_bg, top: 10}}
+            containerStyle={{
+              backgroundColor: colors.cards_bg,
+              top: 10,
+            }}
             activeColor={colors.border}
-            itemTextStyle={{color: colors.black}}
-            iconStyle={{tintColor: colors.text_orange}}
-          />
+            itemTextStyle={{
+              color: colors.black,
+              numberOfLines: 1,
+              ellipsizeMode: 'tail',
+            }}
+            iconStyle={{
+              tintColor: colors.text_orange,
+              marginRight: 0,
+            }}
+          /> */}
+
         </View>
         {/* <Text style={styles.titleLabel}>{strings('Settings.account_setting')}</Text>
                 <TouchableOpacity style={[styles.dropdownContainer]} onPress={() => setVisible(true)}>
@@ -137,7 +158,7 @@ const Settings = () => {
 };
 
 const getGlobalStyles = props => {
-  const {colors} = props;
+  const { colors } = props;
   return StyleSheet.create({
     container: {
       flex: 1,
@@ -148,11 +169,6 @@ const getGlobalStyles = props => {
     },
     subContainer: {
       marginHorizontal: wp(20),
-    },
-    titleLabel: {
-      ...commonFontStyle(400, 15, colors.black),
-      paddingTop: hp(12),
-      marginBottom: hp(18),
     },
     dropdownContainer: {
       justifyContent: 'space-between',
@@ -167,13 +183,23 @@ const getGlobalStyles = props => {
       ...commonFontStyle(500, 15, colors.black),
     },
     dropdown: {
-      width: SCREEN_WIDTH * 0.23,
+      width: SCREEN_WIDTH * 0.3,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+    },
+    selectedTextStyle: {
+      fontSize: 15,
+      marginLeft: 35,
+      flex: 1,
+      textAlign: 'left',
     },
     downIcon: {
       width: 22,
       height: 22,
       resizeMode: 'contain',
       tintColor: colors.black,
+      marginLeft: 15,
     },
     deleteText: {
       ...commonFontStyle(400, 15, colors.red_ED7C7C),

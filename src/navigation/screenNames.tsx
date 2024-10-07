@@ -46,6 +46,7 @@ export const screenName = {
   MyOrders: 'MyOrders',
   TermCondition:'TermCondition',
   PrivacyPolicy:'PrivacyPolicy',
+  ChangePassword:'ChangePassword',
 
 
   //chefSignUp

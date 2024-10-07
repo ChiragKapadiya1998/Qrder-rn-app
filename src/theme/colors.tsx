@@ -79,7 +79,7 @@ export const light_theme = {
   btn_bg: '#DDDDDD',
   blue: '#0162DD',
   green_text: '#1CAA50',
-  red_text: '#CC3730'
+  red_text: '#CC3730',
 };
 
 export const dark_theme = {

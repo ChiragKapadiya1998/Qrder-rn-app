@@ -16,6 +16,7 @@ import {
   USER_INFO,
 } from '../redux/actionTypes';
 import {getAsyncToken} from '../utils/asyncStorageManager';
+import { successToast } from '../utils/commonFunction';
 
 export const getCuisinesAction =
   (request: any): ThunkAction<void, RootState, unknown, AnyAction> =>
@@ -40,15 +41,10 @@ export const getCuisinesAction =
               current_page: request?.data?.page,
             },
           });
-          dispatch({type: IS_LOADING, payload: false});
           if (request.onSuccess) request.onSuccess(response.data.data);
         }
       })
       .catch(error => {
-        console.log('====================================');
-        console.log('error', error);
-        console.log('====================================');
-        dispatch({type: IS_LOADING, payload: false});
         if (request.onFailure) request.onFailure(error.response);
       });
   };
@@ -60,7 +56,6 @@ export const addCuisinesAction =
       Authorization: await getAsyncToken(),
       'Content-Type': 'multipart/form-data',
     };
-    dispatch({type: IS_LOADING, payload: true});
     dispatch({type: IS_LOADING_NEW, payload: true});
     return makeAPIRequest({
       method: POST,
@@ -70,7 +65,7 @@ export const addCuisinesAction =
     })
       .then(async (response: any) => {
         if (response?.data?.success) {
-          dispatch({type: IS_LOADING, payload: false});
+          successToast(response?.data.message);
           dispatch({type: IS_LOADING_NEW, payload: false});
           if (request.onSuccess) request.onSuccess(response.data);
         } else {
@@ -80,7 +75,6 @@ export const addCuisinesAction =
         }
       })
       .catch(error => {
-        dispatch({type: IS_LOADING, payload: false});
         dispatch({type: IS_LOADING_NEW, payload: false});
         if (request.onFailure) request.onFailure(error?.response?.data);
       });
@@ -94,8 +88,6 @@ export const editCuisinesAction =
       'Content-Type': 'multipart/form-data',
     };
     dispatch({type: IS_LOADING_NEW, payload: true});
-
-    dispatch({type: IS_LOADING, payload: true});
     return makeAPIRequest({
       method: POST,
       url: `${api.getCuisinesUpdate}/${request?.id}`,
@@ -104,19 +96,16 @@ export const editCuisinesAction =
     })
       .then(async (response: any) => {
         if (response?.data?.success) {
-          dispatch({type: IS_LOADING_NEW, payload: true});
-
-          dispatch({type: IS_LOADING, payload: false});
+          dispatch({type: IS_LOADING_NEW, payload: false});
+          successToast(response?.data?.message);
           if (request.onSuccess) request.onSuccess(response.data);
         } else {
-          dispatch({type: IS_LOADING_NEW, payload: true});
-
+          dispatch({type: IS_LOADING_NEW, payload: false});
           if (request.onFailure) request.onFailure(response.data);
         }
       })
       .catch(error => {
         dispatch({type: IS_LOADING_NEW, payload: false});
-        dispatch({type: IS_LOADING, payload: false});
         if (request.onFailure) request.onFailure(error?.response?.data);
       });
   };
@@ -127,9 +116,7 @@ export const deleteCuisinesAction =
     let headers = {
       Authorization: await getAsyncToken(),
     };
-    dispatch({type: IS_LOADING, payload: true});
-    console.log('request.data', request.data);
-
+    dispatch({type: IS_LOADING_NEW, payload: true});
     return makeAPIRequest({
       method: DELETE,
       url: `${api.getCuisines}/${request.data}`,
@@ -137,13 +124,14 @@ export const deleteCuisinesAction =
     })
       .then(async (response: any) => {
         if (response.status === 200 || response.status === 201) {
+          successToast(response?.data?.message);
           dispatch({type: DELETE_CUISINES_DATA, payload: request.data});
-          dispatch({type: IS_LOADING, payload: false});
+          dispatch({type: IS_LOADING_NEW, payload: false});
           if (request.onSuccess) request.onSuccess(response.data);
         }
       })
       .catch(error => {
-        dispatch({type: IS_LOADING, payload: false});
+        dispatch({type: IS_LOADING_NEW, payload: false});
         if (request.onFailure) request.onFailure(error.response);
       });
   };
@@ -155,7 +143,6 @@ export const addMiscellaneousAction =
       Authorization: await getAsyncToken(),
       'Content-Type': 'multipart/form-data',
     };
-    dispatch({type: IS_LOADING, payload: true});
     dispatch({type: IS_LOADING_NEW, payload: true});
     return makeAPIRequest({
       method: POST,
@@ -164,9 +151,8 @@ export const addMiscellaneousAction =
       data: request.data,
     })
       .then(async (response: any) => {
-        console.log('response?.data', response?.data);
         if (response?.data?.success) {
-          dispatch({type: IS_LOADING, payload: false});
+          successToast(response?.data?.message);
           dispatch({type: IS_LOADING_NEW, payload: false});
           if (request.onSuccess) request.onSuccess(response.data);
         } else {
@@ -175,7 +161,6 @@ export const addMiscellaneousAction =
         }
       })
       .catch(error => {
-        dispatch({type: IS_LOADING, payload: false});
         dispatch({type: IS_LOADING_NEW, payload: false});
         if (request.onFailure) request.onFailure(error?.response?.data);
       });
@@ -187,9 +172,6 @@ export const deleteMiscellaneousAction =
     let headers = {
       Authorization: await getAsyncToken(),
     };
-    dispatch({type: IS_LOADING, payload: true});
-    console.log('request.data', request.data);
-
     return makeAPIRequest({
       method: DELETE,
       url: `${api.getmiscellaneous}/${request.data}`,
@@ -197,14 +179,12 @@ export const deleteMiscellaneousAction =
     })
       .then(async (response: any) => {
         if (response?.data?.message) {
-          dispatch({type: IS_LOADING, payload: false});
           if (request.onSuccess) request.onSuccess(response.data);
         } else {
           if (request.onFailure) request.onFailure(response.data);
         }
       })
       .catch(error => {
-        dispatch({type: IS_LOADING, payload: false});
         if (request.onFailure) request.onFailure(error.response);
       });
   };
@@ -215,7 +195,6 @@ export const editMiscellaneousAction =
     let headers = {
       Authorization: await getAsyncToken(),
     };
-    dispatch({type: IS_LOADING, payload: true});
     dispatch({type: IS_LOADING_NEW, payload: true});
     return makeAPIRequest({
       method: PUT,
@@ -224,9 +203,8 @@ export const editMiscellaneousAction =
       data: request.data,
     })
       .then(async (response: any) => {
-        console.log('response?.data', response?.data);
         if (response?.data?.success) {
-          dispatch({type: IS_LOADING, payload: false});
+          successToast(response?.data?.message);
           dispatch({type: IS_LOADING_NEW, payload: false});
           if (request.onSuccess) request.onSuccess(response.data);
         } else {
@@ -235,7 +213,6 @@ export const editMiscellaneousAction =
         }
       })
       .catch(error => {
-        dispatch({type: IS_LOADING, payload: false});
         dispatch({type: IS_LOADING_NEW, payload: false});
         if (request.onFailure) request.onFailure(error?.response?.data);
       });
@@ -274,7 +251,6 @@ export const addMenuMastersAction =
     let headers = {
       Authorization: await getAsyncToken(),
     };
-    dispatch({type: IS_LOADING, payload: true});
     dispatch({type: IS_LOADING_NEW, payload: true});
     return makeAPIRequest({
       method: POST,
@@ -283,9 +259,8 @@ export const addMenuMastersAction =
       data: request.data,
     })
       .then(async (response: any) => {
-        console.log('response?.data', response?.data);
         if (response?.data?.success) {
-          dispatch({type: IS_LOADING, payload: false});
+          successToast(response?.data?.message);
           dispatch({type: IS_LOADING_NEW, payload: false});
           if (request.onSuccess) request.onSuccess(response.data);
         } else {
@@ -306,7 +281,6 @@ export const editMenuMastersAction =
     let headers = {
       Authorization: await getAsyncToken(),
     };
-    dispatch({type: IS_LOADING, payload: true});
     dispatch({type: IS_LOADING_NEW, payload: true});
     return makeAPIRequest({
       method: PUT,
@@ -315,9 +289,8 @@ export const editMenuMastersAction =
       data: request.data,
     })
       .then(async (response: any) => {
-        console.log('response?.data', response?.data);
         if (response?.data?.success) {
-          dispatch({type: IS_LOADING, payload: false});
+          successToast(response?.data?.message);
           dispatch({type: IS_LOADING_NEW, payload: false});
           if (request.onSuccess) request.onSuccess(response.data);
         } else {
@@ -326,7 +299,6 @@ export const editMenuMastersAction =
         }
       })
       .catch(error => {
-        dispatch({type: IS_LOADING, payload: false});
         dispatch({type: IS_LOADING_NEW, payload: false});
         if (request.onFailure) request.onFailure(error?.response?.data);
       });
@@ -338,26 +310,19 @@ export const deleteMenuMastersAction =
     let headers = {
       Authorization: await getAsyncToken(),
     };
-    dispatch({type: IS_LOADING, payload: true});
-    console.log('request.data', request.data);
-
     return makeAPIRequest({
       method: DELETE,
       url: `${api.menuMasters}/${request.id}`,
       headers: headers,
     })
       .then(async (response: any) => {
-        console.log('response?.data?.message', response?.data?.message);
-
         if (response?.data?.message) {
-          dispatch({type: IS_LOADING, payload: false});
           if (request.onSuccess) request.onSuccess(response.data);
         } else {
           if (request.onFailure) request.onFailure(response.data);
         }
       })
       .catch(error => {
-        dispatch({type: IS_LOADING, payload: false});
         if (request.onFailure) request.onFailure(error.response);
       });
   };
@@ -398,7 +363,6 @@ export const addRecipeMasterAction =
     let headers = {
       Authorization: await getAsyncToken(),
     };
-    dispatch({type: IS_LOADING, payload: true});
     dispatch({type: IS_LOADING_NEW, payload: true});
     return makeAPIRequest({
       method: POST,
@@ -409,7 +373,6 @@ export const addRecipeMasterAction =
       .then(async (response: any) => {
         console.log('response?.data', response?.data);
         if (response?.data?.success) {
-          dispatch({type: IS_LOADING, payload: false});
           dispatch({type: IS_LOADING_NEW, payload: false});
           if (request.onSuccess) request.onSuccess(response.data);
         } else {
@@ -418,7 +381,6 @@ export const addRecipeMasterAction =
         }
       })
       .catch(error => {
-        dispatch({type: IS_LOADING, payload: false});
         dispatch({type: IS_LOADING_NEW, payload: false});
         if (request.onFailure) request.onFailure(error?.response?.data);
       });
@@ -430,7 +392,6 @@ export const editRecipeMastersAction =
     let headers = {
       Authorization: await getAsyncToken(),
     };
-    dispatch({type: IS_LOADING, payload: true});
     dispatch({type: IS_LOADING_NEW, payload: true});
     return makeAPIRequest({
       method: PUT,
@@ -439,9 +400,7 @@ export const editRecipeMastersAction =
       data: request.data,
     })
       .then(async (response: any) => {
-        console.log('response?.data', response?.data);
         if (response?.data?.success) {
-          dispatch({type: IS_LOADING, payload: false});
           dispatch({type: IS_LOADING_NEW, payload: false});
           if (request.onSuccess) request.onSuccess(response.data);
         } else {
@@ -450,7 +409,6 @@ export const editRecipeMastersAction =
         }
       })
       .catch(error => {
-        dispatch({type: IS_LOADING, payload: false});
         dispatch({type: IS_LOADING_NEW, payload: false});
         if (request.onFailure) request.onFailure(error?.response?.data);
       });
@@ -462,26 +420,19 @@ export const deleteRecipeMasterAction =
     let headers = {
       Authorization: await getAsyncToken(),
     };
-    dispatch({type: IS_LOADING, payload: true});
-    console.log('request.data', request.data);
-
     return makeAPIRequest({
       method: DELETE,
       url: `${api.recipeMaster}/${request.id}`,
       headers: headers,
     })
       .then(async (response: any) => {
-        console.log('response?.data?.message', response?.data?.message);
-
         if (response?.data?.message) {
-          dispatch({type: IS_LOADING, payload: false});
           if (request.onSuccess) request.onSuccess(response.data);
         } else {
           if (request.onFailure) request.onFailure(response.data);
         }
       })
       .catch(error => {
-        dispatch({type: IS_LOADING, payload: false});
         if (request.onFailure) request.onFailure(error.response);
       });
   };
@@ -501,11 +452,6 @@ export const getRecipeMenusAction =
     })
       .then(async (response: any) => {
         if (response.status === 200 || response.status === 201) {
-          console.log(
-            'response?.data?.dataresponse?.data?.data',
-            response?.data?.data,
-          );
-
           dispatch({
             type: GET_RECIPES_MENU,
             payload: response?.data,

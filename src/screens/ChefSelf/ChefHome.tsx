@@ -224,17 +224,14 @@ const ChefHome = () => {
           navigation.navigate(screenName.ChefNotification);
         }}
       />
-      <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
-        <ImageBackground
-          source={Icons.banner}
-          resizeMode="contain"
-          style={{
-            width: SCREEN_WIDTH,
-            height: SCREEN_HEIGHT * 0.133,
-            marginVertical: 12,
-            justifyContent: 'center',
-          }}>
-          {discount === 0 ? null :
+      <ScrollView style={{ flex: 1, marginHorizontal: wp(20) }} showsVerticalScrollIndicator={false}>
+        <View style={styles.hurrUpView}>
+          <View>
+            <Text style={styles.hurryText}>{strings('newAddText.hurry_up')}</Text>
+            <Text style={styles.hurryText}>{strings('newAddText.up_to')}</Text>
+            <Text style={styles.allText}>{strings('newAddText.all_foods_are_available')}</Text>
+          </View>
+          {discount === 0 ? null : (
             <ImageBackground
               source={Icons.ic_dec}
               resizeMode="contain"
@@ -242,21 +239,19 @@ const ChefHome = () => {
                 width: 90,
                 height: 90,
                 alignSelf: 'flex-end',
-                marginRight: SCREEN_WIDTH * 0.1,
                 justifyContent: 'center',
                 alignItems: 'center',
                 flexDirection: 'row',
               }}>
               <Text style={styles.bannerText}>{`${discount}%`}</Text>
-              <Text style={styles.bannerText1}>{'OFF'}</Text>
-            </ImageBackground>}
-        </ImageBackground>
+            </ImageBackground>
+          )}
+        </View>
 
         <View
           style={{
             flexDirection: 'row',
             alignItems: 'center',
-            marginHorizontal: wp(20),
             justifyContent: 'space-between',
             marginTop: hp(8),
             marginBottom: 20,
@@ -269,7 +264,7 @@ const ChefHome = () => {
 
         <FlatList
           data={isRunningOrder}
-          contentContainerStyle={{ gap: 16, marginHorizontal: wp(20) }}
+          contentContainerStyle={{ gap: 16 }}
           renderItem={renderItem}
           keyExtractor={(item, index) => index.toString()}
           showsVerticalScrollIndicator={false}
@@ -450,5 +445,20 @@ const getGlobalStyles = (props: any) => {
     diningText: {
       ...commonFontStyle(500, 12, colors?.defult_white),
     },
+    hurrUpView: {
+      backgroundColor: colors.text_orange,
+      padding: 16,
+      borderRadius: 16,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between'
+    },
+    hurryText: {
+      ...commonFontStyle(800, 18, colors.defult_white),
+    },
+    allText: {
+      marginTop: hp(10),
+      ...commonFontStyle(400, 14, colors.defult_white),
+    }
   });
 };

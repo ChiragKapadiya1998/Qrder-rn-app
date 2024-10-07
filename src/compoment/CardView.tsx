@@ -44,7 +44,6 @@ const getGlobalStyles = (props: any) => {
     container: {
       elevation: 2,
       backgroundColor: colors.cards_bg,
-      marginHorizontal: wp(16),
       borderRadius: 15,
     },
   });

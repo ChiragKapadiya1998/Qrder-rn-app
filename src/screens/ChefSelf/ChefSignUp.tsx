@@ -6,17 +6,17 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useRef, useState} from 'react';
-import {useNavigation, useTheme} from '@react-navigation/native';
-import {hp, wp} from '../../theme/fonts';
+import React, { useRef, useState } from 'react';
+import { useNavigation, useTheme } from '@react-navigation/native';
+import { hp, wp } from '../../theme/fonts';
 import Input from '../../compoment/Input';
 import PrimaryButton from '../../compoment/PrimaryButton';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import LoginHeader from '../../compoment/LoginHeader';
-import {screenName} from '../../navigation/screenNames';
-import {strings} from '../../i18n/i18n';
+import { screenName } from '../../navigation/screenNames';
+import { strings } from '../../i18n/i18n';
 import CCDropDown from '../../compoment/CCDropDown';
-import {useAppDispatch, useAppSelector} from '../../redux/hooks';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import {
   emailCheck,
   errorToast,
@@ -24,32 +24,32 @@ import {
   specialCarCheck,
   UpperCaseCheck,
 } from '../../utils/commonFunction';
-import {chefsSignUp} from '../../actions/chefsAction';
+import { chefsSignUp } from '../../actions/chefsAction';
 import Spacer from '../../compoment/Spacer';
-import {getAsyncUserInfo} from '../../utils/asyncStorageManager';
-import {dispatchNavigation, openImagePicker} from '../../utils/globalFunctions';
+import { getAsyncUserInfo } from '../../utils/asyncStorageManager';
+import { dispatchNavigation, openImagePicker } from '../../utils/globalFunctions';
 import HomeHeader from '../../compoment/HomeHeader';
-import {Icons} from '../../utils/images';
+import { Icons } from '../../utils/images';
 
 type Props = {};
 
 const ChefSignUp = (props: Props) => {
-  const {colors, isDark} = useTheme();
-  const styles = React.useMemo(() => getGlobalStyles({colors}), [colors]);
+  const { colors, isDark } = useTheme();
+  const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState<string>('');
+  const [phone, setPhone] = useState < string > ('');
   const [password, setPassword] = useState('');
   const [salary, setSalary] = useState('');
   const [rePassword, setRePassword] = useState('');
-  const [isShowPassword, setIsShowPassword] = useState<boolean>(true);
-  const [reShowPassword, setReShowPassword] = useState<boolean>(true);
+  const [isShowPassword, setIsShowPassword] = useState < boolean > (true);
+  const [reShowPassword, setReShowPassword] = useState < boolean > (true);
   const [quantityValue, setQuantityValue] = useState(0);
   const [photoUri, setPhotoUri] = useState(null);
   const [loading, setLoading] = useState(false);
-  const {getCuisines} = useAppSelector(state => state.data);
-  const {isDarkTheme} = useAppSelector(state => state.common);
-  const [imageData, setImageData] = useState<any>({
+  const { getCuisines } = useAppSelector(state => state.data);
+  const { isDarkTheme } = useAppSelector(state => state.common);
+  const [imageData, setImageData] = useState < any > ({
     uri: '',
   });
   const navigation = useNavigation();
@@ -85,6 +85,7 @@ const ChefSignUp = (props: Props) => {
     } else if (rePassword.trim() !== password.trim()) {
       errorToast(strings('login.error_re_tyre_match'));
     } else {
+      setLoading(true)
       var data = new FormData();
       const userDetails = await getAsyncUserInfo();
 
@@ -104,6 +105,7 @@ const ChefSignUp = (props: Props) => {
       let obj = {
         data,
         onSuccess: (response: any) => {
+          setLoading(false)
           navigation.goBack();
           setName('');
           setEmail('');
@@ -114,6 +116,7 @@ const ChefSignUp = (props: Props) => {
           setSalary(0);
         },
         onFailure: (Err: any) => {
+          setLoading(false)
           if (Err != undefined) {
             Alert.alert(Err?.message);
           }
@@ -127,27 +130,10 @@ const ChefSignUp = (props: Props) => {
     navigation.goBack();
   };
 
-  // const selectImage = () => {
-  //   setLoading(true);
-  //   ImageCropPicker.openPicker({
-  //     width: 100,
-  //     height: 100,
-  //     cropping: true,
-  //   })
-  //     .then(image => {
-  //       setPhotoUri(image.path);
-  //       setLoading(false);
-  //     })
-  //     .catch(error => {
-  //       console.log(error);
-  //       setLoading(false);
-  //     });
-  // };
 
   const selectImage = () => {
     openImagePicker({
       onSucess: res => {
-        console.log('res', res);
         setImageData(res);
         // setIsPictureEdit(true);
       },
@@ -179,7 +165,7 @@ const ChefSignUp = (props: Props) => {
           <View>
             <Image
               source={
-                imageData?.uri ? {uri: imageData?.uri} : Icons.profileImage
+                imageData?.uri ? { uri: imageData?.uri } : Icons.profileImage
               }
               style={styles.profilImage}
             />
@@ -270,6 +256,7 @@ const ChefSignUp = (props: Props) => {
           extraStyle={styles.signupButton}
           onPress={onPressLogin}
           title={strings('PersonalInfo.save_details')}
+          isLoading={loading}
         />
         <Spacer height={hp(20)} />
       </KeyboardAwareScrollView>
@@ -280,7 +267,7 @@ const ChefSignUp = (props: Props) => {
 export default ChefSignUp;
 
 const getGlobalStyles = (props: any) => {
-  const {colors} = props;
+  const { colors } = props;
   return StyleSheet.create({
     container: {
       flex: 1,

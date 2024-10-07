@@ -1,4 +1,4 @@
-import {Dimensions, Platform} from 'react-native';
+import {Alert, Dimensions, Platform} from 'react-native';
 import {navigationRef} from '../navigation/mainNavigator';
 import {CommonActions} from '@react-navigation/native';
 import moment from 'moment';
@@ -10,7 +10,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {asyncKeys} from './asyncStorageManager';
 import appleAuth from '@invertase/react-native-apple-authentication';
 import auth from '@react-native-firebase/auth';
-import {infoToast} from './commonFunction';
+import {errorToast, infoToast} from './commonFunction';
 
 export const dispatchNavigation = (name: string) => {
   navigationRef.dispatch(
@@ -42,6 +42,7 @@ export const openImagePicker = ({params, onSucess, onFail}: any) => {
       });
   } catch (error) {}
 };
+
 
 export const options = [
   {label: strings('addFoodList.Inclusiveinvoice'), icon: Icons.ic_check},

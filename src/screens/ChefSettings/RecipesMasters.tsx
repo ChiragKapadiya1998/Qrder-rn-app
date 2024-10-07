@@ -61,11 +61,6 @@ const RecipesMastersList = (props: Props) => {
     setVisible(false);
   };
 
-  useFocusEffect(
-    useCallback(() => {
-      setGetAllData(getRecipesMasters);
-    }, [isFocused, getRecipesMasters?.length]),
-  );
 
   const removeMenuCardList = () => {
     let UserInfo = {
@@ -291,6 +286,7 @@ const getGlobalStyles = (props: any) => {
       marginTop: hp(16),
       borderRadius: 8,
       flexDirection: 'row',
+      marginBottom:hp(32)
     },
     nameText: {
       ...commonFontStyle(500, 16, colors.black),

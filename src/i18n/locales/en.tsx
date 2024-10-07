@@ -66,6 +66,7 @@ export default {
     select_role: 'SELECT ROLE',
     error_v_confirm: 'Please enter your confirm password',
     error_new_password: 'Please enter your new password',
+    error_current_password: 'Please enter your current password',
     ressetPassword: 'Reset Password',
 
     welcome_back: 'Welcome Back!',
@@ -137,6 +138,8 @@ export default {
     send_again: 'Send again',
     new_password: 'New Password',
     confirm_password: 'Confirm Password',
+    update: 'Update',
+    reset:'Reset'
   },
   otp_verification: {
     enter_otp_code: 'Enter OTP Code',
@@ -282,6 +285,11 @@ export default {
     privacy_policy: 'Privacy Policy',
     term_condition: 'Term & Condition',
     download_invoice: 'Download Invoice',
+    change_password: 'Change Password',
+    current_password: 'Current Password',
+    add_current_password: 'Add current password',
+    add_new_password: 'Add new password',
+    add_confirm_password: 'Add confirm password'
   },
   notifications: {
     notifications: 'Notifications',
@@ -479,4 +487,11 @@ export default {
   menuList: {
     menu: 'Menu',
   },
+  newAddText:{
+    hurry_up:'Hurry Up!',
+    up_to:'Up to',
+    all_foods_are_available:'All Foods are Available',
+    off:'OFF',
+    e_up_mb:'File should not be larger than 2MB'
+  }
 };

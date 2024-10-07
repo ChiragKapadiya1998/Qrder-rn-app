@@ -71,6 +71,7 @@ import EditMenuList from '../screens/Chef/EditMenuList';
 import TermCondition from '../screens/ChefSettings/TermCondition';
 import PrivacyPolicy from '../screens/ChefSettings/PrivacyPolicy';
 import ChefMyOrders from '../screens/ChefSelf/ChefMyOrders';
+import ChangePassword from '../screens/ChefSettings/ChangePassword';
 
 const Drawer = createDrawerNavigator();
 const { StatusBarManager } = NativeModules;
@@ -409,6 +410,15 @@ const StackNavigator: FC = () => {
         })}
         name={screenName.PrivacyPolicy}
         component={PrivacyPolicy}
+      />
+         <Stack.Screen
+        options={({ navigation }) => ({
+          ...headerStyleTransparent,
+          headerShown: false,
+          headerTitle: '',
+        })}
+        name={screenName.ChangePassword}
+        component={ChangePassword}
       />
       {/* // chefSell */}
 

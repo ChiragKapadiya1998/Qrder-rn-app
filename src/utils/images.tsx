@@ -93,6 +93,7 @@ export const Icons = {
   thankIcon: require('../assets/Icons/thank_icon.png'),
   addImageIcon: require('../assets/Icons/image_icons.png'),
   deleteMins: require('../assets/Icons/delete_mins.png'),
+  homeImage: require('../assets/Icons/ic_bg_image.png'),
 
   //tab
   ic_home: require('../assets/Icons/ic_home.png'),

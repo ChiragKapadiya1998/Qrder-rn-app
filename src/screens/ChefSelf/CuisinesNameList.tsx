@@ -8,7 +8,7 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import React, {useCallback, useEffect, useState} from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   useFocusEffect,
   useIsFocused,
@@ -16,17 +16,17 @@ import {
   useRoute,
   useTheme,
 } from '@react-navigation/native';
-import {commonFontStyle, hp, wp} from '../../theme/fonts';
-import {useAppDispatch, useAppSelector} from '../../redux/hooks';
+import { commonFontStyle, hp, wp } from '../../theme/fonts';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import HomeHeader from '../../compoment/HomeHeader';
-import {strings} from '../../i18n/i18n';
+import { strings } from '../../i18n/i18n';
 import NoDataFound from '../../compoment/NoDataFound';
 import Spacer from '../../compoment/Spacer';
 import ChefNameCardList from '../../compoment/ChefNameCardList';
 import DleleteModal from '../../compoment/DeleteModal';
-import {screenName} from '../../navigation/screenNames';
-import {Icons} from '../../utils/images';
-import {getChefsAction} from '../../actions/chefsAction';
+import { screenName } from '../../navigation/screenNames';
+import { Icons } from '../../utils/images';
+import { getChefsAction } from '../../actions/chefsAction';
 import CuisinesNameCardList from '../../compoment/CuisinesNameCardList';
 import {
   deleteCuisinesAction,
@@ -39,14 +39,14 @@ import Loader from '../../compoment/Loader';
 type Props = {};
 
 const CuisinesNameList = (props: Props) => {
-  const {colors, isDark} = useTheme();
+  const { colors, isDark } = useTheme();
   const navigation = useNavigation();
-  const {params} = useRoute();
-  const styles = React.useMemo(() => getGlobalStyles({colors}), [colors]);
-  const {isDarkTheme, isLoadingNew} = useAppSelector(state => state.common);
+  const { params } = useRoute();
+  const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
+  const { isDarkTheme, isLoadingNew } = useAppSelector(state => state.common);
   const [visible, setVisible] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const {getCuisines, cuisinesCount} = useAppSelector(state => state.data);
+  const { getCuisines, cuisinesCount } = useAppSelector(state => state.data);
   const [getAllData, setGetAllData] = useState(getCuisines);
   const [newFolder, setNewFolder] = useState(false);
   const [editFolder, setEditFolder] = useState(false);
@@ -59,15 +59,10 @@ const CuisinesNameList = (props: Props) => {
     setVisible(false);
   };
 
-  useFocusEffect(
-    useCallback(() => {
-      setGetAllData(getCuisines);
-    }, [isFocused, getCuisines?.length, params]),
-  );
+  useEffect(() => {
+    setGetAllData(getCuisines);
+  }, [isFocused, isLoadingNew])
 
-  // useEffect(() => {
-  //   setGetAllData(getCuisines)
-  // }, [getCuisines?.length, isFocused])
 
   const removeMenuCardList = () => {
     let UserInfo = {
@@ -75,7 +70,7 @@ const CuisinesNameList = (props: Props) => {
       onSuccess: (res: any) => {
         closeModal();
       },
-      onFailure: (Err: any) => {},
+      onFailure: (Err: any) => { },
     };
     dispatch(deleteCuisinesAction(UserInfo));
   };
@@ -137,7 +132,7 @@ const CuisinesNameList = (props: Props) => {
         isShowIcon={false}
         isCreateIcon={true}
       />
-      <View style={{marginHorizontal: wp(20)}}>
+      <View style={{ marginHorizontal: wp(20) }}>
         <View style={styles.searchInputContainer}>
           <Image source={Icons.search} style={styles.searchIcon} />
           <TextInput
@@ -168,7 +163,7 @@ const CuisinesNameList = (props: Props) => {
                 </View>
               );
             }}
-            renderItem={({item, index}) => {
+            renderItem={({ item, index }) => {
               return (
                 <CuisinesNameCardList
                   item={item}
@@ -187,20 +182,11 @@ const CuisinesNameList = (props: Props) => {
             }}
             showsVerticalScrollIndicator={false}
             ListFooterComponent={() => {
-              return <View style={{height: 150}} />;
+              return <View style={{ height: 150 }} />;
             }}
           />
         )}
       </View>
-      {/* <AddFolderModal
-        isVisible={newFolder}
-        onClose={() => setNewFolder(false)}
-      />
-      <EditFolderModal
-        selectItem={selectItem}
-        isVisible={editFolder}
-        onClose={() => setEditFolder(false)}
-      /> */}
       <DleleteModal
         title={strings('myMenuList.are_you_sure')}
         rightText={strings('myMenuList.yes')}
@@ -216,7 +202,7 @@ const CuisinesNameList = (props: Props) => {
 export default CuisinesNameList;
 
 const getGlobalStyles = (props: any) => {
-  const {colors} = props;
+  const { colors } = props;
   return StyleSheet.create({
     container: {
       flex: 1,
@@ -251,6 +237,7 @@ const getGlobalStyles = (props: any) => {
       marginTop: hp(16),
       borderRadius: 8,
       flexDirection: 'row',
+      marginBottom:hp(32)
     },
     nameText: {
       ...commonFontStyle(500, 16, colors.black),

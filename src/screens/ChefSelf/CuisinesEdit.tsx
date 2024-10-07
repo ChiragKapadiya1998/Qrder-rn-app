@@ -7,45 +7,43 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useState} from 'react';
-import {useNavigation, useRoute, useTheme} from '@react-navigation/native';
+import React, { useState } from 'react';
+import { useNavigation, useRoute, useTheme } from '@react-navigation/native';
 import HomeHeader from '../../compoment/HomeHeader';
-import {useAppDispatch, useAppSelector} from '../../redux/hooks';
-import {strings} from '../../i18n/i18n';
-import {commonFontStyle, hp, SCREEN_WIDTH, wp} from '../../theme/fonts';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import { strings } from '../../i18n/i18n';
+import { commonFontStyle, hp, SCREEN_WIDTH, wp } from '../../theme/fonts';
 import Input from '../../compoment/Input';
-import {Icons} from '../../utils/images';
+import { Icons } from '../../utils/images';
 import ImageCropPicker from 'react-native-image-crop-picker';
 import PrimaryButton from '../../compoment/PrimaryButton';
 import Spacer from '../../compoment/Spacer';
-import {infoToast} from '../../utils/commonFunction';
+import { errorToast, infoToast } from '../../utils/commonFunction';
 import {
   addCuisinesAction,
   editCuisinesAction,
 } from '../../actions/cuisinesAction';
-import {getAsyncUserInfo} from '../../utils/asyncStorageManager';
-import {openImagePicker} from '../../utils/globalFunctions';
+import { getAsyncUserInfo } from '../../utils/asyncStorageManager';
+import { openImagePicker } from '../../utils/globalFunctions';
 
 const CuisinesEdit = () => {
-  const {colors} = useTheme();
+  const { colors } = useTheme();
   const route = useRoute();
-  const {selectList} = route?.params;
-  const styles = React.useMemo(() => getGlobalStyles({colors}), [colors]);
+  const { selectList } = route?.params;
+  const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
   const navigation = useNavigation();
   const [visible, setVisible] = useState(false);
   const [cuisineName, seCuisineName] = useState(selectList?.name);
   const [photoUri, setPhotoUri] = useState(selectList?.image);
   const [loading, setLoading] = useState(false);
-  const {isDarkTheme} = useAppSelector(state => state.common);
+  const { isDarkTheme } = useAppSelector(state => state.common);
   const dispatch = useAppDispatch();
-  const [imageData, setImageData] = useState<any>({
+  const [imageData, setImageData] = useState < any > ({
     uri: selectList?.image ? selectList?.image : '',
   });
-  const [isPictureEdit, setIsPictureEdit] = useState<boolean>(
+  const [isPictureEdit, setIsPictureEdit] = useState < boolean > (
     selectList?.image ? true : false,
   );
-
-  console.log('selectList?.image', cuisineName);
 
   const onPressEdit = async () => {
     if (cuisineName == '') {
@@ -56,8 +54,6 @@ const CuisinesEdit = () => {
       let data = new FormData();
 
       data.append('name', cuisineName);
-      //   data.append('parent_id', userDetails?.id);
-
       if (imageData?.uri !== selectList?.image) {
         data.append('file', {
           uri: imageData?.uri,
@@ -87,27 +83,13 @@ const CuisinesEdit = () => {
     navigation.goBack();
   };
 
-  // const selectImage = () => {
-  //     setLoading(true);
-  //     ImageCropPicker.openPicker({
-  //         width: 100,
-  //         height: 100,
-  //         cropping: true,
-  //     })
-  //         .then(image => {
-  //             setPhotoUri(image.path);
-  //             setLoading(false);
-  //         })
-  //         .catch(error => {
-  //             console.log(error);
-  //             setLoading(false);
-  //         });
-  // };
-
   const selectImage = () => {
     openImagePicker({
       onSucess: res => {
-        console.log('res', res);
+        if (res.size > 2 * 1024 * 1024) {
+          errorToast(strings('newAddText.e_up_mb'))
+          return;
+        }
         setImageData(res);
         setIsPictureEdit(true);
       },
@@ -142,7 +124,7 @@ const CuisinesEdit = () => {
           </Text>
           {!isPictureEdit ? (
             <TouchableOpacity
-              style={[styles.addImageView, {borderWidth: 1}]}
+              style={[styles.addImageView, { borderWidth: 1 }]}
               onPress={() => {
                 selectImage();
               }}>
@@ -161,7 +143,7 @@ const CuisinesEdit = () => {
                 selectImage();
               }}>
               <Image
-                source={{uri: imageData.uri}}
+                source={{ uri: imageData.uri }}
                 style={{
                   width: '100%',
                   height: '100%',
@@ -196,7 +178,7 @@ const CuisinesEdit = () => {
 export default CuisinesEdit;
 
 const getGlobalStyles = (props: any) => {
-  const {colors} = props;
+  const { colors } = props;
   return StyleSheet.create({
     container: {
       flex: 1,

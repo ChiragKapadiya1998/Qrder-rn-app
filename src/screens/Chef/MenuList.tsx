@@ -284,6 +284,7 @@ const getGlobalStyles = (props: any) => {
       paddingHorizontal: wp(16),
       borderRadius: 8,
       flexDirection: 'row',
+      marginBottom:hp(32)
     },
     nameText: {
       ...commonFontStyle(500, 16, colors.black),

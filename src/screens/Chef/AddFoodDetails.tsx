@@ -31,7 +31,8 @@ import Spacer from '../../compoment/Spacer';
 import { getCuisinesAction } from '../../actions/cuisinesAction';
 import { screenName } from '../../navigation/screenNames';
 import ImageCropPicker from 'react-native-image-crop-picker';
-import { openImagePicker, options } from '../../utils/globalFunctions';
+import { openImagePicker } from '../../utils/globalFunctions';
+
 
 type DataItem = {
   id: number;
@@ -64,6 +65,13 @@ const AddFoodDetails = () => {
   const [selectedTex, setSelectedTex] = useState(0)
   const isFocuse = useIsFocused();
 
+  const options = [
+    {label: strings('addFoodList.Inclusiveinvoice'), icon: Icons.ic_check},
+    {label: strings('addFoodList.Exclusiveinvoice'), icon: Icons.ic_check},
+  ];
+  
+
+  
   const [miscellaneous, setMiscellaneous] = useState(
     getMiscellaneous.map(item => {
       return { ...item, isSelect: false };
@@ -101,6 +109,10 @@ const AddFoodDetails = () => {
   const selectImage = () => {
     openImagePicker({
       onSucess: res => {
+        if (res.size > 2 * 1024 * 1024) {
+          errorToast(strings('newAddText.e_up_mb'))
+          return;
+        }
         setImageData(res);
         setIsPictureEdit(true);
       },
