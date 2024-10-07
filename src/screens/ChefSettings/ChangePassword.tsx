@@ -12,7 +12,7 @@ import {
 import PrimaryButton from '../../compoment/PrimaryButton';
 import LoginHeader from '../../compoment/LoginHeader';
 import { strings } from '../../i18n/i18n';
-import { useAppDispatch } from '../../redux/hooks';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import Input from '../../compoment/Input';
 import { screenName } from '../../navigation/screenNames';
 import { changePasswords, updatePassword } from '../../actions/authAction';
@@ -27,6 +27,7 @@ const ChangePassword = () => {
     const navigation = useNavigation();
     const dispatch = useAppDispatch();
     const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
+    const { isDarkTheme } = useAppSelector(state => state.common);
     const [currentPassword, setCurrentPassword] = useState < string > ('');
     const [password, setPassword] = useState < string > ('');
     const [confirmPassword, setConfirmPassword] = useState < string > ('');
@@ -100,8 +101,8 @@ const ChangePassword = () => {
     return (
         <View style={styles.container}>
             <StatusBar
-                barStyle={'light-content'}
-                backgroundColor={colors.bg_white}
+                barStyle={isDarkTheme ? 'light-content' : 'dark-content'}
+                backgroundColor={colors.white}
             />
             <HomeHeader
                 onBackPress={() => {
