@@ -120,7 +120,7 @@ const Input = ({
           </TouchableOpacity>
         ) : null}
       </View>
-      {showListView && value.length >= 3 ? (
+      {showListView && value?.length >= 3 ? (
         <ScrollView
           nestedScrollEnabled
           keyboardShouldPersistTaps={'handled'}

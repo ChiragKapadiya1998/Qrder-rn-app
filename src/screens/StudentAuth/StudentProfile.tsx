@@ -178,11 +178,6 @@ const StudentProfile = (props: Props) => {
               iconName: Icons.inventory,
               screens: screenName.student_tab_bar.StudentOrderHistory,
             },
-            {
-              title: strings('profileScreen.change_password'),
-              iconName: Icons.inventory,
-              screens: screenName.ChangePassword,
-            },
             // {
             //   title: strings('profileScreen.notifications'),
             //   iconName: Icons.notificationIcon,

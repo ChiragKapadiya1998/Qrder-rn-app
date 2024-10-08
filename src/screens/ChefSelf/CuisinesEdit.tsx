@@ -48,6 +48,8 @@ const CuisinesEdit = () => {
   const onPressEdit = async () => {
     if (cuisineName == '') {
       infoToast(strings('addFoodList.error_enter'));
+    } if (imageData?.uri === '') {
+      errorToast(strings('addFoodList.selectImg'));
     } else {
       setLoading(true);
       const userDetails = await getAsyncUserInfo();

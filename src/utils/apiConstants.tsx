@@ -2,7 +2,7 @@ export const api = {
   // BASE_URL: 'https://qrder.in/api/',
   // BASE_URL1: 'https://qrder.in/',
   BASE_URL:
-    'https://54e5-2405-201-201f-9802-c9a5-7958-b518-6588.ngrok-free.app/api/',
+  'https://0c35-2405-201-201f-9802-59ba-ee71-9461-7b87.ngrok-free.app/api/',
 
   // Auth
   login: 'login',
@@ -12,6 +12,7 @@ export const api = {
   updatePasswords: 'forgot-password/update-password',
   googleEmail: 'login/google',
   updateProfile: 'update-profile',
+  appleLogin: 'login/apple',
 
   get_cities: 'get-cities',
   getCountry: 'get-selected-country',
@@ -23,6 +24,7 @@ export const api = {
   getMenu: 'menu',
   updateMenu: 'menu-update',
   chefsRegister: 'chefs',
+  updateChef:'update-chef',
   search_cities: 'cities/search',
   getCuisinesMenuList: 'cuisine-menu',
   addCard: 'add-to-cart',
@@ -48,7 +50,8 @@ export const api = {
   getUser: 'get-user',
   orderCreate: 'order-create',
   restaurantDiscount: 'restaurant-discount',
-  changePassword:'change-password',
+  changePassword: 'change-password',
+  invoiceDownload:'invoice-download',
 
   //student
   studentRegister: 'student-register',

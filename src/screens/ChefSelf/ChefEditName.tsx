@@ -23,6 +23,7 @@ import CCDropDown from '../../compoment/CCDropDown';
 import Spacer from '../../compoment/Spacer';
 import { getAsyncUserInfo } from '../../utils/asyncStorageManager';
 import { chefsNameEdit } from '../../actions/chefsAction';
+import { openImagePicker } from '../../utils/globalFunctions';
 
 type Props = {};
 
@@ -42,6 +43,12 @@ const ChefEditName = (props: Props) => {
   const [salary, setSalary] = useState(itemData?.salary.toString());
   const [photoUri, setPhotoUri] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [imageData, setImageData] = useState < any > ({
+    uri: itemData.profile_image ? itemData.profile_image : '',
+  });
+  const [isPictureEdit, setIsPictureEdit] = useState < boolean > (
+    itemData.profile_image ? true : false,
+  );
 
   useEffect(() => {
     const filteredItem = getCuisines.find(
@@ -53,24 +60,18 @@ const ChefEditName = (props: Props) => {
   }, [getCuisines, itemData.cuisine_name]);
 
   const selectImage = () => {
-    setLoading(true);
-    ImageCropPicker.openPicker({
-      width: 100,
-      height: 100,
-      cropping: true,
-    })
-      .then(image => {
-        setPhotoUri(image.path);
-        setLoading(false);
-      })
-      .catch(error => {
-        console.log(error);
-        setLoading(false);
-      });
+    openImagePicker({
+      onSucess: res => {
+        setImageData(res);
+        // setIsPictureEdit(true);
+      },
+    });
   };
 
   const onPressEditDone = async () => {
-    if (name.trim().length === 0) {
+    if (imageData?.uri === '') {
+      errorToast(strings('addFoodList.selectImg'));
+    } else if (name.trim().length === 0) {
       errorToast(strings('login.error_name'));
     } else if (email.trim().length === 0) {
       errorToast(strings('login.error_email'));
@@ -85,27 +86,30 @@ const ChefEditName = (props: Props) => {
     } else if (salary === 0) {
       errorToast(strings('ChefNameList.error_v_salary'));
     } else {
-      setLoading(true);
+      setLoading(true)
+      var data = new FormData();
+
+      data.append('name', name);
+      data.append('email', email);
+      data.append('cuisine_id', quantityValue);
+      data.append('number', phone);
+      data.append('password', password);
+      data.append('confirmed', rePassword);
+      data.append('salary', salary);
+      data.append('profile_image', {
+        uri: imageData?.uri,
+        type: imageData?.mime,
+        name: imageData?.name,
+      });
       let obj = {
-        data: {
-          name: name,
-          email: email,
-          number: number,
-          cuisine_id: quantityValue,
-          salary: salary,
-        },
-        params: itemData?.id,
+        id: imageData?.id,
+        data,
         onSuccess: (response: any) => {
-          setLoading(false);
+          setLoading(false)
           navigation.goBack();
-          setName('');
-          setEmail('');
-          setQuantityValue(0);
-          setNumber('');
-          setSalary(0);
         },
         onFailure: (Err: any) => {
-          setLoading(false);
+          setLoading(false)
           if (Err != undefined) {
             Alert.alert(Err?.message);
           }
@@ -121,7 +125,6 @@ const ChefEditName = (props: Props) => {
         barStyle={isDarkTheme ? 'light-content' : 'dark-content'}
         backgroundColor={colors.white}
       />
-
       <HomeHeader
         onBackPress={() => {
           navigation.goBack();
@@ -136,17 +139,19 @@ const ChefEditName = (props: Props) => {
       <KeyboardAwareScrollView
         keyboardShouldPersistTaps={'handled'}
         contentContainerStyle={styles.contentContainerStyle}>
-        {/* <View style={styles.profileContainer}>
+        <View style={styles.profileContainer}>
           <View>
             <Image
-              source={photoUri ? { uri: photoUri } : Icons.profileImage}
+              source={
+                imageData?.uri ? { uri: imageData?.uri } : Icons.profileImage
+              }
               style={styles.profilImage}
             />
             <TouchableOpacity activeOpacity={0.9} onPress={selectImage} style={styles.editImage}>
               <Image source={Icons.editPencial} style={styles.profileIcon} />
             </TouchableOpacity>
           </View>
-        </View> */}
+        </View>
         <Input
           value={name}
           placeholder={strings('sign_up.p_name')}

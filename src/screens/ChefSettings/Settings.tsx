@@ -16,9 +16,10 @@ import DleleteModal from '../../compoment/DeleteModal';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { setDarkTheme, setLanguage } from '../../utils/commonActions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { asyncKeys } from '../../utils/asyncStorageManager';
+import { asyncKeys, getAsyncRole } from '../../utils/asyncStorageManager';
 import ToggleComponent from '../../compoment/ToggleComponent';
 import DropdownComponent from '../../compoment/DropdownComponent';
+import { screenName } from '../../navigation/screenNames';
 
 const languages = [
   { label: 'English', value: 'en' },
@@ -36,6 +37,7 @@ const Settings = () => {
   const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
   const [selectedLanguage, setSelectedLanguage] = useState('en');
   const [visible, setVisible] = useState(false);
+  const [isRoll, setIsRoll] = useState('');
   const { isDarkTheme, isLanguage } = useAppSelector(state => state.common);
 
   useEffect(() => {
@@ -55,6 +57,17 @@ const Settings = () => {
     loadLanguage();
   }, [isLanguage]);
 
+  useEffect(() => {
+    getUserInfo()
+  }, [])
+
+  const getUserInfo = async () => {
+    let isRole = await getAsyncRole();
+    setIsRoll(isRole);
+  };
+
+
+  console.log("-------", isRoll)
   const closeModal = () => {
     setVisible(false);
   };
@@ -103,11 +116,16 @@ const Settings = () => {
             onValueChange={() => changeValue()}
           />
         </View>
+        {isRoll === 'Staff' ? null :
+          <TouchableOpacity onPress={() => navigation.navigate(screenName.ChangePassword)} style={[styles.dropdownContainer, , { marginTop: hp(20) }]}>
+            <Text style={styles.label}>{strings('profileScreen.change_password')}</Text>
+          </TouchableOpacity>}
+
         <View style={[styles.dropdownContainer, , { marginTop: hp(20) }]}>
           <Text style={styles.label}>{strings('Settings.language')}</Text>
-          <DropdownComponent 
-            selectedValue={selectedLanguage} 
-            data={languages} 
+          <DropdownComponent
+            selectedValue={selectedLanguage}
+            data={languages}
             onSelect={handleChangeLanguage}
             dropdownWidth={0.25}
           />
@@ -174,7 +192,7 @@ const getGlobalStyles = props => {
       justifyContent: 'space-between',
       alignItems: 'center',
       paddingHorizontal: wp(16),
-      paddingVertical: hp(13),
+      paddingVertical: hp(12),
       borderRadius: 8,
       flexDirection: 'row',
       backgroundColor: colors.cards_bg,

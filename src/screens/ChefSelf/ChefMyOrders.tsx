@@ -48,7 +48,7 @@ const ChefMyOrders = () => {
         dispatch(allMyOrderAction(UserInfo));
     }
 
-
+console.log("=><",JSON.stringify(myOrderData))
 
     const onPressGoToHome = () => {
         setIsOpenModal(false)

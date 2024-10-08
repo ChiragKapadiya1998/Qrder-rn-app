@@ -1,5 +1,6 @@
 //import liraries
 import {
+  Alert,
   Image,
   ReturnKeyType,
   StyleSheet,
@@ -9,11 +10,13 @@ import {
   ViewStyle,
 } from 'react-native';
 import React from 'react';
-import {Dropdown} from 'react-native-element-dropdown';
-import {Icons} from '../utils/images';
-import {commonFontStyle, hp, wp} from '../theme/fonts';
-import {useTheme} from '@react-navigation/native';
-import {light_theme} from '../theme/colors';
+import { Dropdown } from 'react-native-element-dropdown';
+import { Icons } from '../utils/images';
+import { commonFontStyle, hp, wp } from '../theme/fonts';
+import { useTheme } from '@react-navigation/native';
+import { light_theme } from '../theme/colors';
+import { errorToast } from '../utils/commonFunction';
+import { strings } from '../i18n/i18n';
 
 type InputProps = {
   placeholder: string;
@@ -58,17 +61,21 @@ const CCDropDown = ({
   disable,
   ...rest
 }: InputProps) => {
-  const {colors, isDark} = useTheme();
-  const styles = React.useMemo(() => getGlobalStyles({colors}), [colors]);
+  const { colors, isDark } = useTheme();
+  const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
 
-  console.log('value', value);
+  const handleDropdownClick = () => {
+    if (!data || data.length === 0) {
+      errorToast(strings('newAddText.no_cuisine_available'))
+    }
+  };
 
   return (
     <View
       style={[
         styles.container,
         extraStyle,
-        {marginTop: isShowLabel ? hp(16) : hp(0)},
+        { marginTop: isShowLabel ? hp(16) : hp(0) },
       ]}>
       {isShowLabel ? (
         <Text numberOfLines={1} style={[styles.labelTextStyle, labelTextStyle]}>
@@ -105,15 +112,16 @@ const CCDropDown = ({
             style={styles.downIcon}
           />
         )}
-        containerStyle={{backgroundColor: colors.input_bg}}
+        containerStyle={{ backgroundColor: colors.input_bg }}
         activeColor={colors.input_bg}
+        onFocus={handleDropdownClick}
       />
     </View>
   );
 };
 
 const getGlobalStyles = (props: any) => {
-  const {colors} = props;
+  const { colors } = props;
   return StyleSheet.create({
     container: {
       marginTop: hp(40),

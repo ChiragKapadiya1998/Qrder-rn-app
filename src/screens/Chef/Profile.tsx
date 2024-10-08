@@ -66,23 +66,6 @@ const Profile = (props: Props) => {
     }, []),
   );
 
-  console.log(name);
-  const selectImage = () => {
-    setLoading(true);
-    ImagePicker.openPicker({
-      width: 100,
-      height: 100,
-      cropping: true,
-    })
-      .then(image => {
-        setPhotoUri(image.path);
-        setLoading(false);
-      })
-      .catch(error => {
-        console.log(error);
-        setLoading(false);
-      });
-  };
 
   const onPressNavigation = list => {
     if (list == screenName.EditProfile) {
@@ -248,11 +231,6 @@ const Profile = (props: Props) => {
               title: strings('profileScreen.order_history'),
               iconName: Icons.inventory,
               screens: screenName.OrderHistory,
-            },
-            {
-              title: strings('profileScreen.change_password'),
-              iconName: Icons.inventory,
-              screens: screenName.ChangePassword,
             },
             // {
             //   title: strings('profileScreen.notifications'),

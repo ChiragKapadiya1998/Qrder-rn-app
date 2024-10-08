@@ -71,12 +71,13 @@ export const chefsNameEdit =
   (request: any): ThunkAction<void, RootState, unknown, AnyAction> =>
     async dispatch => {
       let headers = {
+        'Content-Type': 'multipart/form-data',
         Authorization: await getAsyncToken(),
       };
       dispatch({ type: IS_LOADING_NEW, payload: true });
       return makeAPIRequest({
-        method: PATCH,
-        url: `${api.chefsRegister}/${request.params}`,
+        method: POST,
+        url: `${api.updateChef}/${request?.id}`,
         headers: headers,
         data: request.data,
       })

@@ -56,7 +56,9 @@ const ChefSignUp = (props: Props) => {
   const dispatch = useAppDispatch();
 
   const onPressLogin = async () => {
-    if (name.trim().length === 0) {
+    if (imageData?.uri === '') {
+      errorToast(strings('addFoodList.selectImg'));
+    } else if (name.trim().length === 0) {
       errorToast(strings('login.error_name'));
     } else if (email.trim().length === 0) {
       errorToast(strings('login.error_email'));
@@ -87,9 +89,7 @@ const ChefSignUp = (props: Props) => {
     } else {
       setLoading(true)
       var data = new FormData();
-      const userDetails = await getAsyncUserInfo();
-
-      data.append('parent_id', userDetails?.id);
+    
       data.append('name', name);
       data.append('email', email);
       data.append('cuisine_id', quantityValue);
@@ -97,7 +97,7 @@ const ChefSignUp = (props: Props) => {
       data.append('password', password);
       data.append('confirmed', rePassword);
       data.append('salary', salary);
-      data.append('file', {
+      data.append('profile_image', {
         uri: imageData?.uri,
         type: imageData?.mime,
         name: imageData?.name,

@@ -1,6 +1,7 @@
 import {
   FlatList,
   Image,
+  ImageBackground,
   StatusBar,
   StyleSheet,
   Text,
@@ -8,13 +9,13 @@ import {
   View,
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import { useNavigation, useRoute, useTheme } from '@react-navigation/native';
+import { useIsFocused, useNavigation, useRoute, useTheme } from '@react-navigation/native';
 import HomeHeader from '../../compoment/HomeHeader';
 import { commonFontStyle, hp, SCREEN_WIDTH, wp } from '../../theme/fonts';
 import { strings } from '../../i18n/i18n';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import CartMenuCardList from '../../compoment/CartMenuCardList';
-import { getCanteenCuisineAction, getCanteenMenuAction, getStudentMenuListAction } from '../../actions/commonAction';
+import { getCanteenCuisineAction, getCanteenMenuAction, getDiscountAction, getStudentMenuListAction } from '../../actions/commonAction';
 import { GET_CANTEEN_CUISINE_LIST, GET_EMPTY_CANTEEN_LIST } from '../../redux/actionTypes';
 import { Icons } from '../../utils/images';
 
@@ -32,9 +33,9 @@ const StudentMenuList = () => {
   const [loadingMore, setLoadingMore] = useState(false);
   const dispatch = useAppDispatch();
   const { getCanteenCuisines, getCanteenMenuData, canteenMenuCount } = useAppSelector(state => state.data);
-  const { isDarkTheme } = useAppSelector(state => state.common);
+  const { isDarkTheme, discount } = useAppSelector(state => state.common);
   const [onEndReached, setOnEndReached] = useState(true);
-  console.log('page', page);
+  const isFocuse = useIsFocused();
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
@@ -191,6 +192,28 @@ const StudentMenuList = () => {
         isShowIcon={false}
         isCardIcon={false}
       />
+      <View style={styles.hurrUpView}>
+        <View>
+          <Text style={styles.hurryText}>{strings('newAddText.hurry_up')}</Text>
+          <Text style={styles.hurryText}>{strings('newAddText.up_to')}</Text>
+        </View>
+        {discount === 0 ? null : (
+          <ImageBackground
+            source={Icons.ic_dec}
+            resizeMode="contain"
+            style={{
+              width: 90,
+              height: 90,
+              alignSelf: 'flex-end',
+              justifyContent: 'center',
+              alignItems: 'center',
+              flexDirection: 'row',
+            }}>
+            <Text style={styles.bannerText}>{`${discount}%`}</Text>
+          </ImageBackground>
+        )}
+      </View>
+
 
       {getCanteenCuisines && getCanteenCuisines.length !== 0 && (
         <View style={styles.tabMainView}>
@@ -310,7 +333,7 @@ const getGlobalStyles = (props: any) => {
       alignItems: 'center',
       justifyContent: 'center',
     },
-      allIconImage: {
+    allIconImage: {
       width: wp(30),
       height: wp(30),
       resizeMode: 'contain',
@@ -331,6 +354,28 @@ const getGlobalStyles = (props: any) => {
     boxContainer: {
       flex: 1,
       marginHorizontal: wp(20),
+    },
+    hurrUpView: {
+      backgroundColor: colors.text_orange,
+      padding: 16,
+      borderRadius: 16,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      marginHorizontal: wp(20),
+      marginBottom: hp(20)
+    },
+    hurryText: {
+      ...commonFontStyle(800, 18, colors.defult_white),
+    },
+    allText: {
+      marginTop: hp(10),
+      ...commonFontStyle(400, 14, colors.defult_white),
+    },
+    bannerText: {
+      ...commonFontStyle(800, 40, colors.defult_white),
+      alignSelf: 'center',
+      top: 5,
     },
   });
 };

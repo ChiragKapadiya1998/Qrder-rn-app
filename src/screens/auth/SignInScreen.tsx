@@ -7,13 +7,12 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useState} from 'react';
-import {useNavigation, useRoute, useTheme} from '@react-navigation/native';
-import {Icons} from '../../utils/images';
-import {commonFontStyle, h, hp, isIos, wp} from '../../theme/fonts';
+import React, { useState } from 'react';
+import { useNavigation, useRoute, useTheme } from '@react-navigation/native';
+import { Icons } from '../../utils/images';
+import { commonFontStyle, h, hp, isIos, wp } from '../../theme/fonts';
 import Input from '../../compoment/Input';
 import {
-  DropDownData,
   UpperCaseCheck,
   emailCheck,
   errorToast,
@@ -21,35 +20,35 @@ import {
   specialCarCheck,
 } from '../../utils/commonFunction';
 import PrimaryButton from '../../compoment/PrimaryButton';
-import {screenName} from '../../navigation/screenNames';
+import { screenName } from '../../navigation/screenNames';
 import {
   dispatchNavigation,
   formDataAppleLogin,
   onAppleLogin,
 } from '../../utils/globalFunctions';
-import {useAppDispatch, useAppSelector} from '../../redux/hooks';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import {
   appleSigninAction,
   googleEmailAction,
   userLogin,
 } from '../../actions/authAction';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import LoginHeader from '../../compoment/LoginHeader';
-import {strings} from '../../i18n/i18n';
+import { strings } from '../../i18n/i18n';
 import {
   GoogleSignin,
   statusCodes,
 } from '@react-native-google-signin/google-signin';
-import {GOOGLE_WEB_CLINET_ID} from '../../utils/apiConstants';
+import { GOOGLE_WEB_CLINET_ID } from '../../utils/apiConstants';
 import CCDropDown from '../../compoment/CCDropDown';
-import {setAsyncRole} from '../../utils/asyncStorageManager';
+import { setAsyncRole } from '../../utils/asyncStorageManager';
 
 type Props = {};
 
 const SignInScreen = (props: Props) => {
-  const {colors} = useTheme();
-  const {params} = useRoute();
-  const styles = React.useMemo(() => getGlobalStyles({colors}), [colors]);
+  const { colors } = useTheme();
+  const { params } = useRoute();
+  const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
   // const [email, setEmail] = useState(__DEV__ ? 'adminstudent@gmail.com' : '');
   // const [email, setEmail] = useState(__DEV__ ? 'ssss@gmail.com' : '');
   const [email, setEmail] = useState(__DEV__ ? 'admin@gmail.com' : '');
@@ -58,14 +57,31 @@ const SignInScreen = (props: Props) => {
   // const [password, setPassword] = useState(__DEV__ ? 'Test@1234' : '');
   // const [email, setEmail] = useState('');
   // const [password, setPassword] = useState('');
-  const [isShowPassword, setIsShowPassword] = useState<boolean>(true);
+  const [isShowPassword, setIsShowPassword] = useState < boolean > (true);
   const [selectRole, setSelectRole] = useState('');
-  const [isSelect, setIsSelect] = useState<boolean>(false);
-  const {selectedRole} = useAppSelector(state => state.common);
+  const [isSelect, setIsSelect] = useState < boolean > (false);
+  const { selectedRole } = useAppSelector(state => state.common);
 
   const navigation = useNavigation();
 
-  console.log('params?.role selectRole', selectRole);
+
+  const DropDownData = [
+    {
+      name: strings('roleSelection.owner'),
+      value: 'Admin',
+      id: 1,
+    },
+    {
+      name: strings('roleSelection.staff'),
+      value: 'Staff',
+      id: 2,
+    },
+    {
+      name: strings('roleSelection.student'),
+      value: 'Student',
+      id: 2,
+    },
+  ];
 
   const dispatch = useAppDispatch();
   const onPressLogin = () => {
@@ -141,7 +157,7 @@ const SignInScreen = (props: Props) => {
               dispatchNavigation(screenName.StudentSelect);
             }
           },
-          onFailure: () => {},
+          onFailure: () => { },
         };
         dispatch(appleSigninAction(obj));
       })
@@ -312,7 +328,7 @@ const SignInScreen = (props: Props) => {
       </View>
       {selectRole == 'Admin' || selectRole == 'Student' ? (
         <>
-          <TouchableOpacity onPress={onPressSignUp} style={{bottom: 10}}>
+          <TouchableOpacity onPress={onPressSignUp} style={{ bottom: 10 }}>
             <Text style={styles.bottomText}>
               {strings('login.dont_have_account')}
               <Text style={styles.signUpText}> {strings('login.sign_up')}</Text>
@@ -327,7 +343,7 @@ const SignInScreen = (props: Props) => {
 export default SignInScreen;
 
 const getGlobalStyles = (props: any) => {
-  const {colors} = props;
+  const { colors } = props;
   return StyleSheet.create({
     container: {
       flex: 1,

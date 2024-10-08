@@ -7,8 +7,8 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, { useState } from 'react';
-import { useNavigation, useRoute, useTheme } from '@react-navigation/native';
+import React, { useEffect, useState } from 'react';
+import { useIsFocused, useNavigation, useRoute, useTheme } from '@react-navigation/native';
 import { commonFontStyle, hp, wp } from '../../theme/fonts';
 import HomeHeader from '../../compoment/HomeHeader';
 import { strings } from '../../i18n/i18n';
@@ -23,6 +23,8 @@ import { updateProfile } from '../../actions/authAction';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Spacer from '../../compoment/Spacer';
 import { openImagePicker } from '../../utils/globalFunctions';
+import debounce from 'lodash/debounce';
+import { getCityAction, getstateAction, searchCities } from '../../actions/commonAction';
 
 type Props = {};
 
@@ -31,9 +33,10 @@ const EditProfile = (props: Props) => {
   const { userData } = route?.params;
   const { colors, isDark } = useTheme();
   const navigation = useNavigation();
+  const isFocuse = useIsFocused();
   const dispatch = useAppDispatch();
   const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
-  const { isDarkTheme } = useAppSelector(state => state.common);
+  const { isDarkTheme, searchCity, getCity } = useAppSelector(state => state.common);
   const [names, setName] = useState < string > (userData?.name);
   const [lastName, setLastName] = useState(
     userData?.last_name ? userData?.last_name : '',
@@ -41,6 +44,15 @@ const EditProfile = (props: Props) => {
   const [restaurant, setRestaurant] = useState < string > (
     userData.restaurant_name,
   );
+  const [gstNumber, setGstNumber] = useState < string > (userData.gst_number !== null ? userData.gst_number : '');
+  const [fssaiNumber, setFssaiNumber] = useState < string > (userData.fssai_number !== null ? userData.fssai_number : '');
+  const [googleReview, setGoogleReview] = useState < string > (userData.google_review_link !== null ? userData.google_review_link : '');
+  const [pincode, setPincode] = useState(String(userData?.pincode));
+  const [city, setCity] = useState('');
+  const [state, setState] = useState('');
+  const [country, setCountry] = useState('');
+  const [showListView, setShowListView] = useState(false);
+  const [addressList, setAddressList] = useState([]);
   const [emails, setEmail] = useState < string > (userData.email);
   const [numbers, setNumber] = useState < string > (userData.number);
   const [address, setAddress] = useState < string > (userData.address);
@@ -61,10 +73,45 @@ const EditProfile = (props: Props) => {
   const [salary, setSalary] = useState(userData?.salary ? userData.salary.toString() : '');
 
 
-  console.log(
-    'userDatadasda',
-    getCuisines?.filter(item => item?.id == userData.cuisine_id)?.[0]?.name,
+  useEffect(() => {
+    getCityList()
+  }, [isFocuse])
+
+  const getCityList = () => {
+    let obj = {
+      data: {
+        id: userData.city_id,
+      },
+      onSuccess: (res: any) => {
+        setCity(res?.city_name);
+        setState(res?.state_name);
+        setCountry(res?.country_name);
+      },
+      onFailure: (Err: any) => { },
+    };
+    dispatch(getCityAction(obj));
+  };
+
+
+  const debouncedFilterSearch = React.useCallback(
+    debounce(searchText => {
+      let UserInfo = {
+        data: searchText,
+        onSuccess: res => { },
+        onFailure: Err => { },
+      };
+      dispatch(searchCities(UserInfo));
+    }, 300),
+    [],
   );
+
+  const FilterSearch = (searchText: any) => {
+    setCity(searchText);
+    if (searchText.length >= 3) {
+      debouncedFilterSearch(searchText);
+    }
+  };
+
 
   const selectImage = () => {
     openImagePicker({
@@ -76,7 +123,9 @@ const EditProfile = (props: Props) => {
   };
 
   const onPressStudentEditDone = () => {
-    if (names.trim().length === 0) {
+    if (imageData?.uri === '') {
+      errorToast(strings('addFoodList.selectImg'));
+    } else if (names.trim().length === 0) {
       errorToast(strings('login.error_name'));
     } else if (lastName.trim().length === 0) {
       errorToast(strings('login.error_nameLastName'));
@@ -89,13 +138,14 @@ const EditProfile = (props: Props) => {
     } else if (numbers.trim().length !== 10) {
       errorToast(strings('login.error_v_phone'));
     } else {
+      setLoading(true)
       var data = new FormData();
       data.append('name', names);
       data.append('last_name', lastName);
       data.append('email', emails);
       data.append('number', numbers);
       if (imageData?.uri !== userData.profile_image) {
-        data.append('file', {
+        data.append('profile_image', {
           uri: imageData?.uri,
           type: imageData?.mime,
           name: imageData?.name,
@@ -105,11 +155,13 @@ const EditProfile = (props: Props) => {
         data,
         onSuccess: (response: any) => {
           navigation.goBack();
+          setLoading(false)
         },
         onFailure: (Err: any) => {
           if (Err != undefined) {
             Alert.alert(Err?.message);
           }
+          setLoading(false)
         },
       };
       dispatch(updateProfile(obj));
@@ -117,12 +169,20 @@ const EditProfile = (props: Props) => {
   };
 
   const onPressAdminEditDone = () => {
-    if (names.trim().length === 0) {
+    if (imageData?.uri === '') {
+      errorToast(strings('addFoodList.selectImg'));
+    } else if (names.trim().length === 0) {
       errorToast(strings('login.error_name'));
     } else if (lastName.trim().length === 0) {
       errorToast(strings('login.error_nameLastName'));
     } else if (restaurant.trim().length === 0) {
       errorToast(strings('login.error_restaurantName'));
+    } else if (gstNumber.trim().length === 0) {
+      errorToast(strings('newAddText.e_gst_number'));
+    } else if (fssaiNumber.trim().length === 0) {
+      errorToast(strings('newAddText.e_FSSAI_number'));
+    } else if (googleReview.trim().length === 0) {
+      errorToast(strings('newAddText.e_google_review_link'));
     } else if (emails.trim().length === 0) {
       errorToast(strings('login.error_email'));
     } else if (!emailCheck(emails)) {
@@ -133,13 +193,29 @@ const EditProfile = (props: Props) => {
       errorToast(strings('login.error_v_phone'));
     } else if (address.trim().length == 0) {
       errorToast(strings('login.error_address'));
+    } else if (city.trim().length === 0) {
+      errorToast(strings('login.error_city'));
+    } else if (state.trim().length === 0) {
+      errorToast(strings('login.error_state'));
+    } else if (country.trim().length === 0) {
+      errorToast(strings('login.error_country'));
+    } else if (pincode.trim().length === 0) {
+      errorToast(strings('login.error_pincode'));
     } else {
+      setLoading(true)
       var data = new FormData();
       data.append('name', names);
       data.append('last_name', lastName);
       data.append('email', emails);
       data.append('number', numbers);
-      //   data.append('restaurant_name', restaurant);
+      data.append('restaurant_name', restaurant);
+      data.append('gst_number', gstNumber);
+      data.append('fssai_number', fssaiNumber);
+      data.append('google_review_link', googleReview);
+      data.append('pincode', pincode);
+      data.append('city_id', addressList?.id);
+      data.append('state_id', addressList?.state?.id);
+      data.append('country_id', addressList?.state?.country?.id);
       data.append('address', address);
       if (imageData?.uri !== userData.profile_image) {
         data.append('profile_image', {
@@ -152,11 +228,10 @@ const EditProfile = (props: Props) => {
         data,
         onSuccess: (response: any) => {
           navigation.goBack();
-          setEmail('');
-          setName('');
-          setNumber('');
+          setLoading(false)
         },
         onFailure: (Err: any) => {
+          setLoading(false)
           if (Err != undefined) {
             Alert.alert(Err?.message);
           }
@@ -165,8 +240,6 @@ const EditProfile = (props: Props) => {
       dispatch(updateProfile(obj));
     }
   };
-
-  console.log('userData', userData.role);
 
   return (
     <View style={styles.container}>
@@ -246,12 +319,12 @@ const EditProfile = (props: Props) => {
                 value={restaurant}
                 placeholder={
                   userData?.role == 'canteen'
-                    ? strings('sign_up.p_enter_canteen')
+                    ? strings('newAddText.canteen_name')
                     : strings('sign_up.restaurant_name')
                 }
                 label={
                   userData?.role == 'canteen'
-                    ? strings('sign_up.canteen_name')
+                    ? strings('newAddText.canteen_name')
                     : strings('sign_up.restaurant')
                 }
                 onChangeText={(t: string) => setRestaurant(t)}
@@ -260,6 +333,38 @@ const EditProfile = (props: Props) => {
               />
             )}
 
+            {userData.role === 'student' || userData.role === 'staff' ? null :
+              <>
+                <Input
+                  value={gstNumber}
+                  placeholder={strings('newAddText.gst_number')}
+                  label={strings('newAddText.gst_number')}
+                  onChangeText={(t: string) => setGstNumber(t)}
+                  isShowLabel={true}
+                  inputStyle={styles.inputStyle}
+                  editable={userData.role == 'staff' ? false : true}
+                />
+
+                <Input
+                  value={fssaiNumber}
+                  placeholder={strings('newAddText.FSSAI_number')}
+                  label={strings('newAddText.FSSAI_number')}
+                  onChangeText={(t: string) => setFssaiNumber(t)}
+                  isShowLabel={true}
+                  inputStyle={styles.inputStyle}
+                  editable={userData.role == 'staff' ? false : true}
+                />
+                <Input
+                  value={googleReview}
+                  placeholder={strings('newAddText.google_review_link')}
+                  label={strings('newAddText.google_review_link')}
+                  onChangeText={(t: string) => setGoogleReview(t)}
+                  isShowLabel={true}
+                  inputStyle={styles.inputStyle}
+                  editable={userData.role == 'staff' ? false : true}
+                />
+              </>
+            }
             <Input
               value={emails}
               placeholder={strings('sign_up.p_email')}
@@ -304,16 +409,67 @@ const EditProfile = (props: Props) => {
               />
             ) : null}
             {userData.role === 'student' || userData.role === 'staff' ? null : (
-              <Input
-                value={address}
-                placeholder={strings('sign_up.p_enter_area')}
-                label={strings('sign_up.address')}
-                onChangeText={(t: string) => setAddress(t)}
-                isShowLabel={true}
-                inputStyle={styles.inputStyle}
-                editable={false}
-              />
+              <>
+                <Input
+                  value={address}
+                  placeholder={strings('sign_up.p_enter_area')}
+                  label={strings('sign_up.address')}
+                  onChangeText={(t: string) => setAddress(t)}
+                  isShowLabel={true}
+                  inputStyle={styles.inputStyle}
+                  editable={false}
+                />
+                <Input
+                  value={city}
+                  placeholder={strings('newAddText.select_city')}
+                  label={strings('newAddText.select_city')}
+                  onChangeText={(t: string) => FilterSearch(t)}
+                  showListView={showListView}
+                  searchData={searchCity}
+                  setShowListView={item => {
+                    setShowListView(false);
+                    setCity(item.name);
+                    setState(item?.state?.name);
+                    setCountry(item?.state?.country?.name);
+                    setAddressList(item);
+                  }}
+                  onFocus={() => {
+                    setShowListView(true);
+                  }}
+                  isShowLabel={true}
+                />
+                <Input
+                  value={state}
+                  placeholder={strings('newAddText.select_state')}
+                  label={strings('newAddText.select_state')}
+                  onChangeText={(t: string) => setState(t)}
+                  showListView={false}
+                  isShowLabel={true}
+                />
+                <Input
+                  value={country}
+                  placeholder={strings('newAddText.select_country')}
+                  label={strings('newAddText.select_country')}
+                  onChangeText={(t: string) => setCountry(t)}
+                  isShowLabel={true}
+                />
+
+                <Input
+                  value={pincode}
+                  placeholder={strings('newAddText.pincode')}
+                  keyboardType="number-pad"
+                  label={strings('newAddText.pincode')}
+                  onChangeText={(t: string) => setPincode(t)}
+                  isShowLabel={true}
+                  inputStyle={styles.inputStyle}
+                  editable={false}
+                />
+                <TouchableOpacity>
+                  <Text style={styles.qrCodetext}>{strings('newAddText.download_qr_code')}</Text>
+                </TouchableOpacity>
+              </>
             )}
+
           </View>
         </View>
       </KeyboardAwareScrollView>
@@ -329,6 +485,7 @@ const EditProfile = (props: Props) => {
                 : onPressAdminEditDone();
             }}
             title={strings('PersonalInfo.save_details')}
+            isLoading={loading}
           />
         </View>
       ) : null}
@@ -399,7 +556,7 @@ const getGlobalStyles = (props: any) => {
       ...commonFontStyle(700, 20, colors.Title_Text),
     },
     signupButton: {
-      marginTop: hp(20),
+      // marginTop: hp(20),
       borderRadius: 15,
       alignItems: 'center',
       justifyContent: 'center',
@@ -407,5 +564,11 @@ const getGlobalStyles = (props: any) => {
     contentContainerStyle: {
       paddingHorizontal: wp(20),
     },
+    qrCodetext: {
+      marginTop: hp(16),
+      marginBottom: hp(23),
+      ...commonFontStyle(600, 14, colors.black),
+      textDecorationLine: 'underline'
+    }
   });
 };

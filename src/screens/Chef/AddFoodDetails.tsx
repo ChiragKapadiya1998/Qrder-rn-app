@@ -66,12 +66,12 @@ const AddFoodDetails = () => {
   const isFocuse = useIsFocused();
 
   const options = [
-    {label: strings('addFoodList.Inclusiveinvoice'), icon: Icons.ic_check},
-    {label: strings('addFoodList.Exclusiveinvoice'), icon: Icons.ic_check},
+    { label: strings('addFoodList.Inclusiveinvoice'), icon: Icons.ic_check },
+    { label: strings('addFoodList.Exclusiveinvoice'), icon: Icons.ic_check },
   ];
-  
 
-  
+
+
   const [miscellaneous, setMiscellaneous] = useState(
     getMiscellaneous.map(item => {
       return { ...item, isSelect: false };
@@ -336,6 +336,7 @@ const AddFoodDetails = () => {
   //   );
   // }
 
+  console.log("========", miscellaneous)
   return (
     <View style={styles.container}>
       <HomeHeader
@@ -483,19 +484,19 @@ const AddFoodDetails = () => {
             />
             <Image source={Icons.pertenge} style={styles.pertenge} />
           </View>
-
-          <View>
-            <Text style={styles.miscellaneousText}>
-              {strings('addFoodList.Miscellaneousitems')}
-            </Text>
-            <FlatList
-              data={miscellaneous}
-              renderItem={renderItem}
-              horizontal={true}
-              keyExtractor={item => item.value}
-              showsVerticalScrollIndicator={false}
-            />
-          </View>
+          {miscellaneous.length === 0 ? null :
+            <View>
+              <Text style={styles.miscellaneousText}>
+                {strings('addFoodList.Miscellaneousitems')}
+              </Text>
+              <FlatList
+                data={miscellaneous}
+                renderItem={renderItem}
+                horizontal={true}
+                keyExtractor={item => item.value}
+                showsVerticalScrollIndicator={false}
+              />
+            </View>}
 
           <Input
             value={basicDetails}

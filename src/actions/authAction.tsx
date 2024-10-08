@@ -234,6 +234,7 @@ export const updateProfile =
         data: request.data,
       })
         .then(async (response: any) => {
+          console.log("---<<<",response.data)
           if (response?.data?.success) {
             successToast(response?.data?.message);
             await setAsyncUserInfo(response?.data?.data?.user);
@@ -243,8 +244,7 @@ export const updateProfile =
           }
         })
         .catch(error => {
-          errorToast('User not found');
-          if (request.onFailure) request.onFailure(error.response);
+          if (request.onFailure) request.onFailure(error.response.data);
         });
     };
 
@@ -310,7 +310,7 @@ export const appleSigninAction =
       };
       return makeAPIRequest({
         method: POST,
-        url: api.googleEmail,
+        url: api.appleLogin,
         headers: headers,
         data: request.data,
       })

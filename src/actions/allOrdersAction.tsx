@@ -232,3 +232,22 @@ export const allMyOrderAction =
                     if (request.onFailure) request.onFailure(error.response);
                 });
         };
+
+export const invoiceLinkAction =
+    (request: any): ThunkAction<void, RootState, unknown, AnyAction> =>
+        async dispatch => {
+            let headers = {};
+            return makeAPIRequest({
+                method: GET,
+                url: `${api.invoiceDownload}/${request.params}`,
+                headers: headers,
+            })
+                .then(async (response: any) => {
+                    if (response.status === 200 || response.status === 201) {
+                        if (request.onSuccess) request.onSuccess(response.data);
+                    }
+                })
+                .catch(error => {
+                    if (request.onFailure) request.onFailure(error.response);
+                });
+        };

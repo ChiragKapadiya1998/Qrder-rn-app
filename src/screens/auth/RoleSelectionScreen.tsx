@@ -20,6 +20,7 @@ const RoleSelectionScreen = () => {
   const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
   const [selectRole, setSelectRole] = useState('');
 
+
   const DropDownData = [
     {
       name: strings('roleSelection.owner'),

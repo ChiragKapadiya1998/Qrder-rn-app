@@ -8,15 +8,15 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
-import {useNavigation, useTheme} from '@react-navigation/native';
-import {commonFontStyle, hp, isIos, wp} from '../../theme/fonts';
+import React, { useEffect, useState } from 'react';
+import { useNavigation, useTheme } from '@react-navigation/native';
+import { commonFontStyle, hp, isIos, wp } from '../../theme/fonts';
 import Input from '../../compoment/Input';
 import PrimaryButton from '../../compoment/PrimaryButton';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import LoginHeader from '../../compoment/LoginHeader';
-import {screenName} from '../../navigation/screenNames';
-import {strings} from '../../i18n/i18n';
+import { screenName } from '../../navigation/screenNames';
+import { strings } from '../../i18n/i18n';
 import Spacer from '../../compoment/Spacer';
 import {
   DropDownData,
@@ -27,14 +27,14 @@ import {
   specialCarCheck,
   UpperCaseCheck,
 } from '../../utils/commonFunction';
-import {dispatchNavigation} from '../../utils/globalFunctions';
+import { dispatchNavigation } from '../../utils/globalFunctions';
 import {
   canteenRegisterSignUp,
   googleEmailAction,
   studentUserSignUp,
   userSignUp,
 } from '../../actions/authAction';
-import {useAppDispatch, useAppSelector} from '../../redux/hooks';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import {
   getCityAction,
   getUniversitiesDataAction,
@@ -42,26 +42,26 @@ import {
 } from '../../actions/commonAction';
 import debounce from 'lodash/debounce';
 import CCDropDown from '../../compoment/CCDropDown';
-import {setAsyncRole} from '../../utils/asyncStorageManager';
+import { setAsyncRole } from '../../utils/asyncStorageManager';
 import {
   GoogleSignin,
   statusCodes,
 } from '@react-native-google-signin/google-signin';
-import {Icons} from '../../utils/images';
-import {GOOGLE_WEB_CLINET_ID} from '../../utils/apiConstants';
+import { Icons } from '../../utils/images';
+import { GOOGLE_WEB_CLINET_ID } from '../../utils/apiConstants';
 type Props = {};
 
 const SignUpScreen = (props: Props) => {
-  const {colors, isDark} = useTheme();
-  const styles = React.useMemo(() => getGlobalStyles({colors}), [colors]);
+  const { colors, isDark } = useTheme();
+  const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
   const [name, setName] = useState('');
   const [user_name, setUser_name] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rePassword, setRePassword] = useState('');
-  const [isShowPassword, setIsShowPassword] = useState<boolean>(true);
-  const [isShowRePassword, setisShowRePassword] = useState<boolean>(true);
+  const [isShowPassword, setIsShowPassword] = useState < boolean > (true);
+  const [isShowRePassword, setisShowRePassword] = useState < boolean > (true);
   const [number, setNumber] = useState('');
   const [restaurantName, setRestaurantName] = useState('');
   const [universityName, setUniversityName] = useState('');
@@ -71,12 +71,12 @@ const SignUpScreen = (props: Props) => {
   const [country, setCountry] = useState('');
   const [pincode, setPincode] = useState('');
   const [showListView, setShowListView] = useState(false);
-  const {getCity, searchCity} = useAppSelector(state => state.common);
-  const {getUniversitiesData} = useAppSelector(state => state.data);
+  const { getCity, searchCity } = useAppSelector(state => state.common);
+  const { getUniversitiesData } = useAppSelector(state => state.data);
   const [filteredData, setFilteredData] = useState([]);
   const [addressList, setAddressList] = useState([]);
   const [area, setArea] = useState('');
-  const [selectedOption, setSelectedOption] = useState('Restaurant');
+  const [selectedOption, setSelectedOption] = useState(strings('sign_up.restaurant'));
   const [selectRole, setSelectRole] = useState('');
   const [selectUniversity, setSelectUniversity] = useState('');
 
@@ -85,9 +85,9 @@ const SignUpScreen = (props: Props) => {
   const [hostelAddress, setHostelAddress] = useState('');
 
   const options = [
-    {name: strings('sign_up.restaurant'), value: 'Restaurant'},
-    {name: strings('sign_up.canteen'), value: 'Canteen'},
-    {name: strings('sign_up.student'), value: 'Student'},
+    { name: strings('sign_up.restaurant'), value: 'Restaurant' },
+    { name: strings('sign_up.canteen'), value: 'Canteen' },
+    { name: strings('sign_up.student'), value: 'Student' },
   ];
 
   const handlePress = value => {
@@ -103,12 +103,11 @@ const SignUpScreen = (props: Props) => {
     getUniversitiesDataPress();
   }, []);
 
-  console.log('getUniversitiesData', getUniversitiesData);
 
   const getUniversitiesDataPress = () => {
     let obj = {
-      onSuccess: (res: any) => {},
-      onFailure: (Err: any) => {},
+      onSuccess: (res: any) => { },
+      onFailure: (Err: any) => { },
     };
     dispatch(getUniversitiesDataAction(obj));
   };
@@ -276,7 +275,7 @@ const SignUpScreen = (props: Props) => {
       data.append('country_id', addressList?.state?.country?.id);
       data.append('role', 'canteen');
       data.append('status', '1');
-      data.append('university_id', 2);
+      data.append('university_id', universityName);
       let obj = {
         data,
         onSuccess: async (response: any) => {
@@ -366,8 +365,8 @@ const SignUpScreen = (props: Props) => {
 
   const getCityList = () => {
     let obj = {
-      onSuccess: (res: any) => {},
-      onFailure: (Err: any) => {},
+      onSuccess: (res: any) => { },
+      onFailure: (Err: any) => { },
     };
     dispatch(getCityAction(obj));
   };
@@ -376,8 +375,8 @@ const SignUpScreen = (props: Props) => {
     debounce(searchText => {
       let UserInfo = {
         data: searchText,
-        onSuccess: res => {},
-        onFailure: Err => {},
+        onSuccess: res => { },
+        onFailure: Err => { },
       };
       dispatch(searchCities(UserInfo));
     }, 300),
@@ -627,14 +626,14 @@ const SignUpScreen = (props: Props) => {
                 label={strings('sign_up.state')}
                 onChangeText={(t: string) => setState(t)}
                 showListView={false}
-                // extraStyle={{ zIndex: -1, width: '48.9%' }}
+              // extraStyle={{ zIndex: -1, width: '48.9%' }}
               />
               <Input
                 value={country}
                 placeholder={strings('sign_up.p_enter_country')}
                 label={strings('sign_up.country')}
                 onChangeText={(t: string) => setCountry(t)}
-                // extraStyle={{ zIndex: -1, width: '49%' }}
+              // extraStyle={{ zIndex: -1, width: '49%' }}
               />
 
               <Input
@@ -643,7 +642,7 @@ const SignUpScreen = (props: Props) => {
                 keyboardType="number-pad"
                 label={strings('sign_up.pincode')}
                 onChangeText={(t: string) => setPincode(t)}
-                extraStyle={{zIndex: -1}}
+                extraStyle={{ zIndex: -1 }}
               />
             </>
           )}
@@ -667,7 +666,7 @@ const SignUpScreen = (props: Props) => {
                 placeholder={strings('StudentSignUp.enter_hostel_address')}
                 label={strings('StudentSignUp.hostel_address')}
                 onChangeText={(t: string) => setHostelAddress(t)}
-                extraStyle={{zIndex: -1}}
+                extraStyle={{ zIndex: -1 }}
               />
             </>
           )}
@@ -680,7 +679,7 @@ const SignUpScreen = (props: Props) => {
             label={strings('sign_up.password')}
             onChangeText={(t: string) => setPassword(t)}
             onPressEye={() => setIsShowPassword(!isShowPassword)}
-            extraStyle={{zIndex: -1}}
+            extraStyle={{ zIndex: -1 }}
           />
           <Input
             value={rePassword}
@@ -698,8 +697,8 @@ const SignUpScreen = (props: Props) => {
               selectRole == 'Restaurant'
                 ? onPressLogin()
                 : selectRole == 'Canteen'
-                ? onPressCanteenRegister()
-                : onPressLoginStudent();
+                  ? onPressCanteenRegister()
+                  : onPressLoginStudent();
             }}
             title={strings('sign_up.sign_up')}
           />
@@ -732,7 +731,7 @@ const SignUpScreen = (props: Props) => {
 export default SignUpScreen;
 
 const getGlobalStyles = (props: any) => {
-  const {colors} = props;
+  const { colors } = props;
   return StyleSheet.create({
     container: {
       flex: 1,

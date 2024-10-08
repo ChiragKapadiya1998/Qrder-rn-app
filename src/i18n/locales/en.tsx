@@ -139,7 +139,7 @@ export default {
     new_password: 'New Password',
     confirm_password: 'Confirm Password',
     update: 'Update',
-    reset:'Reset'
+    reset: 'Reset'
   },
   otp_verification: {
     enter_otp_code: 'Enter OTP Code',
@@ -487,11 +487,27 @@ export default {
   menuList: {
     menu: 'Menu',
   },
-  newAddText:{
-    hurry_up:'Hurry Up!',
-    up_to:'Up to',
-    all_foods_are_available:'All Foods are Available',
-    off:'OFF',
-    e_up_mb:'File should not be larger than 2MB'
+  newAddText: {
+    hurry_up: 'Hurry Up!',
+    up_to: 'Up to',
+    all_foods_are_available: 'All Foods are Available',
+    off: 'OFF',
+    e_up_mb: 'File should not be larger than 2MB',
+    no_cuisine_available: 'No cuisine available please add',
+    gst_number: 'GST Number',
+    FSSAI_number: 'FSSAI Number',
+    google_review_link: 'Google Review Link',
+    select_city: 'Select City',
+    select_state: 'Select State',
+    select_country: 'Select Country',
+    pincode: 'Pincode',
+    download_qr_code:'Download qr code',
+    canteen_name:'Canteen Name',
+    e_gst_number: 'Please Enter GST Number',
+    e_FSSAI_number: 'Please Enter FSSAI Number',
+    e_google_review_link: 'Please Enter Google Review Link',
+    e_select_city: 'Please Select City',
+    e_select_state: 'Please Select State',
+    e_select_country: 'Please Select Country'
   }
 };

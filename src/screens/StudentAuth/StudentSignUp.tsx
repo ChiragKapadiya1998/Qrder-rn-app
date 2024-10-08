@@ -10,7 +10,6 @@ import { screenName } from '../../navigation/screenNames';
 import { strings } from '../../i18n/i18n';
 import Spacer from '../../compoment/Spacer';
 import {
-  DropDownData,
   emailCheck,
   errorToast,
   numberCheck,
@@ -41,6 +40,25 @@ const StudentSignUp = (props: Props) => {
   const [isShowRePassword, setisShowRePassword] = useState < boolean > (true);
   const { getUniversitiesData } = useAppSelector(state => state.data);
   const [selectRole, setSelectRole] = useState('');
+
+  
+  const DropDownData = [
+    {
+      name: strings('roleSelection.owner'),
+      value: 'Admin',
+      id: 1,
+    },
+    {
+      name: strings('roleSelection.staff'),
+      value: 'Staff',
+      id: 2,
+    },
+    {
+      name: strings('roleSelection.student'),
+      value: 'Student',
+      id: 2,
+    },
+  ];
 
   const navigation = useNavigation();
   const dispatch = useAppDispatch();

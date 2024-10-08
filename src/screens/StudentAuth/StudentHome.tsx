@@ -150,34 +150,6 @@ const StudentHome = () => {
       </View>
     );
   };
-  // const renderItem = ({ item, index }: any) => {
-  //   const containerWidth = (SCREEN_WIDTH - 40) / 2;
-  //   const containerHeight = 120;
-  //   const xPosition = index % 2 === 0 ? 0 : 10;
-
-  //   return (
-  //     <TouchableOpacity
-  //       activeOpacity={0.7}
-  //       onPress={() => {
-  //         onPressCanteen(item);
-  //       }}
-  //       style={{
-  //         width: containerWidth,
-  //         marginLeft: xPosition,
-  //         marginTop: 10,
-  //       }}>
-  //       <Image
-  //         style={[
-  //           styles.renderContainer,
-  //           {
-  //             height: containerHeight,
-  //             backgroundColor: colors.image_Bg_gray,
-  //           },
-  //         ]}></Image>
-  //       <Text style={styles.textStyle}>{item?.restaurant_name}</Text>
-  //     </TouchableOpacity>
-  //   );
-  // };
 
   return (
     <View style={styles.container}>
