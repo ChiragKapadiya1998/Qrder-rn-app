@@ -277,10 +277,10 @@ const Home = (props: Props) => {
             marginBottom: 10,
           }}>
           <Text style={styles.seeText1}>{strings('home.Revenue')}</Text>
-          <TouchableOpacity
-            onPress={() => navigation.navigate(screenName.MyOrdersList)}>
+          {/* <TouchableOpacity
+            onPress={() => {}}>
             <Text style={styles.seeText}>{strings('home.see_details')}</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
         <CardView>
           <ChartsView />

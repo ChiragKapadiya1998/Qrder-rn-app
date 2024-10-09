@@ -24,12 +24,13 @@ import {
   getAllStudentOrder,
   invoiceLinkAction,
 } from '../../actions/allOrdersAction';
-import { formatDate, formatDateToDDMMYYYY } from '../../utils/globalFunctions';
+import { convertIsoToDate, formatDate, formatDateToDDMMYYYY } from '../../utils/globalFunctions';
 import { getAsyncRole } from '../../utils/asyncStorageManager';
 import DatePicker from 'react-native-date-picker';
 import { errorToast } from '../../utils/commonFunction';
 import NoDataFound from '../../compoment/NoDataFound';
 import { screenName } from '../../navigation/screenNames';
+import Spacer from '../../compoment/Spacer';
 
 const StudentOrderHistory = () => {
   const { colors } = useTheme();
@@ -111,7 +112,7 @@ const StudentOrderHistory = () => {
   };
 
   const renderItem = ({ item, index }) => {
-    const formattedDate = formatDate(item.created_at);
+    const formattedDate = convertIsoToDate(item.created_at);
     return (
       <View style={styles.listContainer}>
         <View style={{ flexDirection: 'row' }}>
@@ -183,9 +184,7 @@ const StudentOrderHistory = () => {
         isShowIcon={true}
         isHideIcon={true}
         rightText={
-          allStudentOrderHistory?.length !== 0
-            ? strings('addFoodList.reset')
-            : ''
+          strings('addFoodList.reset')
         }
       />
       <View style={styles.headerView}>
@@ -200,6 +199,7 @@ const StudentOrderHistory = () => {
                   : strings('orderModal.start_date')}
               </Text>
             </TouchableOpacity>
+            <Spacer width={5} />
             <TouchableOpacity
               onPress={() => handleDatePickerOpen(false)}
               style={styles.dateButton}>
@@ -334,7 +334,7 @@ const getGlobalStyles = (props: any) => {
       borderRadius: 16,
     },
     diningText: {
-      ...commonFontStyle(500, 12, colors.defult_white),
+      ...commonFontStyle(500, 10, colors.defult_white),
     },
     invoiveIcon: {
       width: wp(18),
@@ -344,17 +344,18 @@ const getGlobalStyles = (props: any) => {
     },
     datePickerContainer: {
       flexDirection: 'row',
-      justifyContent: 'space-between',
-      marginVertical: hp(10),
+      justifyContent: 'flex-end',
+      marginTop: hp(10),
+      marginBottom: hp(5),
     },
     dateButton: {
       backgroundColor: colors.cards_bg,
-      paddingVertical: hp(10),
-      paddingHorizontal: wp(20),
+      paddingVertical: hp(6),
+      paddingHorizontal: wp(10),
       borderRadius: 10,
     },
     dateText: {
-      ...commonFontStyle(600, 14, colors.black),
+      ...commonFontStyle(400, 12, colors.black),
     },
     modalContainer: {
       flex: 1,

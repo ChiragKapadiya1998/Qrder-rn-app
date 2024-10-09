@@ -19,7 +19,7 @@ export const screenName = {
     Profile: 'Profile',
   },
   FoodDetails: 'FoodDetails',
-  MyOrdersList: 'MyOrdersList',
+  MyOrderAdmin: 'MyOrderAdmin',
   ProfileNotification: 'ProfileNotification',
   ProfileMessages: 'ProfileMessages',
   ReviewsScreen: 'ReviewsScreen',

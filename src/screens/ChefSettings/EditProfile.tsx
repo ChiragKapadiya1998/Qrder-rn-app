@@ -193,11 +193,11 @@ const EditProfile = (props: Props) => {
       errorToast(strings('login.error_v_phone'));
     } else if (address.trim().length == 0) {
       errorToast(strings('login.error_address'));
-    } else if (city.trim().length === 0) {
+    } else if (city?.trim().length === 0) {
       errorToast(strings('login.error_city'));
-    } else if (state.trim().length === 0) {
+    } else if (state?.trim().length === 0) {
       errorToast(strings('login.error_state'));
-    } else if (country.trim().length === 0) {
+    } else if (country?.trim().length === 0) {
       errorToast(strings('login.error_country'));
     } else if (pincode.trim().length === 0) {
       errorToast(strings('login.error_pincode'));
@@ -320,12 +320,12 @@ const EditProfile = (props: Props) => {
                 placeholder={
                   userData?.role == 'canteen'
                     ? strings('newAddText.canteen_name')
-                    : strings('sign_up.restaurant_name')
+                    : strings('newAddText.restaurant_name')
                 }
                 label={
                   userData?.role == 'canteen'
                     ? strings('newAddText.canteen_name')
-                    : strings('sign_up.restaurant')
+                    : strings('newAddText.restaurant_name')
                 }
                 onChangeText={(t: string) => setRestaurant(t)}
                 isShowLabel={true}
@@ -389,7 +389,7 @@ const EditProfile = (props: Props) => {
               value={numbers}
               placeholder={strings('sign_up.p_enter_phone')}
               keyboardType="number-pad"
-              label={strings('chefSignUp.phone_Number')}
+              label={strings('newAddText.contact_number')}
               onChangeText={(t: string) => setNumber(t)}
               maxLength={10}
               isShowLabel={true}

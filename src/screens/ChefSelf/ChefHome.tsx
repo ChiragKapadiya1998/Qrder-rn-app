@@ -16,6 +16,7 @@ import {
 } from '../../utils/loactionHandler';
 import {
   getAsyncLocation,
+  getAsyncUserInfo,
   setAsyncLocation,
 } from '../../utils/asyncStorageManager';
 import HomeHeader from '../../compoment/HomeHeader';
@@ -39,7 +40,7 @@ import { screenName } from '../../navigation/screenNames';
 import { getDiscountAction } from '../../actions/commonAction';
 import { getRunningOrderAction, orderCompletedAction, orderDeclinedAction } from '../../actions/allOrdersAction';
 import NoDataFound from '../../compoment/NoDataFound';
-import { formatDate } from '../../utils/globalFunctions';
+import { convertIsoToDate, formatDate } from '../../utils/globalFunctions';
 import Spacer from '../../compoment/Spacer';
 
 const ChefHome = () => {
@@ -142,15 +143,6 @@ const ChefHome = () => {
     // navigate(screenName.SelectLocation);
   };
 
-  const onOrderCompleted = (id: number) => {
-    let UserInfo = {
-      data: id,
-      onSuccess: () => { },
-      onFailure: () => { },
-    };
-    dispatch(orderCompletedAction(UserInfo));
-  }
-
   const onCancelBtn = (id: number) => {
     let UserInfo = {
       data: id,
@@ -162,7 +154,7 @@ const ChefHome = () => {
 
 
   const renderItem = ({ item, index }) => {
-    const formattedDate = formatDate(item.created_at);
+    const formattedDate = convertIsoToDate(item.created_at);
 
     return (
       <View style={styles.listContainer}>
@@ -189,13 +181,6 @@ const ChefHome = () => {
 
         <View style={styles.btnContainer}>
           <View style={{ flexDirection: 'row' }}>
-            <PrimaryButton
-              extraStyle={styles.accpetBtn}
-              title={strings('orderModal.completed')}
-              titleStyle={styles.accpetText}
-              onPress={() => onOrderCompleted(item.id)}
-            />
-            <Spacer width={16} />
             <PrimaryButton
               extraStyle={styles.cancelBtn}
               title={strings('orderModal.cancel')}
@@ -443,7 +428,7 @@ const getGlobalStyles = (props: any) => {
       borderRadius: 16,
     },
     diningText: {
-      ...commonFontStyle(500, 12, colors?.defult_white),
+      ...commonFontStyle(500, 10, colors?.defult_white),
     },
     hurrUpView: {
       backgroundColor: colors.text_orange,

@@ -197,7 +197,7 @@ const getGlobalStyles = (props: any) => {
       },
       shadowOpacity: 0.25,
       shadowRadius: 3.84,
-      elevation: 5,
+      elevation: 10,
     },
     itemViewContainer: {
       flex: 1,

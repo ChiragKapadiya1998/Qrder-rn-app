@@ -227,16 +227,12 @@ const SignInScreen = (props: Props) => {
         backgroundColor={colors.Primary_Bg}
       />
 
-      <LoginHeader
-        title={strings('login.welcome_back')}
-        description={strings('login.login_dec')}
-      />
-
       <View style={styles.bottomContainer}>
         <KeyboardAwareScrollView
           keyboardShouldPersistTaps={'handled'}
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.contentContainerStyle}>
+          <Text style={styles.welcomeText}>{strings('login.welcome_back')}</Text>
           <CCDropDown
             data={DropDownData}
             label={strings('login.select_role')}
@@ -328,7 +324,7 @@ const SignInScreen = (props: Props) => {
       </View>
       {selectRole == 'Admin' || selectRole == 'Student' ? (
         <>
-          <TouchableOpacity onPress={onPressSignUp} style={{ bottom: 10 }}>
+          <TouchableOpacity onPress={onPressSignUp} style={{ bottom: 10, position: 'absolute', left: 0, right: 0 }}>
             <Text style={styles.bottomText}>
               {strings('login.dont_have_account')}
               <Text style={styles.signUpText}> {strings('login.sign_up')}</Text>
@@ -348,13 +344,18 @@ const getGlobalStyles = (props: any) => {
     container: {
       flex: 1,
       backgroundColor: colors.bg_white,
+      justifyContent: 'center',
     },
     bottomContainer: {
-      flex: 2.5,
       backgroundColor: colors.bg_white,
     },
     contentContainerStyle: {
       paddingHorizontal: wp(20),
+    },
+    welcomeText: {
+      textAlign: 'center',
+      marginBottom: hp(20),
+      ...commonFontStyle(800, 20, colors.black),
     },
     loginIcon: {
       height: hp(150),

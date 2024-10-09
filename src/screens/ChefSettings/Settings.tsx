@@ -66,8 +66,6 @@ const Settings = () => {
     setIsRoll(isRole);
   };
 
-
-  console.log("-------", isRoll)
   const closeModal = () => {
     setVisible(false);
   };
@@ -102,7 +100,7 @@ const Settings = () => {
       />
       <View style={styles.subContainer}>
         <View style={[styles.dropdownContainer]}>
-          <Text style={styles.label}>{strings('Settings.theme')}</Text>
+          <Text style={styles.label}>{strings('newAddText.themes')}</Text>
           {/* <Switch
             value={isDarkTheme}
             onChange={() => changeValue()}

@@ -26,7 +26,7 @@ import VerificationCode from '../screens/auth/VerificationCode';
 import LocationScreen from '../screens/auth/LocationScreen';
 import MyTabs from '../navigation/BottomTabBar';
 import FoodDetails from '../screens/Chef/FoodDetails';
-import MyOrdersList from '../screens/Chef/MyOrdersList';
+import MyOrderAdmin from '../screens/Chef/MyOrderAdmin';
 import Notification from '../screens/Chef/Notification';
 import NotificationListCard from '../screens/Chef/NotificationListCard';
 import ProfileNotification from '../screens/ChefSettings/ProfileNotification';
@@ -234,8 +234,8 @@ const StackNavigator: FC = () => {
           headerShown: false,
           headerTitle: '',
         })}
-        name={screenName.MyOrdersList}
-        component={MyOrdersList}
+        name={screenName.MyOrderAdmin}
+        component={MyOrderAdmin}
       />
 
       <Stack.Screen

@@ -42,8 +42,6 @@ const FoodCart = () => {
   const [loading, setLoading] = useState(false);
   const isFocuse = useIsFocused();
 
-  console.log('=======================dasdasda', discount);
-
   const totalPrice = getCardData.reduce((acc, item) => {
     return acc + Number(item.price) * item.quantity;
   }, 0);

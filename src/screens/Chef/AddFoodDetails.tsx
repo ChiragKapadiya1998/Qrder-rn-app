@@ -335,8 +335,7 @@ const AddFoodDetails = () => {
   //     </View>
   //   );
   // }
-
-  console.log("========", miscellaneous)
+  
   return (
     <View style={styles.container}>
       <HomeHeader

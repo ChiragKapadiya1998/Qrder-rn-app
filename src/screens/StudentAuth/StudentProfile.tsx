@@ -29,6 +29,7 @@ import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import LogOutModal from '../../compoment/GeneralModal';
 import { USER_LOGOUT } from '../../redux/actionTypes';
+import ReviewModal from '../../compoment/ReviewModal';
 
 type Props = {};
 
@@ -40,8 +41,10 @@ const StudentProfile = (props: Props) => {
   const [photoUri, setPhotoUri] = useState(null);
   const [loading, setLoading] = useState(false);
   const [name, setName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [number, setNumber] = useState('');
   const [visible, setVisible] = useState(false);
+  const [openReviewModal, setOpenReviewModal] = useState(false);
   const [userData, setUserData] = useState < any > ({});
   const dispatch = useAppDispatch();
   console.log('photoUri', photoUri);
@@ -51,11 +54,12 @@ const StudentProfile = (props: Props) => {
       const userList = await getAsyncUserInfo();
       console.log(
         'userList.original_url',
-        JSON.stringify(userList?.profile_image),
+        JSON.stringify(userList),
       );
 
       setUserData(userList);
       setName(userList?.name || '');
+      setLastName(userList?.last_name || '')
       setNumber(userList?.number || '');
       setPhotoUri(userList?.profile_image || '');
     } catch (error) { }
@@ -90,6 +94,8 @@ const StudentProfile = (props: Props) => {
       navigation.navigate(list, { hideEdit: false, userData: userData });
     } else if (list === 'log Out') {
       setVisible(true);
+    } else if (list === 'Review') {
+      setOpenReviewModal(true)
     } else {
       list !== '' && navigation.navigate(list);
     }
@@ -97,6 +103,7 @@ const StudentProfile = (props: Props) => {
 
   const closeModal = () => {
     setVisible(false);
+    setOpenReviewModal(false)
   };
 
   const onPressLogOut = async () => {
@@ -153,7 +160,7 @@ const StudentProfile = (props: Props) => {
                 />
               )}
               <View style={styles.userNameView}>
-                <Text style={styles.nameText}>{name}</Text>
+                <Text style={styles.nameText}>{name + ' ' + lastName}</Text>
                 <Text style={styles.numberText}>{number}</Text>
               </View>
             </View>
@@ -193,12 +200,7 @@ const StudentProfile = (props: Props) => {
             {
               title: strings('profileScreen.review'),
               iconName: Icons.stareIcon,
-              screens: '',
-            },
-            {
-              title: strings('profileScreen.support'),
-              iconName: Icons.supportIcon,
-              screens: screenName.Support,
+              screens: 'Review',
             },
             {
               title: strings('profileScreen.privacy_policy'),
@@ -236,6 +238,10 @@ const StudentProfile = (props: Props) => {
         onPressDelete={() => onPressLogOut()}
         isShowLogOut={true}
       />
+      <ReviewModal
+        title={strings('profileScreen.review')}
+        visible={openReviewModal}
+        closeModal={() => closeModal()} />
     </View>
   );
 };

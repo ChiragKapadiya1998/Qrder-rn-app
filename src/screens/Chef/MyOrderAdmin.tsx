@@ -22,7 +22,7 @@ import { GET_ALL_MY_ORDER } from '../../redux/actionTypes';
 import { calculateTotalMiscAmount, calculateTotalTax, convertIsoToDate, formatDate } from '../../utils/globalFunctions';
 import NoDataFound from '../../compoment/NoDataFound';
 
-const MyOrders = () => {
+const MyOrderAdmin = () => {
   const { colors } = useTheme();
   const route = useRoute();
   const { itemData } = route?.params;
@@ -79,7 +79,7 @@ const MyOrders = () => {
 
   };
 
-  console.log("=================", JSON.stringify(allMyOrder.items))
+
   return (
     <View style={styles.container}>
       <StatusBar
@@ -102,7 +102,6 @@ const MyOrders = () => {
         isCreateIcon={true}
         isShowInvoice={true}
       />
-
       <ScrollView
         style={styles.subContainer}
         showsVerticalScrollIndicator={false}>
@@ -111,13 +110,13 @@ const MyOrders = () => {
         </Text>
         <View style={styles.orderBox}>
           <View style={[styles.comanStyle]}>
-            <Text style={styles.priText}>{strings('myOrders.order_id')}</Text>
+            <Text style={styles.priText}>{strings('newAddText.invoice_Ids')}</Text>
             <Text style={[styles.priText, { color: colors.black }]}>
               {allMyOrder?.order_id}
             </Text>
           </View>
           <View style={[styles.comanStyle, { marginVertical: hp(12) }]}>
-            <Text style={styles.priText}>{strings('myOrders.user_name')}</Text>
+            <Text style={styles.priText}>{strings('CuisinesNameList.names')}</Text>
             <Text style={[styles.priText, { color: colors.black }]}>
               {allMyOrder?.name}
             </Text>
@@ -128,6 +127,12 @@ const MyOrders = () => {
             </Text>
             <Text style={[styles.priText, { color: colors.black }]}>
               {allMyOrder?.number}
+            </Text>
+          </View>
+          <View style={[styles.comanStyle, { marginTop: hp(12) }]}>
+            <Text style={styles.priText}>{strings('sign_up.p_email')}</Text>
+            <Text style={[styles.priText, { color: colors.black }]}>
+              {allMyOrder?.email}
             </Text>
           </View>
           <View style={[styles.comanStyle, { marginVertical: hp(12) }]}>
@@ -162,7 +167,7 @@ const MyOrders = () => {
               {strings('myOrders.platform_free')}
             </Text>
             <Text
-              style={[styles.priText, { color: colors.black }]}>{`₹${allMyOrder?.platform_fee}`}</Text>
+              style={[styles.priText, { color: colors.black }]}>{`₹${25}`}</Text>
           </View>
           <View style={[styles.comanStyle, { marginTop: hp(12) }]}>
             <Text style={styles.priText}>
@@ -179,31 +184,6 @@ const MyOrders = () => {
           </View>
         </View>
 
-        <Text style={styles.addressText}>
-          {strings('myOrders.address_details')}
-        </Text>
-        <View style={styles.cardContainer}>
-          {!isLoading && allMyOrder?.address !== null ? (
-            <View style={[styles.boxView, { marginBottom: hp(12) }]}>
-              <Text style={styles.textStyle}>
-                {strings('myOrders.address')}
-              </Text>
-              <Text style={styles.nameText}>{allMyOrder?.address}</Text>
-            </View>
-          ) : null}
-          <View style={[styles.boxView]}>
-            <Text style={styles.textStyle}>
-              {strings('myOrders.dining_parcel')}
-            </Text>
-            <View style={styles.diningView}>
-              <Text style={styles.diningText}>
-                {allMyOrder?.order_type === 1
-                  ? strings('orderModal.dining')
-                  : strings('orderModal.parcel')}
-              </Text>
-            </View>
-          </View>
-        </View>
         <Text style={[styles.addressText]}>{strings('myOrders.items')}</Text>
         {!isLoading && allMyOrder?.items && (
           <FlatList
@@ -279,7 +259,6 @@ const MyOrders = () => {
             contentContainerStyle={styles.containerView}
             ListEmptyComponent={<NoDataFound />}
           />
-
         )}
       </ScrollView>
       <ThankYouModal
@@ -293,7 +272,7 @@ const MyOrders = () => {
     </View>
   );
 };
-export default MyOrders;
+export default MyOrderAdmin;
 
 const getGlobalStyles = (props: any) => {
   const { colors } = props;
@@ -382,6 +361,7 @@ const getGlobalStyles = (props: any) => {
       height: 89,
       borderRadius: 16,
       resizeMode: 'contain',
+      backgroundColor: 'red'
     },
     itemText: {
       ...commonFontStyle(400, 10, colors.text_orange),
@@ -393,6 +373,7 @@ const getGlobalStyles = (props: any) => {
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
+      paddingTop: hp(3),
     },
     priceText: {
       ...commonFontStyle(600, 16, colors.text_orange),

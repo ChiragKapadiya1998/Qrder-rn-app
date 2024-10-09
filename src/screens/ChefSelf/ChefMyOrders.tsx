@@ -22,7 +22,7 @@ const ChefMyOrders = () => {
     // const { allMyOrder } = useAppSelector(state => state.orders);
     const [isOpenModal, setIsOpenModal] = useState(false);
     const dispatch = useAppDispatch();
-    const [myOrderData,setMyOrderData] = useState({})
+    const [myOrderData, setMyOrderData] = useState({})
     const [isLoading, setIsLoading] = useState(true);
 
     const goback = () => {
@@ -37,18 +37,16 @@ const ChefMyOrders = () => {
     const getAllMyOrder = () => {
         let UserInfo = {
             data: itemData?.id,
-            onSuccess: (res) => { 
+            onSuccess: (res) => {
                 setMyOrderData(res)
                 setIsLoading(false)
             },
-            onFailure: () => { 
+            onFailure: () => {
                 setIsLoading(false)
             },
         };
         dispatch(allMyOrderAction(UserInfo));
     }
-
-console.log("=><",JSON.stringify(myOrderData))
 
     const onPressGoToHome = () => {
         setIsOpenModal(false)
@@ -102,31 +100,84 @@ console.log("=><",JSON.stringify(myOrderData))
                             <Text style={styles.diningText}>{myOrderData?.order_type === 1 ? strings('orderModal.dining') : strings('orderModal.parcel')}</Text>
                         </View>
                     </View>
+                    {myOrderData.table_number === null ? null :
+                        <View style={[styles.boxView, { marginTop: hp(12) }]}>
+                            <Text style={styles.textStyle}>{strings('newAddText.table_no')}</Text>
+                            <Text style={styles.nameText}>{myOrderData?.table_number}</Text>
+                        </View>}
                 </View>
                 <Text style={[styles.addressText, { marginTop: hp(20) }]}>{strings('myOrders.items')}</Text>
-                {!isLoading && 
+                {!isLoading &&
                     <FlatList
                         data={myOrderData.items}
-                        renderItem={({ item }) => (
-                            <View style={styles.headingView}>
-                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                    <Image source={{ uri: item?.menu?.image }} style={styles.imageStyle} />
-                                    <View style={{ marginLeft: wp(10), flex: 1 }}>
-                                    <Text style={styles.itemText}>{`${strings('foodDetails.item')} :  ${1}`}</Text>
-                                        <Text style={styles.foodText}>{item?.menu?.name}</Text>
-                                        {item?.description !== null ? (
-                                            <Text numberOfLines={1} style={styles.leftText}>
-                                                {item?.description}
+                        renderItem={({ item }) => {
+                            const miscItems = item.miscellaneous_items.map(misc => misc.name).join(', ');
+                            const miscAmount = item.miscellaneous_items
+                                .reduce((total, misc) => total + parseFloat(misc.price), 0)
+                                .toFixed(2);
+
+                            const taxAmount = item?.menu?.price * (item?.menu?.tax_percentage / 100);
+
+                            return (
+                                <View style={styles.headingView}>
+                                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                        <Image
+                                            source={{ uri: item?.menu?.image }}
+                                            style={styles.imageStyle}
+                                        />
+                                        <View style={{ marginLeft: wp(10), flex: 1 }}>
+                                            <Text style={styles.foodText}>{item?.menu?.name}</Text>
+                                            {item?.description !== null ? (
+                                                <Text style={styles.desText}>
+                                                    {`${strings('addFoodList.Description')} : `}
+                                                    <Text numberOfLines={1} style={styles.leftText}>
+                                                        {item?.description}
+                                                    </Text>
+                                                </Text>
+                                            ) : null}
+
+                                            <Text style={styles.desText}>
+                                                {`${strings('newAddText.quantity')} : `}
+                                                <Text numberOfLines={1} style={styles.leftText}>
+                                                    {item?.quantity}
+                                                </Text>
                                             </Text>
-                                        ) : null}
-                                        <View style={styles.addContiner}>
-                                            <Text style={styles.priceText}>{`₹${item?.menu?.price}`}</Text>
+                                            {miscItems.length === 0 ? null :
+                                                <Text style={styles.desText}>
+                                                    {`${strings('newAddText.misc_item')} : `}
+                                                    <Text numberOfLines={1} style={styles.leftText}>
+                                                        {miscItems}
+                                                    </Text>
+                                                </Text>
+                                            }
+                                            {parseFloat(miscAmount) > 0 ? (
+                                                <Text style={styles.desText}>
+                                                    {`${strings('newAddText.misc_amount')} : `}
+                                                    <Text numberOfLines={1} style={styles.leftText}>
+                                                        {miscAmount}
+                                                    </Text>
+                                                </Text>
+                                            ) : null}
+                                            {taxAmount > 0 ? (
+                                                <Text style={styles.desText}>
+                                                    {`${strings('newAddText.tax')} : `}
+                                                    <Text numberOfLines={1} style={styles.leftText}>
+                                                        {taxAmount}
+                                                    </Text>
+                                                </Text>
+                                            ) : null}
+
+                                            <View style={styles.addContiner}>
+                                                <Text style={styles.priceText}>
+                                                    ₹{item?.menu?.price}
+                                                </Text>
+                                            </View>
                                         </View>
                                     </View>
                                 </View>
-                            </View>
-                        )}
-                        keyExtractor={(item) => item.toString()}
+                            );
+                        }}
+                        keyExtractor={item => item.toString()}
                         contentContainerStyle={styles.containerView}
                         ListEmptyComponent={<NoDataFound />}
                     />}
@@ -231,7 +282,7 @@ const getGlobalStyles = (props: any) => {
             width: 89,
             height: 89,
             borderRadius: 16,
-            resizeMode: 'contain'
+            resizeMode: 'contain',
         },
         itemText: {
             ...commonFontStyle(400, 10, colors.text_orange),
@@ -243,13 +294,16 @@ const getGlobalStyles = (props: any) => {
             flexDirection: 'row',
             alignItems: 'center',
             justifyContent: 'space-between',
-            paddingTop: hp(10),
+            paddingTop: hp(3),
         },
         priceText: {
             ...commonFontStyle(600, 16, colors.text_orange),
         },
         leftText: {
-            ...commonFontStyle(500, 12, colors.title_dec100),
+            ...commonFontStyle(400, 10, colors.title_dec100),
+        },
+        desText: {
+            ...commonFontStyle(400, 10, colors.text_orange),
         },
         emptyContainer: {
             flex: 1,

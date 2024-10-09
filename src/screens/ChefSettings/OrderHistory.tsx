@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Alert,
   FlatList,
@@ -11,31 +11,31 @@ import {
   View,
 } from 'react-native';
 
-import {useNavigation, useTheme} from '@react-navigation/native';
-import {strings} from '../../i18n/i18n';
-import {commonFontStyle, hp, wp} from '../../theme/fonts';
-import {useAppDispatch, useAppSelector} from '../../redux/hooks';
+import { useNavigation, useTheme } from '@react-navigation/native';
+import { strings } from '../../i18n/i18n';
+import { commonFontStyle, hp, wp } from '../../theme/fonts';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import HomeHeader from '../../compoment/HomeHeader';
-import {Icons} from '../../utils/images';
+import { Icons } from '../../utils/images';
 import HomeDropDown from '../../compoment/HomeDropDown';
 import {
   getAllOrderAction,
   getAllOrderFilterAction,
 } from '../../actions/allOrdersAction';
-import {formatDate, formatDateToDDMMYYYY} from '../../utils/globalFunctions';
-import {getAsyncRole} from '../../utils/asyncStorageManager';
+import { convertIsoToDate, formatDate, formatDateToDDMMYYYY } from '../../utils/globalFunctions';
+import { getAsyncRole } from '../../utils/asyncStorageManager';
 import DatePicker from 'react-native-date-picker';
 import Spacer from '../../compoment/Spacer';
 import NoDataFound from '../../compoment/NoDataFound';
-import {screenName} from '../../navigation/screenNames';
+import { screenName } from '../../navigation/screenNames';
 
 const OrderHistory = () => {
-  const {colors} = useTheme();
+  const { colors } = useTheme();
   const navigation = useNavigation();
   const dispatch = useAppDispatch();
-  const styles = React.useMemo(() => getGlobalStyles({colors}), [colors]);
-  const {isDarkTheme} = useAppSelector(state => state.common);
-  const {allOrderHistory} = useAppSelector(state => state.orders);
+  const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
+  const { isDarkTheme } = useAppSelector(state => state.common);
+  const { allOrderHistory } = useAppSelector(state => state.orders);
   const [isRole, setIsRole] = useState('');
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
@@ -49,8 +49,8 @@ const OrderHistory = () => {
 
   const getAllOrdersHistory = () => {
     let obj = {
-      onSuccess: () => {},
-      onFailure: () => {},
+      onSuccess: () => { },
+      onFailure: () => { },
     };
     dispatch(getAllOrderAction(obj));
   };
@@ -61,8 +61,8 @@ const OrderHistory = () => {
         start_date: formatDateToDDMMYYYY(startDate),
         end_date: formatDateToDDMMYYYY(data),
       },
-      onSuccess: () => {},
-      onFailure: () => {},
+      onSuccess: () => { },
+      onFailure: () => { },
     };
     dispatch(getAllOrderFilterAction(obj));
   };
@@ -97,16 +97,16 @@ const OrderHistory = () => {
     setIsDatePickerVisible(false);
   };
 
-  const onCancelBtn = () => {};
+  const onCancelBtn = () => { };
 
-  const renderItem = ({item, index}) => {
-    const formattedDate = formatDate(item.created_at);
+  const renderItem = ({ item, index }) => {
+    const formattedDate = convertIsoToDate(item.created_at);
     return (
       <View style={styles.listContainer}>
-        <View style={{flexDirection: 'row'}}>
+        <View style={{ flexDirection: 'row' }}>
           <TouchableOpacity
             onPress={() =>
-              navigation.navigate(screenName.MyOrders, {itemData: item})
+              navigation.navigate(screenName.MyOrderAdmin, { itemData: item })
             }
             style={styles.imageView}>
             <Text style={styles.imageText}>#{index + 1}</Text>
@@ -136,7 +136,7 @@ const OrderHistory = () => {
             </Text>
           </TouchableOpacity>
         </View>
-        {isRole === 'Admin' || isRole === 'Staff' ? null : (
+        {/* {isRole === 'Admin' || isRole === 'Staff' ? null : (
           <View style={styles.btnContainer}>
             <TouchableOpacity onPress={onCancelBtn} style={styles.cancelBtn}>
               <Image style={styles.invoiveIcon} source={Icons.invoiceIcon} />
@@ -145,7 +145,7 @@ const OrderHistory = () => {
               </Text>
             </TouchableOpacity>
           </View>
-        )}
+        )} */}
       </View>
     );
   };
@@ -172,7 +172,7 @@ const OrderHistory = () => {
         isShowIcon={true}
         isHideIcon={true}
         rightText={
-          allOrderHistory?.length == 0 ? '' : strings('addFoodList.reset')
+          strings('addFoodList.reset')
         }
       />
       <View style={styles.headerView}>
@@ -187,6 +187,7 @@ const OrderHistory = () => {
                   : strings('orderModal.start_date')}
               </Text>
             </TouchableOpacity>
+            <Spacer width={5} />
             <TouchableOpacity
               onPress={() => handleDatePickerOpen(false)}
               style={styles.dateButton}>
@@ -206,7 +207,7 @@ const OrderHistory = () => {
           showsVerticalScrollIndicator={false}
           ListEmptyComponent={<NoDataFound />}
           ListFooterComponent={() => {
-            return <View style={{height: 100}} />;
+            return <View style={{ height: 100 }} />;
           }}
         />
       </View>
@@ -234,7 +235,7 @@ const OrderHistory = () => {
 };
 
 const getGlobalStyles = (props: any) => {
-  const {colors} = props;
+  const { colors } = props;
 
   return StyleSheet.create({
     container: {
@@ -322,7 +323,7 @@ const getGlobalStyles = (props: any) => {
       borderRadius: 16,
     },
     diningText: {
-      ...commonFontStyle(500, 12, colors.defult_white),
+      ...commonFontStyle(500, 10, colors.defult_white),
     },
     invoiveIcon: {
       width: wp(18),
@@ -332,17 +333,18 @@ const getGlobalStyles = (props: any) => {
     },
     datePickerContainer: {
       flexDirection: 'row',
-      justifyContent: 'space-between',
-      marginVertical: hp(10),
+      justifyContent: 'flex-end',
+      marginTop: hp(10),
+      marginBottom: hp(5),
     },
     dateButton: {
       backgroundColor: colors.cards_bg,
-      paddingVertical: hp(10),
-      paddingHorizontal: wp(20),
+      paddingVertical: hp(6),
+      paddingHorizontal: wp(10),
       borderRadius: 10,
     },
     dateText: {
-      ...commonFontStyle(600, 14, colors.black),
+      ...commonFontStyle(400, 12, colors.black),
     },
     modalContainer: {
       flex: 1,

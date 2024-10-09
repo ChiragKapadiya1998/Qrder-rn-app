@@ -31,6 +31,7 @@ import GeneralModal from '../../compoment/GeneralModal';
 import { USER_LOGOUT } from '../../redux/actionTypes';
 import { addDiscountAction } from '../../actions/commonAction';
 import { errorToast } from '../../utils/commonFunction';
+import ReviewModal from '../../compoment/ReviewModal';
 
 type Props = {};
 
@@ -47,6 +48,7 @@ const Profile = (props: Props) => {
   const [photoUri, setPhotoUri] = useState(null);
   const [discountModal, setDiscountModal] = useState(false);
   const [lotSizeModal, setLotSizeModal] = useState(false);
+  const [openReviewModal, setOpenReviewModal] = useState(false);
   const [discountText, setDiscountText] = useState < string > ('');
   const dispatch = useAppDispatch();
 
@@ -76,6 +78,8 @@ const Profile = (props: Props) => {
       setDiscountModal(true);
     } else if (list === 'OrderWaterBottle') {
       setLotSizeModal(true);
+    } else if (list === 'Review') {
+      setOpenReviewModal(true)
     } else {
       list !== '' && navigation.navigate(list);
     }
@@ -85,6 +89,7 @@ const Profile = (props: Props) => {
     setVisible(false);
     setDiscountModal(false);
     setLotSizeModal(false);
+    setOpenReviewModal(false)
   };
 
   const onPressLogOut = async () => {
@@ -153,10 +158,6 @@ const Profile = (props: Props) => {
           style={styles.profileContainer}>
           <View style={styles.profileView}>
             <View style={styles.profileBox}>
-              {/* <Image
-                source={photoUri ? {uri: photoUri} : Icons.profileImage}
-                style={styles.profilImage}
-              /> */}
               {photoUri ? (
                 <View style={styles.profilImage}>
                   <Image source={{ uri: photoUri }} style={styles.profilImage} />
@@ -173,7 +174,7 @@ const Profile = (props: Props) => {
               {/* <View style={styles.profilImage} /> */}
               <View style={styles.userNameView}>
                 <Text style={styles.nameText}>{name}</Text>
-                <Text style={styles.numberText}>{number}</Text>
+                {/* <Text style={styles.numberText}>{number}</Text> */}
               </View>
             </View>
           </View>
@@ -340,6 +341,10 @@ const Profile = (props: Props) => {
         isShowLotSize={true}
         setLoading={setLoading}
       />
+      <ReviewModal
+        title={strings('profileScreen.review')}
+        visible={openReviewModal}
+        closeModal={() => closeModal()} />
     </View>
   );
 };

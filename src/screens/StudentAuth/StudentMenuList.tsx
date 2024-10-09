@@ -192,12 +192,12 @@ const StudentMenuList = () => {
         isShowIcon={false}
         isCardIcon={false}
       />
-      <View style={styles.hurrUpView}>
-        <View>
-          <Text style={styles.hurryText}>{strings('newAddText.hurry_up')}</Text>
-          <Text style={styles.hurryText}>{strings('newAddText.up_to')}</Text>
-        </View>
-        {discount === 0 ? null : (
+      {discount === 0 ? null :
+        <View style={styles.hurrUpView}>
+          <View>
+            <Text style={styles.hurryText}>{strings('newAddText.hurry_up')}</Text>
+            <Text style={styles.hurryText}>{strings('newAddText.up_to')}</Text>
+          </View>
           <ImageBackground
             source={Icons.ic_dec}
             resizeMode="contain"
@@ -211,8 +211,7 @@ const StudentMenuList = () => {
             }}>
             <Text style={styles.bannerText}>{`${discount}%`}</Text>
           </ImageBackground>
-        )}
-      </View>
+        </View>}
 
 
       {getCanteenCuisines && getCanteenCuisines.length !== 0 && (

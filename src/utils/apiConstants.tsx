@@ -2,7 +2,7 @@ export const api = {
   // BASE_URL: 'https://qrder.in/api/',
   // BASE_URL1: 'https://qrder.in/',
   BASE_URL:
-  'https://0c35-2405-201-201f-9802-59ba-ee71-9461-7b87.ngrok-free.app/api/',
+  'https://3a5e-2405-201-201f-9802-6958-ad41-1fe8-e519.ngrok-free.app/api/',
 
   // Auth
   login: 'login',

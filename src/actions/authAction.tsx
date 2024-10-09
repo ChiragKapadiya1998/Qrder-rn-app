@@ -244,7 +244,7 @@ export const updateProfile =
           }
         })
         .catch(error => {
-          if (request.onFailure) request.onFailure(error.response.data);
+          if (request.onFailure) request.onFailure(error.response);
         });
     };
 
