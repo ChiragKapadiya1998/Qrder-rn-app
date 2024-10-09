@@ -234,7 +234,6 @@ export const updateProfile =
         data: request.data,
       })
         .then(async (response: any) => {
-          console.log("---<<<",response.data)
           if (response?.data?.success) {
             successToast(response?.data?.message);
             await setAsyncUserInfo(response?.data?.data?.user);

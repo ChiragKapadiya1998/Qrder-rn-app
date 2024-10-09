@@ -86,6 +86,7 @@ const EditProfile = (props: Props) => {
         setCity(res?.city_name);
         setState(res?.state_name);
         setCountry(res?.country_name);
+        setAddressList(res.city)
       },
       onFailure: (Err: any) => { },
     };
