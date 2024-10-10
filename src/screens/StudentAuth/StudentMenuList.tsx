@@ -8,23 +8,35 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, { useEffect, useState } from 'react';
-import { useIsFocused, useNavigation, useRoute, useTheme } from '@react-navigation/native';
+import React, {useEffect, useState} from 'react';
+import {
+  useIsFocused,
+  useNavigation,
+  useRoute,
+  useTheme,
+} from '@react-navigation/native';
 import HomeHeader from '../../compoment/HomeHeader';
-import { commonFontStyle, hp, SCREEN_WIDTH, wp } from '../../theme/fonts';
-import { strings } from '../../i18n/i18n';
-import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import {commonFontStyle, hp, SCREEN_WIDTH, wp} from '../../theme/fonts';
+import {strings} from '../../i18n/i18n';
+import {useAppDispatch, useAppSelector} from '../../redux/hooks';
 import CartMenuCardList from '../../compoment/CartMenuCardList';
-import { getCanteenCuisineAction, getCanteenMenuAction, getDiscountAction, getStudentMenuListAction } from '../../actions/commonAction';
-import { GET_CANTEEN_CUISINE_LIST, GET_EMPTY_CANTEEN_LIST } from '../../redux/actionTypes';
-import { Icons } from '../../utils/images';
-
+import {
+  getCanteenCuisineAction,
+  getCanteenMenuAction,
+  getDiscountAction,
+  getStudentMenuListAction,
+} from '../../actions/commonAction';
+import {
+  GET_CANTEEN_CUISINE_LIST,
+  GET_EMPTY_CANTEEN_LIST,
+} from '../../redux/actionTypes';
+import {Icons} from '../../utils/images';
 
 const StudentMenuList = () => {
-  const { colors } = useTheme();
+  const {colors} = useTheme();
   const navigation = useNavigation();
-  const { params } = useRoute < any > ();
-  const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
+  const {params} = useRoute<any>();
+  const styles = React.useMemo(() => getGlobalStyles({colors}), [colors]);
   const [tabSelection, setTabSelection] = useState(strings('myMenuList.all'));
   const [refreshing, setRefreshing] = React.useState(false);
   const [cuisineId, setCuisineId] = React.useState(0);
@@ -32,17 +44,19 @@ const StudentMenuList = () => {
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
   const dispatch = useAppDispatch();
-  const { getCanteenCuisines, getCanteenMenuData, canteenMenuCount } = useAppSelector(state => state.data);
-  const { isDarkTheme, discount } = useAppSelector(state => state.common);
+  const {getCanteenCuisines, getCanteenMenuData, canteenMenuCount} =
+    useAppSelector(state => state.data);
+  const {isDarkTheme, discount} = useAppSelector(state => state.common);
   const [onEndReached, setOnEndReached] = useState(true);
   const isFocuse = useIsFocused();
+  console.log('discount', discount);
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     if (tabSelection === 'All') {
       getMenuList(1);
     } else {
-      getAllCuisinesMenuList(cuisineId, 1)
+      getAllCuisinesMenuList(cuisineId, 1);
     }
   }, [refreshing, cuisineId]);
 
@@ -54,8 +68,8 @@ const StudentMenuList = () => {
   const getCanteenCuisineList = () => {
     let obj = {
       params: params?.selectID,
-      onSuccess: () => { },
-      onFailure: () => { },
+      onSuccess: () => {},
+      onFailure: () => {},
     };
     dispatch(getCanteenCuisineAction(obj));
   };
@@ -72,12 +86,12 @@ const StudentMenuList = () => {
         setRefreshing(false);
         setLoadingMore(false);
         setPage(pages);
-        setLoading(false)
+        setLoading(false);
       },
       onFailure: (Err: any) => {
         setRefreshing(false);
         setLoadingMore(false);
-        setLoading(false)
+        setLoading(false);
       },
     };
     dispatch(getCanteenMenuAction(obj));
@@ -95,12 +109,12 @@ const StudentMenuList = () => {
         setRefreshing(false);
         setLoadingMore(false);
         setPage(pages);
-        setLoading(false)
+        setLoading(false);
       },
       onFailure: (Err: any) => {
         setRefreshing(false);
         setLoadingMore(false);
-        setLoading(false)
+        setLoading(false);
       },
     };
     dispatch(getStudentMenuListAction(obj));
@@ -124,7 +138,7 @@ const StudentMenuList = () => {
     setTabSelection(item.name);
     setCuisineId(item.id);
     setLoading(true);
-    dispatch({ type: GET_EMPTY_CANTEEN_LIST, payload: false });
+    dispatch({type: GET_EMPTY_CANTEEN_LIST, payload: false});
     setTimeout(() => {
       if (item.name === 'All') {
         getMenuList(1);
@@ -134,8 +148,7 @@ const StudentMenuList = () => {
     }, 100);
   };
 
-
-  const renderItem = ({ item }) => {
+  const renderItem = ({item}) => {
     const selectColor =
       tabSelection === item.name ? colors.text_orange : colors.text_gray;
     return (
@@ -144,16 +157,16 @@ const StudentMenuList = () => {
           onPress={() => onTabChange(item)}
           style={styles.cuisineView}>
           {item.name === 'All' ? (
-            <View style={[styles.allImage, { borderColor: selectColor }]}>
+            <View style={[styles.allImage, {borderColor: selectColor}]}>
               <Image
                 source={Icons.allIcon}
-                style={[styles.allIconImage, { tintColor: selectColor }]}
+                style={[styles.allIconImage, {tintColor: selectColor}]}
               />
             </View>
           ) : (
             <Image
-              source={item.name === 'All' ? Icons.allIcon : { uri: item.image }}
-              style={[styles.profilImage, { borderColor: selectColor }]}
+              source={item.name === 'All' ? Icons.allIcon : {uri: item.image}}
+              style={[styles.profilImage, {borderColor: selectColor}]}
             />
           )}
           <Text
@@ -173,29 +186,37 @@ const StudentMenuList = () => {
     );
   };
 
-
   return (
     <View style={styles.container}>
-      <StatusBar barStyle={isDarkTheme ? 'light-content' : 'dark-content'} backgroundColor={colors.white} />
+      <StatusBar
+        barStyle={isDarkTheme ? 'light-content' : 'dark-content'}
+        backgroundColor={colors.white}
+      />
       <HomeHeader
         onBackPress={() => {
           navigation.goBack();
-          dispatch({ type: GET_EMPTY_CANTEEN_LIST, payload: false });
-          dispatch({ type: GET_CANTEEN_CUISINE_LIST, payload: [] });
+          dispatch({type: GET_EMPTY_CANTEEN_LIST, payload: false});
+          dispatch({type: GET_CANTEEN_CUISINE_LIST, payload: []});
         }}
         onRightPress={() => {
           console.log('dee');
         }}
         mainShow={true}
-        title={params?.canteenName ? params?.canteenName : strings('myMenuList.my_menu')}
+        title={
+          params?.canteenName
+            ? params?.canteenName
+            : strings('myMenuList.my_menu')
+        }
         extraStyle={styles.headerContainer}
         isShowIcon={false}
         isCardIcon={false}
       />
-      {discount === 0 ? null :
+      {discount === 0 ? null : (
         <View style={styles.hurrUpView}>
           <View>
-            <Text style={styles.hurryText}>{strings('newAddText.hurry_up')}</Text>
+            <Text style={styles.hurryText}>
+              {strings('newAddText.hurry_up')}
+            </Text>
             <Text style={styles.hurryText}>{strings('newAddText.up_to')}</Text>
           </View>
           <ImageBackground
@@ -211,26 +232,25 @@ const StudentMenuList = () => {
             }}>
             <Text style={styles.bannerText}>{`${discount}%`}</Text>
           </ImageBackground>
-        </View>}
-
+        </View>
+      )}
 
       {getCanteenCuisines && getCanteenCuisines.length !== 0 && (
         <View style={styles.tabMainView}>
           <FlatList
             data={[
-              { name: 'All', label: strings('myMenuList.all'), page: 0, id: 0 },
+              {name: 'All', label: strings('myMenuList.all'), page: 0, id: 0},
               ...getCanteenCuisines,
             ]}
             horizontal
             showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{ gap: 16 }}
+            contentContainerStyle={{gap: 16}}
             keyExtractor={(item, index) => `${item.id}-${index}`}
             onEndReachedThreshold={0.5}
             renderItem={renderItem}
           />
         </View>
       )}
-
 
       {/* {getCanteenCuisines?.length === 0 ? null :
         <View style={styles.tabMainView}>
@@ -286,15 +306,16 @@ const StudentMenuList = () => {
         </View>} */}
 
       <View style={styles.boxContainer}>
-        <CartMenuCardList onRefresh={() => {
-          onRefresh()
-        }}
+        <CartMenuCardList
+          onRefresh={() => {
+            onRefresh();
+          }}
           refreshing={refreshing}
           loading={loading}
           loadMoreData={() => loadMoreData()}
           loadingMore={loadingMore}
           onMomentumScrollBegin={() => {
-            setOnEndReached(false)
+            setOnEndReached(false);
           }}
         />
       </View>
@@ -305,7 +326,7 @@ const StudentMenuList = () => {
 export default StudentMenuList;
 
 const getGlobalStyles = (props: any) => {
-  const { colors } = props;
+  const {colors} = props;
   return StyleSheet.create({
     container: {
       flex: 1,
@@ -362,7 +383,7 @@ const getGlobalStyles = (props: any) => {
       alignItems: 'center',
       justifyContent: 'space-between',
       marginHorizontal: wp(20),
-      marginBottom: hp(20)
+      marginBottom: hp(20),
     },
     hurryText: {
       ...commonFontStyle(800, 18, colors.defult_white),

@@ -65,7 +65,7 @@ const StudentHome = () => {
 
   const getDiscount = id => {
     var data = new FormData();
-    data.append('canteen_id', id);
+    data.append('canteen_id', id.toString());
     let obj = {
       data,
       onSuccess: (res: any) => {},

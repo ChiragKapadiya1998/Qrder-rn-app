@@ -10,26 +10,34 @@ import {
   FlatList,
   Linking,
 } from 'react-native';
-import React, { useEffect, useState } from 'react';
-import { useNavigation, useRoute, useTheme } from '@react-navigation/native';
-import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import React, {useEffect, useState} from 'react';
+import {useNavigation, useRoute, useTheme} from '@react-navigation/native';
+import {useAppDispatch, useAppSelector} from '../../redux/hooks';
 import HomeHeader from '../../compoment/HomeHeader';
-import { strings } from '../../i18n/i18n';
-import { commonFontStyle, hp, wp } from '../../theme/fonts';
+import {strings} from '../../i18n/i18n';
+import {commonFontStyle, hp, wp} from '../../theme/fonts';
 import ThankYouModal from '../../compoment/ThankYouModal';
-import { allMyOrderAction, invoiceLinkAction } from '../../actions/allOrdersAction';
-import { GET_ALL_MY_ORDER } from '../../redux/actionTypes';
-import { calculateTotalMiscAmount, calculateTotalTax, convertIsoToDate, formatDate } from '../../utils/globalFunctions';
+import {
+  allMyOrderAction,
+  invoiceLinkAction,
+} from '../../actions/allOrdersAction';
+import {GET_ALL_MY_ORDER} from '../../redux/actionTypes';
+import {
+  calculateTotalMiscAmount,
+  calculateTotalTax,
+  convertIsoToDate,
+  formatDate,
+} from '../../utils/globalFunctions';
 import NoDataFound from '../../compoment/NoDataFound';
 
 const MyOrderAdmin = () => {
-  const { colors } = useTheme();
+  const {colors} = useTheme();
   const route = useRoute();
-  const { itemData } = route?.params;
-  const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
+  const {itemData} = route?.params;
+  const styles = React.useMemo(() => getGlobalStyles({colors}), [colors]);
   const navigation = useNavigation();
-  const { isDarkTheme } = useAppSelector(state => state.common);
-  const { allMyOrder } = useAppSelector(state => state.orders);
+  const {isDarkTheme} = useAppSelector(state => state.common);
+  const {allMyOrder} = useAppSelector(state => state.orders);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const dispatch = useAppDispatch();
   const [myOrderData, setMyOrderData] = useState({});
@@ -37,7 +45,7 @@ const MyOrderAdmin = () => {
 
   const goback = () => {
     navigation.goBack();
-    dispatch({ type: GET_ALL_MY_ORDER, payload: [] });
+    dispatch({type: GET_ALL_MY_ORDER, payload: []});
     setMyOrderData({});
   };
 
@@ -70,15 +78,13 @@ const MyOrderAdmin = () => {
   const onPressInvoice = () => {
     let obj = {
       params: itemData?.id,
-      onSuccess: (res) => {
-        Linking.openURL(res.url)
+      onSuccess: res => {
+        Linking.openURL(res.url);
       },
-      onFailure: () => { },
+      onFailure: () => {},
     };
     dispatch(invoiceLinkAction(obj));
-
   };
-
 
   return (
     <View style={styles.container}>
@@ -91,7 +97,7 @@ const MyOrderAdmin = () => {
           navigation.goBack();
         }}
         onRightPress={() => {
-          onPressInvoice()
+          onPressInvoice();
           // setIsOpenModal(true);
         }}
         mainShow={true}
@@ -110,14 +116,18 @@ const MyOrderAdmin = () => {
         </Text>
         <View style={styles.orderBox}>
           <View style={[styles.comanStyle]}>
-            <Text style={styles.priText}>{strings('newAddText.invoice_Ids')}</Text>
-            <Text style={[styles.priText, { color: colors.black }]}>
+            <Text style={styles.priText}>
+              {strings('newAddText.invoice_Ids')}
+            </Text>
+            <Text style={[styles.priText, {color: colors.black}]}>
               {allMyOrder?.order_id}
             </Text>
           </View>
-          <View style={[styles.comanStyle, { marginVertical: hp(12) }]}>
-            <Text style={styles.priText}>{strings('CuisinesNameList.names')}</Text>
-            <Text style={[styles.priText, { color: colors.black }]}>
+          <View style={[styles.comanStyle, {marginVertical: hp(12)}]}>
+            <Text style={styles.priText}>
+              {strings('CuisinesNameList.names')}
+            </Text>
+            <Text style={[styles.priText, {color: colors.black}]}>
               {allMyOrder?.name}
             </Text>
           </View>
@@ -125,22 +135,22 @@ const MyOrderAdmin = () => {
             <Text style={styles.priText}>
               {strings('myOrders.phone_number')}
             </Text>
-            <Text style={[styles.priText, { color: colors.black }]}>
+            <Text style={[styles.priText, {color: colors.black}]}>
               {allMyOrder?.number}
             </Text>
           </View>
-          <View style={[styles.comanStyle, { marginTop: hp(12) }]}>
+          <View style={[styles.comanStyle, {marginTop: hp(12)}]}>
             <Text style={styles.priText}>{strings('sign_up.p_email')}</Text>
-            <Text style={[styles.priText, { color: colors.black }]}>
+            <Text style={[styles.priText, {color: colors.black}]}>
               {allMyOrder?.email}
             </Text>
           </View>
-          <View style={[styles.comanStyle, { marginVertical: hp(12) }]}>
+          <View style={[styles.comanStyle, {marginVertical: hp(12)}]}>
             <Text style={styles.priText}>{strings('myOrders.subtotal')}</Text>
             <Text
               style={[
                 styles.priText,
-                { color: colors.black },
+                {color: colors.black},
               ]}>{`₹${allMyOrder?.subtotal}`}</Text>
           </View>
           <View style={[styles.comanStyle]}>
@@ -148,32 +158,39 @@ const MyOrderAdmin = () => {
             <Text
               style={[
                 styles.priText,
-                { color: colors.red_text },
+                {color: colors.red_text},
               ]}>{`-₹${allMyOrder?.discount}`}</Text>
           </View>
-          <View style={[styles.comanStyle, { marginTop: hp(12) }]}>
-            <Text style={styles.priText}>{strings('newAddText.total_misc')}</Text>
-            <Text style={[styles.priText, { color: colors.black }]}>
+          <View style={[styles.comanStyle, {marginTop: hp(12)}]}>
+            <Text style={styles.priText}>
+              {strings('newAddText.total_misc')}
+            </Text>
+            <Text style={[styles.priText, {color: colors.black}]}>
               {`₹${calculateTotalMiscAmount(allMyOrder?.items)}`}
             </Text>
           </View>
-          <View style={[styles.comanStyle, { marginVertical: hp(12) }]}>
-            <Text style={styles.priText}>{strings('newAddText.total_tax')}</Text>
+          <View style={[styles.comanStyle, {marginVertical: hp(12)}]}>
+            <Text style={styles.priText}>
+              {strings('newAddText.total_tax')}
+            </Text>
             <Text
-              style={[styles.priText, { color: colors.black }]}>{`₹${calculateTotalTax(allMyOrder?.items)}`}</Text>
+              style={[
+                styles.priText,
+                {color: colors.black},
+              ]}>{`₹${calculateTotalTax(allMyOrder?.items)}`}</Text>
           </View>
           <View style={[styles.comanStyle]}>
             <Text style={styles.priText}>
               {strings('myOrders.platform_free')}
             </Text>
             <Text
-              style={[styles.priText, { color: colors.black }]}>{`₹${25}`}</Text>
+              style={[styles.priText, {color: colors.black}]}>{`₹${2}`}</Text>
           </View>
-          <View style={[styles.comanStyle, { marginTop: hp(12) }]}>
+          <View style={[styles.comanStyle, {marginTop: hp(12)}]}>
             <Text style={styles.priText}>
               {strings('myOrders.created_date')}
             </Text>
-            <Text style={[styles.priText, { color: colors.green_text }]}>
+            <Text style={[styles.priText, {color: colors.green_text}]}>
               {convertIsoToDate(allMyOrder?.created_at)}
             </Text>
           </View>
@@ -188,22 +205,25 @@ const MyOrderAdmin = () => {
         {!isLoading && allMyOrder?.items && (
           <FlatList
             data={allMyOrder.items}
-            renderItem={({ item }) => {
-              const miscItems = item.miscellaneous_items.map(misc => misc.name).join(', ');
+            renderItem={({item}) => {
+              const miscItems = item.miscellaneous_items
+                .map(misc => misc.name)
+                .join(', ');
               const miscAmount = item.miscellaneous_items
                 .reduce((total, misc) => total + parseFloat(misc.price), 0)
                 .toFixed(2);
 
-              const taxAmount = item?.menu?.price * (item?.menu?.tax_percentage / 100);
+              const taxAmount =
+                item?.menu?.price * (item?.menu?.tax_percentage / 100);
 
               return (
                 <View style={styles.headingView}>
-                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
                     <Image
-                      source={{ uri: item?.menu?.image }}
+                      source={{uri: item?.menu?.image}}
                       style={styles.imageStyle}
                     />
-                    <View style={{ marginLeft: wp(10), flex: 1 }}>
+                    <View style={{marginLeft: wp(10), flex: 1}}>
                       <Text style={styles.foodText}>{item?.menu?.name}</Text>
                       {item?.description !== null ? (
                         <Text style={styles.desText}>
@@ -220,14 +240,14 @@ const MyOrderAdmin = () => {
                           {item?.quantity}
                         </Text>
                       </Text>
-                      {miscItems.length === 0 ? null :
+                      {miscItems.length === 0 ? null : (
                         <Text style={styles.desText}>
                           {`${strings('newAddText.misc_item')} : `}
                           <Text numberOfLines={1} style={styles.leftText}>
                             {miscItems}
                           </Text>
                         </Text>
-                      }
+                      )}
                       {parseFloat(miscAmount) > 0 ? (
                         <Text style={styles.desText}>
                           {`${strings('newAddText.misc_amount')} : `}
@@ -275,7 +295,7 @@ const MyOrderAdmin = () => {
 export default MyOrderAdmin;
 
 const getGlobalStyles = (props: any) => {
-  const { colors } = props;
+  const {colors} = props;
   return StyleSheet.create({
     container: {
       flex: 1,
@@ -360,8 +380,7 @@ const getGlobalStyles = (props: any) => {
       width: 89,
       height: 89,
       borderRadius: 16,
-      resizeMode: 'contain',
-      backgroundColor: 'red'
+      resizeMode: 'stretch',
     },
     itemText: {
       ...commonFontStyle(400, 10, colors.text_orange),
@@ -383,6 +402,6 @@ const getGlobalStyles = (props: any) => {
     },
     desText: {
       ...commonFontStyle(400, 10, colors.text_orange),
-    }
+    },
   });
 };
