@@ -333,7 +333,7 @@ const getGlobalStyles = (props: any) => {
       width: 89,
       height: 89,
       borderRadius: 16,
-      resizeMode: 'contain',
+      resizeMode: 'stretch',
     },
     foodText: {
       ...commonFontStyle(600, 14, colors.black),
