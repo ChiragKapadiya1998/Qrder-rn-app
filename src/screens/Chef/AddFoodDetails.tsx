@@ -335,7 +335,7 @@ const AddFoodDetails = () => {
   //     </View>
   //   );
   // }
-  
+
   return (
     <View style={styles.container}>
       <HomeHeader
@@ -430,6 +430,7 @@ const AddFoodDetails = () => {
             value={quantityValue}
             setValue={setQuantityValue}
             isShowLabel={true}
+            isShowError={true}
           />
           {/* </View> */}
 

@@ -46,9 +46,9 @@ const CuisinesEdit = () => {
   );
 
   const onPressEdit = async () => {
-    if (cuisineName == '') {
-      infoToast(strings('addFoodList.error_enter'));
-    } if (imageData?.uri === '') {
+    if (cuisineName.length == '') {
+      errorToast(strings('addFoodList.error_enter'));
+    } else if (imageData?.uri === '') {
       errorToast(strings('addFoodList.selectImg'));
     } else {
       setLoading(true);

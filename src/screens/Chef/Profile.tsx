@@ -340,6 +340,7 @@ const Profile = (props: Props) => {
         // onPressDelete={() => onOrderBottle()}
         isShowLotSize={true}
         setLoading={setLoading}
+        setLotSizeModal={setLotSizeModal}
       />
       <ReviewModal
         title={strings('profileScreen.review')}

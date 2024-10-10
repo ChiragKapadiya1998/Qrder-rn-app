@@ -1,8 +1,8 @@
 export const api = {
-  // BASE_URL: 'https://qrder.in/api/',
+  BASE_URL: 'https://qrder.in/api/',
   // BASE_URL1: 'https://qrder.in/',
-  BASE_URL:
-  'https://3a5e-2405-201-201f-9802-6958-ad41-1fe8-e519.ngrok-free.app/api/',
+  // BASE_URL:
+  // 'https://3a5e-2405-201-201f-9802-6958-ad41-1fe8-e519.ngrok-free.app/api/',
 
   // Auth
   login: 'login',
@@ -24,7 +24,7 @@ export const api = {
   getMenu: 'menu',
   updateMenu: 'menu-update',
   chefsRegister: 'chefs',
-  updateChef:'update-chef',
+  updateChef: 'update-chef',
   search_cities: 'cities/search',
   getCuisinesMenuList: 'cuisine-menu',
   addCard: 'add-to-cart',

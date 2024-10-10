@@ -519,6 +519,7 @@ export default {
     table_no:'Table No.',
     themes: 'Themes',
     restaurant_name:'Restaurant Name',
-    contact_number:'Contact Number'
+    contact_number:'Contact Number',
+    canteen:'Canteen'
   }
 };

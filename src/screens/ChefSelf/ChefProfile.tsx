@@ -136,11 +136,6 @@ const ChefProfile = (props: Props) => {
               iconName: Icons.profileIcon,
               screens: screenName.EditProfile,
             },
-            // {
-            //   title: strings('profileScreen.menu'),
-            //   iconName: Icons.menuIcon,
-            //   screens: ""
-            // },
             {
               title: strings('profileScreen.inventory'),
               iconName: Icons.inventory,
@@ -151,16 +146,6 @@ const ChefProfile = (props: Props) => {
               iconName: Icons.inventory,
               screens: screenName.OrderHistory,
             },
-            // {
-            //   title: strings('profileScreen.notifications'),
-            //   iconName: Icons.notificationIcon,
-            //   screens: screenName.ProfileNotification,
-            // },
-            // {
-            //   title: strings('profileScreen.cuisines'),
-            //   iconName: Icons.cuisine,
-            //   screens: screenName.CuisinesNameList
-            // },
           ]}
           onPressCell={onPressNavigation}
           styleProp={styles.boxCotainer}
@@ -192,19 +177,6 @@ const ChefProfile = (props: Props) => {
           onPressCell={onPressNavigation}
           styleProp={styles.boxCotainer}
         />
-        {/* <TitleList
-          arr_list={[
-            {
-              title: strings('profileScreen.log_out'),
-              iconName: Icons.logout,
-            },
-          ]}
-          onPressCell={async () => {
-            clearAsync(), dispatchNavigation(screenName.RoleSelectionScreen);
-            await GoogleSignin.signOut();
-          }}
-          styleProp={styles.boxCotainer}
-        /> */}
         <Spacer height={hp(50)} />
       </KeyboardAwareScrollView>
 

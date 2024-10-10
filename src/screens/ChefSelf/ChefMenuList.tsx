@@ -190,7 +190,6 @@ const MyMenuList = (props: Props) => {
     );
   };
 
-  console.log('getCuisines', getCuisines);
 
   return (
     <View style={styles.container}>

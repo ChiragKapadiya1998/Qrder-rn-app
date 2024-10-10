@@ -25,6 +25,7 @@ type Props = {
   discountText?: string;
   loading?: boolean;
   setLoading?: boolean;
+  setLotSizeModal:any
 };
 
 const GeneralModal = ({
@@ -41,6 +42,7 @@ const GeneralModal = ({
   discountText,
   loading,
   setLoading,
+  setLotSizeModal,
 }: Props) => {
   const {colors, isDark} = useTheme();
   const dispatch = useAppDispatch();
@@ -65,12 +67,11 @@ const GeneralModal = ({
           size: selectedOption,
         },
         onSuccess: res => {
+          setLotSizeModal(false)
           setLotSizeText('');
           setSelectedIndex('');
           setLoading(false);
-          setTimeout(() => {
-            closeModal();
-          }, 200);
+     
         },
         onFailure: (Err: any) => {
           if (Err !== undefined) {

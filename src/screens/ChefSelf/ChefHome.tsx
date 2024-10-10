@@ -79,11 +79,6 @@ const ChefHome = () => {
         await getAddress(
           response,
           async (result: any) => {
-            console.log(
-              'result?.results?.[0]?.formatted_address',
-              result?.results?.[0]?.formatted_address,
-            );
-
             setValue(result?.results?.[0]?.formatted_address);
             result?.results?.length
               ? await setAsyncLocation(result?.results?.[0]?.formatted_address)
@@ -210,13 +205,13 @@ const ChefHome = () => {
         }}
       />
       <ScrollView style={{ flex: 1, marginHorizontal: wp(20) }} showsVerticalScrollIndicator={false}>
-        <View style={styles.hurrUpView}>
-          <View>
-            <Text style={styles.hurryText}>{strings('newAddText.hurry_up')}</Text>
-            <Text style={styles.hurryText}>{strings('newAddText.up_to')}</Text>
-            <Text style={styles.allText}>{strings('newAddText.all_foods_are_available')}</Text>
-          </View>
-          {discount === 0 ? null : (
+        {discount === 0 ? null :
+          <View style={styles.hurrUpView}>
+            <View>
+              <Text style={styles.hurryText}>{strings('newAddText.hurry_up')}</Text>
+              <Text style={styles.hurryText}>{strings('newAddText.up_to')}</Text>
+              <Text style={styles.allText}>{strings('newAddText.all_foods_are_available')}</Text>
+            </View>
             <ImageBackground
               source={Icons.ic_dec}
               resizeMode="contain"
@@ -230,15 +225,13 @@ const ChefHome = () => {
               }}>
               <Text style={styles.bannerText}>{`${discount}%`}</Text>
             </ImageBackground>
-          )}
-        </View>
+          </View>}
 
         <View
           style={{
             flexDirection: 'row',
             alignItems: 'center',
             justifyContent: 'space-between',
-            marginTop: hp(8),
             marginBottom: 20,
           }}>
           <Text style={styles.seeText1}>{strings('home.running_orders')}</Text>
@@ -436,7 +429,8 @@ const getGlobalStyles = (props: any) => {
       borderRadius: 16,
       flexDirection: 'row',
       alignItems: 'center',
-      justifyContent: 'space-between'
+      justifyContent: 'space-between',
+      marginBottom: hp(8),
     },
     hurryText: {
       ...commonFontStyle(800, 18, colors.defult_white),

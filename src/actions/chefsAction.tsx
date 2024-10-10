@@ -71,8 +71,8 @@ export const chefsNameEdit =
   (request: any): ThunkAction<void, RootState, unknown, AnyAction> =>
     async dispatch => {
       let headers = {
-        'Content-Type': 'multipart/form-data',
         Authorization: await getAsyncToken(),
+        'Content-Type': 'multipart/form-data',
       };
       dispatch({ type: IS_LOADING_NEW, payload: true });
       return makeAPIRequest({

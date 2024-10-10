@@ -10,7 +10,7 @@ import {
 import React, {useState} from 'react';
 import {useNavigation, useRoute, useTheme} from '@react-navigation/native';
 import {useAppDispatch, useAppSelector} from '../../redux/hooks';
-import {infoToast} from '../../utils/commonFunction';
+import {errorToast, infoToast} from '../../utils/commonFunction';
 import {strings} from '../../i18n/i18n';
 import {getAsyncUserInfo} from '../../utils/asyncStorageManager';
 import HomeHeader from '../../compoment/HomeHeader';
@@ -41,9 +41,9 @@ const EditMiscellaneous = () => {
 
   const onPressEdit = async () => {
     if (recipesName == '') {
-      infoToast(strings('miscellaneousList.miscellaneous_items_error'));
+      errorToast(strings('miscellaneousList.miscellaneous_items_error'));
     } else if (materialName.trim() == '') {
-      infoToast(strings('miscellaneousList.price_error'));
+      errorToast(strings('miscellaneousList.price_error'));
     } else {
       setLoading(true);
 

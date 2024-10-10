@@ -51,17 +51,14 @@ const CuisinesAdd = ({ item }: ItemProps) => {
   const [isPictureEdit, setIsPictureEdit] = useState < boolean > (false);
 
   const onPressNewAdd = async () => {
-    if (cuisineName == '') {
+    if (cuisineName.length == '') {
       errorToast(strings('addFoodList.error_enter'));
-    } if (imageData?.uri === '') {
+    } else if (imageData?.uri === '') {
       errorToast(strings('addFoodList.selectImg'));
     } else {
       setLoading(true);
-      const userDetails = await getAsyncUserInfo();
-
       let data = new FormData();
       data.append('name', cuisineName);
-      data.append('parent_id', userDetails?.id);
       data.append('file', {
         uri: imageData?.uri,
         type: imageData?.mime,
@@ -76,7 +73,7 @@ const CuisinesAdd = ({ item }: ItemProps) => {
         },
         onFailure: (Err: any) => {
           if (Err != undefined) {
-            Alert.alert('Warning', Err?.message);
+            // Alert.alert('Warning', Err?.message);
           }
           setLoading(false);
         },
@@ -93,22 +90,6 @@ const CuisinesAdd = ({ item }: ItemProps) => {
     setDelete(true);
   };
 
-  //   const selectImage = () => {
-  //     setLoading(true);
-  //     ImageCropPicker.openPicker({
-  //       width: 100,
-  //       height: 100,
-  //       cropping: true,
-  //     })
-  //       .then(image => {
-  //         setPhotoUri(image.path);
-  //         setLoading(false);
-  //       })
-  //       .catch(error => {
-  //         console.log(error);
-  //         setLoading(false);
-  //       });
-  //   };
 
   const selectImage = () => {
     openImagePicker({
@@ -151,19 +132,6 @@ const CuisinesAdd = ({ item }: ItemProps) => {
           <Text style={styles.uploadText}>
             {strings('addFoodList.upload_photo_video')}
           </Text>
-
-          {/* <View>
-            <Image
-              source={photoUri ? {uri: photoUri} : Icons.profileImage}
-              style={styles.profilImage}
-            />
-            <TouchableOpacity
-              activeOpacity={0.9}
-              onPress={selectImage}
-              style={styles.editImage}>
-              <Image source={Icons.editPencial} style={styles.profileIcon} />
-            </TouchableOpacity>
-          </View> */}
 
           {!isPictureEdit ? (
             <TouchableOpacity

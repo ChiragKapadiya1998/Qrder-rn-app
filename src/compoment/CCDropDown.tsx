@@ -40,6 +40,7 @@ type InputProps = {
   labelTextStyle?: ViewStyle;
   extraStyle?: ViewStyle;
   isShowLabel?: boolean;
+  isShowError?:boolean
 };
 
 const CCDropDown = ({
@@ -58,6 +59,7 @@ const CCDropDown = ({
   labelTextStyle,
   extraStyle,
   isShowLabel = false,
+  isShowError = false,
   disable,
   ...rest
 }: InputProps) => {
@@ -65,7 +67,7 @@ const CCDropDown = ({
   const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
 
   const handleDropdownClick = () => {
-    if (!data || data.length === 0) {
+    if (!data || data.length === 0 && isShowError) {
       errorToast(strings('newAddText.no_cuisine_available'))
     }
   };

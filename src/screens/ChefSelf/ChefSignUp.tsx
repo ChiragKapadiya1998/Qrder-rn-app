@@ -135,7 +135,6 @@ const ChefSignUp = (props: Props) => {
     openImagePicker({
       onSucess: res => {
         setImageData(res);
-        // setIsPictureEdit(true);
       },
     });
   };

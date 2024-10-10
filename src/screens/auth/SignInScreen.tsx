@@ -77,6 +77,11 @@ const SignInScreen = (props: Props) => {
       id: 2,
     },
     {
+      name: strings('newAddText.canteen'),
+      value: 'Canteen',
+      id: 2,
+    },
+    {
       name: strings('roleSelection.student'),
       value: 'Student',
       id: 2,
@@ -110,7 +115,7 @@ const SignInScreen = (props: Props) => {
         data,
         onSuccess: async () => {
           await setAsyncRole(selectRole);
-          if (selectRole == 'Admin') {
+          if (selectRole == 'Admin' || selectRole === 'Canteen') {
             dispatchNavigation(screenName.BottomTabBar);
           } else if (selectRole == 'Staff') {
             dispatchNavigation(screenName.ChefSelfBottomBar);
@@ -274,7 +279,7 @@ const SignInScreen = (props: Props) => {
                 {strings('login.remember_me')}
               </Text>
             </View> */}
-            {(selectRole == 'Admin' || selectRole == 'Student') && (
+            {(selectRole == 'Admin' || selectRole == 'Student' || selectRole === 'Canteen') && (
               <TouchableOpacity
                 onPress={() => navigation.navigate(screenName.ForgotScreen)}>
                 <Text style={styles.forgotText}>
@@ -322,7 +327,7 @@ const SignInScreen = (props: Props) => {
           ) : null}
         </KeyboardAwareScrollView>
       </View>
-      {selectRole == 'Admin' || selectRole == 'Student' ? (
+      {selectRole == 'Admin' || selectRole == 'Student' || selectRole === 'Canteen' ? (
         <>
           <TouchableOpacity onPress={onPressSignUp} style={{ bottom: 10, position: 'absolute', left: 0, right: 0 }}>
             <Text style={styles.bottomText}>

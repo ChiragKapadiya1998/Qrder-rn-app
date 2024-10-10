@@ -63,11 +63,10 @@ const ChefEditName = (props: Props) => {
     openImagePicker({
       onSucess: res => {
         setImageData(res);
-        // setIsPictureEdit(true);
       },
     });
   };
-
+  
   const onPressEditDone = async () => {
     if (imageData?.uri === '') {
       errorToast(strings('addFoodList.selectImg'));
@@ -83,26 +82,27 @@ const ChefEditName = (props: Props) => {
       errorToast(strings('login.error_phone'));
     } else if (number.trim().length !== 10) {
       errorToast(strings('login.error_v_phone'));
-    } else if (salary === 0) {
+    } else if (salary.trim().length === 0) {
       errorToast(strings('ChefNameList.error_v_salary'));
     } else {
       setLoading(true)
       var data = new FormData();
-
+     
       data.append('name', name);
       data.append('email', email);
       data.append('cuisine_id', quantityValue);
-      data.append('number', phone);
-      data.append('password', password);
-      data.append('confirmed', rePassword);
+      data.append('number', number);
       data.append('salary', salary);
-      data.append('profile_image', {
-        uri: imageData?.uri,
-        type: imageData?.mime,
-        name: imageData?.name,
-      });
+      if (imageData?.uri !== itemData.profile_image) {
+        data.append('profile_image', {
+          uri: imageData?.uri,
+          type: imageData?.mime,
+          name: imageData?.name,
+        });
+      }
+   
       let obj = {
-        id: imageData?.id,
+        id: itemData?.id,
         data,
         onSuccess: (response: any) => {
           setLoading(false)
@@ -141,12 +141,22 @@ const ChefEditName = (props: Props) => {
         contentContainerStyle={styles.contentContainerStyle}>
         <View style={styles.profileContainer}>
           <View>
-            <Image
-              source={
-                imageData?.uri ? { uri: imageData?.uri } : Icons.profileImage
-              }
-              style={styles.profilImage}
-            />
+          {imageData?.uri ? (
+                <View style={styles.profilImage}>
+                  <Image
+                    source={{ uri: imageData?.uri }}
+                    style={styles.profilImage}
+                  />
+                </View>
+              ) : (
+                <Image
+                  source={Icons.profileImage}
+                  style={[
+                    styles.profilImage,
+                    { backgroundColor: colors.bg_orange200 },
+                  ]}
+                />
+              )}
             <TouchableOpacity activeOpacity={0.9} onPress={selectImage} style={styles.editImage}>
               <Image source={Icons.editPencial} style={styles.profileIcon} />
             </TouchableOpacity>

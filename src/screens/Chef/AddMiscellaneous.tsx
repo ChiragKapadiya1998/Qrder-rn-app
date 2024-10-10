@@ -55,9 +55,9 @@ const AddMiscellaneous = () => {
 
   const onPressNewAdd = async () => {
     if (recipesName == '') {
-      infoToast(strings('miscellaneousList.miscellaneous_items_error'));
+      errorToast(strings('miscellaneousList.miscellaneous_items_error'));
     } else if (materialName.trim() == '') {
-      infoToast(strings('miscellaneousList.price_error'));
+      errorToast(strings('miscellaneousList.price_error'));
     } else {
       setLoading(true);
       let data = new FormData();

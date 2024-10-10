@@ -12,7 +12,7 @@ import {
 import React, {useEffect, useState} from 'react';
 import {useNavigation, useTheme} from '@react-navigation/native';
 import {useAppDispatch, useAppSelector} from '../../redux/hooks';
-import {infoToast} from '../../utils/commonFunction';
+import {errorToast, infoToast} from '../../utils/commonFunction';
 import {strings} from '../../i18n/i18n';
 import HomeHeader from '../../compoment/HomeHeader';
 import Input from '../../compoment/Input';
@@ -99,7 +99,7 @@ const AddRecipesMasters = () => {
 
   const onPressEdit = async () => {
     if (recipesname == '') {
-      infoToast(strings('recipesMaster.recipesMaster_error'));
+      errorToast(strings('recipesMaster.recipesMaster_error'));
     } else {
       setLoading(true);
       let obj = {

@@ -10,7 +10,7 @@ import {
 import React, {useState} from 'react';
 import {useNavigation, useRoute, useTheme} from '@react-navigation/native';
 import {useAppDispatch, useAppSelector} from '../../redux/hooks';
-import {infoToast} from '../../utils/commonFunction';
+import {errorToast, infoToast} from '../../utils/commonFunction';
 import {strings} from '../../i18n/i18n';
 import {getAsyncUserInfo} from '../../utils/asyncStorageManager';
 import HomeHeader from '../../compoment/HomeHeader';
@@ -42,11 +42,11 @@ const AddItemMasters = () => {
 
   const onPressEdit = async () => {
     if (materialName == '') {
-      infoToast(strings('itemMastersList.add_item_masters_error'));
+      errorToast(strings('itemMastersList.add_item_masters_error'));
     } else if (inWeightNmae == '') {
-      infoToast(strings('itemMastersList.weight_error'));
+      errorToast(strings('itemMastersList.weight_error'));
     } else if (unitName == '') {
-      infoToast(strings('itemMastersList.select_unit_error'));
+      errorToast(strings('itemMastersList.select_unit_error'));
     } else {
       setLoading(true);
       let obj = {

@@ -192,14 +192,13 @@ const Home = (props: Props) => {
         }}
       />
       <ScrollView style={{ flex: 1, marginHorizontal: hp(20) }}>
-
-        <View style={styles.hurrUpView}>
-          <View>
-            <Text style={styles.hurryText}>{strings('newAddText.hurry_up')}</Text>
-            <Text style={styles.hurryText}>{strings('newAddText.up_to')}</Text>
-            <Text style={styles.allText}>{strings('newAddText.all_foods_are_available')}</Text>
-          </View>
-          {discount === 0 ? null : (
+        {discount === 0 ? null :
+          <View style={styles.hurrUpView}>
+            <View>
+              <Text style={styles.hurryText}>{strings('newAddText.hurry_up')}</Text>
+              <Text style={styles.hurryText}>{strings('newAddText.up_to')}</Text>
+              <Text style={styles.allText}>{strings('newAddText.all_foods_are_available')}</Text>
+            </View>
             <ImageBackground
               source={Icons.ic_dec}
               resizeMode="contain"
@@ -213,8 +212,7 @@ const Home = (props: Props) => {
               }}>
               <Text style={styles.bannerText}>{`${discount}%`}</Text>
             </ImageBackground>
-          )}
-        </View>
+          </View>}
         {/* <ImageBackground
           source={Icons.banner}
           resizeMode="stretch"
@@ -356,7 +354,6 @@ const getGlobalStyles = (props: any) => {
       alignSelf: 'center',
       justifyContent: 'space-between',
       marginVertical: 0,
-      marginTop: hp(20)
     },
     headerView: {
       flex: 1,
@@ -444,7 +441,8 @@ const getGlobalStyles = (props: any) => {
       borderRadius: 16,
       flexDirection: 'row',
       alignItems: 'center',
-      justifyContent: 'space-between'
+      justifyContent: 'space-between',
+      marginBottom: hp(20)
     },
     hurryText: {
       ...commonFontStyle(800, 18, colors.defult_white),
