@@ -81,10 +81,7 @@ const NewPassword = () => {
 
   return (
     <View style={styles.container}>
-      <StatusBar
-        barStyle={'light-content'}
-        backgroundColor={colors.Primary_Bg}
-      />
+      <StatusBar barStyle="dark-content" backgroundColor={colors.bg_white} />
       <LoginHeader
         title={''}
         description={''}
@@ -158,11 +155,11 @@ const getGlobalStyles = (props: any) => {
       justifyContent: 'center',
     },
     loginText: {
-      textAlign:'center',
+      textAlign: 'center',
       ...commonFontStyle(800, 20, colors.black),
     },
     desText: {
-      textAlign:'center',
+      textAlign: 'center',
       ...commonFontStyle(400, 14, colors.title_dec),
       marginTop: hp(5),
     },

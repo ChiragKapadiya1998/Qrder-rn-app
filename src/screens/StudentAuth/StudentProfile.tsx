@@ -30,6 +30,7 @@ import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import LogOutModal from '../../compoment/GeneralModal';
 import { USER_LOGOUT } from '../../redux/actionTypes';
 import ReviewModal from '../../compoment/ReviewModal';
+import { setDarkTheme } from '../../utils/commonActions';
 
 type Props = {};
 
@@ -110,6 +111,7 @@ const StudentProfile = (props: Props) => {
     clearAsync();
     dispatch({ type: USER_LOGOUT });
     dispatchNavigation(screenName.SignInScreen);
+    dispatch(setDarkTheme(false));
     await GoogleSignin.signOut();
     setVisible(false);
   };

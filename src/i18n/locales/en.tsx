@@ -29,7 +29,7 @@ export default {
     remember_me: 'Remember me',
     forgot_password: 'Forgot Password?',
     forgot_passwords: 'Forgot Password',
-    dont_have_account: 'Don’t have any account? ',
+    dont_have_account: 'Don’t have an account? ',
     sign_in: 'SIGN IN',
     or: 'Or continue with',
     sign_in_button: 'Sign In',
@@ -69,7 +69,7 @@ export default {
     error_current_password: 'Please enter your current password',
     ressetPassword: 'Reset Password',
 
-    welcome_back: 'Welcome Back!',
+    welcome_back: 'Welcome Back',
     enter_email_Id: 'Enter Email Id',
     google: 'Google',
     apple: 'Apple',
@@ -274,7 +274,7 @@ export default {
     cuisines: 'Cuisines',
     accounts: 'Accounts',
     more: 'More',
-    recipes_master: 'Recipes Master',
+    recipes_master: 'Recipe Master',
     ItemMasters: 'Item Master',
     Miscellaneous: 'Miscellaneous',
     Cuisines: 'Cuisines',
@@ -369,6 +369,7 @@ export default {
     create: 'Create',
     names: 'Name',
     action: 'Action',
+    actions: 'Actions',
     add_cuisines: 'Add Cuisines',
     cuisines_name: 'Cuisines Name',
     submit: 'Submit',
@@ -452,7 +453,7 @@ export default {
     price_error: 'Please enter price',
   },
   itemMastersList: {
-    item_masters: 'Item Masters',
+    item_masters: 'Item Master',
     in_weight: 'In-We...',
     out_weight: 'Out-We...',
     kg: 'Kg',
@@ -521,5 +522,8 @@ export default {
     restaurant_name: 'Restaurant Name',
     contact_number: 'Contact Number',
     canteen: 'Canteen',
+    kinley:'Kinley',
+    bisleri:'Bisleri',
+    the_discount_is:'The Discount is'
   },
 };

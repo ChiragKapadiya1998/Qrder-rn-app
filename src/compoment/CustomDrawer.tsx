@@ -73,7 +73,7 @@ const CustomDrawer = ({
   ];
 
   const changeValue = () => {
-    dispatch(setDarkTheme(!isDarkTheme));
+    // dispatch(setDarkTheme(!isDarkTheme));
     setSelectValue(!selectValue);
   };
   return (

@@ -32,6 +32,7 @@ import {USER_LOGOUT} from '../../redux/actionTypes';
 import {addDiscountAction} from '../../actions/commonAction';
 import {errorToast} from '../../utils/commonFunction';
 import ReviewModal from '../../compoment/ReviewModal';
+import { setDarkTheme } from '../../utils/commonActions';
 
 type Props = {};
 
@@ -96,6 +97,7 @@ const Profile = (props: Props) => {
     clearAsync();
     dispatch({type: USER_LOGOUT});
     dispatchNavigation(screenName.SignInScreen);
+    dispatch(setDarkTheme(false));
     await GoogleSignin.signOut();
   };
 

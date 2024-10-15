@@ -61,8 +61,8 @@ const ForgotScreen = (props: Props) => {
   return (
     <View style={styles.container}>
       <StatusBar
-        barStyle={'light-content'}
-        backgroundColor={colors.Primary_Bg}
+        barStyle={'dark-content'}
+        backgroundColor={colors.bg_white}
       />
 
       <LoginHeader

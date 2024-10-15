@@ -1,16 +1,16 @@
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React, {useState} from 'react';
-import {useTheme} from '@react-navigation/native';
-import {commonFontStyle, hp, SCREEN_WIDTH, wp} from '../theme/fonts';
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React, { useState } from 'react';
+import { useTheme } from '@react-navigation/native';
+import { commonFontStyle, hp, SCREEN_WIDTH, wp } from '../theme/fonts';
 import CCModal from './CCModal';
 import PrimaryButton from './PrimaryButton';
-import {Icons} from '../utils/images';
-import {strings} from '../i18n/i18n';
+import { Icons } from '../utils/images';
+import { strings } from '../i18n/i18n';
 import Spacer from './Spacer';
 import Input from './Input';
-import {waterBottleAction} from '../actions/commonAction';
-import {errorToast} from '../utils/commonFunction';
-import {useAppDispatch} from '../redux/hooks';
+import { waterBottleAction } from '../actions/commonAction';
+import { errorToast } from '../utils/commonFunction';
+import { useAppDispatch } from '../redux/hooks';
 type Props = {
   visible?: boolean;
   closeModal: () => void;
@@ -25,7 +25,7 @@ type Props = {
   discountText?: string;
   loading?: boolean;
   setLoading?: boolean;
-  setLotSizeModal:any
+  setLotSizeModal: any
 };
 
 const GeneralModal = ({
@@ -44,11 +44,12 @@ const GeneralModal = ({
   setLoading,
   setLotSizeModal,
 }: Props) => {
-  const {colors, isDark} = useTheme();
+  const { colors, isDark } = useTheme();
   const dispatch = useAppDispatch();
-  const styles = React.useMemo(() => getGlobalStyles({colors}), [colors]);
-  const [lotSizeText, setLotSizeText] = useState<string>('');
+  const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
+  const [lotSizeText, setLotSizeText] = useState < string > ('');
   const [selectedOption, setSelectedOption] = useState('500ml');
+  const [selectBrand, setSelectBrand] = useState('');
 
   const options = ['500ml', '1000ml'];
 
@@ -70,8 +71,9 @@ const GeneralModal = ({
           setLotSizeModal(false)
           setLotSizeText('');
           setSelectedIndex('');
+          setSelectBrand('')
           setLoading(false);
-     
+
         },
         onFailure: (Err: any) => {
           if (Err !== undefined) {
@@ -89,7 +91,10 @@ const GeneralModal = ({
     <View>
       <CCModal
         visible={visible}
-        close={closeModal}
+        close={() => {
+          closeModal()
+          setSelectBrand('')
+        }}
         containStyle={{
           alignItems: 'center',
           paddingVertical: hp(16),
@@ -125,7 +130,7 @@ const GeneralModal = ({
                 {options.map((option, index) => (
                   <TouchableOpacity
                     key={index}
-                    onPress={() => setSelectedOption(option)} // Set the option value on press
+                    onPress={() => setSelectedOption(option)}
                     style={{
                       flexDirection: 'row',
                       alignItems: 'center',
@@ -143,7 +148,7 @@ const GeneralModal = ({
                         borderColor:
                           selectedOption === option
                             ? colors.white
-                            : colors.title_dec, // Check if the current option is selected
+                            : colors.title_dec,
                         backgroundColor:
                           selectedOption === option
                             ? colors.blue
@@ -153,7 +158,7 @@ const GeneralModal = ({
                         <Image
                           source={Icons.ic_check}
                           style={styles.ic_check}
-                        /> // Show check icon if option is selected
+                        />
                       )}
                     </View>
                     <Text style={styles.text1}>{option}</Text>
@@ -167,6 +172,17 @@ const GeneralModal = ({
                   isShowLabel={true}
                   inputStyle={styles.inputStyle}
                 />
+
+                <Text style={styles.selectText}>{'Select Brand'}</Text>
+                <View style={styles.btnContainer}>
+                  <TouchableOpacity onPress={() => setSelectBrand(strings('newAddText.kinley'))} style={[styles.kinleyBtn, { borderColor: selectBrand === 'Kinley' ? colors.text_orange : colors.title_dec100 }]}>
+                    <Text style={styles.kinleyText}>{strings('newAddText.kinley')}</Text>
+                  </TouchableOpacity>
+                  <Spacer width={16} />
+                  <TouchableOpacity onPress={() => setSelectBrand(strings('newAddText.bisleri'))} style={[styles.kinleyBtn, { borderColor: selectBrand === 'Bisleri' ? colors.text_orange : colors.title_dec100 }]}>
+                    <Text style={styles.kinleyText}>{strings('newAddText.bisleri')}</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
             )}
             <View style={styles.underLine} />
@@ -175,7 +191,10 @@ const GeneralModal = ({
                 extraStyle={styles.cancelBtn}
                 title={leftText}
                 titleStyle={styles.cancelText}
-                onPress={closeModal}
+                onPress={() => {
+                  closeModal()
+                  setSelectBrand('')
+                }}
               />
               <Spacer width={16} />
               <PrimaryButton
@@ -198,7 +217,7 @@ const GeneralModal = ({
 export default GeneralModal;
 
 const getGlobalStyles = (props: any) => {
-  const {colors} = props;
+  const { colors } = props;
   return StyleSheet.create({
     containerContain: {
       alignSelf: 'center',
@@ -262,5 +281,22 @@ const getGlobalStyles = (props: any) => {
     text1: {
       ...commonFontStyle(500, 14, colors?.title_dec100),
     },
+    selectText: {
+      marginVertical: hp(24),
+      ...commonFontStyle(500, 14, colors.black),
+    },
+    kinleyBtn: {
+      width: SCREEN_WIDTH * 0.39,
+      height: hp(46),
+      backgroundColor: colors.cards_bg,
+      borderColor: colors.title_dec100,
+      borderWidth: 1,
+      borderRadius: 8,
+      alignItems: 'center',
+      justifyContent: 'center'
+    },
+    kinleyText: {
+      ...commonFontStyle(400, 14, colors.black),
+    }
   });
 };

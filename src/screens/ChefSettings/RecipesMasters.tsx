@@ -8,24 +8,24 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import React, {useCallback, useEffect, useState} from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   useFocusEffect,
   useIsFocused,
   useNavigation,
   useTheme,
 } from '@react-navigation/native';
-import {commonFontStyle, hp, wp} from '../../theme/fonts';
-import {useAppDispatch, useAppSelector} from '../../redux/hooks';
+import { commonFontStyle, hp, wp } from '../../theme/fonts';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import HomeHeader from '../../compoment/HomeHeader';
-import {strings} from '../../i18n/i18n';
+import { strings } from '../../i18n/i18n';
 import NoDataFound from '../../compoment/NoDataFound';
 import Spacer from '../../compoment/Spacer';
 import ChefNameCardList from '../../compoment/ChefNameCardList';
 import DleleteModal from '../../compoment/DeleteModal';
-import {screenName} from '../../navigation/screenNames';
-import {Icons} from '../../utils/images';
-import {getChefsAction} from '../../actions/chefsAction';
+import { screenName } from '../../navigation/screenNames';
+import { Icons } from '../../utils/images';
+import { getChefsAction } from '../../actions/chefsAction';
 import CuisinesNameCardList from '../../compoment/CuisinesNameCardList';
 import {
   deleteCuisinesAction,
@@ -42,13 +42,13 @@ import Loader from '../../compoment/Loader';
 type Props = {};
 
 const RecipesMastersList = (props: Props) => {
-  const {colors, isDark} = useTheme();
+  const { colors, isDark } = useTheme();
   const navigation = useNavigation();
-  const styles = React.useMemo(() => getGlobalStyles({colors}), [colors]);
-  const {isDarkTheme, isLoadingNew} = useAppSelector(state => state.common);
+  const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
+  const { isDarkTheme, isLoadingNew } = useAppSelector(state => state.common);
   const [visible, setVisible] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const {getRecipesMasters} = useAppSelector(state => state.data);
+  const { getRecipesMasters } = useAppSelector(state => state.data);
   const [getAllData, setGetAllData] = useState(getRecipesMasters);
   const [newFolder, setNewFolder] = useState(false);
   const [editFolder, setEditFolder] = useState(false);
@@ -72,7 +72,7 @@ const RecipesMastersList = (props: Props) => {
         });
         setGetAllData(updateData);
       },
-      onFailure: (Err: any) => {},
+      onFailure: (Err: any) => { },
     };
     dispatch(deleteRecipeMasterAction(UserInfo));
   };
@@ -170,7 +170,7 @@ const RecipesMastersList = (props: Props) => {
         isShowIcon={false}
         isCreateIcon={true}
       />
-      <View style={{marginHorizontal: wp(20)}}>
+      <View style={{ marginHorizontal: wp(20) }}>
         <View style={styles.searchInputContainer}>
           <Image source={Icons.search} style={styles.searchIcon} />
           <TextInput
@@ -196,12 +196,12 @@ const RecipesMastersList = (props: Props) => {
                     {strings('CuisinesNameList.names')}
                   </Text>
                   <Text style={styles.nameText}>
-                    {strings('CuisinesNameList.action')}
+                    {getAllData?.length > 1 ? strings('CuisinesNameList.actions') : strings('CuisinesNameList.action')}
                   </Text>
                 </View>
               );
             }}
-            renderItem={({item, index}) => {
+            renderItem={({ item, index }) => {
               return (
                 <CuisinesNameCardList
                   showIcon={true}
@@ -222,7 +222,7 @@ const RecipesMastersList = (props: Props) => {
             }}
             showsVerticalScrollIndicator={false}
             ListFooterComponent={() => {
-              return <View style={{height: 150}} />;
+              return <View style={{ height: 150 }} />;
             }}
           />
         )}
@@ -251,7 +251,7 @@ const RecipesMastersList = (props: Props) => {
 export default RecipesMastersList;
 
 const getGlobalStyles = (props: any) => {
-  const {colors} = props;
+  const { colors } = props;
   return StyleSheet.create({
     container: {
       flex: 1,
@@ -286,7 +286,7 @@ const getGlobalStyles = (props: any) => {
       marginTop: hp(16),
       borderRadius: 8,
       flexDirection: 'row',
-      marginBottom:hp(32)
+      marginBottom: hp(32)
     },
     nameText: {
       ...commonFontStyle(500, 16, colors.black),

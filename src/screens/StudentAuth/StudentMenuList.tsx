@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   useIsFocused,
   useNavigation,
@@ -16,9 +16,9 @@ import {
   useTheme,
 } from '@react-navigation/native';
 import HomeHeader from '../../compoment/HomeHeader';
-import {commonFontStyle, hp, SCREEN_WIDTH, wp} from '../../theme/fonts';
-import {strings} from '../../i18n/i18n';
-import {useAppDispatch, useAppSelector} from '../../redux/hooks';
+import { commonFontStyle, hp, SCREEN_WIDTH, wp } from '../../theme/fonts';
+import { strings } from '../../i18n/i18n';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import CartMenuCardList from '../../compoment/CartMenuCardList';
 import {
   getCanteenCuisineAction,
@@ -30,13 +30,13 @@ import {
   GET_CANTEEN_CUISINE_LIST,
   GET_EMPTY_CANTEEN_LIST,
 } from '../../redux/actionTypes';
-import {Icons} from '../../utils/images';
+import { Icons } from '../../utils/images';
 
 const StudentMenuList = () => {
-  const {colors} = useTheme();
+  const { colors } = useTheme();
   const navigation = useNavigation();
-  const {params} = useRoute<any>();
-  const styles = React.useMemo(() => getGlobalStyles({colors}), [colors]);
+  const { params } = useRoute < any > ();
+  const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
   const [tabSelection, setTabSelection] = useState(strings('myMenuList.all'));
   const [refreshing, setRefreshing] = React.useState(false);
   const [cuisineId, setCuisineId] = React.useState(0);
@@ -44,9 +44,9 @@ const StudentMenuList = () => {
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
   const dispatch = useAppDispatch();
-  const {getCanteenCuisines, getCanteenMenuData, canteenMenuCount} =
+  const { getCanteenCuisines, getCanteenMenuData, canteenMenuCount } =
     useAppSelector(state => state.data);
-  const {isDarkTheme, discount} = useAppSelector(state => state.common);
+  const { isDarkTheme, discount } = useAppSelector(state => state.common);
   const [onEndReached, setOnEndReached] = useState(true);
   const isFocuse = useIsFocused();
   console.log('discount', discount);
@@ -58,18 +58,26 @@ const StudentMenuList = () => {
     } else {
       getAllCuisinesMenuList(cuisineId, 1);
     }
-  }, [refreshing, cuisineId]);
+  }, [refreshing, tabSelection]);
 
   useEffect(() => {
     getCanteenCuisineList();
-    getMenuList(1);
   }, []);
+
+  useEffect(() => {
+    if (tabSelection === 'All') {
+      getMenuList(1);
+    } else {
+      getAllCuisinesMenuList(cuisineId, 1);
+    }
+  }, [isFocuse]);
+
 
   const getCanteenCuisineList = () => {
     let obj = {
       params: params?.selectID,
-      onSuccess: () => {},
-      onFailure: () => {},
+      onSuccess: () => { },
+      onFailure: () => { },
     };
     dispatch(getCanteenCuisineAction(obj));
   };
@@ -138,7 +146,7 @@ const StudentMenuList = () => {
     setTabSelection(item.name);
     setCuisineId(item.id);
     setLoading(true);
-    dispatch({type: GET_EMPTY_CANTEEN_LIST, payload: false});
+    dispatch({ type: GET_EMPTY_CANTEEN_LIST, payload: false });
     setTimeout(() => {
       if (item.name === 'All') {
         getMenuList(1);
@@ -148,7 +156,7 @@ const StudentMenuList = () => {
     }, 100);
   };
 
-  const renderItem = ({item}) => {
+  const renderItem = ({ item }) => {
     const selectColor =
       tabSelection === item.name ? colors.text_orange : colors.text_gray;
     return (
@@ -157,16 +165,16 @@ const StudentMenuList = () => {
           onPress={() => onTabChange(item)}
           style={styles.cuisineView}>
           {item.name === 'All' ? (
-            <View style={[styles.allImage, {borderColor: selectColor}]}>
+            <View style={[styles.allImage, { borderColor: selectColor }]}>
               <Image
                 source={Icons.allIcon}
-                style={[styles.allIconImage, {tintColor: selectColor}]}
+                style={[styles.allIconImage, { tintColor: selectColor }]}
               />
             </View>
           ) : (
             <Image
-              source={item.name === 'All' ? Icons.allIcon : {uri: item.image}}
-              style={[styles.profilImage, {borderColor: selectColor}]}
+              source={item.name === 'All' ? Icons.allIcon : { uri: item.image }}
+              style={[styles.profilImage, { borderColor: selectColor }]}
             />
           )}
           <Text
@@ -195,8 +203,8 @@ const StudentMenuList = () => {
       <HomeHeader
         onBackPress={() => {
           navigation.goBack();
-          dispatch({type: GET_EMPTY_CANTEEN_LIST, payload: false});
-          dispatch({type: GET_CANTEEN_CUISINE_LIST, payload: []});
+          dispatch({ type: GET_EMPTY_CANTEEN_LIST, payload: false });
+          dispatch({ type: GET_CANTEEN_CUISINE_LIST, payload: [] });
         }}
         onRightPress={() => {
           console.log('dee');
@@ -217,7 +225,7 @@ const StudentMenuList = () => {
             <Text style={styles.hurryText}>
               {strings('newAddText.hurry_up')}
             </Text>
-            <Text style={styles.hurryText}>{strings('newAddText.up_to')}</Text>
+            <Text style={styles.hurryText}>{strings('newAddText.the_discount_is')}</Text>
           </View>
           <ImageBackground
             source={Icons.ic_dec}
@@ -239,71 +247,18 @@ const StudentMenuList = () => {
         <View style={styles.tabMainView}>
           <FlatList
             data={[
-              {name: 'All', label: strings('myMenuList.all'), page: 0, id: 0},
+              { name: 'All', label: strings('myMenuList.all'), page: 0, id: 0 },
               ...getCanteenCuisines,
             ]}
             horizontal
             showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{gap: 16}}
+            contentContainerStyle={{ gap: 16 }}
             keyExtractor={(item, index) => `${item.id}-${index}`}
             onEndReachedThreshold={0.5}
             renderItem={renderItem}
           />
         </View>
       )}
-
-      {/* {getCanteenCuisines?.length === 0 ? null :
-        <View style={styles.tabMainView}>
-          <FlatList
-            data={[
-              { name: 'All', label: strings('myMenuList.all'), page: 0, id: 0 },
-              ...getCanteenCuisines,
-            ]}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            keyExtractor={(item, index) => `${item.id}-${index}`}
-            onEndReachedThreshold={0.5}
-            renderItem={({ item }) => (
-              <TouchableOpacity
-                onPress={() => onTabChange(item)}
-                style={[
-                  styles.tabItemView,
-                  {
-                    // borderBottomWidth: 1,
-                    backgroundColor: tabSelection === item.name
-                      ? colors.orange_bg
-                      : colors.card_bg,
-                    marginBottom: hp(16),
-                    // borderColor:
-                    //   tabSelection === item.name
-                    //     ? colors.headerText3
-                    //     : colors.card_bg,
-                  },
-                ]}>
-                <View
-                  style={[
-                    styles.imageView,
-                    {
-                      backgroundColor: tabSelection === item.name
-                        ? colors.image_Bg_gray
-                        : colors.image_Bg_gray
-                    },
-                  ]}
-                />
-                <Text
-                  style={{
-                    color:
-                      tabSelection === item.name
-                        ? colors.black
-                        : colors.Title_Text,
-                  }}>
-                  {item.name}
-                </Text>
-              </TouchableOpacity>
-            )}
-          />
-          <View style={styles.underlineAll} />
-        </View>} */}
 
       <View style={styles.boxContainer}>
         <CartMenuCardList
@@ -326,7 +281,7 @@ const StudentMenuList = () => {
 export default StudentMenuList;
 
 const getGlobalStyles = (props: any) => {
-  const {colors} = props;
+  const { colors } = props;
   return StyleSheet.create({
     container: {
       flex: 1,

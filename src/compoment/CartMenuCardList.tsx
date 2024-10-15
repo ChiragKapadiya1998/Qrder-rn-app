@@ -4,11 +4,12 @@ import {
   RefreshControl,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from 'react-native';
 import React, { useRef } from 'react';
 import { useTheme } from '@react-navigation/native';
-import { commonFontStyle } from '../theme/fonts';
+import { commonFontStyle, hp } from '../theme/fonts';
 import NoDataFound from './NoDataFound';
 import { useAppSelector } from '../redux/hooks';
 import Loader from './Loader';
@@ -27,10 +28,11 @@ type Props = {
 const CartMenuCardList = ({ onRefresh, refreshing, loadMoreData, loadingMore, onMomentumScrollBegin, loading }: Props) => {
   const { colors } = useTheme();
   const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
-  const { getCanteenMenuData } = useAppSelector(state => state.data);
+  const { getCanteenMenuData, canteenMenuCount } = useAppSelector(state => state.data);
   const currentData = useRef();
   currentData.current = getCanteenMenuData;
 
+  const hasMoreItems = currentData.current?.length < canteenMenuCount;
 
   return (
     <View>
@@ -49,71 +51,39 @@ const CartMenuCardList = ({ onRefresh, refreshing, loadMoreData, loadingMore, on
           columnWrapperStyle={styles.columnWrapperStyle}
           contentContainerStyle={{ gap: 11 }}
           keyExtractor={(item, index) => `${item.id}-${index}`}
-          // ListFooterComponent={() => (
-          //   <View>
-          //     {hasMoreItems && !loadingMore && (
-          //       <TouchableOpacity
-          //         onPress={loadMoreData}
-          //         style={[styles.seeMoreButton]}
-          //       >
-          //         <Text style={styles.seeMoreText}>
-          //           {strings('CardMenuList.see_more')}
-          //         </Text>
-          //       </TouchableOpacity>
-          //     )}
-          //     {loadingMore && (
-          //       <View style={styles.seeMoreButton}>
-          //         <ActivityIndicator size={'small'} color={colors.black} />
-          //       </View>
+          ListFooterComponent={() => (
+            <View>
+              {hasMoreItems && !loadingMore && (
+                <TouchableOpacity
+                  onPress={loadMoreData}
+                  style={[styles.seeMoreButton]}
+                >
+                  <Text style={styles.seeMoreText}>
+                    {strings('CardMenuList.see_more')}
+                  </Text>
+                </TouchableOpacity>
+              )}
+              {loadingMore && (
+                <View style={styles.seeMoreButton}>
+                  <ActivityIndicator size={'small'} color={colors.black} />
+                </View>
 
-          //     )}
-          //     <View style={{ height: hp(150)}} />
-          //   </View>
-          // )}
+              )}
+              <View style={{ height: hp(150) }} />
+            </View>
+          )}
           ListEmptyComponent={!loading && (
             <NoDataFound />
           )}
-          renderItem={({ item ,index}) => (
-              <CartMenuItems
-                item={item}
-                index={index}
-              />
-            )}
+          renderItem={({ item, index }) => (
+            <CartMenuItems
+              item={item}
+              index={index}
+            />
+          )}
           showsVerticalScrollIndicator={false}
-        // onEndReached={loadMoreData}
         />
       )}
-
-
-      {/* {loading ? (
-        <Loader />
-      ) : (
-        <>
-          <FlatList
-            refreshControl={
-              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-            }
-            onEndReachedThreshold={0.3}
-            data={currentData.current}
-            renderItem={({ item }) => (
-              <CartMenuItems
-                item={item}
-              />
-            )}
-            showsVerticalScrollIndicator={false}
-            ListFooterComponent={() => (
-              loadingMore && (
-                <ActivityIndicator size={'small'} color={colors.black} />
-              )
-            )}
-            ListEmptyComponent={!loading && (
-              <NoDataFound />
-            )}
-            onEndReached={loadMoreData}
-            onMomentumScrollBegin={onMomentumScrollBegin}
-          />
-        </>
-      )} */}
     </View>
   );
 };
@@ -137,6 +107,13 @@ const getGlobalStyles = (props: any) => {
     },
     columnWrapperStyle: {
       justifyContent: 'center',
+    },
+    seeMoreButton: {
+      alignItems: 'center',
+      paddingVertical: 10,
+    },
+    seeMoreText: {
+      color: colors.black,
     },
   });
 };

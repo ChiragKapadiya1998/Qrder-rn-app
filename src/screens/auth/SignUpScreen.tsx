@@ -450,10 +450,7 @@ const SignUpScreen = (props: Props) => {
 
   return (
     <View style={styles.container}>
-      <StatusBar
-        barStyle={'light-content'}
-        backgroundColor={colors.Primary_Bg}
-      />
+      <StatusBar barStyle="dark-content" backgroundColor={colors.bg_white} />
 
       <LoginHeader
         title={strings('sign_up.sign_up')}
