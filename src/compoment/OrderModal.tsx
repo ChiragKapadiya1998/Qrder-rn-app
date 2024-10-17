@@ -135,10 +135,10 @@ const OrderModal = ({
               'orderModal.invoice_id',
             )} : ${item.order_id}`}</Text>
             <Text style={styles.titleStyle}>{item.name}</Text>
-            {item.table_number !== null ? (
+            {item?.table_number !== null ? (
               <Text style={styles.idText}>{`${strings(
                 'orderModal.table_no',
-              )} : ${item.table_number}`}</Text>
+              )} : ${item?.table_number}`}</Text>
             ) : null}
             <View style={styles.priceView}>
               <Text style={styles.priceText}>{`₹${item.total}`}</Text>
@@ -171,13 +171,6 @@ const OrderModal = ({
                   title={strings('orderModal.completed')}
                   titleStyle={styles.accpetText}
                   onPress={() => onOrderCompleted(item.id)}
-                />
-                <Spacer width={16} />
-                <PrimaryButton
-                  extraStyle={styles.cancelBtn}
-                  title={strings('orderModal.declined')}
-                  titleStyle={styles.cancelText}
-                  onPress={() => onCancelBtn(item.id)}
                 />
               </View>
             )

@@ -169,7 +169,7 @@ const ItemMastersList = (props: Props) => {
                     {strings('itemMastersList.out_weight')}
                   </Text>
                   <Text style={styles.nameText}>
-                    {getAllData.length > 1 ? strings('CuisinesNameList.actions') : strings('CuisinesNameList.action')}
+                    {strings('CuisinesNameList.action')}
                   </Text>
                 </View>
               );

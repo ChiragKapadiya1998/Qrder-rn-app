@@ -140,7 +140,7 @@ const MyOrderAdmin = () => {
             </Text>
           </View>
           <View style={[styles.comanStyle, {marginTop: hp(12)}]}>
-            <Text style={styles.priText}>{strings('sign_up.p_email')}</Text>
+            <Text style={styles.priText}>{strings('sign_up.e_emaild')}</Text>
             <Text style={[styles.priText, {color: colors.black}]}>
               {allMyOrder?.email}
             </Text>
@@ -161,7 +161,7 @@ const MyOrderAdmin = () => {
                 {color: colors.red_text},
               ]}>{`-₹${allMyOrder?.discount}`}</Text>
           </View>
-          <View style={[styles.comanStyle, {marginTop: hp(12)}]}>
+          {/* <View style={[styles.comanStyle, {marginTop: hp(12)}]}>
             <Text style={styles.priText}>
               {strings('newAddText.total_misc')}
             </Text>
@@ -178,8 +178,8 @@ const MyOrderAdmin = () => {
                 styles.priText,
                 {color: colors.black},
               ]}>{`₹${calculateTotalTax(allMyOrder?.items)}`}</Text>
-          </View>
-          <View style={[styles.comanStyle]}>
+          </View> */}
+          <View style={[styles.comanStyle,{marginTop:hp(12)}]}>
             <Text style={styles.priText}>
               {strings('myOrders.platform_free')}
             </Text>

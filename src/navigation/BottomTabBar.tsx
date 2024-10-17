@@ -96,7 +96,7 @@ const TabBarItem = ({state, navigation}: BottomTabBarProps) => {
       case 0:
         return 'Home';
       case 1:
-        return 'List';
+        return 'Item';
       case 2:
         return 'Add';
       case 3:

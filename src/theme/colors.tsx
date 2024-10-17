@@ -80,6 +80,7 @@ export const light_theme = {
   blue: '#0162DD',
   green_text: '#1CAA50',
   red_text: '#CC3730',
+  input_modal_bg: '#F1F1F1',
 };
 
 export const dark_theme = {
@@ -159,5 +160,6 @@ export const dark_theme = {
   border_gray: '#50555C',
   blue: '#0162DD',
   green_text: '#1CAA50',
-  red_text: '#CC3730'
+  red_text: '#CC3730',
+  input_modal_bg: '#0C0F14',
 };

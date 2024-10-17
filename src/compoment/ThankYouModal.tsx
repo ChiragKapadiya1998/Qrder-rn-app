@@ -67,6 +67,7 @@ const getGlobalStyles = (props: any) => {
     return StyleSheet.create({
         containerContain: {
             alignSelf: 'center',
+            textAlign:'center',
             marginTop: hp(8),
             ...commonFontStyle(400, 14, colors.text_gray),
         },

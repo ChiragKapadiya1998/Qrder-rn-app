@@ -343,7 +343,6 @@ export const getRecipeMasterAction =
       params: request?.data,
     })
       .then(async (response: any) => {
-        console.log('response', response);
         if (response.status === 200 || response.status === 201) {
           dispatch({
             type: GET_RECIPES_MASTERS,
@@ -371,7 +370,6 @@ export const addRecipeMasterAction =
       data: request.data,
     })
       .then(async (response: any) => {
-        console.log('response?.data', response?.data);
         if (response?.data?.success) {
           dispatch({type: IS_LOADING_NEW, payload: false});
           if (request.onSuccess) request.onSuccess(response.data);

@@ -26,7 +26,7 @@ import { screenName } from '../../navigation/screenNames';
 import { ColorProperties } from 'react-native-reanimated/lib/typescript/Colors';
 
 type Props = {};
-const CELL_COUNT = 6;
+const CELL_COUNT = 4;
 
 const VerificationCode = ({ route }) => {
   const { email, otpNumber } = route.params;
@@ -55,7 +55,7 @@ const VerificationCode = ({ route }) => {
   }, [timer]);
 
   const onSubmitPress = () => {
-    if (value.trim().length !== 6) {
+    if (value.trim().length !== 4) {
       errorToast(strings('otp_verification.error_otp'));
     } else {
       setLoading(true);
@@ -203,16 +203,16 @@ const getGlobalStyles = (props: any) => {
       ...commonFontStyle(500, 14, colors.text_orange),
     },
     codeFieldRoot: {
-      marginTop: hp(10),
+      // marginTop: hp(10),
       width: '100%',
       justifyContent: 'space-between',
     },
     cellRoot: {
-      width: wp(45),
-      height: wp(55),
+      width: wp(72),
+      height: wp(72),
       justifyContent: 'center',
       alignItems: 'center',
-      borderRadius: 8,
+      borderRadius: 20,
       backgroundColor: colors.input_bg1,
       borderWidth: 1,
       borderColor: colors.input_border1,
@@ -223,7 +223,7 @@ const getGlobalStyles = (props: any) => {
       backgroundColor: colors.input_bg,
     },
     cellText: {
-      ...commonFontStyle(700, 20, colors.black),
+      ...commonFontStyle(600, 34, colors.black),
       textAlign: 'center',
     },
     signupButton: {

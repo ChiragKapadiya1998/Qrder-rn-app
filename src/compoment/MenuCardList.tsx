@@ -91,27 +91,27 @@ const MenuCardList = ({
           columnWrapperStyle={styles.columnWrapperStyle}
           contentContainerStyle={{gap: 11}}
           keyExtractor={(item, index) => `${item.id}-${index}`}
-          // ListFooterComponent={() => (
-          //   <View>
-          //     {hasMoreItems && !loadingMore && (
-          //       <TouchableOpacity
-          //         onPress={loadMoreData}
-          //         style={[styles.seeMoreButton]}
-          //       >
-          //         <Text style={styles.seeMoreText}>
-          //           {strings('CardMenuList.see_more')}
-          //         </Text>
-          //       </TouchableOpacity>
-          //     )}
-          //     {loadingMore && (
-          //       <View style={styles.seeMoreButton}>
-          //         <ActivityIndicator size={'small'} color={colors.black} />
-          //       </View>
+          ListFooterComponent={() => (
+            <View>
+              {hasMoreItems && !loadingMore && (
+                <TouchableOpacity
+                  onPress={loadMoreData}
+                  style={[styles.seeMoreButton]}
+                >
+                  <Text style={styles.seeMoreText}>
+                    {strings('CardMenuList.see_more')}
+                  </Text>
+                </TouchableOpacity>
+              )}
+              {loadingMore && (
+                <View style={styles.seeMoreButton}>
+                  <ActivityIndicator size={'small'} color={colors.black} />
+                </View>
 
-          //     )}
-          //     <View style={{ height: hp(150)}} />
-          //   </View>
-          // )}
+              )}
+              <View style={{ height: hp(10)}} />
+            </View>
+          )}
           ListEmptyComponent={
             loading ? (
               <ActivityIndicator size={'small'} color={colors.black} />

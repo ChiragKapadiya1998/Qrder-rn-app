@@ -86,14 +86,14 @@ const AddItemMasters = () => {
       <HomeHeader
         onBackPress={goback}
         mainShow={true}
-        title={strings('itemMastersList.add_item_masters')}
+        title={strings('itemMastersList.item_masters')}
         extraStyle={styles.headerContainer}
         isShowIcon={false}
       />
       <View style={styles.contentContainer}>
         <Input
           value={materialName}
-          placeholder={strings('recipesMaster.e_material_name')}
+          placeholder={strings('itemMastersList.add_material_name')}
           label={strings('recipesMaster.material_name')}
           onChangeText={(t: string) => setMaterialName(t)}
           isShowLabel={true}
@@ -109,7 +109,7 @@ const AddItemMasters = () => {
         />
         <CCDropDown
           data={options}
-          placeholder={strings('recipesMaster.e_unit')}
+          placeholder={strings('itemMastersList.add_unit')}
           labelField={'name'}
           valueField={'value'}
           label={strings('recipesMaster.unit')}

@@ -270,7 +270,7 @@ const EditProfile = (props: Props) => {
           navigation.goBack();
         }}
         mainShow={true}
-        title={strings('profileScreen.profile')}
+        title={userData.role === 'staff' ? strings('profileScreen.view_chef') : strings('profileScreen.profile')}
         isShowIcon={false}
         extraStyle={styles.headerContainer}
         isHideIcon={true}
@@ -315,7 +315,7 @@ const EditProfile = (props: Props) => {
           <View style={styles.inputView}>
             <Input
               value={names}
-              placeholder={strings('sign_up.p_name')}
+              placeholder={strings('editProfiles.add_first_name')}
               label={strings('sign_up.first_name')}
               onChangeText={(t: string) => setName(t)}
               isShowLabel={true}
@@ -325,7 +325,7 @@ const EditProfile = (props: Props) => {
             {userData.role !== 'staff' ? (
               <Input
                 value={lastName}
-                placeholder={strings('sign_up.lats_p_name')}
+                placeholder={strings('editProfiles.add_last_name')}
                 label={strings('sign_up.last_name')}
                 onChangeText={(t: string) => setLastName(t)}
                 isShowLabel={true}
@@ -337,8 +337,8 @@ const EditProfile = (props: Props) => {
                 value={restaurant}
                 placeholder={
                   userData?.role == 'canteen'
-                    ? strings('newAddText.canteen_name')
-                    : strings('newAddText.restaurant_name')
+                    ? strings('editProfiles.add_canteen_name')
+                    : strings('editProfiles.add_restaurant_name')
                 }
                 label={
                   userData?.role == 'canteen'
@@ -385,8 +385,8 @@ const EditProfile = (props: Props) => {
             )}
             <Input
               value={emails}
-              placeholder={strings('sign_up.p_email')}
-              label={strings('sign_up.email_address')}
+              placeholder={strings('editProfiles.add_email')}
+              label={strings('sign_up.email')}
               onChangeText={(t: string) => setEmail(t)}
               isShowLabel={true}
               inputStyle={styles.inputStyle}
@@ -405,9 +405,9 @@ const EditProfile = (props: Props) => {
             ) : null}
             <Input
               value={numbers}
-              placeholder={strings('sign_up.p_enter_phone')}
+              placeholder={userData.role === 'student' ? strings('sign_up.p_enter_phone') :strings('editProfiles.add_contact_number')}
               keyboardType="number-pad"
-              label={strings('newAddText.contact_number')}
+              label={userData.role === 'student' ? strings('chefSignUp.phone_Number') :strings('newAddText.contact_number')}
               onChangeText={(t: string) => setNumber(t)}
               maxLength={10}
               isShowLabel={true}
@@ -430,12 +430,11 @@ const EditProfile = (props: Props) => {
               <>
                 <Input
                   value={address}
-                  placeholder={strings('sign_up.p_enter_area')}
+                  placeholder={strings('editProfiles.add_address')}
                   label={strings('sign_up.address')}
                   onChangeText={(t: string) => setAddress(t)}
                   isShowLabel={true}
                   inputStyle={styles.inputStyle}
-                  editable={false}
                 />
                 <Input
                   value={city}
@@ -474,13 +473,12 @@ const EditProfile = (props: Props) => {
 
                 <Input
                   value={pincode}
-                  placeholder={strings('newAddText.pincode')}
+                  placeholder={strings('editProfiles.add_pincode')}
                   keyboardType="number-pad"
                   label={strings('newAddText.pincode')}
                   onChangeText={(t: string) => setPincode(t)}
                   isShowLabel={true}
                   inputStyle={styles.inputStyle}
-                  editable={false}
                 />
                 {userData.role === 'student' ||
                 userData.role === 'staff' ? null : (

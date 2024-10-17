@@ -146,14 +146,14 @@ const SignUpScreen = (props: Props) => {
       errorToast(strings('sign_up.user_name_error'));
     } else if (lastName.trim().length === 0) {
       errorToast(strings('login.error_nameLastName'));
-    } else if (email.trim().length === 0) {
-      errorToast(strings('login.error_email'));
-    } else if (!emailCheck(email)) {
-      errorToast(strings('login.error_v_email'));
     } else if (number.trim().length === 0) {
       errorToast(strings('login.error_phone'));
     } else if (number.trim().length !== 10) {
       errorToast(strings('login.error_v_phone'));
+    } else if (email.trim().length === 0) {
+      errorToast(strings('login.error_email'));
+    } else if (!emailCheck(email)) {
+      errorToast(strings('login.error_v_email'));
     } else if (restaurantName.trim().length == 0) {
       errorToast(strings('login.error_restaurantName'));
     } else if (area.trim().length === 0) {
@@ -216,22 +216,22 @@ const SignUpScreen = (props: Props) => {
   const onPressCanteenRegister = () => {
     if (selectRole.trim().length === 0) {
       errorToast(strings('login.error_role'));
+    } else if (universityName == '') {
+      errorToast(strings('login.error_v_university'));
     } else if (name.trim().length === 0) {
       errorToast(strings('login.error_name'));
     } else if (user_name.trim().length === 0) {
       errorToast(strings('sign_up.user_name_error'));
     } else if (lastName.trim().length === 0) {
       errorToast(strings('login.error_nameLastName'));
-    } else if (email.trim().length === 0) {
-      errorToast(strings('login.error_email'));
-    } else if (!emailCheck(email)) {
-      errorToast(strings('login.error_v_email'));
     } else if (number.trim().length === 0) {
       errorToast(strings('login.error_phone'));
     } else if (number.trim().length !== 10) {
       errorToast(strings('login.error_v_phone'));
-    } else if (universityName == '') {
-      errorToast(strings('login.error_v_university'));
+    } else if (email.trim().length === 0) {
+      errorToast(strings('login.error_email'));
+    } else if (!emailCheck(email)) {
+      errorToast(strings('login.error_v_email'));
     } else if (canteenName.trim().length == 0) {
       errorToast(strings('login.error_v_canteen'));
     } else if (area.trim().length === 0) {
@@ -302,20 +302,14 @@ const SignUpScreen = (props: Props) => {
       errorToast(strings('login.error_name'));
     } else if (lastName.trim().length === 0) {
       errorToast(strings('login.error_nameLastName'));
-    } else if (email.trim().length === 0) {
-      errorToast(strings('login.error_email'));
-    } else if (!emailCheck(email)) {
-      errorToast(strings('login.error_v_email'));
     } else if (number.trim().length === 0) {
       errorToast(strings('login.error_phone'));
     } else if (number.trim().length !== 10) {
       errorToast(strings('login.error_v_phone'));
-    } else if (collegeName.trim().length == 0) {
-      errorToast(strings('StudentSignUp.error_colleg_name'));
-    } else if (hostelName.trim().length === 0) {
-      errorToast(strings('StudentSignUp.error_hostel'));
-    } else if (hostelAddress.trim().length === 0) {
-      errorToast(strings('StudentSignUp.error_hostel_address'));
+    } else if (email.trim().length === 0) {
+      errorToast(strings('login.error_email'));
+    } else if (!emailCheck(email)) {
+      errorToast(strings('login.error_v_email'));
     } else if (password.trim().length === 0) {
       errorToast(strings('login.error_password'));
     } else if (password.trim().length < 9) {
@@ -341,9 +335,6 @@ const SignUpScreen = (props: Props) => {
       data.append('role', 'student');
       data.append('university_id', selectUniversity);
       data.append('status', '1');
-      data.append('college_name', collegeName);
-      data.append('hostel_name', hostelName);
-      data.append('hostel_address', hostelAddress);
 
       let obj = {
         data,
@@ -453,7 +444,7 @@ const SignUpScreen = (props: Props) => {
       <StatusBar barStyle="dark-content" backgroundColor={colors.bg_white} />
 
       <LoginHeader
-        title={strings('sign_up.sign_up')}
+        title={strings('sign_up.join_us_today')}
         description={strings('sign_up.sign_dec')}
         isBack={true}
         onPress={() => onPressBack()}
@@ -465,37 +456,6 @@ const SignUpScreen = (props: Props) => {
           showsVerticalScrollIndicator={false}
           nestedScrollEnabled
           contentContainerStyle={styles.contentContainerStyle}>
-          {/* <View style={styles.radioView}>
-            {options.map(option => (
-              <TouchableOpacity
-                key={option.value}
-                style={styles.radioContainer}
-                onPress={() => handlePress(option.value)}>
-                <View
-                  style={[
-                    styles.radioButton,
-                    selectedOption === option.value &&
-                      styles.selectedRadioButton,
-                  ]}>
-                  {selectedOption === option.value && (
-                    <View style={styles.radioButtonInner} />
-                  )}
-                </View>
-                <Text
-                  style={[
-                    styles.radioText,
-                    {
-                      color:
-                        selectedOption === option.value
-                          ? colors.Primary_Orange
-                          : colors.Title_Text,
-                    },
-                  ]}>
-                  {option.label}
-                </Text>
-              </TouchableOpacity>
-            ))}
-          </View> */}
           <CCDropDown
             data={options}
             label={strings('login.select_role')}
@@ -559,18 +519,19 @@ const SignUpScreen = (props: Props) => {
           />
 
           <Input
-            value={email}
-            placeholder={strings('sign_up.p_email')}
-            label={strings('sign_up.email')}
-            onChangeText={(t: string) => setEmail(t)}
-          />
-          <Input
             value={number}
-            placeholder={strings('sign_up.p_enter_number')}
+            placeholder={strings('sign_up.mobile_Number')}
             keyboardType="number-pad"
             label={strings('sign_up.p_enter_number')}
             onChangeText={(t: string) => setNumber(t)}
             maxLength={10}
+          />
+
+          <Input
+            value={email}
+            placeholder={strings('sign_up.p_email')}
+            label={strings('sign_up.email')}
+            onChangeText={(t: string) => setEmail(t)}
           />
 
           {selectRole === 'Restaurant' ? (
@@ -623,14 +584,12 @@ const SignUpScreen = (props: Props) => {
                 label={strings('sign_up.state')}
                 onChangeText={(t: string) => setState(t)}
                 showListView={false}
-              // extraStyle={{ zIndex: -1, width: '48.9%' }}
               />
               <Input
                 value={country}
                 placeholder={strings('sign_up.p_enter_country')}
                 label={strings('sign_up.country')}
                 onChangeText={(t: string) => setCountry(t)}
-              // extraStyle={{ zIndex: -1, width: '49%' }}
               />
 
               <Input
@@ -644,7 +603,7 @@ const SignUpScreen = (props: Props) => {
             </>
           )}
 
-          {selectRole === 'Student' && (
+          {/* {selectRole === 'Student' && (
             <>
               <Input
                 value={collegeName}
@@ -666,7 +625,7 @@ const SignUpScreen = (props: Props) => {
                 extraStyle={{ zIndex: -1 }}
               />
             </>
-          )}
+          )} */}
           <Input
             value={password}
             autoCorrect={false}
@@ -697,7 +656,7 @@ const SignUpScreen = (props: Props) => {
                   ? onPressCanteenRegister()
                   : onPressLoginStudent();
             }}
-            title={strings('sign_up.sign_up')}
+            title={strings('sign_up.Signup')}
           />
           {selectRole == 'Student' ? (
             <Text style={styles.orContinueText}>{strings('login.or')}</Text>

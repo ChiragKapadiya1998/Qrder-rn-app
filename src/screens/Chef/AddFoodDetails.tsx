@@ -63,11 +63,18 @@ const AddFoodDetails = () => {
   const [selectedOption, setSelectedOption] = useState < number | null > (null);
   const [loading, setLoading] = useState < boolean > (false);
   const [selectedTex, setSelectedTex] = useState(0)
+  const [selecteFood, setSelecteFood] = useState(1)
   const isFocuse = useIsFocused();
 
   const options = [
     { label: strings('addFoodList.Inclusiveinvoice'), icon: Icons.ic_check },
     { label: strings('addFoodList.Exclusiveinvoice'), icon: Icons.ic_check },
+  ];
+
+
+  const foodType = [
+    { label: strings('addFoodList.veg'), icon: Icons.ic_check },
+    { label: strings('addFoodList.non_veg'), icon: Icons.ic_check },
   ];
 
 
@@ -199,6 +206,7 @@ const AddFoodDetails = () => {
       data.append('include_tax', selectedTex);
       data.append('tax_percentage', texPre);
       data.append('miscellaneous_item_ids', `[${listData}]`);
+      data.append('food_type', selecteFood);
       data.append('file', {
         uri: imageData?.uri,
         type: imageData?.mime,
@@ -218,6 +226,7 @@ const AddFoodDetails = () => {
           setPercentageInput('');
           setImageData({ uri: '' });
           setIsPictureEdit(false);
+          setSelecteFood(1)
           setMiscellaneous(
             getMiscellaneous.map(item => {
               return { ...item, isSelect: false };
@@ -402,7 +411,7 @@ const AddFoodDetails = () => {
           {/* </View> */}
           <Input
             value={itemName}
-            placeholder={strings('addFoodList.item_name')}
+            placeholder={strings('addFoodList.p_item_name')}
             label={strings('addFoodList.item_name')}
             onChangeText={(t: string) => setItemName(t)}
             extraStyle={styles.inputView}
@@ -477,7 +486,7 @@ const AddFoodDetails = () => {
             <TextInput
               value={percentageInput}
               onChangeText={handleChangeText}
-              placeholder={strings('addFoodList.add_basic')}
+              placeholder={strings('addFoodList.tax_percentage')}
               style={styles.inputTaxPercentage}
               placeholderTextColor={colors.title_dec100}
               keyboardType="numeric"
@@ -507,31 +516,42 @@ const AddFoodDetails = () => {
             inputStyle={styles.inputStyle}
             isShowLabel={true}
           />
+          <Text style={[styles.textStyle]}>
+            {strings('addFoodList.food_type')}
+          </Text>
+          {foodType.map((option, index) => {
+            const optionIndex = index + 1;
+            return (
+              <TouchableOpacity
+                key={optionIndex}
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  gap: 10,
+                  marginTop: optionIndex === 1 ? 0 : 16,
+                }}
+                onPress={() => setSelecteFood(optionIndex)}
+              >
+                <View
+                  style={{
+                    width: 20,
+                    height: 20,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    borderRadius: 10,
+                    backgroundColor: selecteFood === optionIndex ? colors.blue : 'transparent',
+                    borderColor: selecteFood === optionIndex ? colors.blue : colors.title_dec,
+                    borderWidth: selecteFood === optionIndex ? 0 : 1,
+                  }}
+                >
+                  {selecteFood === optionIndex && <Image source={option.icon} style={styles.ic_check} />}
+                </View>
+                <Text style={styles.text1}>{option.label}</Text>
+              </TouchableOpacity>
+            );
+          })}
 
-          {/* <TextInput
-            value={basicDetails}
-            onChangeText={(t: string) => setBasicDetails(t)}
-            placeholder={strings('addFoodList.Adddescription')}
-            style={[
-              styles.basicInput,
-              {
-                borderColor:
-                  basicDetails?.length == 0
-                    ? colors.border_line4
-                    : colors.text_orange,
-              },
-            ]}
-            multiline
-            maxLength={200}
-            placeholderTextColor={colors.gray_300}
-          /> */}
-          {/* <PrimaryButton
-            extraStyle={styles.saveChangeButton}
-            onPress={onPressAddItem}
-            title={strings('addFoodList.save_changes')}
-            titleStyle={styles.saveText}
-            isLoading={loading}
-          /> */}
+
           <View style={styles.buttonContainer}>
             <PrimaryButton
               extraStyle={styles.submitButton}
@@ -742,7 +762,7 @@ const getGlobalStyles = (props: any) => {
       width: wp(22),
       borderRadius: 6,
       borderWidth: 1,
-      borderColor: colors.text_border,
+      borderColor: colors.title_dec,
       alignItems: 'center',
       justifyContent: 'center',
     },

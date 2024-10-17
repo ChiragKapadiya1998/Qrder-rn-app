@@ -92,7 +92,6 @@ export const getCuisinesMenuListAction =
     })
       .then(async (response: any) => {
         if (response.status === 200 || response.status === 201) {
-          console.log('getCuisinesMenuListAction=-=+++', response?.data?.data);
           dispatch({
             type: GET_MENU_DATA,
             payload: {
@@ -108,7 +107,6 @@ export const getCuisinesMenuListAction =
       .catch(error => {
         dispatch({type: IS_LOADING, payload: false});
         if (request.onFailure) request.onFailure(error.response);
-        // errorToast('your account has been logged in on another device.');
       });
   };
 
@@ -205,8 +203,7 @@ export const getDashboardAction =
       params: request?.params,
     })
       .then(async (response: any) => {
-        console.log('response?.data?.data', response?.data?.data);
-
+        console.log('response?.data?.data===', response?.data?.data);
         if (response.status === 200 || response.status === 201) {
           dispatch({
             type: GET_DASHBOARD_LIST,

@@ -157,6 +157,7 @@ const getGlobalStyles = (props: any) => {
       width: 20,
       height: 20,
       resizeMode: 'contain',
+      tintColor:colors.black
     },
     bagView: {
       height: hp(35),

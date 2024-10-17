@@ -196,7 +196,7 @@ const RecipesMastersList = (props: Props) => {
                     {strings('CuisinesNameList.names')}
                   </Text>
                   <Text style={styles.nameText}>
-                    {getAllData?.length > 1 ? strings('CuisinesNameList.actions') : strings('CuisinesNameList.action')}
+                    {strings('CuisinesNameList.action')}
                   </Text>
                 </View>
               );

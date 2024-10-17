@@ -184,7 +184,7 @@ const StudentProfile = (props: Props) => {
             },
             {
               title: strings('profileScreen.order_history'),
-              iconName: Icons.inventory,
+              iconName: Icons.orderHistory_ic,
               screens: screenName.student_tab_bar.StudentOrderHistory,
             },
             // {

@@ -24,7 +24,7 @@ const ReviewModal = ({
                 close={closeModal}
                 containStyle={{
                     alignItems: 'flex-start', paddingHorizontal: wp(16),
-                    paddingVertical: hp(20)
+                    paddingTop: hp(20),paddingBottom:hp(36)
                 }}
                 contain={
                     <View>
@@ -49,6 +49,7 @@ const getGlobalStyles = (props: any) => {
         },
         linkText: {
             marginTop: hp(19),
+            textDecorationLine:'underline',
             ...commonFontStyle(400, 14, colors.black),
         }
     });

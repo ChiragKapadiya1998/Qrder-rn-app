@@ -122,7 +122,7 @@ const CuisinesAdd = ({ item }: ItemProps) => {
       <View style={styles.contentContainer}>
         <Input
           value={cuisineName}
-          placeholder={strings('CuisinesNameList.add_cuisines')}
+          placeholder={strings('CuisinesNameList.enter_cuisine_name')}
           label={strings('CuisinesNameList.cuisines_name')}
           onChangeText={(t: string) => seCuisineName(t)}
           isShowLabel={true}
@@ -141,7 +141,7 @@ const CuisinesAdd = ({ item }: ItemProps) => {
               }}>
               <Image source={Icons.addImageIcon} style={styles.addImageIcon} />
               <Text style={styles.addImageText}>
-                {strings('addFoodList.add_food_photo')}
+                {strings('CuisinesNameList.add_photo')}
               </Text>
               <Text style={styles.upToText}>
                 {strings('addFoodList.upToMb')}
@@ -199,11 +199,14 @@ const getGlobalStyles = (props: any) => {
       flex: 1,
       marginHorizontal: wp(20),
     },
+    headerContainer: {
+      paddingBottom: hp(4)
+    },
     profileContainer: {
       justifyContent: 'flex-start',
       alignSelf: 'flex-start',
       //   alignItems: 'center',
-      marginTop: hp(30),
+      marginTop: hp(11),
     },
     profilImage: {
       width: wp(99),

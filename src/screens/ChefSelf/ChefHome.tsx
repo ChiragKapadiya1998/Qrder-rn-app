@@ -209,22 +209,9 @@ const ChefHome = () => {
           <View style={styles.hurrUpView}>
             <View>
               <Text style={styles.hurryText}>{strings('newAddText.hurry_up')}</Text>
-              <Text style={styles.hurryText}>{strings('newAddText.up_to')}</Text>
-              <Text style={styles.allText}>{strings('newAddText.all_foods_are_available')}</Text>
+              <Text style={styles.hurryText}>{strings('newAddText.discount')}</Text>
             </View>
-            <ImageBackground
-              source={Icons.ic_dec}
-              resizeMode="contain"
-              style={{
-                width: 90,
-                height: 90,
-                alignSelf: 'flex-end',
-                justifyContent: 'center',
-                alignItems: 'center',
-                flexDirection: 'row',
-              }}>
               <Text style={styles.bannerText}>{`${discount}%`}</Text>
-            </ImageBackground>
           </View>}
 
         <View
@@ -308,9 +295,9 @@ const getGlobalStyles = (props: any) => {
       marginBottom: 10,
     },
     bannerText: {
-      ...commonFontStyle(800, 40, light_theme.white),
+      ...commonFontStyle(800, 36, light_theme.white),
       alignSelf: 'center',
-      top: 5,
+      marginRight: wp(10)
     },
     bannerText1: {
       ...commonFontStyle(700, 20, light_theme.white),
@@ -430,7 +417,7 @@ const getGlobalStyles = (props: any) => {
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
-      marginBottom: hp(8),
+      marginBottom: hp(20),
     },
     hurryText: {
       ...commonFontStyle(800, 18, colors.defult_white),

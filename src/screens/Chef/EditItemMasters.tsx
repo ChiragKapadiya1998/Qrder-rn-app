@@ -87,14 +87,14 @@ const EditItemMasters = () => {
       <HomeHeader
         onBackPress={goback}
         mainShow={true}
-        title={strings('itemMastersList.edit_item_masters')}
+        title={strings('itemMastersList.item_masters')}
         extraStyle={styles.headerContainer}
         isShowIcon={false}
       />
       <View style={styles.contentContainer}>
         <Input
           value={materialName}
-          placeholder={strings('recipesMaster.e_material_name')}
+          placeholder={strings('itemMastersList.add_material_name')}
           label={strings('recipesMaster.material_name')}
           onChangeText={(t: string) => setMaterialName(t)}
           isShowLabel={true}

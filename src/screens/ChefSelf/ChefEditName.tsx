@@ -164,15 +164,15 @@ const ChefEditName = (props: Props) => {
         </View>
         <Input
           value={name}
-          placeholder={strings('sign_up.p_name')}
-          label={strings('sign_up.first_name')}
+          placeholder={strings('sign_up.name')}
+          label={strings('sign_up.name')}
           onChangeText={(t: string) => setName(t)}
           isShowLabel={true}
         />
         <Input
           value={email}
-          placeholder={strings('sign_up.p_email')}
-          label={strings('sign_up.email_address')}
+          placeholder={strings('sign_up.email')}
+          label={strings('sign_up.email')}
           onChangeText={(t: string) => setEmail(t)}
           isShowLabel={true}
         />

@@ -27,12 +27,12 @@ const EditMiscellaneous = () => {
   const {colors} = useTheme();
   const route = useRoute();
   const {data} = route?.params;
-  console.log('data', data);
+
 
   const styles = React.useMemo(() => getGlobalStyles({colors}), [colors]);
   const navigation = useNavigation();
   const [recipesName, setRecipesName] = useState(data?.name);
-  const [materialName, setMaterialName] = useState(data?.price);
+  const [materialName, setMaterialName] = useState(Number(data?.price).toFixed(0));
   const [stockName, setStockName] = useState('');
   const [unitName, setUnitName] = useState('');
   const [loading, setLoading] = useState(false);

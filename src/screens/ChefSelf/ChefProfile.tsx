@@ -139,13 +139,13 @@ const ChefProfile = (props: Props) => {
               screens: screenName.EditProfile,
             },
             {
-              title: strings('profileScreen.inventory'),
-              iconName: Icons.inventory,
-              screens: '',
+              title: strings('profileScreen.menu'),
+              iconName: Icons.menu_ic,
+              screens: screenName.chef_tab_bar.ChefMenuList,
             },
             {
               title: strings('profileScreen.order_history'),
-              iconName: Icons.inventory,
+              iconName: Icons.orderHistory_ic,
               screens: screenName.OrderHistory,
             },
           ]}

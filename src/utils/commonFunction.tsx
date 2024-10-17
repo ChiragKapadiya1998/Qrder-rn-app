@@ -117,6 +117,14 @@ export const miscellData = [
   {id: '4', name: 'Milkshake', price: 100},
 ];
 
+
+const getDayLabel = (dateString) => {
+  const date = new Date(dateString.split('-').reverse().join('-')); // Convert 'DD-MM-YYYY' to 'YYYY-MM-DD'
+  const days = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+  return days[date.getDay()]; // getDay() returns a number (0-6) where 0 is Sunday and 6 is Saturday
+};
+
+
 export const chartData = (revenueData, filter) => {
   switch (filter) {
     case strings('home.daily'):
@@ -134,7 +142,7 @@ export const chartData = (revenueData, filter) => {
       const updateWeekly = revenueData?.map((entry, index) => {
         return {
           value: parseFloat(entry?.revenue) || 0, // Parse revenue and default to 0 if NaN
-          label: labels2[index] || 'Unknown', // Use the corresponding label
+          label: getDayLabel(entry?.date) || 'Unknown', // Use the corresponding label
         };
       });
       return updateWeekly;

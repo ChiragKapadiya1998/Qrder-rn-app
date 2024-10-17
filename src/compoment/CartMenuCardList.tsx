@@ -69,7 +69,7 @@ const CartMenuCardList = ({ onRefresh, refreshing, loadMoreData, loadingMore, on
                 </View>
 
               )}
-              <View style={{ height: hp(150) }} />
+              <View style={{ height: hp(30) }} />
             </View>
           )}
           ListEmptyComponent={!loading && (

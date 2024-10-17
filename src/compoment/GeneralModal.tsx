@@ -11,6 +11,7 @@ import Input from './Input';
 import { waterBottleAction } from '../actions/commonAction';
 import { errorToast } from '../utils/commonFunction';
 import { useAppDispatch } from '../redux/hooks';
+import ThankYouModal from './ThankYouModal';
 type Props = {
   visible?: boolean;
   closeModal: () => void;
@@ -25,7 +26,8 @@ type Props = {
   discountText?: string;
   loading?: boolean;
   setLoading?: boolean;
-  setLotSizeModal: any
+  setLotSizeModal: any;
+  setIsOpenModal?: any
 };
 
 const GeneralModal = ({
@@ -43,6 +45,7 @@ const GeneralModal = ({
   loading,
   setLoading,
   setLotSizeModal,
+  setIsOpenModal,
 }: Props) => {
   const { colors, isDark } = useTheme();
   const dispatch = useAppDispatch();
@@ -51,28 +54,30 @@ const GeneralModal = ({
   const [selectedOption, setSelectedOption] = useState('500ml');
   const [selectBrand, setSelectBrand] = useState('');
 
+
   const options = ['500ml', '1000ml'];
 
   const onOrderBottle = () => {
     if (lotSizeText.trim().length === 0) {
       errorToast(strings('supportText.e_lot_size'));
+    } else if (selectBrand === '') {
+      errorToast(strings('supportText.e_brand'));
     } else {
       setLoading(true);
-      //   let data = new FormData();
-      //   data.append('lot_size', lotSizeText);
-      //   data.append('size', selectedOption);
-
       let userInfo = {
         data: {
           lot_size: Number(lotSizeText),
           size: selectedOption,
+          brand: selectBrand.toLowerCase()
         },
         onSuccess: res => {
           setLotSizeModal(false)
-          setLotSizeText('');
-          setSelectedIndex('');
+          setIsOpenModal(true)
           setSelectBrand('')
+          setLotSizeText('');
+          setSelectedOption('500ml')
           setLoading(false);
+
 
         },
         onFailure: (Err: any) => {
@@ -87,6 +92,7 @@ const GeneralModal = ({
     }
   };
 
+
   return (
     <View>
       <CCModal
@@ -97,7 +103,8 @@ const GeneralModal = ({
         }}
         containStyle={{
           alignItems: 'center',
-          paddingVertical: hp(16),
+          paddingVertical: isShowDiscount ? hp(0) : hp(16),
+          paddingBottom: hp(32),
           backgroundColor: colors.cards_bg,
         }}
         contain={
@@ -105,7 +112,7 @@ const GeneralModal = ({
             {isShowDiscount && (
               <Input
                 value={discountText}
-                placeholder={strings('supportText.enter_discount')}
+                placeholder={strings('supportText.p_enter_discount')}
                 label={strings('supportText.enter_discount')}
                 onChangeText={(t: string) => setDiscountText(t)}
                 isShowLabel={true}
@@ -171,6 +178,7 @@ const GeneralModal = ({
                   onChangeText={(t: string) => setLotSizeText(t)}
                   isShowLabel={true}
                   inputStyle={styles.inputStyle}
+                  keyboardType="number-pad"
                 />
 
                 <Text style={styles.selectText}>{'Select Brand'}</Text>
@@ -272,6 +280,7 @@ const getGlobalStyles = (props: any) => {
     },
     inputStyle: {
       borderColor: colors.title_dec100,
+      backgroundColor: colors.input_modal_bg
     },
     ic_check: {
       width: 11,

@@ -54,7 +54,7 @@ const OrderHistory = () => {
     };
     dispatch(getAllOrderAction(obj));
   };
-
+  console.log("----", isRole)
   const getAllOrdersFilter = data => {
     let obj = {
       params: {
@@ -106,7 +106,13 @@ const OrderHistory = () => {
         <View style={{ flexDirection: 'row' }}>
           <TouchableOpacity
             onPress={() =>
-              navigation.navigate(screenName.MyOrderAdmin, { itemData: item })
+            {
+              if (isRole === 'Staff') {
+                navigation.navigate(screenName.ChefMyOrders, { itemData: item })
+              } else {
+                navigation.navigate(screenName.MyOrderAdmin, { itemData: item })
+              }
+            }
             }
             style={styles.imageView}>
             <Text style={styles.imageText}>#{index + 1}</Text>
@@ -136,16 +142,6 @@ const OrderHistory = () => {
             </Text>
           </TouchableOpacity>
         </View>
-        {/* {isRole === 'Admin' || isRole === 'Staff' ? null : (
-          <View style={styles.btnContainer}>
-            <TouchableOpacity onPress={onCancelBtn} style={styles.cancelBtn}>
-              <Image style={styles.invoiveIcon} source={Icons.invoiceIcon} />
-              <Text style={styles.cancelText}>
-                {strings('profileScreen.download_invoice')}
-              </Text>
-            </TouchableOpacity>
-          </View>
-        )} */}
       </View>
     );
   };
@@ -341,7 +337,7 @@ const getGlobalStyles = (props: any) => {
       backgroundColor: colors.cards_bg,
       paddingVertical: hp(6),
       paddingHorizontal: wp(10),
-      borderRadius: 10,
+      borderRadius: 8,
     },
     dateText: {
       ...commonFontStyle(400, 12, colors.black),

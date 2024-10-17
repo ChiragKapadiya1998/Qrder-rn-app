@@ -78,7 +78,6 @@ const ChartsView = ({
   const [isLoading, setIsLoading] = useState(false);
   const {getDashboardData} = useAppSelector(state => state.data);
   const [convertedData, setConvertedData] = useState(getDashboardData?.data);
-  console.log('convertedData', convertedData);
   const dispatch = useAppDispatch();
 
   const [selectedType, setselectedType] = useState({
@@ -98,7 +97,6 @@ const ChartsView = ({
   }, []);
 
   const getDashboard = item => {
-    console.log('item', item);
     setIsLoading(true);
     let obj = {
       params: {
@@ -119,13 +117,6 @@ const ChartsView = ({
     setdropDownValue(text);
     getDashboard(finedDate(text));
   };
-
-  console.log(
-    'dadasdasdasdas',
-    financial(getDashboardData?.total_revenue) == 0 ||
-      getDashboardData?.data == 0 ||
-      getDashboardData?.data == undefined,
-  );
 
   return (
     <View style={styles.container}>
@@ -173,7 +164,7 @@ const ChartsView = ({
             maxValue={1}
             adjustToWidth={false}
             barBorderRadius={5}
-            frontColor={colors.Primary_Orange}
+            frontColor={colors.text_orange}
             yAxisTextStyle={{color: colors.black}}
             xAxisLabelTextStyle={{color: colors.black}}
             noOfSections={4} // Number of sections on the Y-axis
@@ -190,7 +181,7 @@ const ChartsView = ({
             barWidth={30}
             adjustToWidth={false}
             barBorderRadius={5}
-            frontColor={colors.Primary_Orange}
+            frontColor={colors.text_orange}
             yAxisTextStyle={{color: colors.black}}
             xAxisLabelTextStyle={{color: colors.black}}
             noOfSections={4} // Number of sections on the Y-axis
@@ -219,7 +210,7 @@ const getGlobalStyles = (props: any) => {
       ...commonFontStyle(400, 14, colors.Title_Text),
     },
     labelTextStyle1: {
-      ...commonFontStyle(700, 22, colors.Title_Text),
+      ...commonFontStyle(700, 22, colors.text_orange),
     },
     seeText: {
       ...commonFontStyle(400, 14, colors.Primary_Orange),

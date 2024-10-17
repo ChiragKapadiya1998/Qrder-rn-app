@@ -196,22 +196,9 @@ const Home = (props: Props) => {
           <View style={styles.hurrUpView}>
             <View>
               <Text style={styles.hurryText}>{strings('newAddText.hurry_up')}</Text>
-              <Text style={styles.hurryText}>{strings('newAddText.up_to')}</Text>
-              <Text style={styles.allText}>{strings('newAddText.all_foods_are_available')}</Text>
+              <Text style={styles.hurryText}>{strings('newAddText.discount')}</Text>
             </View>
-            <ImageBackground
-              source={Icons.ic_dec}
-              resizeMode="contain"
-              style={{
-                width: 90,
-                height: 90,
-                alignSelf: 'flex-end',
-                justifyContent: 'center',
-                alignItems: 'center',
-                flexDirection: 'row',
-              }}>
-              <Text style={styles.bannerText}>{`${discount}%`}</Text>
-            </ImageBackground>
+            <Text style={styles.bannerText}>{`${discount}%`}</Text>
           </View>}
         {/* <ImageBackground
           source={Icons.banner}
@@ -269,16 +256,14 @@ const Home = (props: Props) => {
           style={{
             flexDirection: 'row',
             alignItems: 'center',
-            marginHorizontal: wp(20),
             justifyContent: 'space-between',
-            marginTop: 15,
-            marginBottom: 10,
+            marginVertical:hp(20)
           }}>
           <Text style={styles.seeText1}>{strings('home.Revenue')}</Text>
-          {/* <TouchableOpacity
-            onPress={() => {}}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate(screenName.OrderHistory)}>
             <Text style={styles.seeText}>{strings('home.see_details')}</Text>
-          </TouchableOpacity> */}
+          </TouchableOpacity>
         </View>
         <CardView>
           <ChartsView />
@@ -417,9 +402,9 @@ const getGlobalStyles = (props: any) => {
       borderColor: colors.black,
     },
     bannerText: {
-      ...commonFontStyle(800, 40, light_theme.white),
+      ...commonFontStyle(800, 36, light_theme.white),
       alignSelf: 'center',
-      top: 5,
+      marginRight: wp(10)
     },
     bannerText1: {
       ...commonFontStyle(700, 20, light_theme.white),
@@ -429,7 +414,7 @@ const getGlobalStyles = (props: any) => {
       right: 5,
     },
     seeText: {
-      ...commonFontStyle(400, 14, colors.Primary_Orange),
+      ...commonFontStyle(400, 14, colors.text_orange),
       textDecorationLine: 'underline',
     },
     seeText1: {
@@ -448,7 +433,6 @@ const getGlobalStyles = (props: any) => {
       ...commonFontStyle(800, 18, colors.defult_white),
     },
     allText: {
-      marginTop: hp(10),
       ...commonFontStyle(400, 14, colors.defult_white),
     }
   });

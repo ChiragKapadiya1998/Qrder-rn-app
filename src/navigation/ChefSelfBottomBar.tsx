@@ -37,7 +37,7 @@ const TabBarItem = ({state, navigation}: BottomTabBarProps) => {
       case 1:
         return (
           <Image
-            source={Icons.ic_list}
+            source={Icons.ic_history}
             style={{
               width: 24,
               height: 24,

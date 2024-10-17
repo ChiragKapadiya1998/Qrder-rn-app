@@ -87,7 +87,7 @@ const StudentMenuList = () => {
       id: params?.selectID,
       data: {
         page: pages,
-        limit: 7,
+        limit: 8,
         pagination: true,
       },
       onSuccess: (res: any) => {
@@ -110,7 +110,7 @@ const StudentMenuList = () => {
       id: id,
       data: {
         page: pages,
-        limit: 7,
+        limit: 8,
         pagination: true,
       },
       onSuccess: (res: any) => {
@@ -129,7 +129,7 @@ const StudentMenuList = () => {
   };
 
   const loadMoreData = () => {
-    if (!onEndReached && getCanteenMenuData?.length >= 7) {
+    if (!onEndReached && getCanteenMenuData?.length >= 8) {
       if (getCanteenMenuData && getCanteenMenuData?.length < canteenMenuCount) {
         setLoadingMore(true);
         if (tabSelection === 'All') {
@@ -225,21 +225,9 @@ const StudentMenuList = () => {
             <Text style={styles.hurryText}>
               {strings('newAddText.hurry_up')}
             </Text>
-            <Text style={styles.hurryText}>{strings('newAddText.the_discount_is')}</Text>
+            <Text style={styles.hurryText}>{strings('newAddText.discount')}</Text>
           </View>
-          <ImageBackground
-            source={Icons.ic_dec}
-            resizeMode="contain"
-            style={{
-              width: 90,
-              height: 90,
-              alignSelf: 'flex-end',
-              justifyContent: 'center',
-              alignItems: 'center',
-              flexDirection: 'row',
-            }}>
             <Text style={styles.bannerText}>{`${discount}%`}</Text>
-          </ImageBackground>
         </View>
       )}
 
@@ -348,9 +336,9 @@ const getGlobalStyles = (props: any) => {
       ...commonFontStyle(400, 14, colors.defult_white),
     },
     bannerText: {
-      ...commonFontStyle(800, 40, colors.defult_white),
+      ...commonFontStyle(800, 36, colors.defult_white),
       alignSelf: 'center',
-      top: 5,
+      marginRight: wp(10)
     },
   });
 };

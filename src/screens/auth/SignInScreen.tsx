@@ -329,7 +329,7 @@ const SignInScreen = (props: Props) => {
       </View>
       {selectRole == 'Admin' || selectRole == 'Student' || selectRole === 'Canteen' ? (
         <>
-          <TouchableOpacity onPress={onPressSignUp} style={{ bottom: 10, position: 'absolute', left: 0, right: 0 }}>
+          <TouchableOpacity onPress={onPressSignUp} style={{marginTop:hp(10)}}>
             <Text style={styles.bottomText}>
               {strings('login.dont_have_account')}
               <Text style={styles.signUpText}> {strings('login.sign_up')}</Text>

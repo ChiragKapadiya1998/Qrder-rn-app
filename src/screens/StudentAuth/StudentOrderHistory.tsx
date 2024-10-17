@@ -352,7 +352,7 @@ const getGlobalStyles = (props: any) => {
       backgroundColor: colors.cards_bg,
       paddingVertical: hp(6),
       paddingHorizontal: wp(10),
-      borderRadius: 10,
+      borderRadius: 8,
     },
     dateText: {
       ...commonFontStyle(400, 12, colors.black),

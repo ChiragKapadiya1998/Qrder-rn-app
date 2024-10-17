@@ -11,7 +11,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   useIsFocused,
   useNavigation,
@@ -19,24 +19,24 @@ import {
   useTheme,
 } from '@react-navigation/native';
 import HomeHeader from '../../compoment/HomeHeader';
-import {strings} from '../../i18n/i18n';
+import { strings } from '../../i18n/i18n';
 import Input from '../../compoment/Input';
-import {commonFontStyle, hp, isIos, SCREEN_WIDTH, wp} from '../../theme/fonts';
-import {Icons} from '../../utils/images';
+import { commonFontStyle, hp, isIos, SCREEN_WIDTH, wp } from '../../theme/fonts';
+import { Icons } from '../../utils/images';
 import ImagePicker from 'react-native-image-crop-picker';
 import CCDropDown from '../../compoment/CCDropDown';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import PrimaryButton from '../../compoment/PrimaryButton';
-import {useAppDispatch, useAppSelector} from '../../redux/hooks';
-import {addMenuAction, updateManuAction} from '../../actions/menuAction';
-import {errorToast} from '../../utils/commonFunction';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import { addMenuAction, updateManuAction } from '../../actions/menuAction';
+import { errorToast } from '../../utils/commonFunction';
 import moment = require('moment');
 import AddFolderModal from '../../compoment/AddFolderModal';
 import Spacer from '../../compoment/Spacer';
-import {getCuisinesAction} from '../../actions/cuisinesAction';
-import {screenName} from '../../navigation/screenNames';
+import { getCuisinesAction } from '../../actions/cuisinesAction';
+import { screenName } from '../../navigation/screenNames';
 import ImageCropPicker from 'react-native-image-crop-picker';
-import {openImagePicker, options} from '../../utils/globalFunctions';
+import { openImagePicker } from '../../utils/globalFunctions';
 
 type DataItem = {
   id: number;
@@ -46,12 +46,12 @@ type DataItem = {
 };
 
 const EditMenuList = () => {
-  const {colors} = useTheme();
+  const { colors } = useTheme();
   const navigation = useNavigation();
   const route = useRoute();
-  const {itemData} = route?.params;
-  const {miscellaneous_items} = itemData;
-  const styles = React.useMemo(() => getGlobalStyles({colors}), [colors]);
+  const { itemData } = route?.params;
+  const { miscellaneous_items } = itemData;
+  const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
   const [itemName, setItemName] = useState(itemData?.name);
   const [price, setPrice] = useState(itemData?.price);
   const [basicDetails, setBasicDetails] = useState(itemData?.description);
@@ -62,50 +62,52 @@ const EditMenuList = () => {
     String(itemData?.tax_percentage),
   );
   const [images, setImages] = useState('');
-  const [imageData, setImageData] = useState<any>({
+  const [imageData, setImageData] = useState < any > ({
     uri: itemData.image ? itemData?.image : '',
   });
-  const [isPictureEdit, setIsPictureEdit] = useState<boolean>(
+  const [isPictureEdit, setIsPictureEdit] = useState < boolean > (
     itemData.image ? true : false,
   );
 
-  console.log('itemData?.include_tax', itemData.image);
-  console.log('itemData.image2', imageData);
-
   const [quantityValue, setQuantityValue] = useState(0);
-  const {getCuisines, getMiscellaneous} = useAppSelector(state => state.data);
+  const { getCuisines, getMiscellaneous } = useAppSelector(state => state.data);
   const dispatch = useAppDispatch();
   const [newFolder, setNewFolder] = useState(false);
   const [showAddField, setShowAddField] = useState(false);
-  const [selectedOption, setSelectedOption] = useState<number | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [selectedOption, setSelectedOption] = useState < number | null > (null);
+  const [loading, setLoading] = useState < boolean > (false);
   const isFocuse = useIsFocused();
   const [miscellaneous, setMiscellaneous] = useState([]);
+  const [selecteFood, setSelecteFood] = useState(itemData?.food_type)
+
+  const options = [
+    { label: strings('addFoodList.Inclusiveinvoice'), icon: Icons.ic_check },
+    { label: strings('addFoodList.Exclusiveinvoice'), icon: Icons.ic_check },
+  ];
+
+
+  const foodType = [
+    { label: strings('addFoodList.veg'), icon: Icons.ic_check },
+    { label: strings('addFoodList.non_veg'), icon: Icons.ic_check },
+  ];
+
 
   useEffect(() => {
     const selectedIds = new Set(miscellaneous_items.map(item => item.id));
-    console.log('Selected IDs: ', selectedIds);
     const updatedMiscellaneous = getMiscellaneous.map(item => ({
       ...item,
       isSelect: selectedIds.has(item.id),
     }));
-
-    console.log('Updated Miscellaneous: ', updatedMiscellaneous);
     setMiscellaneous(updatedMiscellaneous);
   }, [isFocuse]);
 
   const toggleSelectItem = itemId => {
     setMiscellaneous(prevState =>
       prevState.map(item =>
-        item.id === itemId ? {...item, isSelect: !item.isSelect} : item,
+        item.id === itemId ? { ...item, isSelect: !item.isSelect } : item,
       ),
     );
   };
-  // const [miscellaneous, setMiscellaneous] = useState(
-  //     getMiscellaneous.map(item => {
-  //         return { ...item, isSelect: false };
-  //     }),
-  // );
 
   useEffect(() => {
     const filteredItem = getCuisines.find(
@@ -120,14 +122,6 @@ const EditMenuList = () => {
     getCuisinesList();
   }, [showAddField]);
 
-  // useEffect(() => {
-  //     setMiscellaneous(
-  //         getMiscellaneous.map(item => {
-  //             return { ...item, isSelect: false };
-  //         }),
-  //     );
-  // }, [isFocuse]);
-
   const getCuisinesList = () => {
     let obj = {
       data: {
@@ -135,8 +129,8 @@ const EditMenuList = () => {
         limit: 15,
         pagination: false,
       },
-      onSuccess: (res: any) => {},
-      onFailure: (Err: any) => {},
+      onSuccess: (res: any) => { },
+      onFailure: (Err: any) => { },
     };
     dispatch(getCuisinesAction(obj));
   };
@@ -154,9 +148,9 @@ const EditMenuList = () => {
     });
   };
 
-  const renderImage = ({item}: any) => (
+  const renderImage = ({ item }: any) => (
     <View style={styles.imageContainer}>
-      <Image source={{uri: item.uri}} style={styles.imageView} />
+      <Image source={{ uri: item.uri }} style={styles.imageView} />
     </View>
   );
 
@@ -181,8 +175,6 @@ const EditMenuList = () => {
           return item.id;
         });
 
-      console.log('listData', `'[${listData}]'`);
-
       data.append('name', itemName);
       data.append('cuisine_id', quantityValue);
       data.append('price', price);
@@ -190,6 +182,7 @@ const EditMenuList = () => {
       data.append('include_tax', selectedTex);
       data.append('tax_percentage', texPre);
       data.append('miscellaneous_item_ids', `[${listData}]`);
+      data.append('food_type', selecteFood);
 
       if (imageData?.uri !== itemData.image) {
         data.append('file', {
@@ -228,9 +221,9 @@ const EditMenuList = () => {
   const handlePress = (value: number) => {
     const update = miscellaneous.map(item => {
       if (item?.id == value.id) {
-        return {...value, isSelect: !value?.isSelect};
+        return { ...value, isSelect: !value?.isSelect };
       } else {
-        return {...item};
+        return { ...item };
       }
     });
     setMiscellaneous(update);
@@ -250,7 +243,7 @@ const EditMenuList = () => {
       );
     }
   };
-  const renderItem = ({item}) => (
+  const renderItem = ({ item }) => (
     <View style={styles.radioView}>
       <TouchableOpacity
         style={styles.radioContainer}
@@ -273,7 +266,7 @@ const EditMenuList = () => {
         onBackPress={() => {
           navigation.goBack();
         }}
-        onRightPress={() => {}}
+        onRightPress={() => { }}
         mainShow={true}
         title={strings('editFoodDetails.editItems')}
         extraStyle={styles.headerContainer}
@@ -308,7 +301,7 @@ const EditMenuList = () => {
                 selectImage();
               }}>
               <Image
-                source={{uri: imageData.uri}}
+                source={{ uri: imageData.uri }}
                 style={{
                   width: '100%',
                   height: '100%',
@@ -320,7 +313,7 @@ const EditMenuList = () => {
           )}
           <Input
             value={itemName}
-            placeholder={strings('addFoodList.item_name')}
+            placeholder={strings('addFoodList.p_item_name')}
             label={strings('addFoodList.item_name')}
             onChangeText={(t: string) => setItemName(t)}
             extraStyle={styles.inputView}
@@ -430,6 +423,42 @@ const EditMenuList = () => {
             isShowLabel={true}
           />
 
+          <Text style={[styles.textStyle]}>
+            {strings('addFoodList.food_type')}
+          </Text>
+          {foodType.map((option, index) => {
+            const optionIndex = index + 1;
+            return (
+              <TouchableOpacity
+                key={optionIndex}
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  gap: 10,
+                  marginTop: optionIndex === 1 ? 0 : 16,
+                }}
+                onPress={() => setSelecteFood(optionIndex)}
+              >
+                <View
+                  style={{
+                    width: 20,
+                    height: 20,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    borderRadius: 10,
+                    backgroundColor: selecteFood === optionIndex ? colors.blue : 'transparent',
+                    borderColor: selecteFood === optionIndex ? colors.blue : colors.title_dec,
+                    borderWidth: selecteFood === optionIndex ? 0 : 1,
+                  }}
+                >
+                  {selecteFood === optionIndex && <Image source={option.icon} style={styles.ic_check} />}
+                </View>
+                <Text style={styles.text1}>{option.label}</Text>
+              </TouchableOpacity>
+            );
+          })}
+
+
           <View style={styles.buttonContainer}>
             <PrimaryButton
               extraStyle={styles.submitButton}
@@ -458,7 +487,7 @@ const EditMenuList = () => {
 export default EditMenuList;
 
 const getGlobalStyles = (props: any) => {
-  const {colors} = props;
+  const { colors } = props;
   return StyleSheet.create({
     container: {
       flex: 1,

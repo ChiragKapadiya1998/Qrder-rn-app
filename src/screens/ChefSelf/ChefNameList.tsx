@@ -144,7 +144,7 @@ const ChefNameList = (props: Props) => {
           // setNewFolder(true)
         }}
         mainShow={true}
-        title={strings('ChefNameList.chef_list')}
+        title={strings('roleSelection.staff')}
         extraStyle={styles.headerContainer}
         createText={strings('CuisinesNameList.create')}
         isShowIcon={false}

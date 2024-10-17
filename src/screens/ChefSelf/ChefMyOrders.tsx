@@ -102,7 +102,7 @@ const ChefMyOrders = () => {
             </Text>
             <Text style={styles.nameText}>{myOrderData?.name}</Text>
           </View>
-          {!isLoading && myOrderData.role !== 'canteen' ? (
+          {!isLoading && myOrderData.role === 'canteen' ? (
             <View style={[styles.boxView, {marginTop: hp(12)}]}>
               <Text style={styles.textStyle}>
                 {strings('myOrders.address')}
@@ -128,7 +128,8 @@ const ChefMyOrders = () => {
               </Text>
             </View>
           </View>
-          {myOrderData.role !== 'canteen' ? null : (
+
+          {myOrderData.role === 'canteen' && myOrderData?.order_type === 2 ? null : (
             <View style={[styles.boxView, {marginTop: hp(12)}]}>
               <Text style={styles.textStyle}>
                 {strings('newAddText.table_no')}
@@ -136,6 +137,7 @@ const ChefMyOrders = () => {
               <Text style={styles.nameText}>{myOrderData?.table_number}</Text>
             </View>
           )}
+
         </View>
         <Text style={[styles.addressText, {marginTop: hp(20)}]}>
           {strings('myOrders.items')}

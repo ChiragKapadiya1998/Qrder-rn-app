@@ -7,50 +7,52 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useCallback, useEffect, useState} from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   useFocusEffect,
   useNavigation,
   useTheme,
 } from '@react-navigation/native';
 import HomeHeader from '../../compoment/HomeHeader';
-import {strings} from '../../i18n/i18n';
-import {commonFontStyle, hp, wp} from '../../theme/fonts';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import {Icons} from '../../utils/images';
+import { strings } from '../../i18n/i18n';
+import { commonFontStyle, hp, wp } from '../../theme/fonts';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { Icons } from '../../utils/images';
 import TitleList from '../../compoment/TitleListComponent';
 import Spacer from '../../compoment/Spacer';
 import ImagePicker from 'react-native-image-crop-picker';
 import Loader from '../../compoment/Loader';
-import {screenName} from '../../navigation/screenNames';
-import {clearAsync, getAsyncUserInfo} from '../../utils/asyncStorageManager';
-import {dispatchNavigation} from '../../utils/globalFunctions';
-import {useAppDispatch, useAppSelector} from '../../redux/hooks';
-import {GoogleSignin} from '@react-native-google-signin/google-signin';
+import { screenName } from '../../navigation/screenNames';
+import { clearAsync, getAsyncUserInfo } from '../../utils/asyncStorageManager';
+import { dispatchNavigation } from '../../utils/globalFunctions';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import GeneralModal from '../../compoment/GeneralModal';
-import {USER_LOGOUT} from '../../redux/actionTypes';
-import {addDiscountAction} from '../../actions/commonAction';
-import {errorToast} from '../../utils/commonFunction';
+import { USER_LOGOUT } from '../../redux/actionTypes';
+import { addDiscountAction } from '../../actions/commonAction';
+import { errorToast } from '../../utils/commonFunction';
 import ReviewModal from '../../compoment/ReviewModal';
 import { setDarkTheme } from '../../utils/commonActions';
+import ThankYouModal from '../../compoment/ThankYouModal';
 
 type Props = {};
 
 const Profile = (props: Props) => {
-  const {colors, isDark} = useTheme();
+  const { colors, isDark } = useTheme();
   const navigation = useNavigation();
-  const styles = React.useMemo(() => getGlobalStyles({colors}), [colors]);
-  const {isDarkTheme} = useAppSelector(state => state.common);
+  const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
+  const { isDarkTheme } = useAppSelector(state => state.common);
   const [loading, setLoading] = useState(false);
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
   const [visible, setVisible] = useState(false);
-  const [userData, setUserData] = useState<any>({});
+  const [userData, setUserData] = useState < any > ({});
   const [photoUri, setPhotoUri] = useState(null);
   const [discountModal, setDiscountModal] = useState(false);
   const [lotSizeModal, setLotSizeModal] = useState(false);
   const [openReviewModal, setOpenReviewModal] = useState(false);
-  const [discountText, setDiscountText] = useState<string>('');
+  const [discountText, setDiscountText] = useState < string > ('');
+  const [isOpenModal, setIsOpenModal] = useState(false);
   const dispatch = useAppDispatch();
 
   const fetchUserInfo = async () => {
@@ -60,7 +62,7 @@ const Profile = (props: Props) => {
       setName(userList.name || '');
       setNumber(userList.number || '');
       setPhotoUri(userList?.profile_image);
-    } catch (error) {}
+    } catch (error) { }
   };
 
   useFocusEffect(
@@ -71,7 +73,7 @@ const Profile = (props: Props) => {
 
   const onPressNavigation = list => {
     if (list == screenName.EditProfile) {
-      navigation.navigate(list, {hideEdit: false, userData: userData});
+      navigation.navigate(list, { hideEdit: false, userData: userData });
     } else if (list === 'log Out') {
       setVisible(true);
     } else if (list === 'Discount') {
@@ -95,11 +97,20 @@ const Profile = (props: Props) => {
   const onPressLogOut = async () => {
     setVisible(false);
     clearAsync();
-    dispatch({type: USER_LOGOUT});
+    dispatch({ type: USER_LOGOUT });
     dispatchNavigation(screenName.SignInScreen);
     dispatch(setDarkTheme(false));
     await GoogleSignin.signOut();
   };
+
+  const onPressGoToHome = () => {
+    setIsOpenModal(false);
+  };
+
+  const closeModals = () => {
+    setIsOpenModal(false);
+  };
+
 
   const onPressDiscount = () => {
     try {
@@ -161,14 +172,14 @@ const Profile = (props: Props) => {
             <View style={styles.profileBox}>
               {photoUri ? (
                 <View style={styles.profilImage}>
-                  <Image source={{uri: photoUri}} style={styles.profilImage} />
+                  <Image source={{ uri: photoUri }} style={styles.profilImage} />
                 </View>
               ) : (
                 <Image
                   source={Icons.profileImage}
                   style={[
                     styles.profilImage,
-                    {backgroundColor: colors.bg_orange200},
+                    { backgroundColor: colors.bg_orange200 },
                   ]}
                 />
               )}
@@ -179,9 +190,6 @@ const Profile = (props: Props) => {
               </View>
             </View>
           </View>
-          <TouchableOpacity>
-            <Image style={styles.rightIcon} source={Icons.rightBack} />
-          </TouchableOpacity>
         </TouchableOpacity>
 
         <Text style={styles.accountText}>
@@ -196,12 +204,12 @@ const Profile = (props: Props) => {
             },
             {
               title: strings('profileScreen.Cuisines'),
-              iconName: Icons.inventory,
+              iconName: Icons.cuisine_ic,
               screens: screenName.CuisinesNameList,
             },
             {
               title: strings('profileScreen.menu'),
-              iconName: Icons.inventory,
+              iconName: Icons.menu_ic,
               screens: screenName.tab_bar_name.MenuList,
             },
             {
@@ -216,22 +224,22 @@ const Profile = (props: Props) => {
             // },
             {
               title: strings('profileScreen.ItemMasters'),
-              iconName: Icons.inventory,
+              iconName: Icons.itemMaster_ic,
               screens: screenName.ItemMastersList,
             },
             {
               title: strings('profileScreen.recipes_master'),
-              iconName: Icons.inventory,
+              iconName: Icons.recipeMaster_ic,
               screens: screenName.RecipesMastersList,
             },
             {
               title: strings('profileScreen.chef'),
-              iconName: Icons.chef,
+              iconName: Icons.staff_ic,
               screens: screenName.ChefNameList,
             },
             {
               title: strings('profileScreen.order_history'),
-              iconName: Icons.inventory,
+              iconName: Icons.orderHistory_ic,
               screens: screenName.OrderHistory,
             },
             // {
@@ -263,7 +271,7 @@ const Profile = (props: Props) => {
             },
             {
               title: strings('profileScreen.OrderWaterBottle'),
-              iconName: Icons.supportIcon,
+              iconName: Icons.waterBottle_ic,
               screens: 'OrderWaterBottle',
             },
             {
@@ -342,11 +350,20 @@ const Profile = (props: Props) => {
         isShowLotSize={true}
         setLoading={setLoading}
         setLotSizeModal={setLotSizeModal}
+        setIsOpenModal={setIsOpenModal}
       />
       <ReviewModal
         title={strings('profileScreen.review')}
         visible={openReviewModal}
         closeModal={() => closeModal()}
+      />
+      <ThankYouModal
+        title={strings('myOrders.thank_dc')}
+        title1={strings('myOrders.thank_for_your_order')}
+        rightText={strings('myOrders.go_to_home')}
+        visible={isOpenModal}
+        closeModal={() => closeModals()}
+        onPressGoToHome={() => onPressGoToHome()}
       />
     </View>
   );
@@ -355,7 +372,7 @@ const Profile = (props: Props) => {
 export default Profile;
 
 const getGlobalStyles = (props: any) => {
-  const {colors} = props;
+  const { colors } = props;
   return StyleSheet.create({
     container: {
       flex: 1,

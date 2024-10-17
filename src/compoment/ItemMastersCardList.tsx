@@ -47,7 +47,7 @@ const ItemMastersCardList = ({item, setDelete, onPressEdit}: ItemProps) => {
             </View>
             <Text style={[styles.titleText]}> {item?.unit}</Text>
             <Text style={[styles.titleText]}>{item?.stock}</Text>
-            <Text style={[styles.titleText]}>{item?.outward_stock}</Text>
+            <Text style={[styles.titleText]}>{item?.outward_stock || '0.00'}</Text>
             <View style={styles.viewStyle}>
               <TouchableOpacity onPress={() => onPressEdit()}>
                 <Image source={Icons.editItemIcon} style={styles.editIcon} />

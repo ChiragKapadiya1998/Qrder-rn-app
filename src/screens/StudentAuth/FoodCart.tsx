@@ -58,7 +58,7 @@ const FoodCart = () => {
   let discontData =
     discount == 0
       ? 0
-      : (miscellaneousItemsPrice + platformPrice + totalPrice) *
+      : (miscellaneousItemsPrice  + totalPrice) *
         (discount / 100);
 
   const deleteCardItem = (id: number) => {
@@ -135,6 +135,7 @@ const FoodCart = () => {
     let updateObj = {
       data,
       onSuccess: (res: any) => {
+        setAddress('')
         setLoading(false);
       },
       onFailure: (Err: any) => {
@@ -146,7 +147,6 @@ const FoodCart = () => {
     };
     dispatch(orderCreateAction(updateObj));
   };
-  console.log('getCardData', JSON.stringify(getCardData));
 
   return (
     <View style={styles.container}>
@@ -180,7 +180,7 @@ const FoodCart = () => {
                   style={styles.imageStyle}
                 />
                 <View style={{marginLeft: wp(10), flex: 1}}>
-                  <Text style={styles.titleText}> {item?.name}</Text>
+                  <Text style={styles.titleText}>{item?.name}</Text>
                   {/* <TouchableOpacity
                     style={styles.closeView}
                     onPress={() => deleteCardItem(item?.id)}>
@@ -231,9 +231,7 @@ const FoodCart = () => {
           <Text style={styles.summaryText}>{strings('foodCart.summary')}</Text>
           <View style={[styles.comanStyle, {marginTop: hp(8)}]}>
             <Text style={styles.priText}>
-              {`${strings('foodCart.price')} (${getCardData.length} ${strings(
-                'foodCart.item',
-              )})`}
+              {strings('myOrders.subtotal')}
             </Text>
             <Text style={[styles.priText, {color: colors.black}]}>{`₹${(
               miscellaneousItemsPrice + totalPrice
@@ -246,19 +244,19 @@ const FoodCart = () => {
             </Text>
           </View> */}
           <View style={[styles.comanStyle, {marginVertical: hp(12)}]}>
-            <Text style={styles.priText}>
-              {strings('foodCart.Platform_Fee')}
-            </Text>
-            <Text style={[styles.priText, {color: colors.black}]}>
-              {platformPrice}
-            </Text>
-          </View>
-          <View style={[styles.comanStyle, {marginBottom: hp(12)}]}>
             <Text style={styles.priText}>{`${strings(
               'foodCart.discount',
             )} (${discount}%)`}</Text>
             <Text style={[styles.priText, {color: colors.black}]}>
               {discount == 0 ? 0 : `- ₹${discontData.toFixed(2)}`}
+            </Text>
+          </View>
+          <View style={[styles.comanStyle]}>
+            <Text style={styles.priText}>
+              {strings('foodCart.Platform_Fee')}
+            </Text>
+            <Text style={[styles.priText, {color: colors.black}]}>
+              {`₹${platformPrice}`}
             </Text>
           </View>
           {/* <View style={styles.comanStyle}>

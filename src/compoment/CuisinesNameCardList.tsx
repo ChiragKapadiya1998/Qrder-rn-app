@@ -59,7 +59,7 @@ const CuisinesNameCardList = ({
               </Text>
             </View>
             {isShowPrice ? (
-              <Text style={[styles.titleText]}>{item?.price}</Text>
+             <Text style={[styles.titleText]}>{parseInt(item?.price)}</Text>
             ) : null}
             <View style={styles.viewStyle}>
               {showIcon ? (

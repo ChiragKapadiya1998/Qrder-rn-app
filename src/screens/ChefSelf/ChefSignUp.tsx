@@ -178,8 +178,8 @@ const ChefSignUp = (props: Props) => {
         </View>
         <Input
           value={name}
-          placeholder={strings('sign_up.p_name')}
-          label={strings('sign_up.first_name')}
+          placeholder={strings('sign_up.name')}
+          label={strings('sign_up.name')}
           onChangeText={(t: string) => setName(t)}
           isShowLabel={true}
           inputStyle={styles.inputStyle}
@@ -187,7 +187,7 @@ const ChefSignUp = (props: Props) => {
         <Input
           value={email}
           placeholder={strings('sign_up.p_email')}
-          label={strings('sign_up.email_address')}
+          label={strings('sign_up.email')}
           onChangeText={(t: string) => setEmail(t)}
           isShowLabel={true}
           inputStyle={styles.inputStyle}
@@ -231,7 +231,7 @@ const ChefSignUp = (props: Props) => {
           autoCorrect={false}
           isShowEyeIcon={true}
           secureTextEntry={isShowPassword}
-          placeholder={strings('sign_up.p_password')}
+          placeholder={strings('sign_up.password')}
           label={strings('sign_up.password')}
           onChangeText={(t: string) => setPassword(t)}
           onPressEye={() => setIsShowPassword(!isShowPassword)}
@@ -242,7 +242,7 @@ const ChefSignUp = (props: Props) => {
           value={rePassword}
           autoCorrect={false}
           isShowEyeIcon={true}
-          placeholder={strings('sign_up.p_confirm_password')}
+          placeholder={strings('Phone_number_verification.confirm_password')}
           secureTextEntry={reShowPassword}
           label={strings('Phone_number_verification.confirm_password')}
           onChangeText={(t: string) => setRePassword(t)}

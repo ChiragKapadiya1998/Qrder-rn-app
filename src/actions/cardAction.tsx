@@ -120,7 +120,6 @@ export const orderCreateAction =
       data: request.data,
     })
       .then(async (response: any) => {
-        console.log('orderCreateAction', response?.data);
         if (response?.data?.data) {
           successToast(response?.data.message);
           dispatch({type: GET_CARD_EMPTY_LIST, payload: response?.data?.data});
@@ -130,8 +129,6 @@ export const orderCreateAction =
         }
       })
       .catch(error => {
-        console.log('orderCreateAction error', error);
-
         if (request.onFailure) request.onFailure(error?.response);
       });
   };

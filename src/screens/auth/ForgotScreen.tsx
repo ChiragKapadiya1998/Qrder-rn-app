@@ -76,13 +76,13 @@ const ForgotScreen = (props: Props) => {
         <KeyboardAwareScrollView
           keyboardShouldPersistTaps={'handled'}
           contentContainerStyle={styles.contentContainerStyle}>
-          <View style={{ marginBottom: hp(20) }}>
+          <View style={{ marginBottom: hp(12) }}>
             <Text style={styles.loginText}>{strings('login.forgot_passwords')}</Text>
             <Text style={styles.desText}>{strings('login.login_dec')}</Text>
           </View>
           <Input
             value={email}
-            placeholder={strings('login.enter_email_Id')}
+            placeholder={strings('login.email')}
             label={strings('login.email')}
             onChangeText={(t: string) => setEmail(t)}
           />
