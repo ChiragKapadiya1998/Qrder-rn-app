@@ -18,7 +18,7 @@ export default {
     owner: 'માલિક',
     staff: 'સ્ટાફ',
     student: 'વિદ્યાર્થી',
-    error_role: "કૃપા કરીને ભૂમિકા પસંદ કરો"
+    error_role: 'કૃપા કરીને ભૂમિકા પસંદ કરો',
   },
   login: {
     login_in: 'લૉગ ઈન',
@@ -59,9 +59,9 @@ export default {
     error_re_tyre_match: 'તમારો પાસવર્ડ અને પુનઃપ્રમાણિત પાસવર્ડ મેલ ખાતા નથી.',
     role: 'ભૂમિકા',
     select_role: 'ભૂમિકા પસંદ કરો',
-    "error_v_confirm": "કૃપા કરીને તમારો પુષ્ટિ પાસવર્ડ દાખલ કરો",
-    "error_new_password": "કૃપા કરીને તમારો નવો પાસવર્ડ દાખલ કરો",
-    ressetPassword: 'પાસવર્ડ રીસેટ કરો'
+    error_v_confirm: 'કૃપા કરીને તમારો પુષ્ટિ પાસવર્ડ દાખલ કરો',
+    error_new_password: 'કૃપા કરીને તમારો નવો પાસવર્ડ દાખલ કરો',
+    ressetPassword: 'પાસવર્ડ રીસેટ કરો',
   },
   sign_up: {
     sign_up: 'સાઇન અપ',
@@ -182,7 +182,7 @@ export default {
     add_menu: 'મેનૂ ઉમેરો',
     add_basic: 'તમારી મૂળભૂત વિગતો અહીં લખો...',
     add_to_card: 'કાર્ડમાં ઉમેરો',
-    miscellaneous: 'વિવિધ'
+    miscellaneous: 'વિવિધ',
   },
   foodDetails: {
     food_Details: 'ખોરાકની વિગતો',
@@ -279,22 +279,25 @@ export default {
     add: 'ઉમેરો',
     total: 'કુલ',
     items: 'વસ્તુઓ',
-    see_more: 'વધુ જુઓ'
+    see_more: 'વધુ જુઓ',
   },
   Cart: {
-    CheckOut: "ચેકઆઉટ",
-    Cart: "કાર્ટ"
+    CheckOut: 'ચેકઆઉટ',
+    Cart: 'કાર્ટ',
   },
   googleSignIn: {
     user_cancelled: 'વપરાશકર્તાએ લૉગિન પ્રવાહ રદ કર્યો',
-    error_text: "સંચાલન (જેમ કે સાઇન ઇન) પહેલેથી જ પ્રગતિમાં છે",
+    error_text: 'સંચાલન (જેમ કે સાઇન ઇન) પહેલેથી જ પ્રગતિમાં છે',
     play_services: 'પ્લે સેવાઓ ઉપલબ્ધ નથી અથવા જૂની છે',
-    something_went: 'કઈક ખોટું થયું, કૃપા કરીને ફરીથી પ્રયાસ કરો'
+    something_went: 'કઈક ખોટું થયું, કૃપા કરીને ફરીથી પ્રયાસ કરો',
   },
   studentCheckOut: {
     your_order: 'તમારો ઓર્ડર',
     no_product_found: 'કોઈ ઉત્પાદન મળ્યું નહીં',
     remove: 'દૂર કરો',
-    sub_total: 'કુલ'
-  }
+    sub_total: 'કુલ',
+  },
+  newKey: {
+    today: 'Today',
+  },
 };

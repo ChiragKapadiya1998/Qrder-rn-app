@@ -29,7 +29,7 @@ import {useAppDispatch, useAppSelector} from '../../redux/hooks';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import LogOutModal from '../../compoment/GeneralModal';
 import {USER_LOGOUT} from '../../redux/actionTypes';
-import { setDarkTheme } from '../../utils/commonActions';
+import {setDarkTheme, setLanguage} from '../../utils/commonActions';
 
 type Props = {};
 
@@ -81,6 +81,7 @@ const ChefProfile = (props: Props) => {
     dispatch({type: USER_LOGOUT});
     dispatchNavigation(screenName.SignInScreen);
     dispatch(setDarkTheme(false));
+    dispatch(setLanguage('en'));
     await GoogleSignin.signOut();
     setVisible(false);
   };
@@ -123,9 +124,9 @@ const ChefProfile = (props: Props) => {
               </View>
             </View>
           </View>
-          <TouchableOpacity>
+          {/* <TouchableOpacity>
             <Image style={styles.rightIcon} source={Icons.rightBack} />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </TouchableOpacity>
 
         <Text style={styles.accountText}>

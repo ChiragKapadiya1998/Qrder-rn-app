@@ -78,7 +78,7 @@ export const formDataAppleLogin = async (response: any) => {
   data.append('email', response.user.email);
   data.append('id', response.user.uid);
   data.append('role', 'student');
-  // data.append('deviceToken', deviceToken || uniqueId);
+  data.append('device_token', JSON.parse(deviceToken) || uniqueId);
   return data;
 };
 

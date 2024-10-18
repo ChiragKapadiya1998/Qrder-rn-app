@@ -7,10 +7,10 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, { useState } from 'react';
-import { useNavigation, useRoute, useTheme } from '@react-navigation/native';
-import { Icons } from '../../utils/images';
-import { commonFontStyle, h, hp, isIos, wp } from '../../theme/fonts';
+import React, {useState} from 'react';
+import {useNavigation, useRoute, useTheme} from '@react-navigation/native';
+import {Icons} from '../../utils/images';
+import {commonFontStyle, h, hp, isIos, wp} from '../../theme/fonts';
 import Input from '../../compoment/Input';
 import {
   UpperCaseCheck,
@@ -20,35 +20,37 @@ import {
   specialCarCheck,
 } from '../../utils/commonFunction';
 import PrimaryButton from '../../compoment/PrimaryButton';
-import { screenName } from '../../navigation/screenNames';
+import {screenName} from '../../navigation/screenNames';
 import {
   dispatchNavigation,
   formDataAppleLogin,
   onAppleLogin,
 } from '../../utils/globalFunctions';
-import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import {useAppDispatch, useAppSelector} from '../../redux/hooks';
 import {
   appleSigninAction,
   googleEmailAction,
   userLogin,
 } from '../../actions/authAction';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import LoginHeader from '../../compoment/LoginHeader';
-import { strings } from '../../i18n/i18n';
+import {strings} from '../../i18n/i18n';
 import {
   GoogleSignin,
   statusCodes,
 } from '@react-native-google-signin/google-signin';
-import { GOOGLE_WEB_CLINET_ID } from '../../utils/apiConstants';
+import {GOOGLE_WEB_CLINET_ID} from '../../utils/apiConstants';
 import CCDropDown from '../../compoment/CCDropDown';
-import { setAsyncRole } from '../../utils/asyncStorageManager';
+import {asyncKeys, setAsyncRole} from '../../utils/asyncStorageManager';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {getUniqueId} from 'react-native-device-info';
 
 type Props = {};
 
 const SignInScreen = (props: Props) => {
-  const { colors } = useTheme();
-  const { params } = useRoute();
-  const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
+  const {colors} = useTheme();
+  const {params} = useRoute();
+  const styles = React.useMemo(() => getGlobalStyles({colors}), [colors]);
   // const [email, setEmail] = useState(__DEV__ ? 'adminstudent@gmail.com' : '');
   // const [email, setEmail] = useState(__DEV__ ? 'ssss@gmail.com' : '');
   const [email, setEmail] = useState(__DEV__ ? 'admin@gmail.com' : '');
@@ -57,13 +59,12 @@ const SignInScreen = (props: Props) => {
   // const [password, setPassword] = useState(__DEV__ ? 'Test@1234' : '');
   // const [email, setEmail] = useState('');
   // const [password, setPassword] = useState('');
-  const [isShowPassword, setIsShowPassword] = useState < boolean > (true);
+  const [isShowPassword, setIsShowPassword] = useState<boolean>(true);
   const [selectRole, setSelectRole] = useState('');
-  const [isSelect, setIsSelect] = useState < boolean > (false);
-  const { selectedRole } = useAppSelector(state => state.common);
+  const [isSelect, setIsSelect] = useState<boolean>(false);
+  const {selectedRole} = useAppSelector(state => state.common);
 
   const navigation = useNavigation();
-
 
   const DropDownData = [
     {
@@ -89,7 +90,7 @@ const SignInScreen = (props: Props) => {
   ];
 
   const dispatch = useAppDispatch();
-  const onPressLogin = () => {
+  const onPressLogin = async () => {
     // dispatchNavigation(screenName.StudentSelect);
     // return;
     if (email.trim().length === 0) {
@@ -107,10 +108,13 @@ const SignInScreen = (props: Props) => {
     } else if (!UpperCaseCheck(password)) {
       errorToast(strings('login.error_uppercase_password'));
     } else {
+      let deviceToken = await AsyncStorage.getItem(asyncKeys.fcm_token);
+      let uniqueId = await getUniqueId();
       var data = new FormData();
       data.append('email', email);
       data.append('password', password);
       data.append('role', selectRole.toLowerCase());
+      data.append('device_token', JSON.parse(deviceToken) || uniqueId);
       let obj = {
         data,
         onSuccess: async () => {
@@ -162,7 +166,7 @@ const SignInScreen = (props: Props) => {
               dispatchNavigation(screenName.StudentSelect);
             }
           },
-          onFailure: () => { },
+          onFailure: () => {},
         };
         dispatch(appleSigninAction(obj));
       })
@@ -186,12 +190,15 @@ const SignInScreen = (props: Props) => {
       await GoogleSignin.hasPlayServices();
       const userInfo = await GoogleSignin.signIn();
       console.log('GoogleSignin userInfo', userInfo);
+      let deviceToken = await AsyncStorage.getItem(asyncKeys.fcm_token);
+      let uniqueId = await getUniqueId();
 
       let googleUser = {
         ...userInfo,
         user: {
           ...userInfo.user,
           role: selectRole.toLowerCase(),
+          device_token: JSON.parse(deviceToken) || uniqueId,
         },
       };
       let userObj = {
@@ -227,17 +234,16 @@ const SignInScreen = (props: Props) => {
 
   return (
     <View style={styles.container}>
-      <StatusBar
-        barStyle={'dark-content'}
-        backgroundColor={colors.bg_white}
-      />
+      <StatusBar barStyle={'dark-content'} backgroundColor={colors.bg_white} />
 
       <View style={styles.bottomContainer}>
         <KeyboardAwareScrollView
           keyboardShouldPersistTaps={'handled'}
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.contentContainerStyle}>
-          <Text style={styles.welcomeText}>{strings('login.welcome_back')}</Text>
+          <Text style={styles.welcomeText}>
+            {strings('login.welcome_back')}
+          </Text>
           <CCDropDown
             data={DropDownData}
             label={strings('login.select_role')}
@@ -279,7 +285,9 @@ const SignInScreen = (props: Props) => {
                 {strings('login.remember_me')}
               </Text>
             </View> */}
-            {(selectRole == 'Admin' || selectRole == 'Student' || selectRole === 'Canteen') && (
+            {(selectRole == 'Admin' ||
+              selectRole == 'Student' ||
+              selectRole === 'Canteen') && (
               <TouchableOpacity
                 onPress={() => navigation.navigate(screenName.ForgotScreen)}>
                 <Text style={styles.forgotText}>
@@ -327,9 +335,11 @@ const SignInScreen = (props: Props) => {
           ) : null}
         </KeyboardAwareScrollView>
       </View>
-      {selectRole == 'Admin' || selectRole == 'Student' || selectRole === 'Canteen' ? (
+      {selectRole == 'Admin' ||
+      selectRole == 'Student' ||
+      selectRole === 'Canteen' ? (
         <>
-          <TouchableOpacity onPress={onPressSignUp} style={{marginTop:hp(10)}}>
+          <TouchableOpacity onPress={onPressSignUp} style={{marginTop: hp(10)}}>
             <Text style={styles.bottomText}>
               {strings('login.dont_have_account')}
               <Text style={styles.signUpText}> {strings('login.sign_up')}</Text>
@@ -344,7 +354,7 @@ const SignInScreen = (props: Props) => {
 export default SignInScreen;
 
 const getGlobalStyles = (props: any) => {
-  const { colors } = props;
+  const {colors} = props;
   return StyleSheet.create({
     container: {
       flex: 1,

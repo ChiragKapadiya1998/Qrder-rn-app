@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   StatusBar,
   StyleSheet,
@@ -7,38 +7,44 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { useNavigation, useTheme } from '@react-navigation/native';
-import { strings } from '../../i18n/i18n';
-import { Dropdown } from 'react-native-element-dropdown';
+import {useNavigation, useTheme} from '@react-navigation/native';
+import {strings} from '../../i18n/i18n';
+import {Dropdown} from 'react-native-element-dropdown';
 import HomeHeader from '../../compoment/HomeHeader';
-import { commonFontStyle, hp, SCREEN_HEIGHT, SCREEN_WIDTH, wp } from '../../theme/fonts';
+import {
+  commonFontStyle,
+  hp,
+  SCREEN_HEIGHT,
+  SCREEN_WIDTH,
+  wp,
+} from '../../theme/fonts';
 import DleleteModal from '../../compoment/DeleteModal';
-import { useAppDispatch, useAppSelector } from '../../redux/hooks';
-import { setDarkTheme, setLanguage } from '../../utils/commonActions';
+import {useAppDispatch, useAppSelector} from '../../redux/hooks';
+import {setDarkTheme, setLanguage} from '../../utils/commonActions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { asyncKeys, getAsyncRole } from '../../utils/asyncStorageManager';
+import {asyncKeys, getAsyncRole} from '../../utils/asyncStorageManager';
 import ToggleComponent from '../../compoment/ToggleComponent';
 import DropdownComponent from '../../compoment/DropdownComponent';
-import { screenName } from '../../navigation/screenNames';
+import {screenName} from '../../navigation/screenNames';
 
 const languages = [
-  { label: 'English', value: 'en' },
-  { label: 'Tamil', value: 'ta' },
-  { label: 'Hindi', value: 'hi' },
-  { label: 'Telugu', value: 'te' },
-  { label: 'Kanada', value: 'ka' },
-  { label: 'Malyalam', value: 'ma' },
+  {label: 'English', value: 'en'},
+  {label: 'Tamil', value: 'ta'},
+  {label: 'Hindi', value: 'hi'},
+  {label: 'Telugu', value: 'te'},
+  {label: 'Kannada', value: 'ka'},
+  {label: 'Malayalam', value: 'ma'},
 ];
 
 const Settings = () => {
-  const { colors } = useTheme();
+  const {colors} = useTheme();
   const navigation = useNavigation();
   const dispatch = useAppDispatch();
-  const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
+  const styles = React.useMemo(() => getGlobalStyles({colors}), [colors]);
   const [selectedLanguage, setSelectedLanguage] = useState('en');
   const [visible, setVisible] = useState(false);
   const [isRoll, setIsRoll] = useState('');
-  const { isDarkTheme, isLanguage } = useAppSelector(state => state.common);
+  const {isDarkTheme, isLanguage} = useAppSelector(state => state.common);
 
   useEffect(() => {
     const loadLanguage = async () => {
@@ -58,8 +64,8 @@ const Settings = () => {
   }, [isLanguage]);
 
   useEffect(() => {
-    getUserInfo()
-  }, [])
+    getUserInfo();
+  }, []);
 
   const getUserInfo = async () => {
     let isRole = await getAsyncRole();
@@ -85,7 +91,7 @@ const Settings = () => {
     dispatch(setLanguage(lang));
   };
 
-  const trackColor = isDarkTheme ? colors.input_bg1 : colors.image_bg
+  const trackColor = isDarkTheme ? colors.input_bg1 : colors.image_bg;
 
   return (
     <View style={styles.container}>
@@ -117,12 +123,17 @@ const Settings = () => {
             trackColor={trackColor}
           />
         </View>
-        {isRoll === 'Staff' ? null :
-          <TouchableOpacity onPress={() => navigation.navigate(screenName.ChangePassword)} style={[styles.dropdownContainer, , { marginTop: hp(20) }]}>
-            <Text style={styles.label}>{strings('profileScreen.change_password')}</Text>
-          </TouchableOpacity>}
+        {isRoll === 'Staff' ? null : (
+          <TouchableOpacity
+            onPress={() => navigation.navigate(screenName.ChangePassword)}
+            style={[styles.dropdownContainer, , {marginTop: hp(20)}]}>
+            <Text style={styles.label}>
+              {strings('profileScreen.change_password')}
+            </Text>
+          </TouchableOpacity>
+        )}
 
-        <View style={[styles.dropdownContainer, , { marginTop: hp(20) }]}>
+        <View style={[styles.dropdownContainer, , {marginTop: hp(20)}]}>
           <Text style={styles.label}>{strings('Settings.language')}</Text>
           <DropdownComponent
             selectedValue={selectedLanguage}
@@ -165,7 +176,6 @@ const Settings = () => {
               marginRight: 0,
             }}
           /> */}
-
         </View>
         {/* <Text style={styles.titleLabel}>{strings('Settings.account_setting')}</Text>
                 <TouchableOpacity style={[styles.dropdownContainer]} onPress={() => setVisible(true)}>
@@ -177,7 +187,7 @@ const Settings = () => {
 };
 
 const getGlobalStyles = props => {
-  const { colors } = props;
+  const {colors} = props;
   return StyleSheet.create({
     container: {
       flex: 1,

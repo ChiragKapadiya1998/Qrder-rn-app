@@ -1,10 +1,13 @@
-import messaging from "@react-native-firebase/messaging";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Alert, PermissionsAndroid, Platform } from "react-native";
-import { asyncKeys } from "./asyncStorageManager";
-import { infoToast } from "./commonFunction";
-import { GoogleSignin, statusCodes } from "@react-native-google-signin/google-signin";
-import { GOOGLE_WEB_CLINET_ID } from "./apiConstants";
+import messaging from '@react-native-firebase/messaging';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {Alert, PermissionsAndroid, Platform} from 'react-native';
+import {asyncKeys} from './asyncStorageManager';
+import {infoToast} from './commonFunction';
+import {
+  GoogleSignin,
+  statusCodes,
+} from '@react-native-google-signin/google-signin';
+import {GOOGLE_WEB_CLINET_ID} from './apiConstants';
 // import {
 //   GoogleSignin,
 //   statusCodes,
@@ -25,9 +28,9 @@ import { GOOGLE_WEB_CLINET_ID } from "./apiConstants";
 // } from "react-native-fbsdk-next";
 
 export async function requestNotificationUserPermission() {
-  if (Platform.OS === "android") {
+  if (Platform.OS === 'android') {
     PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS
+      PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
     );
   }
   const authStatus = await messaging().requestPermission();
@@ -37,7 +40,7 @@ export async function requestNotificationUserPermission() {
 
   if (enabled) {
     if (authStatus === 1) {
-      if (Platform.OS === "ios") {
+      if (Platform.OS === 'ios') {
         await messaging()
           .registerDeviceForRemoteMessages()
           .then(async () => {
@@ -50,26 +53,27 @@ export async function requestNotificationUserPermission() {
         getFirebaseToken();
       }
     } else {
-      await messaging().requestPermission();    }
+      await messaging().requestPermission();
+    }
   } else {
     await messaging().requestPermission();
-    infoToast("Please allow to notifications permission");
+    infoToast('Please allow to notifications permission');
   }
 }
 
 const getFirebaseToken = async () => {
   await messaging()
     .getToken()
-    .then((fcmToken) => {
+    .then(fcmToken => {
       if (fcmToken) {
-        console.log("---fcmToken---", fcmToken);
-        AsyncStorage.setItem(asyncKeys.fcm_token, fcmToken);
+        console.log('---fcmToken---', fcmToken);
+        AsyncStorage.setItem(asyncKeys.fcm_token, JSON.stringify(fcmToken));
         // infoToast(fcmToken.toString());
       } else {
-        infoToast("[FCMService] User does not have a device token");
+        infoToast('[FCMService] User does not have a device token');
       }
     })
-    .catch((error) => {
+    .catch(error => {
       let err = `FCm token get error${error}`;
       infoToast(error);
       console.log(err);
@@ -79,7 +83,7 @@ const getFirebaseToken = async () => {
 // export const onGoogleLogin = async (onSucess: (res: any) => void) => {
 //   GoogleSignin.configure({
 //     webClientId: GOOGLE_WEB_CLINET_ID,
-//        offlineAccess: false, 
+//        offlineAccess: false,
 //   });
 //   try {
 //     await GoogleSignin.hasPlayServices();

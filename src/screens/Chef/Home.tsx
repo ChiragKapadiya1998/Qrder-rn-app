@@ -10,7 +10,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   useFocusEffect,
   useIsFocused,
@@ -36,19 +36,19 @@ import {
   statusBarHeight,
   wp,
 } from '../../theme/fonts';
-import { Icons } from '../../utils/images';
+import {Icons} from '../../utils/images';
 import OrderModal from '../../compoment/OrderModal';
-import { screenName } from '../../navigation/screenNames';
-import { strings } from '../../i18n/i18n';
-import { useAppDispatch, useAppSelector } from '../../redux/hooks';
-import { getCuisinesAction } from '../../actions/cuisinesAction';
-import { getChefsAction } from '../../actions/chefsAction';
+import {screenName} from '../../navigation/screenNames';
+import {strings} from '../../i18n/i18n';
+import {useAppDispatch, useAppSelector} from '../../redux/hooks';
+import {getCuisinesAction} from '../../actions/cuisinesAction';
+import {getChefsAction} from '../../actions/chefsAction';
 import {
   getDashboardAction,
   getMiscellaneousAction,
 } from '../../actions/menuAction';
-import { light_theme } from '../../theme/colors';
-import { getDiscountAction } from '../../actions/commonAction';
+import {light_theme} from '../../theme/colors';
+import {getDiscountAction} from '../../actions/commonAction';
 import {
   getOrdersRequestAction,
   getRunningOrderAction,
@@ -59,12 +59,12 @@ import Spacer from '../../compoment/Spacer';
 type Props = {};
 
 const Home = (props: Props) => {
-  const { colors, isDark } = useTheme();
+  const {colors, isDark} = useTheme();
   const navigation = useNavigation();
   const isFocuse = useIsFocused();
-  const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
-  const { isDarkTheme, discount } = useAppSelector(state => state.common);
-  const { getDashboardData } = useAppSelector(state => state.data);
+  const styles = React.useMemo(() => getGlobalStyles({colors}), [colors]);
+  const {isDarkTheme, discount} = useAppSelector(state => state.common);
+  const {getDashboardData} = useAppSelector(state => state.data);
   const [value, setValue] = useState('');
   const [runningOrderModal, setRunninOrderModal] = useState(false);
   const [orderRequestModal, setOrderRequestModal] = useState(false);
@@ -124,8 +124,8 @@ const Home = (props: Props) => {
         limit: 15,
         pagination: false,
       },
-      onSuccess: (res: any) => { },
-      onFailure: (Err: any) => { },
+      onSuccess: (res: any) => {},
+      onFailure: (Err: any) => {},
     };
     dispatch(getCuisinesAction(obj));
   };
@@ -137,16 +137,16 @@ const Home = (props: Props) => {
         limit: 10,
         pagination: false,
       },
-      onSuccess: (res: any) => { },
-      onFailure: (Err: any) => { },
+      onSuccess: (res: any) => {},
+      onFailure: (Err: any) => {},
     };
     dispatch(getMiscellaneousAction(obj));
   };
 
   const getChefsList = () => {
     let obj = {
-      onSuccess: (res: any) => { },
-      onFailure: (Err: any) => { },
+      onSuccess: (res: any) => {},
+      onFailure: (Err: any) => {},
     };
     dispatch(getChefsAction(obj));
   };
@@ -157,16 +157,16 @@ const Home = (props: Props) => {
         start_date: moment().format('YYYY-MM-DD'),
         end_date: moment().format('YYYY-MM-DD'),
       },
-      onSuccess: (res: any) => { },
-      onFailure: (Err: any) => { },
+      onSuccess: (res: any) => {},
+      onFailure: (Err: any) => {},
     };
     dispatch(getDashboardAction(obj));
   };
 
   const getDiscount = () => {
     let obj = {
-      onSuccess: (res: any) => { },
-      onFailure: (Err: any) => { },
+      onSuccess: (res: any) => {},
+      onFailure: (Err: any) => {},
     };
     dispatch(getDiscountAction(obj));
   };
@@ -183,23 +183,28 @@ const Home = (props: Props) => {
         backgroundColor={colors.white}
       />
       <HomeHeader
-        onPressProfile={() => { }}
-        onPressCart={() => { }}
+        onPressProfile={() => {}}
+        onPressCart={() => {}}
         location={value}
         onPressLocation={onPressLocation}
         onRightPressNotification={() => {
           navigation.navigate(screenName.tab_bar_name?.Notification);
         }}
       />
-      <ScrollView style={{ flex: 1, marginHorizontal: hp(20) }}>
-        {discount === 0 ? null :
+      <ScrollView style={{flex: 1, marginHorizontal: hp(20)}}>
+        {discount === 0 ? null : (
           <View style={styles.hurrUpView}>
             <View>
-              <Text style={styles.hurryText}>{strings('newAddText.hurry_up')}</Text>
-              <Text style={styles.hurryText}>{strings('newAddText.discount')}</Text>
+              <Text style={styles.hurryText}>
+                {strings('newAddText.hurry_up')}
+              </Text>
+              <Text style={styles.hurryText}>
+                {strings('newAddText.discount')}
+              </Text>
             </View>
             <Text style={styles.bannerText}>{`${discount}%`}</Text>
-          </View>}
+          </View>
+        )}
         {/* <ImageBackground
           source={Icons.banner}
           resizeMode="stretch"
@@ -257,7 +262,7 @@ const Home = (props: Props) => {
             flexDirection: 'row',
             alignItems: 'center',
             justifyContent: 'space-between',
-            marginVertical:hp(20)
+            marginVertical: hp(20),
           }}>
           <Text style={styles.seeText1}>{strings('home.Revenue')}</Text>
           <TouchableOpacity
@@ -303,7 +308,7 @@ const Home = (props: Props) => {
             }}
           />
         </CardView> */}
-        <View style={{ height: 100 }} />
+        <View style={{height: 100}} />
 
         {runningOrderModal && (
           <OrderModal
@@ -327,7 +332,7 @@ const Home = (props: Props) => {
 export default Home;
 
 const getGlobalStyles = (props: any) => {
-  const { colors } = props;
+  const {colors} = props;
   return StyleSheet.create({
     container: {
       flex: 1,
@@ -349,7 +354,7 @@ const getGlobalStyles = (props: any) => {
       paddingHorizontal: 16,
       paddingVertical: 12,
       gap: 2,
-      borderRadius: 8
+      borderRadius: 8,
     },
     runnigStyle: {
       width: 20,
@@ -404,7 +409,7 @@ const getGlobalStyles = (props: any) => {
     bannerText: {
       ...commonFontStyle(800, 36, light_theme.white),
       alignSelf: 'center',
-      marginRight: wp(10)
+      marginRight: wp(10),
     },
     bannerText1: {
       ...commonFontStyle(700, 20, light_theme.white),
@@ -427,13 +432,13 @@ const getGlobalStyles = (props: any) => {
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
-      marginBottom: hp(20)
+      marginBottom: hp(20),
     },
     hurryText: {
       ...commonFontStyle(800, 18, colors.defult_white),
     },
     allText: {
       ...commonFontStyle(400, 14, colors.defult_white),
-    }
+    },
   });
 };

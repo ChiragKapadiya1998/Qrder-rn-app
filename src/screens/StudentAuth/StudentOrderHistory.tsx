@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   ActivityIndicator,
   Alert,
@@ -13,33 +13,37 @@ import {
   View,
 } from 'react-native';
 
-import { useNavigation, useTheme } from '@react-navigation/native';
-import { strings } from '../../i18n/i18n';
-import { commonFontStyle, hp, wp } from '../../theme/fonts';
-import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import {useNavigation, useTheme} from '@react-navigation/native';
+import {strings} from '../../i18n/i18n';
+import {commonFontStyle, hp, wp} from '../../theme/fonts';
+import {useAppDispatch, useAppSelector} from '../../redux/hooks';
 import HomeHeader from '../../compoment/HomeHeader';
-import { Icons } from '../../utils/images';
+import {Icons} from '../../utils/images';
 import HomeDropDown from '../../compoment/HomeDropDown';
 import {
   allStudentOrderFilterAction,
   getAllStudentOrder,
   invoiceLinkAction,
 } from '../../actions/allOrdersAction';
-import { convertIsoToDate, formatDate, formatDateToDDMMYYYY } from '../../utils/globalFunctions';
-import { getAsyncRole } from '../../utils/asyncStorageManager';
+import {
+  convertIsoToDate,
+  formatDate,
+  formatDateToDDMMYYYY,
+} from '../../utils/globalFunctions';
+import {getAsyncRole} from '../../utils/asyncStorageManager';
 import DatePicker from 'react-native-date-picker';
-import { errorToast } from '../../utils/commonFunction';
+import {errorToast} from '../../utils/commonFunction';
 import NoDataFound from '../../compoment/NoDataFound';
-import { screenName } from '../../navigation/screenNames';
+import {screenName} from '../../navigation/screenNames';
 import Spacer from '../../compoment/Spacer';
 
 const StudentOrderHistory = () => {
-  const { colors } = useTheme();
+  const {colors} = useTheme();
   const navigation = useNavigation();
   const dispatch = useAppDispatch();
-  const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
-  const { isDarkTheme } = useAppSelector(state => state.common);
-  const { allStudentOrderHistory } = useAppSelector(state => state.orders);
+  const styles = React.useMemo(() => getGlobalStyles({colors}), [colors]);
+  const {isDarkTheme} = useAppSelector(state => state.common);
+  const {allStudentOrderHistory} = useAppSelector(state => state.orders);
   const [isRole, setIsRole] = useState('');
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
@@ -70,8 +74,8 @@ const StudentOrderHistory = () => {
         start_date: formatDateToDDMMYYYY(startDate),
         end_date: formatDateToDDMMYYYY(data),
       },
-      onSuccess: () => { },
-      onFailure: () => { },
+      onSuccess: () => {},
+      onFailure: () => {},
     };
     dispatch(allStudentOrderFilterAction(obj));
   };
@@ -105,27 +109,26 @@ const StudentOrderHistory = () => {
     }
     setIsDatePickerVisible(false);
   };
-  const onPressInvoice = (id) => {
+  const onPressInvoice = id => {
     let obj = {
       params: id,
-      onSuccess: (res) => {
-        Linking.openURL(res.url)
+      onSuccess: res => {
+        Linking.openURL(res.url);
       },
-      onFailure: () => { },
+      onFailure: () => {},
     };
     dispatch(invoiceLinkAction(obj));
-
   };
 
-  const renderItem = ({ item, index }) => {
+  const renderItem = ({item, index}) => {
     const formattedDate = convertIsoToDate(item.created_at);
     return (
       <View style={styles.listContainer}>
-        <View style={{ flexDirection: 'row' }}>
+        <View style={{flexDirection: 'row'}}>
           <TouchableOpacity
             style={styles.imageView}
             onPress={() =>
-              navigation.navigate(screenName.MyOrders, { itemData: item })
+              navigation.navigate(screenName.MyOrders, {itemData: item})
             }>
             <Text style={styles.imageText}>#{index + 1}</Text>
           </TouchableOpacity>
@@ -156,7 +159,9 @@ const StudentOrderHistory = () => {
         </View>
         {isRole === 'Admin' || isRole === 'Staff' ? null : (
           <View style={styles.btnContainer}>
-            <TouchableOpacity onPress={() => onPressInvoice(item?.id)} style={styles.cancelBtn}>
+            <TouchableOpacity
+              onPress={() => onPressInvoice(item?.id)}
+              style={styles.cancelBtn}>
               <Image style={styles.invoiveIcon} source={Icons.invoiceIcon} />
               <Text style={styles.cancelText}>
                 {strings('profileScreen.download_invoice')}
@@ -189,13 +194,11 @@ const StudentOrderHistory = () => {
         rightTextStyle={styles.rightTextStyle}
         isShowIcon={true}
         isHideIcon={true}
-        rightText={
-          strings('addFoodList.reset')
-        }
+        rightText={strings('addFoodList.reset')}
       />
-      {allStudentOrderHistory.length || !loading ?
+      {allStudentOrderHistory.length || !loading ? (
         <View style={styles.headerView}>
-          {allStudentOrderHistory?.length !== 0 && (
+          {true && (
             <View style={styles.datePickerContainer}>
               <TouchableOpacity
                 onPress={() => handleDatePickerOpen(true)}
@@ -225,10 +228,15 @@ const StudentOrderHistory = () => {
             showsVerticalScrollIndicator={false}
             ListEmptyComponent={!loading && <NoDataFound />}
             ListFooterComponent={() => {
-              return <View style={{ height: 100 }} />;
+              return <View style={{height: 100}} />;
             }}
           />
-        </View> : <View style={styles.centerLoadr}><ActivityIndicator color={colors.black} /></View>}
+        </View>
+      ) : (
+        <View style={styles.centerLoadr}>
+          <ActivityIndicator color={colors.black} />
+        </View>
+      )}
       <Modal
         transparent={true}
         visible={isDatePickerVisible}
@@ -253,7 +261,7 @@ const StudentOrderHistory = () => {
 };
 
 const getGlobalStyles = (props: any) => {
-  const { colors } = props;
+  const {colors} = props;
 
   return StyleSheet.create({
     container: {
@@ -380,8 +388,8 @@ const getGlobalStyles = (props: any) => {
     centerLoadr: {
       flex: 1,
       alignItems: 'center',
-      justifyContent: 'center'
-    }
+      justifyContent: 'center',
+    },
   });
 };
 

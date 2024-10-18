@@ -37,6 +37,8 @@ const MenuCardList = ({
   loadingMore,
   onMomentumScrollBegin,
   loading,
+  filterData,
+  searchQuery,
 }: Props) => {
   const {colors} = useTheme();
   const styles = React.useMemo(() => getGlobalStyles({colors}), [colors]);
@@ -47,6 +49,7 @@ const MenuCardList = ({
 
   const currentData = useRef();
   currentData.current = getMenuData;
+  console.log('searchQuery', searchQuery);
 
   const removeMenuCardList = () => {
     let UserInfo = {
@@ -69,14 +72,54 @@ const MenuCardList = ({
     removeMenuCardList();
   };
 
+  console.log(
+    'searchQuery.length !== 0 || filterData.length == 0',
+    searchQuery.length !== 0 || filterData.length == 0,
+  );
+
   const hasMoreItems = currentData.current?.length < allMenuCount;
+  if (searchQuery.length !== 0) {
+    return (
+      <FlatList
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+        data={filterData}
+        onMomentumScrollBegin={onMomentumScrollBegin}
+        numColumns={2}
+        windowSize={10}
+        showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}
+        columnWrapperStyle={styles.columnWrapperStyle}
+        contentContainerStyle={{gap: 11}}
+        keyExtractor={(item, index) => `${item.id}-${index}`}
+        ListEmptyComponent={
+          loading ? (
+            <ActivityIndicator size={'small'} color={colors.black} />
+          ) : (
+            <NoDataFound />
+          )
+        }
+        renderItem={({item, index}) => {
+          return (
+            <MenuItems
+              item={item}
+              index={index}
+              showChef={showChef}
+              setDelete={() => {
+                setVisible(true);
+                setSelectItem(item);
+              }}
+            />
+          );
+        }}
+        showsVerticalScrollIndicator={false}
+        // onEndReached={loadMoreData}
+      />
+    );
+  }
   return (
     <>
-      <Text style={styles.itemsText}>
-        {/* {currentData.current?.length
-          ? `${strings('CardMenuList.total')} ${currentData.current?.length} ${strings('CardMenuList.items')}`
-          : null} */}
-      </Text>
       {currentData.current && (
         <FlatList
           refreshControl={
@@ -96,8 +139,7 @@ const MenuCardList = ({
               {hasMoreItems && !loadingMore && (
                 <TouchableOpacity
                   onPress={loadMoreData}
-                  style={[styles.seeMoreButton]}
-                >
+                  style={[styles.seeMoreButton]}>
                   <Text style={styles.seeMoreText}>
                     {strings('CardMenuList.see_more')}
                   </Text>
@@ -107,9 +149,8 @@ const MenuCardList = ({
                 <View style={styles.seeMoreButton}>
                   <ActivityIndicator size={'small'} color={colors.black} />
                 </View>
-
               )}
-              <View style={{ height: hp(10)}} />
+              <View style={{height: hp(10)}} />
             </View>
           )}
           ListEmptyComponent={

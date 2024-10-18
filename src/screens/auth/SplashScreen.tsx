@@ -44,7 +44,7 @@ const SplashScreen = (props: Props) => {
     let isUser = await getAsyncToken();
     let isRole = await getAsyncRole();
     console.log('isRole', isRole);
-
+    console.log('isRole', isUser);
     if (isUser) {
       if (isRole == 'Student') {
         let obj = {

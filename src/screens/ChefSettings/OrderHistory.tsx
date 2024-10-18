@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Alert,
   FlatList,
@@ -11,31 +11,35 @@ import {
   View,
 } from 'react-native';
 
-import { useNavigation, useTheme } from '@react-navigation/native';
-import { strings } from '../../i18n/i18n';
-import { commonFontStyle, hp, wp } from '../../theme/fonts';
-import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import {useNavigation, useTheme} from '@react-navigation/native';
+import {strings} from '../../i18n/i18n';
+import {commonFontStyle, hp, wp} from '../../theme/fonts';
+import {useAppDispatch, useAppSelector} from '../../redux/hooks';
 import HomeHeader from '../../compoment/HomeHeader';
-import { Icons } from '../../utils/images';
+import {Icons} from '../../utils/images';
 import HomeDropDown from '../../compoment/HomeDropDown';
 import {
   getAllOrderAction,
   getAllOrderFilterAction,
 } from '../../actions/allOrdersAction';
-import { convertIsoToDate, formatDate, formatDateToDDMMYYYY } from '../../utils/globalFunctions';
-import { getAsyncRole } from '../../utils/asyncStorageManager';
+import {
+  convertIsoToDate,
+  formatDate,
+  formatDateToDDMMYYYY,
+} from '../../utils/globalFunctions';
+import {getAsyncRole} from '../../utils/asyncStorageManager';
 import DatePicker from 'react-native-date-picker';
 import Spacer from '../../compoment/Spacer';
 import NoDataFound from '../../compoment/NoDataFound';
-import { screenName } from '../../navigation/screenNames';
+import {screenName} from '../../navigation/screenNames';
 
 const OrderHistory = () => {
-  const { colors } = useTheme();
+  const {colors} = useTheme();
   const navigation = useNavigation();
   const dispatch = useAppDispatch();
-  const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
-  const { isDarkTheme } = useAppSelector(state => state.common);
-  const { allOrderHistory } = useAppSelector(state => state.orders);
+  const styles = React.useMemo(() => getGlobalStyles({colors}), [colors]);
+  const {isDarkTheme} = useAppSelector(state => state.common);
+  const {allOrderHistory} = useAppSelector(state => state.orders);
   const [isRole, setIsRole] = useState('');
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
@@ -49,20 +53,20 @@ const OrderHistory = () => {
 
   const getAllOrdersHistory = () => {
     let obj = {
-      onSuccess: () => { },
-      onFailure: () => { },
+      onSuccess: () => {},
+      onFailure: () => {},
     };
     dispatch(getAllOrderAction(obj));
   };
-  console.log("----", isRole)
+  console.log('----', isRole);
   const getAllOrdersFilter = data => {
     let obj = {
       params: {
         start_date: formatDateToDDMMYYYY(startDate),
         end_date: formatDateToDDMMYYYY(data),
       },
-      onSuccess: () => { },
-      onFailure: () => { },
+      onSuccess: () => {},
+      onFailure: () => {},
     };
     dispatch(getAllOrderFilterAction(obj));
   };
@@ -97,23 +101,21 @@ const OrderHistory = () => {
     setIsDatePickerVisible(false);
   };
 
-  const onCancelBtn = () => { };
+  const onCancelBtn = () => {};
 
-  const renderItem = ({ item, index }) => {
+  const renderItem = ({item, index}) => {
     const formattedDate = convertIsoToDate(item.created_at);
     return (
       <View style={styles.listContainer}>
-        <View style={{ flexDirection: 'row' }}>
+        <View style={{flexDirection: 'row'}}>
           <TouchableOpacity
-            onPress={() =>
-            {
+            onPress={() => {
               if (isRole === 'Staff') {
-                navigation.navigate(screenName.ChefMyOrders, { itemData: item })
+                navigation.navigate(screenName.ChefMyOrders, {itemData: item});
               } else {
-                navigation.navigate(screenName.MyOrderAdmin, { itemData: item })
+                navigation.navigate(screenName.MyOrderAdmin, {itemData: item});
               }
-            }
-            }
+            }}
             style={styles.imageView}>
             <Text style={styles.imageText}>#{index + 1}</Text>
           </TouchableOpacity>
@@ -167,12 +169,10 @@ const OrderHistory = () => {
         rightTextStyle={styles.rightTextStyle}
         isShowIcon={true}
         isHideIcon={true}
-        rightText={
-          strings('addFoodList.reset')
-        }
+        rightText={strings('addFoodList.reset')}
       />
       <View style={styles.headerView}>
-        {allOrderHistory?.length !== 0 && (
+        {true && (
           <View style={styles.datePickerContainer}>
             <TouchableOpacity
               onPress={() => handleDatePickerOpen(true)}
@@ -203,7 +203,7 @@ const OrderHistory = () => {
           showsVerticalScrollIndicator={false}
           ListEmptyComponent={<NoDataFound />}
           ListFooterComponent={() => {
-            return <View style={{ height: 100 }} />;
+            return <View style={{height: 100}} />;
           }}
         />
       </View>
@@ -231,7 +231,7 @@ const OrderHistory = () => {
 };
 
 const getGlobalStyles = (props: any) => {
-  const { colors } = props;
+  const {colors} = props;
 
   return StyleSheet.create({
     container: {

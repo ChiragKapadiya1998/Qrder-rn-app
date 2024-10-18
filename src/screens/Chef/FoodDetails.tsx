@@ -105,6 +105,7 @@ const FoodDetails = ({route}) => {
               setQuantity(1);
               setActiveButton('increment');
               setSelectedItems([]);
+              navigation.navigate(screenName.FoodCart);
             },
             onFailure: () => {},
           };

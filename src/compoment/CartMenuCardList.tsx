@@ -7,14 +7,14 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, { useEffect, useRef, useState } from 'react';
-import { useTheme } from '@react-navigation/native';
-import { commonFontStyle, hp } from '../theme/fonts';
+import React, {useEffect, useRef, useState} from 'react';
+import {useTheme} from '@react-navigation/native';
+import {commonFontStyle, hp} from '../theme/fonts';
 import NoDataFound from './NoDataFound';
-import { useAppSelector } from '../redux/hooks';
+import {useAppSelector} from '../redux/hooks';
 import Loader from './Loader';
 import CartMenuItems from './CartMenuItems';
-import { strings } from '../i18n/i18n';
+import {strings} from '../i18n/i18n';
 
 type Props = {
   onRefresh?: () => void;
@@ -23,32 +23,40 @@ type Props = {
   loadingMore: boolean;
   onMomentumScrollBegin: () => void;
   loading: boolean;
-  searchQuery: any
-
+  searchQuery: any;
 };
 
-const CartMenuCardList = ({ searchQuery, onRefresh, refreshing, loadMoreData, loadingMore, onMomentumScrollBegin, loading }: Props) => {
-  const { colors } = useTheme();
-  const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
-  const { getCanteenMenuData, canteenMenuCount, getSearch } = useAppSelector(state => state.data);
+const CartMenuCardList = ({
+  searchQuery,
+  onRefresh,
+  refreshing,
+  loadMoreData,
+  loadingMore,
+  onMomentumScrollBegin,
+  loading,
+}: Props) => {
+  const {colors} = useTheme();
+  const styles = React.useMemo(() => getGlobalStyles({colors}), [colors]);
+  const {getCanteenMenuData, canteenMenuCount, getSearch} = useAppSelector(
+    state => state.data,
+  );
   const currentData = useRef();
   currentData.current = getCanteenMenuData;
   const [searchData, setSearchData] = useState(getCanteenMenuData);
 
   useEffect(() => {
     if (searchQuery.length && getSearch.length === 0) {
-      setSearchData([])
+      setSearchData([]);
     } else if (searchQuery.length === 0) {
-      setSearchData(getCanteenMenuData)
+      setSearchData(getCanteenMenuData);
     } else {
-      setSearchData(getSearch)
+      setSearchData(getSearch);
     }
-  }, [getSearch, getCanteenMenuData])
+  }, [getSearch, getCanteenMenuData]);
   // const hasMoreItems = currentData.current?.length < canteenMenuCount;
 
   return (
     <View>
-
       {currentData.current && (
         <FlatList
           refreshControl={
@@ -61,37 +69,11 @@ const CartMenuCardList = ({ searchQuery, onRefresh, refreshing, loadMoreData, lo
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicator={false}
           columnWrapperStyle={styles.columnWrapperStyle}
-          contentContainerStyle={{ gap: 11 }}
+          contentContainerStyle={{gap: 11}}
           keyExtractor={(item, index) => `${item.id}-${index}`}
-          // ListFooterComponent={() => (
-          //   <View>
-          //     {hasMoreItems && !loadingMore && (
-          //       <TouchableOpacity
-          //         onPress={loadMoreData}
-          //         style={[styles.seeMoreButton]}
-          //       >
-          //         <Text style={styles.seeMoreText}>
-          //           {strings('CardMenuList.see_more')}
-          //         </Text>
-          //       </TouchableOpacity>
-          //     )}
-          //     {loadingMore && (
-          //       <View style={styles.seeMoreButton}>
-          //         <ActivityIndicator size={'small'} color={colors.black} />
-          //       </View>
-
-          //     )}
-          //     <View style={{ height: hp(30) }} />
-          //   </View>
-          // )}
-          ListEmptyComponent={!loading && (
-            <NoDataFound />
-          )}
-          renderItem={({ item, index }) => (
-            <CartMenuItems
-              item={item}
-              index={index}
-            />
+          ListEmptyComponent={!loading && <NoDataFound />}
+          renderItem={({item, index}) => (
+            <CartMenuItems item={item} index={index} />
           )}
           showsVerticalScrollIndicator={false}
         />
@@ -103,7 +85,7 @@ const CartMenuCardList = ({ searchQuery, onRefresh, refreshing, loadMoreData, lo
 export default CartMenuCardList;
 
 const getGlobalStyles = (props: any) => {
-  const { colors } = props;
+  const {colors} = props;
   return StyleSheet.create({
     itemsText: {
       ...commonFontStyle(400, 14, colors.gray_400),

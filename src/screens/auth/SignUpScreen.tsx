@@ -8,15 +8,15 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, { useEffect, useState } from 'react';
-import { useNavigation, useTheme } from '@react-navigation/native';
-import { commonFontStyle, hp, isIos, wp } from '../../theme/fonts';
+import React, {useEffect, useState} from 'react';
+import {useNavigation, useTheme} from '@react-navigation/native';
+import {commonFontStyle, hp, isIos, wp} from '../../theme/fonts';
 import Input from '../../compoment/Input';
 import PrimaryButton from '../../compoment/PrimaryButton';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import LoginHeader from '../../compoment/LoginHeader';
-import { screenName } from '../../navigation/screenNames';
-import { strings } from '../../i18n/i18n';
+import {screenName} from '../../navigation/screenNames';
+import {strings} from '../../i18n/i18n';
 import Spacer from '../../compoment/Spacer';
 import {
   DropDownData,
@@ -27,14 +27,19 @@ import {
   specialCarCheck,
   UpperCaseCheck,
 } from '../../utils/commonFunction';
-import { dispatchNavigation } from '../../utils/globalFunctions';
 import {
+  dispatchNavigation,
+  formDataAppleLogin,
+  onAppleLogin,
+} from '../../utils/globalFunctions';
+import {
+  appleSigninAction,
   canteenRegisterSignUp,
   googleEmailAction,
   studentUserSignUp,
   userSignUp,
 } from '../../actions/authAction';
-import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import {useAppDispatch, useAppSelector} from '../../redux/hooks';
 import {
   getCityAction,
   getUniversitiesDataAction,
@@ -42,26 +47,28 @@ import {
 } from '../../actions/commonAction';
 import debounce from 'lodash/debounce';
 import CCDropDown from '../../compoment/CCDropDown';
-import { setAsyncRole } from '../../utils/asyncStorageManager';
+import {asyncKeys, setAsyncRole} from '../../utils/asyncStorageManager';
 import {
   GoogleSignin,
   statusCodes,
 } from '@react-native-google-signin/google-signin';
-import { Icons } from '../../utils/images';
-import { GOOGLE_WEB_CLINET_ID } from '../../utils/apiConstants';
+import {Icons} from '../../utils/images';
+import {GOOGLE_WEB_CLINET_ID} from '../../utils/apiConstants';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {getUniqueId} from 'react-native-device-info';
 type Props = {};
 
 const SignUpScreen = (props: Props) => {
-  const { colors, isDark } = useTheme();
-  const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
+  const {colors, isDark} = useTheme();
+  const styles = React.useMemo(() => getGlobalStyles({colors}), [colors]);
   const [name, setName] = useState('');
   const [user_name, setUser_name] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rePassword, setRePassword] = useState('');
-  const [isShowPassword, setIsShowPassword] = useState < boolean > (true);
-  const [isShowRePassword, setisShowRePassword] = useState < boolean > (true);
+  const [isShowPassword, setIsShowPassword] = useState<boolean>(true);
+  const [isShowRePassword, setisShowRePassword] = useState<boolean>(true);
   const [number, setNumber] = useState('');
   const [restaurantName, setRestaurantName] = useState('');
   const [universityName, setUniversityName] = useState('');
@@ -71,12 +78,14 @@ const SignUpScreen = (props: Props) => {
   const [country, setCountry] = useState('');
   const [pincode, setPincode] = useState('');
   const [showListView, setShowListView] = useState(false);
-  const { getCity, searchCity } = useAppSelector(state => state.common);
-  const { getUniversitiesData } = useAppSelector(state => state.data);
+  const {getCity, searchCity} = useAppSelector(state => state.common);
+  const {getUniversitiesData} = useAppSelector(state => state.data);
   const [filteredData, setFilteredData] = useState([]);
   const [addressList, setAddressList] = useState([]);
   const [area, setArea] = useState('');
-  const [selectedOption, setSelectedOption] = useState(strings('sign_up.restaurant'));
+  const [selectedOption, setSelectedOption] = useState(
+    strings('sign_up.restaurant'),
+  );
   const [selectRole, setSelectRole] = useState('');
   const [selectUniversity, setSelectUniversity] = useState('');
 
@@ -85,9 +94,9 @@ const SignUpScreen = (props: Props) => {
   const [hostelAddress, setHostelAddress] = useState('');
 
   const options = [
-    { name: strings('sign_up.restaurant'), value: 'Restaurant' },
-    { name: strings('sign_up.canteen'), value: 'Canteen' },
-    { name: strings('sign_up.student'), value: 'Student' },
+    {name: strings('sign_up.restaurant'), value: 'Restaurant'},
+    {name: strings('sign_up.canteen'), value: 'Canteen'},
+    {name: strings('sign_up.student'), value: 'Student'},
   ];
 
   const handlePress = value => {
@@ -103,11 +112,10 @@ const SignUpScreen = (props: Props) => {
     getUniversitiesDataPress();
   }, []);
 
-
   const getUniversitiesDataPress = () => {
     let obj = {
-      onSuccess: (res: any) => { },
-      onFailure: (Err: any) => { },
+      onSuccess: (res: any) => {},
+      onFailure: (Err: any) => {},
     };
     dispatch(getUniversitiesDataAction(obj));
   };
@@ -137,7 +145,7 @@ const SignUpScreen = (props: Props) => {
     navigation.goBack();
   };
 
-  const onPressLogin = () => {
+  const onPressLogin = async () => {
     if (selectRole.trim().length === 0) {
       errorToast(strings('login.error_role'));
     } else if (name.trim().length === 0) {
@@ -181,6 +189,9 @@ const SignUpScreen = (props: Props) => {
     } else if (rePassword.trim() !== password.trim()) {
       errorToast(strings('login.error_re_tyre_match'));
     } else {
+      let deviceToken = await AsyncStorage.getItem(asyncKeys.fcm_token);
+      let uniqueId = await getUniqueId();
+
       var data = new FormData();
       data.append('name', name);
       data.append('user_name', user_name);
@@ -197,6 +208,8 @@ const SignUpScreen = (props: Props) => {
       data.append('country_id', addressList?.state?.country?.id);
       data.append('role', 'admin');
       data.append('status', '1');
+      data.append('device_token', JSON.parse(deviceToken) || uniqueId);
+
       let obj = {
         data,
         onSuccess: async (response: any) => {
@@ -213,7 +226,7 @@ const SignUpScreen = (props: Props) => {
     }
   };
 
-  const onPressCanteenRegister = () => {
+  const onPressCanteenRegister = async () => {
     if (selectRole.trim().length === 0) {
       errorToast(strings('login.error_role'));
     } else if (universityName == '') {
@@ -259,6 +272,9 @@ const SignUpScreen = (props: Props) => {
     } else if (rePassword.trim() !== password.trim()) {
       errorToast(strings('login.error_re_tyre_match'));
     } else {
+      let deviceToken = await AsyncStorage.getItem(asyncKeys.fcm_token);
+      let uniqueId = await getUniqueId();
+
       var data = new FormData();
       data.append('name', name);
       data.append('user_name', user_name);
@@ -276,6 +292,8 @@ const SignUpScreen = (props: Props) => {
       data.append('role', 'canteen');
       data.append('status', '1');
       data.append('university_id', universityName);
+      data.append('device_token', JSON.parse(deviceToken) || uniqueId);
+
       let obj = {
         data,
         onSuccess: async (response: any) => {
@@ -293,7 +311,7 @@ const SignUpScreen = (props: Props) => {
     }
   };
 
-  const onPressLoginStudent = () => {
+  const onPressLoginStudent = async () => {
     if (selectRole.trim().length === 0) {
       errorToast(strings('login.error_role'));
     } else if (selectUniversity === '') {
@@ -325,6 +343,9 @@ const SignUpScreen = (props: Props) => {
     } else if (rePassword.trim() !== password.trim()) {
       errorToast(strings('login.error_re_tyre_match'));
     } else {
+      let deviceToken = await AsyncStorage.getItem(asyncKeys.fcm_token);
+      let uniqueId = await getUniqueId();
+
       var data = new FormData();
       data.append('name', name);
       data.append('last_name', lastName);
@@ -335,6 +356,7 @@ const SignUpScreen = (props: Props) => {
       data.append('role', 'student');
       data.append('university_id', selectUniversity);
       data.append('status', '1');
+      data.append('device_token', JSON.parse(deviceToken) || uniqueId);
 
       let obj = {
         data,
@@ -356,8 +378,8 @@ const SignUpScreen = (props: Props) => {
 
   const getCityList = () => {
     let obj = {
-      onSuccess: (res: any) => { },
-      onFailure: (Err: any) => { },
+      onSuccess: (res: any) => {},
+      onFailure: (Err: any) => {},
     };
     dispatch(getCityAction(obj));
   };
@@ -366,8 +388,8 @@ const SignUpScreen = (props: Props) => {
     debounce(searchText => {
       let UserInfo = {
         data: searchText,
-        onSuccess: res => { },
-        onFailure: Err => { },
+        onSuccess: res => {},
+        onFailure: Err => {},
       };
       dispatch(searchCities(UserInfo));
     }, 300),
@@ -386,6 +408,29 @@ const SignUpScreen = (props: Props) => {
     // setFilteredData(filteredData);
   };
 
+  const onPressAppleLogin = async () => {
+    await onAppleLogin()
+      .then(async response => {
+        let data = await formDataAppleLogin(response);
+        const obj = {
+          data,
+          onSuccess: async () => {
+            await setAsyncRole(selectRole);
+            if (res?.university_id) {
+              dispatchNavigation(screenName.StudentBottomBar);
+            } else {
+              dispatchNavigation(screenName.StudentSelect);
+            }
+          },
+          onFailure: () => {},
+        };
+        dispatch(appleSigninAction(obj));
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  };
+
   const googlesignIn = async () => {
     GoogleSignin.configure({
       webClientId: GOOGLE_WEB_CLINET_ID,
@@ -400,13 +445,14 @@ const SignUpScreen = (props: Props) => {
       }
       await GoogleSignin.hasPlayServices();
       const userInfo = await GoogleSignin.signIn();
-      console.log('GoogleSignin userInfo', userInfo);
+      let deviceToken = await AsyncStorage.getItem(asyncKeys.fcm_token);
 
       let googleUser = {
         ...userInfo,
         user: {
           ...userInfo.user,
           role: selectRole.toLowerCase(),
+          device_token: JSON.parse(deviceToken) || uniqueId,
         },
       };
       let userObj = {
@@ -598,7 +644,7 @@ const SignUpScreen = (props: Props) => {
                 keyboardType="number-pad"
                 label={strings('sign_up.pincode')}
                 onChangeText={(t: string) => setPincode(t)}
-                extraStyle={{ zIndex: -1 }}
+                extraStyle={{zIndex: -1}}
               />
             </>
           )}
@@ -635,7 +681,7 @@ const SignUpScreen = (props: Props) => {
             label={strings('sign_up.password')}
             onChangeText={(t: string) => setPassword(t)}
             onPressEye={() => setIsShowPassword(!isShowPassword)}
-            extraStyle={{ zIndex: -1 }}
+            extraStyle={{zIndex: -1}}
           />
           <Input
             value={rePassword}
@@ -653,8 +699,8 @@ const SignUpScreen = (props: Props) => {
               selectRole == 'Restaurant'
                 ? onPressLogin()
                 : selectRole == 'Canteen'
-                  ? onPressCanteenRegister()
-                  : onPressLoginStudent();
+                ? onPressCanteenRegister()
+                : onPressLoginStudent();
             }}
             title={strings('sign_up.Signup')}
           />
@@ -668,7 +714,9 @@ const SignUpScreen = (props: Props) => {
                 <Text style={styles.googleText}>{strings('login.google')}</Text>
               </TouchableOpacity>
               {isIos && (
-                <TouchableOpacity style={[styles.roundView]}>
+                <TouchableOpacity
+                  onPress={onPressAppleLogin}
+                  style={[styles.roundView]}>
                   <Image style={styles.appleIcon} source={Icons.apple} />
                   <Text style={styles.googleText}>
                     {strings('login.apple')}
@@ -687,7 +735,7 @@ const SignUpScreen = (props: Props) => {
 export default SignUpScreen;
 
 const getGlobalStyles = (props: any) => {
-  const { colors } = props;
+  const {colors} = props;
   return StyleSheet.create({
     container: {
       flex: 1,

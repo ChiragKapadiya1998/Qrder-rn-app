@@ -3,7 +3,8 @@ export default {
     all_you_favorites: 'आपके सभी पसंदीदा',
     order_from_choosen_chef: 'चुने हुए शेफ से ऑर्डर करें',
     free_delivery_offers: 'मुफ़्त डिलीवरी ऑफ़र',
-    onboarding_dec: "'आपके सभी पसंदीदा खाद्य पदार्थ एक ही स्थान पर,\nआप ऑर्डर करें, हम बाकी का ध्यान रखते हैं'",
+    onboarding_dec:
+      "'आपके सभी पसंदीदा खाद्य पदार्थ एक ही स्थान पर,\nआप ऑर्डर करें, हम बाकी का ध्यान रखते हैं'",
     next: 'आगे',
     get_started: 'शुरू करें',
     skip: 'छोड़ें',
@@ -35,7 +36,8 @@ export default {
     sign_up: 'साइन अप करें',
     send_code: 'कोड भेजें',
     access_location: 'स्थान तक पहुंच प्राप्त करें',
-    access_location_dec: 'DFOOD केवल ऐप का उपयोग करते समय आपका स्थान एक्सेस करेगा',
+    access_location_dec:
+      'DFOOD केवल ऐप का उपयोग करते समय आपका स्थान एक्सेस करेगा',
     error_email: 'कृपया अपना ईमेल दर्ज करें',
     error_name: 'कृपया अपना पहला नाम दर्ज करें',
     error_role: 'कृपया भूमिका चुनें',
@@ -87,7 +89,8 @@ export default {
     full_name: 'पूरा नाम',
     password: 'पासवर्ड',
     re_type_password: 'पासवर्ड फिर से लिखें',
-    strong_password_text: 'कम से कम 6 वर्णों का होना चाहिए और उसमें कम से कम 1 संख्या और 1 विशेष अक्षर होना चाहिए',
+    strong_password_text:
+      'कम से कम 6 वर्णों का होना चाहिए और उसमें कम से कम 1 संख्या और 1 विशेष अक्षर होना चाहिए',
     terms_text: 'हमारे नियम और गोपनीयता नीति से सहमत होकर शामिल हों',
     great: 'बहुत बढ़िया!',
     account_success_text: 'आपका खाता सफलतापूर्वक बनाया गया है',
@@ -123,7 +126,7 @@ export default {
     pay_now: 'अभी भुगतान करें',
     join_us_today: 'आज ही हमारे साथ जुड़ें !',
     Signup: 'साइनअप',
-    e_emaild: 'ईमेल आईडी'
+    e_emaild: 'ईमेल आईडी',
   },
   Phone_number_verification: {
     verification: 'अपना ईमेल जांचें',
@@ -142,7 +145,8 @@ export default {
   },
   otp_verification: {
     enter_otp_code: 'OTP कोड दर्ज करें',
-    otp_code_text: 'हम आपको OTP भेज रहे हैं ताकि आपका फ़ोन नंबर सत्यापित किया जा सके',
+    otp_code_text:
+      'हम आपको OTP भेज रहे हैं ताकि आपका फ़ोन नंबर सत्यापित किया जा सके',
     error_otp: 'कृपया वैध OTP दर्ज करें',
   },
   home: {
@@ -247,7 +251,7 @@ export default {
     tax_percentage: 'कर प्रतिशत',
     food_type: 'भोजन प्रकार',
     veg: 'शाकाहारी',
-    non_veg: 'मांसाहारी'
+    non_veg: 'मांसाहारी',
   },
   foodDetails: {
     food_Details: 'भोजन विवरण',
@@ -294,7 +298,7 @@ export default {
     add_current_password: 'वर्तमान पासवर्ड जोड़ें',
     add_new_password: 'नया पासवर्ड जोड़ें',
     add_confirm_password: 'पुष्टि पासवर्ड जोड़ें',
-    view_chef: 'शेफ देखें'
+    view_chef: 'शेफ देखें',
   },
   notifications: {
     notifications: 'सूचनाएँ',
@@ -333,7 +337,8 @@ export default {
     theme: 'थीम',
     account_setting: 'खाता सेटिंग',
     deactivate_account: 'खाता निष्क्रिय करें',
-    deleteText: 'क्या आप सुनिश्चित हैं कि आप अपने खाते को Qrder से हटाना चाहते हैं?',
+    deleteText:
+      'क्या आप सुनिश्चित हैं कि आप अपने खाते को Qrder से हटाना चाहते हैं?',
     no: 'नहीं',
     yes: 'हाँ',
     logoutDes: 'क्या आप लॉग आउट करना चाहेंगे, क्या आप सुनिश्चित हैं?',
@@ -380,7 +385,7 @@ export default {
     submit: 'सबमिट करें',
     cancel: 'रद्द करें',
     enter_cuisine_name: 'पकवान का नाम दर्ज करें',
-    add_photo: 'फोटो जोड़ें'
+    add_photo: 'फोटो जोड़ें',
   },
   CardMenuList: {
     add: 'जोड़ें',
@@ -431,7 +436,7 @@ export default {
     e_lot_size: 'कृपया लॉट आकार दर्ज करें',
     e_type_support: 'कृपया समर्थन प्रकार चुनें',
     e_enter_text: 'कृपया पाठ दर्ज करें',
-    e_brand: 'कृपया ब्रांड चुनें'
+    e_brand: 'कृपया ब्रांड चुनें',
   },
   recipesMaster: {
     edit_recipes_master: 'पकवान मास्टर संपादित करें',
@@ -473,7 +478,7 @@ export default {
     select_unit_error: 'कृपया इकाई चुनें',
     weight_error: 'कृपया स्टॉक दर्ज करें',
     add_material_name: 'सामग्री का नाम जोड़ें',
-    add_unit: 'इकाई जोड़ें'
+    add_unit: 'इकाई जोड़ें',
   },
   myOrders: {
     my_orders: 'मेरे आदेश',
@@ -495,7 +500,8 @@ export default {
     go_to_home: 'मुख पृष्ठ पर जाएं',
     address: 'पता',
     thank_for_your_order: 'आपके आदेश के लिए धन्यवाद!',
-    thank_dc: 'आपकी पानी की बोतलों के लिए अनुरोध सफलतापूर्वक प्रस्तुत किया गया है। आपको जल्द ही एक अपडेट, उद्धरण और भुगतान लिंक प्राप्त होगा।'
+    thank_dc:
+      'आपकी पानी की बोतलों के लिए अनुरोध सफलतापूर्वक प्रस्तुत किया गया है। आपको जल्द ही एक अपडेट, उद्धरण और भुगतान लिंक प्राप्त होगा।',
   },
   menuList: {
     menu: 'मेन्यू',
@@ -547,6 +553,29 @@ export default {
     add_email: 'ईमेल जोड़ें',
     add_contact_number: 'संपर्क नंबर जोड़ें',
     add_address: 'पता जोड़ें',
-    add_pincode: 'पिनकोड जोड़ें'
-  }
+    add_pincode: 'पिनकोड जोड़ें',
+  },
+  newKey: {
+    today: 'आज',
+    M: 'सोम',
+    T: 'मंगल',
+    W: 'बुध',
+    T: 'गुरु',
+    F: 'शुक्र',
+    S: 'शनि',
+    S: 'रवि',
+
+    Jan: 'जनवरी',
+    Feb: 'फरवरी',
+    Mar: 'मार्च',
+    Apr: 'अप्रैल',
+    May: 'मई',
+    Jun: 'जून',
+    Jul: 'जुलाई',
+    Aug: 'अगस्त',
+    Sept: 'सितंबर',
+    Oct: 'अक्टूबर',
+    Nov: 'नवंबर',
+    Dec: 'दिसंबर',
+  },
 };

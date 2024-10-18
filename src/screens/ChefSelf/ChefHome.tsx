@@ -8,8 +8,13 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, { useCallback, useEffect, useState } from 'react';
-import { useFocusEffect, useIsFocused, useNavigation, useTheme } from '@react-navigation/native';
+import React, {useCallback, useEffect, useState} from 'react';
+import {
+  useFocusEffect,
+  useIsFocused,
+  useNavigation,
+  useTheme,
+} from '@react-navigation/native';
 import {
   getAddress,
   requestLocationPermission,
@@ -29,28 +34,34 @@ import {
   wp,
 } from '../../theme/fonts';
 import OrderModal from '../../compoment/OrderModal';
-import { strings } from '../../i18n/i18n';
-import { useAppDispatch, useAppSelector } from '../../redux/hooks';
-import { getCuisinesAction } from '../../actions/cuisinesAction';
-import { getChefsAction } from '../../actions/chefsAction';
-import { Icons } from '../../utils/images';
-import { light_theme } from '../../theme/colors';
+import {strings} from '../../i18n/i18n';
+import {useAppDispatch, useAppSelector} from '../../redux/hooks';
+import {getCuisinesAction} from '../../actions/cuisinesAction';
+import {getChefsAction} from '../../actions/chefsAction';
+import {Icons} from '../../utils/images';
+import {light_theme} from '../../theme/colors';
 import PrimaryButton from '../../compoment/PrimaryButton';
-import { screenName } from '../../navigation/screenNames';
-import { getDiscountAction } from '../../actions/commonAction';
-import { getRunningOrderAction, orderCompletedAction, orderDeclinedAction } from '../../actions/allOrdersAction';
+import {screenName} from '../../navigation/screenNames';
+import {getDiscountAction} from '../../actions/commonAction';
+import {
+  getRunningOrderAction,
+  orderCompletedAction,
+  orderDeclinedAction,
+} from '../../actions/allOrdersAction';
 import NoDataFound from '../../compoment/NoDataFound';
-import { convertIsoToDate, formatDate } from '../../utils/globalFunctions';
+import {convertIsoToDate, formatDate} from '../../utils/globalFunctions';
 import Spacer from '../../compoment/Spacer';
 
 const ChefHome = () => {
-  const { colors } = useTheme();
-  const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
+  const {colors} = useTheme();
+  const styles = React.useMemo(() => getGlobalStyles({colors}), [colors]);
   const [value, setValue] = useState('');
   const [runningOrderModal, setRunninOrderModal] = useState(false);
   const [orderRequestModal, setOrderRequestModal] = useState(false);
-  const { isDarkTheme, discount, isLoadingNew } = useAppSelector(state => state.common);
-  const { isRunningOrder } = useAppSelector(state => state.orders);
+  const {isDarkTheme, discount, isLoadingNew} = useAppSelector(
+    state => state.common,
+  );
+  const {isRunningOrder} = useAppSelector(state => state.orders);
   const dispatch = useAppDispatch();
   const navigation = useNavigation();
   const isFocuse = useIsFocused();
@@ -61,14 +72,14 @@ const ChefHome = () => {
   };
 
   useEffect(() => {
-    getRunningOrder()
-    getDiscount()
-  }, [isFocuse])
+    getRunningOrder();
+    getDiscount();
+  }, [isFocuse]);
 
   const getRunningOrder = () => {
     let obj = {
-      onSuccess: () => { },
-      onFailure: () => { },
+      onSuccess: () => {},
+      onFailure: () => {},
     };
     dispatch(getRunningOrderAction(obj));
   };
@@ -102,14 +113,13 @@ const ChefHome = () => {
     getChefsList();
   }, []);
 
-
   const getDiscount = () => {
     let obj = {
-      onSuccess: (res: any) => { },
-      onFailure: (Err: any) => { },
+      onSuccess: (res: any) => {},
+      onFailure: (Err: any) => {},
     };
     dispatch(getDiscountAction(obj));
-  }
+  };
 
   const getCuisinesList = () => {
     let obj = {
@@ -118,16 +128,16 @@ const ChefHome = () => {
         limit: 15,
         pagination: false,
       },
-      onSuccess: (res: any) => { },
-      onFailure: (Err: any) => { },
+      onSuccess: (res: any) => {},
+      onFailure: (Err: any) => {},
     };
     dispatch(getCuisinesAction(obj));
   };
 
   const getChefsList = () => {
     let obj = {
-      onSuccess: (res: any) => { },
-      onFailure: (Err: any) => { },
+      onSuccess: (res: any) => {},
+      onFailure: (Err: any) => {},
     };
     dispatch(getChefsAction(obj));
   };
@@ -141,28 +151,36 @@ const ChefHome = () => {
   const onCancelBtn = (id: number) => {
     let UserInfo = {
       data: id,
-      onSuccess: () => { },
-      onFailure: () => { },
+      onSuccess: () => {},
+      onFailure: () => {},
     };
     dispatch(orderDeclinedAction(UserInfo));
   };
 
-
-  const renderItem = ({ item, index }) => {
+  const renderItem = ({item, index}) => {
     const formattedDate = convertIsoToDate(item.created_at);
 
     return (
       <View style={styles.listContainer}>
-        <View style={{ flexDirection: 'row' }}>
-          <TouchableOpacity style={styles.imageView} onPress={() => navigation.navigate(screenName.ChefMyOrders, { itemData: item })}>
+        <View style={{flexDirection: 'row'}}>
+          <TouchableOpacity
+            style={styles.imageView}
+            onPress={() =>
+              navigation.navigate(screenName.ChefMyOrders, {itemData: item})
+            }>
             <Text style={styles.imageText}>#{index + 1}</Text>
           </TouchableOpacity>
 
           <View style={styles.rightContainer}>
-            <Text numberOfLines={1} style={styles.breakText}>{`${strings('orderModal.invoice_id')} : ${item.order_id}`}</Text>
+            <Text numberOfLines={1} style={styles.breakText}>{`${strings(
+              'orderModal.invoice_id',
+            )} : ${item.order_id}`}</Text>
             <Text style={styles.titleStyle}>{item.name}</Text>
-            {item.table_number !== null ?
-              <Text style={styles.idText}>{`${strings('orderModal.table_no')} : ${item.table_number}`}</Text> : null}
+            {item.table_number !== null ? (
+              <Text style={styles.idText}>{`${strings(
+                'orderModal.table_no',
+              )} : ${item.table_number}`}</Text>
+            ) : null}
             <View style={styles.priceView}>
               <Text style={styles.priceText}>{`₹${item.total}`}</Text>
               <Text style={styles.dateText}>{formattedDate}</Text>
@@ -170,12 +188,16 @@ const ChefHome = () => {
           </View>
 
           <TouchableOpacity style={styles.diningView}>
-            <Text style={styles.diningText}>{item.order_type === 1 ? strings('orderModal.dining') : strings('orderModal.parcel')}</Text>
+            <Text style={styles.diningText}>
+              {item.order_type === 1
+                ? strings('orderModal.dining')
+                : strings('orderModal.parcel')}
+            </Text>
           </TouchableOpacity>
         </View>
 
         <View style={styles.btnContainer}>
-          <View style={{ flexDirection: 'row' }}>
+          <View style={{flexDirection: 'row'}}>
             <PrimaryButton
               extraStyle={styles.cancelBtn}
               title={strings('orderModal.cancel')}
@@ -188,7 +210,6 @@ const ChefHome = () => {
     );
   };
 
-
   return (
     <View style={styles.container}>
       <StatusBar
@@ -196,23 +217,31 @@ const ChefHome = () => {
         backgroundColor={colors.white}
       />
       <HomeHeader
-        onPressProfile={() => { }}
-        onPressCart={() => { }}
+        onPressProfile={() => {}}
+        onPressCart={() => {}}
         location={value}
         onPressLocation={onPressLocation}
         onRightPressNotification={() => {
-          navigation.navigate(screenName.ChefNotification);
+          setRunninOrderModal(true);
+          // navigation.navigate(screenName.ChefNotification);
         }}
       />
-      <ScrollView style={{ flex: 1, marginHorizontal: wp(20) }} showsVerticalScrollIndicator={false}>
-        {discount === 0 ? null :
+      <ScrollView
+        style={{flex: 1, marginHorizontal: wp(20)}}
+        showsVerticalScrollIndicator={false}>
+        {discount === 0 ? null : (
           <View style={styles.hurrUpView}>
             <View>
-              <Text style={styles.hurryText}>{strings('newAddText.hurry_up')}</Text>
-              <Text style={styles.hurryText}>{strings('newAddText.discount')}</Text>
+              <Text style={styles.hurryText}>
+                {strings('newAddText.hurry_up')}
+              </Text>
+              <Text style={styles.hurryText}>
+                {strings('newAddText.discount')}
+              </Text>
             </View>
-              <Text style={styles.bannerText}>{`${discount}%`}</Text>
-          </View>}
+            <Text style={styles.bannerText}>{`${discount}%`}</Text>
+          </View>
+        )}
 
         <View
           style={{
@@ -229,42 +258,38 @@ const ChefHome = () => {
 
         <FlatList
           data={isRunningOrder}
-          contentContainerStyle={{ gap: 16 }}
+          contentContainerStyle={{gap: 16}}
           renderItem={renderItem}
           keyExtractor={(item, index) => index.toString()}
           showsVerticalScrollIndicator={false}
           ListEmptyComponent={<NoDataFound />}
         />
 
-        < View style={{ height: 20 }} />
+        <View style={{height: 20}} />
 
-        {
-          runningOrderModal && (
-            <OrderModal
-              isVisible={runningOrderModal}
-              onPressCancel={() => setRunninOrderModal(false)}
-              isRunning={true}
-            />
-          )
-        }
+        {runningOrderModal && (
+          <OrderModal
+            isVisible={runningOrderModal}
+            onPressCancel={() => setRunninOrderModal(false)}
+            isRunning={true}
+          />
+        )}
 
-        {
-          orderRequestModal && (
-            <OrderModal
-              isVisible={orderRequestModal}
-              onPressCancel={() => setOrderRequestModal(false)}
-            />
-          )
-        }
-      </ScrollView >
-    </View >
+        {orderRequestModal && (
+          <OrderModal
+            isVisible={orderRequestModal}
+            onPressCancel={() => setOrderRequestModal(false)}
+          />
+        )}
+      </ScrollView>
+    </View>
   );
 };
 
 export default ChefHome;
 
 const getGlobalStyles = (props: any) => {
-  const { colors } = props;
+  const {colors} = props;
   return StyleSheet.create({
     container: {
       flex: 1,
@@ -297,7 +322,7 @@ const getGlobalStyles = (props: any) => {
     bannerText: {
       ...commonFontStyle(800, 36, light_theme.white),
       alignSelf: 'center',
-      marginRight: wp(10)
+      marginRight: wp(10),
     },
     bannerText1: {
       ...commonFontStyle(700, 20, light_theme.white),
@@ -425,6 +450,6 @@ const getGlobalStyles = (props: any) => {
     allText: {
       marginTop: hp(10),
       ...commonFontStyle(400, 14, colors.defult_white),
-    }
+    },
   });
 };

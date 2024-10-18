@@ -11,7 +11,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   useIsFocused,
   useNavigation,
@@ -19,9 +19,9 @@ import {
   useTheme,
 } from '@react-navigation/native';
 import HomeHeader from '../../compoment/HomeHeader';
-import { commonFontStyle, hp, SCREEN_WIDTH, wp } from '../../theme/fonts';
-import { strings } from '../../i18n/i18n';
-import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import {commonFontStyle, hp, SCREEN_WIDTH, wp} from '../../theme/fonts';
+import {strings} from '../../i18n/i18n';
+import {useAppDispatch, useAppSelector} from '../../redux/hooks';
 import CartMenuCardList from '../../compoment/CartMenuCardList';
 import {
   getCanteenCuisineAction,
@@ -37,16 +37,16 @@ import {
   GET_EMPTY_CANTEEN_LIST,
   GET_SEARCH,
 } from '../../redux/actionTypes';
-import { Icons } from '../../utils/images';
+import {Icons} from '../../utils/images';
 import ToggleComponent from '../../compoment/ToggleComponent';
-import { setFoodVeg } from '../../utils/commonActions';
+import {setFoodVeg} from '../../utils/commonActions';
 import debounce from 'lodash/debounce';
 
 const StudentMenuList = () => {
-  const { colors } = useTheme();
+  const {colors} = useTheme();
   const navigation = useNavigation();
-  const { params } = useRoute < any > ();
-  const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
+  const {params} = useRoute<any>();
+  const styles = React.useMemo(() => getGlobalStyles({colors}), [colors]);
   const [tabSelection, setTabSelection] = useState(strings('myMenuList.all'));
   const [refreshing, setRefreshing] = React.useState(false);
   const [cuisineId, setCuisineId] = React.useState(0);
@@ -54,59 +54,60 @@ const StudentMenuList = () => {
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
   const dispatch = useAppDispatch();
-  const { getCanteenCuisines, getCanteenMenuData, canteenMenuCount, getSearch } =
+  const {getCanteenCuisines, getCanteenMenuData, canteenMenuCount, getSearch} =
     useAppSelector(state => state.data);
-  const { isDarkTheme, discount, isFoodVeg } = useAppSelector(state => state.common);
+  const {isDarkTheme, discount, isFoodVeg} = useAppSelector(
+    state => state.common,
+  );
   const [onEndReached, setOnEndReached] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [filterData, setFilterData] = useState(getCanteenMenuData);
   const isFocuse = useIsFocused();
-  const trackColor = isFoodVeg !== 2 ? colors.green_text : colors.red_text
-
+  const trackColor = isFoodVeg !== 2 ? colors.green_text : colors.red_text;
 
   const changeValue = () => {
     const newValue = isFoodVeg === 1 ? 2 : 1;
+
+    setSearchQuery('');
+    if (tabSelection === strings('myMenuList.all')) {
+      getMenuList(1, isFoodVeg === 1 ? 2 : 1);
+    } else {
+      getAllCuisinesMenuList(cuisineId, 1, isFoodVeg === 1 ? 2 : 1);
+    }
     dispatch(setFoodVeg(newValue));
   };
-
 
   const debouncedFilterSearch = React.useCallback(
     debounce(searchText => {
       let UserInfo = {
         data: `${params?.selectID}/${searchText}`,
-        params: { food_type: isFoodVeg },
+        params: {food_type: isFoodVeg},
         onSuccess: res => {
-          setFilterData(res?.data)
+          setFilterData(res?.data);
         },
-        onFailure: Err => { },
+        onFailure: Err => {},
       };
       dispatch(searchMenuList(UserInfo));
     }, 300),
     [isFoodVeg],
   );
 
-
   const FilterSearch = (searchText: any) => {
     setSearchQuery(searchText);
     if (searchText === '') {
-      dispatch({ type: GET_SEARCH, payload: [] });
-      // console.log("========>>>>>>>>>>>>>>>>>>",getSearch.length)
-      // setFilterData(getCanteenMenuData)
-
+      dispatch({type: GET_SEARCH, payload: []});
     }
     if (searchText.length >= 3) {
       debouncedFilterSearch(searchText);
     }
   };
 
-
-
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
-    if (tabSelection === 'All') {
-      getMenuList(1);
+    if (tabSelection === strings('myMenuList.all')) {
+      getMenuList(1, isFoodVeg);
     } else {
-      getAllCuisinesMenuList(cuisineId, 1);
+      getAllCuisinesMenuList(cuisineId, 1, isFoodVeg);
     }
   }, [refreshing, tabSelection]);
 
@@ -115,30 +116,30 @@ const StudentMenuList = () => {
   }, []);
 
   useEffect(() => {
-    if (tabSelection === 'All') {
-      getMenuList(1);
+    if (tabSelection === strings('myMenuList.all')) {
+      getMenuList(1, isFoodVeg);
     } else {
-      getAllCuisinesMenuList(cuisineId, 1);
+      getAllCuisinesMenuList(cuisineId, 1, isFoodVeg);
     }
   }, [isFocuse]);
-
 
   const getCanteenCuisineList = () => {
     let obj = {
       params: params?.selectID,
-      onSuccess: () => { },
-      onFailure: () => { },
+      onSuccess: () => {},
+      onFailure: () => {},
     };
     dispatch(getCanteenCuisineAction(obj));
   };
 
-  const getMenuList = (pages: number) => {
+  const getMenuList = (pages: number, isFoodVeg: any) => {
     let obj = {
       id: params?.selectID,
       data: {
         page: pages,
         limit: 8,
         pagination: false,
+        food_type: isFoodVeg,
       },
       onSuccess: (res: any) => {
         setRefreshing(false);
@@ -155,13 +156,20 @@ const StudentMenuList = () => {
     dispatch(getCanteenMenuAction(obj));
   };
 
-  const getAllCuisinesMenuList = (id: number, pages: number) => {
+  const getAllCuisinesMenuList = (
+    id: number,
+    pages: number,
+    isFoodVeg: any,
+  ) => {
+    console.log('getAllCuisinesMenuList', isFoodVeg);
+
     let obj = {
       id: id,
       data: {
         page: pages,
         limit: 8,
         pagination: false,
+        food_type: isFoodVeg,
       },
       onSuccess: (res: any) => {
         setRefreshing(false);
@@ -182,10 +190,10 @@ const StudentMenuList = () => {
     if (!onEndReached && getCanteenMenuData?.length >= 8) {
       if (getCanteenMenuData && getCanteenMenuData?.length < canteenMenuCount) {
         setLoadingMore(true);
-        if (tabSelection === 'All') {
-          getMenuList(page + 1);
+        if (tabSelection === strings('myMenuList.all')) {
+          getMenuList(page + 1, isFoodVeg);
         } else {
-          getAllCuisinesMenuList(cuisineId, page + 1);
+          getAllCuisinesMenuList(cuisineId, page + 1, isFoodVeg);
         }
       }
     }
@@ -198,10 +206,10 @@ const StudentMenuList = () => {
     setLoading(true);
     // dispatch({ type: GET_EMPTY_CANTEEN_LIST, payload: false });
     setTimeout(() => {
-      if (item.name === 'All') {
-        getMenuList(1);
+      if (item.name === strings('myMenuList.all')) {
+        getMenuList(1, isFoodVeg);
       } else {
-        getAllCuisinesMenuList(item.id, 1);
+        getAllCuisinesMenuList(item.id, 1, isFoodVeg);
       }
     }, 10);
   };
@@ -209,12 +217,12 @@ const StudentMenuList = () => {
   useEffect(() => {
     const unsubscribeFocus = navigation.addListener('focus', () => {
       // This event runs when the screen is focused (navigated to)
-      dispatch({ type: GET_CANTEEN_MENU_LIST, payload: [] });
+      dispatch({type: GET_CANTEEN_MENU_LIST, payload: []});
     });
 
     const unsubscribeBlur = navigation.addListener('blur', () => {
       // This event runs when the screen is unfocused (navigated away)
-      dispatch({ type: GET_CANTEEN_MENU_LIST, payload: [] });
+      dispatch({type: GET_CANTEEN_MENU_LIST, payload: []});
     });
 
     return () => {
@@ -223,8 +231,7 @@ const StudentMenuList = () => {
     };
   }, [navigation, isFocuse]);
 
-
-  const renderItem = ({ item }) => {
+  const renderItem = ({item}) => {
     const selectColor =
       tabSelection === item.name ? colors.text_orange : colors.text_gray;
     return (
@@ -232,17 +239,21 @@ const StudentMenuList = () => {
         <TouchableOpacity
           onPress={() => onTabChange(item)}
           style={styles.cuisineView}>
-          {item.name === 'All' ? (
-            <View style={[styles.allImage, { borderColor: selectColor }]}>
+          {item.name === strings('myMenuList.all') ? (
+            <View style={[styles.allImage, {borderColor: selectColor}]}>
               <Image
                 source={Icons.allIcon}
-                style={[styles.allIconImage, { tintColor: selectColor }]}
+                style={[styles.allIconImage, {tintColor: selectColor}]}
               />
             </View>
           ) : (
             <Image
-              source={item.name === 'All' ? Icons.allIcon : { uri: item.image }}
-              style={[styles.profilImage, { borderColor: selectColor }]}
+              source={
+                item.name === strings('myMenuList.all')
+                  ? Icons.allIcon
+                  : {uri: item.image}
+              }
+              style={[styles.profilImage, {borderColor: selectColor}]}
             />
           )}
           <Text
@@ -270,10 +281,9 @@ const StudentMenuList = () => {
       />
       <HomeHeader
         onBackPress={() => {
-          dispatch({ type: GET_CANTEEN_CUISINE_LIST, payload: [] });
+          dispatch({type: GET_CANTEEN_CUISINE_LIST, payload: []});
           navigation.goBack();
           // dispatch({ type: GET_EMPTY_CANTEEN_LIST, payload: false });
-
         }}
         onRightPress={() => {
           console.log('dee');
@@ -289,80 +299,100 @@ const StudentMenuList = () => {
         isCardIcon={false}
       />
 
-      {getCanteenMenuData.length || !loading ? <>
-        {discount === 0 ? null : (
-          <View style={styles.hurrUpView}>
-            <View>
-              <Text style={styles.hurryText}>
-                {strings('newAddText.hurry_up')}
-              </Text>
-              <Text style={styles.hurryText}>{strings('newAddText.discount')}</Text>
+      {getCanteenMenuData.length || !loading ? (
+        <>
+          {discount === 0 ? null : (
+            <View style={styles.hurrUpView}>
+              <View>
+                <Text style={styles.hurryText}>
+                  {strings('newAddText.hurry_up')}
+                </Text>
+                <Text style={styles.hurryText}>
+                  {strings('newAddText.discount')}
+                </Text>
+              </View>
+              <Text style={styles.bannerText}>{`${discount}%`}</Text>
             </View>
-            <Text style={styles.bannerText}>{`${discount}%`}</Text>
+          )}
+
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              alignSelf: 'flex-start',
+              marginHorizontal: wp(20),
+              marginBottom: hp(20),
+            }}>
+            <View style={styles.searchInputContainer}>
+              <Image source={Icons.search} style={styles.searchIcon} />
+              <TextInput
+                style={styles.searchInput}
+                placeholder={strings('CuisinesNameList.Search')}
+                value={searchQuery}
+                onChangeText={(t: string) => FilterSearch(t)}
+                placeholderTextColor={colors.text_gray1}
+              />
+            </View>
+
+            <ToggleComponent
+              value={isFoodVeg === 2}
+              onValueChange={() => changeValue()}
+              trackColor={trackColor}
+              toggleContainerStyle={styles.btnStyle}
+              toggleWheel={styles.toggleWheels}
+              isFood={true}
+            />
+            <Text numberOfLines={1} style={styles.vegText}>
+              {isFoodVeg !== 2
+                ? strings('addFoodList.veg')
+                : strings('addFoodList.non_veg')}
+            </Text>
           </View>
-        )}
 
-        <View style={{ flexDirection: 'row', alignItems: 'center', alignSelf: 'flex-start', marginHorizontal: wp(20), marginBottom: hp(20) }}>
+          {getCanteenCuisines && getCanteenCuisines.length !== 0 && (
+            <View style={styles.tabMainView}>
+              <FlatList
+                data={[
+                  {
+                    name: strings('myMenuList.all'),
+                    label: strings('myMenuList.all'),
+                    page: 0,
+                    id: 0,
+                  },
+                  ...getCanteenCuisines,
+                ]}
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={{gap: 16}}
+                keyExtractor={(item, index) => `${item.id}-${index}`}
+                onEndReachedThreshold={0.5}
+                renderItem={renderItem}
+              />
+            </View>
+          )}
 
-          <View style={styles.searchInputContainer}>
-            <Image source={Icons.search} style={styles.searchIcon} />
-            <TextInput
-              style={styles.searchInput}
-              placeholder={strings('CuisinesNameList.Search')}
-              value={searchQuery}
-              onChangeText={(t: string) => FilterSearch(t)}
-              placeholderTextColor={colors.text_gray1}
+          <View style={styles.boxContainer}>
+            <CartMenuCardList
+              filterData={filterData}
+              onRefresh={() => {
+                onRefresh();
+              }}
+              refreshing={refreshing}
+              loading={loading}
+              loadMoreData={() => loadMoreData()}
+              loadingMore={loadingMore}
+              onMomentumScrollBegin={() => {
+                setOnEndReached(false);
+              }}
+              searchQuery={searchQuery}
             />
           </View>
-
-          <ToggleComponent
-            value={isFoodVeg === 2}
-            onValueChange={() => changeValue()}
-            trackColor={trackColor}
-            toggleContainerStyle={styles.btnStyle}
-            toggleWheel={styles.toggleWheels}
-            isFood={true}
-          />
-          <Text numberOfLines={1} style={styles.vegText}>{isFoodVeg !== 2 ? strings('addFoodList.veg') : strings('addFoodList.non_veg')}</Text>
+        </>
+      ) : (
+        <View style={styles.centerLoadr}>
+          <ActivityIndicator color={colors.black} />
         </View>
-
-
-
-        {getCanteenCuisines && getCanteenCuisines.length !== 0 && (
-          <View style={styles.tabMainView}>
-            <FlatList
-              data={[
-                { name: 'All', label: strings('myMenuList.all'), page: 0, id: 0 },
-                ...getCanteenCuisines,
-              ]}
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={{ gap: 16 }}
-              keyExtractor={(item, index) => `${item.id}-${index}`}
-              onEndReachedThreshold={0.5}
-              renderItem={renderItem}
-            />
-          </View>
-        )}
-
-        <View style={styles.boxContainer}>
-          <CartMenuCardList
-            filterData={filterData}
-            onRefresh={() => {
-              onRefresh();
-            }}
-            refreshing={refreshing}
-            loading={loading}
-            loadMoreData={() => loadMoreData()}
-            loadingMore={loadingMore}
-            onMomentumScrollBegin={() => {
-              setOnEndReached(false);
-            }}
-            searchQuery={searchQuery}
-          />
-        </View>
-      </> : <View style={styles.centerLoadr}><ActivityIndicator color={colors.black} /></View>}
-
+      )}
     </View>
   );
 };
@@ -370,7 +400,7 @@ const StudentMenuList = () => {
 export default StudentMenuList;
 
 const getGlobalStyles = (props: any) => {
-  const { colors } = props;
+  const {colors} = props;
   return StyleSheet.create({
     container: {
       flex: 1,
@@ -439,7 +469,7 @@ const getGlobalStyles = (props: any) => {
     bannerText: {
       ...commonFontStyle(800, 36, colors.defult_white),
       alignSelf: 'center',
-      marginRight: wp(10)
+      marginRight: wp(10),
     },
     searchInputContainer: {
       borderRadius: 15,
@@ -480,7 +510,7 @@ const getGlobalStyles = (props: any) => {
     centerLoadr: {
       flex: 1,
       alignItems: 'center',
-      justifyContent: 'center'
-    }
+      justifyContent: 'center',
+    },
   });
 };

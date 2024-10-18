@@ -84,8 +84,8 @@ const Notification = ({}: Props) => {
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }
           onEndReachedThreshold={0.3}
-          data={[1, 2, 3, 4, 5, 6, 7, 8]}
-          //   data={[]}
+          // data={[1, 2, 3, 4, 5, 6, 7, 8]}
+          data={[]}
           ListEmptyComponent={() => {
             return (
               <View>

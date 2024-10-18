@@ -135,6 +135,7 @@ const EditRecipesMasters = () => {
               label={strings('recipesMaster.stock')}
               onChangeText={t => handleInputChange(index, 'unit', t)}
               isShowLabel={true}
+              editable={false}
             />
             <Input
               value={recipe.weight}
@@ -142,6 +143,7 @@ const EditRecipesMasters = () => {
               label={strings('recipesMaster.unit')}
               onChangeText={t => handleInputChange(index, 'weight', t)}
               isShowLabel={true}
+              editable={false}
             />
           </View>
         ))}

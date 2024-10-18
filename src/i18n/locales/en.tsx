@@ -127,7 +127,7 @@ export default {
     pay_now: 'Pay Now',
     join_us_today: 'Join Us Today !',
     Signup: 'Signup',
-    e_emaild:'Email Id'
+    e_emaild: 'Email Id',
   },
   Phone_number_verification: {
     verification: 'Check your email',
@@ -248,10 +248,10 @@ export default {
     add_food_photo: 'Add Food Photo',
     upToMb: '(up to 2 Mb)',
     e_Tex_Per: 'Please enter a percentage between 0% and 100%',
-    tax_percentage:'Tax percentage',
-    food_type:'Food Type',
-    veg:'Veg',
-    non_veg:'Non Veg'
+    tax_percentage: 'Tax percentage',
+    food_type: 'Food Type',
+    veg: 'Veg',
+    non_veg: 'Non Veg',
   },
   foodDetails: {
     food_Details: 'Food Details',
@@ -298,7 +298,7 @@ export default {
     add_current_password: 'Add current password',
     add_new_password: 'Add new password',
     add_confirm_password: 'Add confirm password',
-    view_chef:'View Chef'
+    view_chef: 'View Chef',
   },
   notifications: {
     notifications: 'Notifications',
@@ -383,8 +383,8 @@ export default {
     cuisines_name: 'Cuisine Name',
     submit: 'Submit',
     cancel: 'Cancel',
-    enter_cuisine_name:'Enter cuisine name',
-    add_photo:'Add Photo'
+    enter_cuisine_name: 'Enter cuisine name',
+    add_photo: 'Add Photo',
   },
   CardMenuList: {
     add: 'Add',
@@ -435,7 +435,7 @@ export default {
     e_lot_size: 'Please Enter lot size',
     e_type_support: 'Please Select Type Support',
     e_enter_text: 'Please Enter text',
-    e_brand:'Please select brand'
+    e_brand: 'Please select brand',
   },
   recipesMaster: {
     edit_recipes_master: 'Edit Recipes Master',
@@ -477,8 +477,8 @@ export default {
     add_item_masters_error: 'Please enter material name',
     select_unit_error: 'Please select unit',
     weight_error: 'Please enter stock',
-    add_material_name:'Add material name',
-    add_unit:'Add unit'
+    add_material_name: 'Add material name',
+    add_unit: 'Add unit',
   },
   myOrders: {
     my_orders: 'My Orders',
@@ -499,8 +499,9 @@ export default {
     thank_you_des: 'Thank you for placing the order',
     go_to_home: 'Go to Home',
     address: 'Address',
-    thank_for_your_order:'Thank you for your order!',
-    thank_dc:'Your request for water bottles has been submitted successfully. You will receive an update, quotation, with payment link soon.'
+    thank_for_your_order: 'Thank you for your order!',
+    thank_dc:
+      'Your request for water bottles has been submitted successfully. You will receive an update, quotation, with payment link soon.',
   },
   menuList: {
     menu: 'Menu',
@@ -546,12 +547,35 @@ export default {
   },
   editProfiles: {
     add_first_name: 'Add First Name',
-    add_last_name:'Add Last Name',
-    add_restaurant_name:'Add Restaurant Name',
-    add_canteen_name:'Add Canteen Name',
-    add_email:'Add Email',
-    add_contact_number:'Add Contact Number',
-    add_address:'Add Address',
-    add_pincode:'Add Pincode'
-  }
+    add_last_name: 'Add Last Name',
+    add_restaurant_name: 'Add Restaurant Name',
+    add_canteen_name: 'Add Canteen Name',
+    add_email: 'Add Email',
+    add_contact_number: 'Add Contact Number',
+    add_address: 'Add Address',
+    add_pincode: 'Add Pincode',
+  },
+  newKey: {
+    today: 'Today',
+    M: 'M',
+    T: 'T',
+    W: 'W',
+    T: 'T',
+    F: 'F',
+    S: 'S',
+    S: 'S',
+
+    Jan: 'Jan',
+    Feb: 'Feb',
+    Mar: 'Mar',
+    Apr: 'Apr',
+    May: 'May',
+    Jun: 'Jun',
+    Jul: 'Jul',
+    Aug: 'Aug',
+    Sept: 'Sept',
+    Oct: 'Oct',
+    Nov: 'Nov',
+    Dec: 'Dec',
+  },
 };

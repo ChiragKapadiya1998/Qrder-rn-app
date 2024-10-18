@@ -7,38 +7,38 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   useFocusEffect,
   useNavigation,
   useTheme,
 } from '@react-navigation/native';
 import HomeHeader from '../../compoment/HomeHeader';
-import { strings } from '../../i18n/i18n';
-import { commonFontStyle, hp, wp } from '../../theme/fonts';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { Icons } from '../../utils/images';
+import {strings} from '../../i18n/i18n';
+import {commonFontStyle, hp, wp} from '../../theme/fonts';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import {Icons} from '../../utils/images';
 import TitleList from '../../compoment/TitleListComponent';
 import Spacer from '../../compoment/Spacer';
 import ImagePicker from 'react-native-image-crop-picker';
 import Loader from '../../compoment/Loader';
-import { screenName } from '../../navigation/screenNames';
-import { clearAsync, getAsyncUserInfo } from '../../utils/asyncStorageManager';
-import { dispatchNavigation } from '../../utils/globalFunctions';
-import { useAppDispatch, useAppSelector } from '../../redux/hooks';
-import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import {screenName} from '../../navigation/screenNames';
+import {clearAsync, getAsyncUserInfo} from '../../utils/asyncStorageManager';
+import {dispatchNavigation} from '../../utils/globalFunctions';
+import {useAppDispatch, useAppSelector} from '../../redux/hooks';
+import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import LogOutModal from '../../compoment/GeneralModal';
-import { USER_LOGOUT } from '../../redux/actionTypes';
+import {USER_LOGOUT} from '../../redux/actionTypes';
 import ReviewModal from '../../compoment/ReviewModal';
-import { setDarkTheme } from '../../utils/commonActions';
+import {setDarkTheme, setLanguage} from '../../utils/commonActions';
 
 type Props = {};
 
 const StudentProfile = (props: Props) => {
-  const { colors, isDark } = useTheme();
+  const {colors, isDark} = useTheme();
   const navigation = useNavigation();
-  const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
-  const { isDarkTheme } = useAppSelector(state => state.common);
+  const styles = React.useMemo(() => getGlobalStyles({colors}), [colors]);
+  const {isDarkTheme} = useAppSelector(state => state.common);
   const [photoUri, setPhotoUri] = useState(null);
   const [loading, setLoading] = useState(false);
   const [name, setName] = useState('');
@@ -46,24 +46,21 @@ const StudentProfile = (props: Props) => {
   const [number, setNumber] = useState('');
   const [visible, setVisible] = useState(false);
   const [openReviewModal, setOpenReviewModal] = useState(false);
-  const [userData, setUserData] = useState < any > ({});
+  const [userData, setUserData] = useState<any>({});
   const dispatch = useAppDispatch();
   console.log('photoUri', photoUri);
 
   const fetchUserInfo = async () => {
     try {
       const userList = await getAsyncUserInfo();
-      console.log(
-        'userList.original_url',
-        JSON.stringify(userList),
-      );
+      console.log('userList.original_url', JSON.stringify(userList));
 
       setUserData(userList);
       setName(userList?.name || '');
-      setLastName(userList?.last_name || '')
+      setLastName(userList?.last_name || '');
       setNumber(userList?.number || '');
       setPhotoUri(userList?.profile_image || '');
-    } catch (error) { }
+    } catch (error) {}
   };
 
   useFocusEffect(
@@ -92,11 +89,11 @@ const StudentProfile = (props: Props) => {
 
   const onPressNavigation = list => {
     if (list == screenName.EditProfile) {
-      navigation.navigate(list, { hideEdit: false, userData: userData });
+      navigation.navigate(list, {hideEdit: false, userData: userData});
     } else if (list === 'log Out') {
       setVisible(true);
     } else if (list === 'Review') {
-      setOpenReviewModal(true)
+      setOpenReviewModal(true);
     } else {
       list !== '' && navigation.navigate(list);
     }
@@ -104,16 +101,17 @@ const StudentProfile = (props: Props) => {
 
   const closeModal = () => {
     setVisible(false);
-    setOpenReviewModal(false)
+    setOpenReviewModal(false);
   };
 
   const onPressLogOut = async () => {
     clearAsync();
-    dispatch({ type: USER_LOGOUT });
+    dispatch({type: USER_LOGOUT});
     dispatchNavigation(screenName.SignInScreen);
     dispatch(setDarkTheme(false));
-    await GoogleSignin.signOut();
+    dispatch(setLanguage('en'));
     setVisible(false);
+    await GoogleSignin.signOut();
   };
 
   return (
@@ -150,14 +148,14 @@ const StudentProfile = (props: Props) => {
               /> */}
               {photoUri ? (
                 <View style={styles.profilImage}>
-                  <Image source={{ uri: photoUri }} style={styles.profilImage} />
+                  <Image source={{uri: photoUri}} style={styles.profilImage} />
                 </View>
               ) : (
                 <Image
                   source={Icons.profileImage}
                   style={[
                     styles.profilImage,
-                    { backgroundColor: colors.bg_orange200 },
+                    {backgroundColor: colors.bg_orange200},
                   ]}
                 />
               )}
@@ -167,9 +165,9 @@ const StudentProfile = (props: Props) => {
               </View>
             </View>
           </View>
-          <TouchableOpacity>
+          {/* <TouchableOpacity>
             <Image style={styles.rightIcon} source={Icons.rightBack} />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </TouchableOpacity>
 
         <Text style={styles.accountText}>
@@ -243,7 +241,8 @@ const StudentProfile = (props: Props) => {
       <ReviewModal
         title={strings('profileScreen.review')}
         visible={openReviewModal}
-        closeModal={() => closeModal()} />
+        closeModal={() => closeModal()}
+      />
     </View>
   );
 };
@@ -251,7 +250,7 @@ const StudentProfile = (props: Props) => {
 export default StudentProfile;
 
 const getGlobalStyles = (props: any) => {
-  const { colors } = props;
+  const {colors} = props;
   return StyleSheet.create({
     container: {
       flex: 1,
