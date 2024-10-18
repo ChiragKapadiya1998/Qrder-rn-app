@@ -14,49 +14,38 @@ import {
   Animated,
   TouchableWithoutFeedback,
 } from 'react-native';
-import React, {useEffect, useMemo, useRef} from 'react';
-import {useIsFocused, useTheme} from '@react-navigation/native';
-import {commonFontStyle, hp, SCREEN_WIDTH, wp} from '../theme/fonts';
-import {Icons} from '../utils/images';
-import {useAppSelector} from '../redux/hooks';
+import React, { useEffect, useMemo, useRef } from 'react';
+import { useIsFocused, useTheme } from '@react-navigation/native';
+import { commonFontStyle, hp, SCREEN_WIDTH, wp } from '../theme/fonts';
+import { Icons } from '../utils/images';
+import { useAppSelector } from '../redux/hooks';
 
 type Props = {
-  placeholder: string;
-  label: string;
   value: string;
-  onChangeText: (params: string) => void;
-  isShowEyeIcon?: boolean;
-  secureTextEntry?: boolean;
-  onPressEye?: () => void;
-  onSubmitEditing?: () => void;
-  autoCorrect?: boolean;
-  rest?: TextInputProps[];
-  inputRef?: any;
-  returnKeyType?: ReturnKeyType;
-  extraStyle?: ViewStyle;
-  inputStyle: ViewStyle;
-  maxLength: number;
-  keyboardType: any;
-  multiline?: boolean;
-  onFocus?: any;
-  searchData?: any;
-  showListView?: boolean;
-  setShowListView?: any;
-  isShowLabel?: boolean;
+  onValueChange: () => void;
+  disabled?: boolean;
+  trackColor: string;
+  toggleContainerStyle?: ViewStyle;
+  toggleWheel?: ViewStyle;
+  isFood?: boolean
 };
 
 const ToggleComponent = ({
   value = false,
-  onValueChange = () => {},
+  onValueChange = () => { },
   disabled = false,
+  trackColor,
+  toggleContainerStyle,
+  toggleWheel,
+  isFood
 }: Props) => {
-  const {colors} = useTheme();
-  const styles = React.useMemo(() => getGlobalStyles({colors}), [colors]);
-  const {isDarkTheme, isLanguage} = useAppSelector(state => state.common);
+  const { colors } = useTheme();
+  const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
+  const { isDarkTheme, isLanguage } = useAppSelector(state => state.common);
 
   const animatedValue = useRef(new Animated.Value(value ? 1 : 0)).current;
   const TOGGLE_LEFT_MARGIN = 3;
-  const TOGGLE_RIGHT_MARGIN = 22;
+  const TOGGLE_RIGHT_MARGIN = isFood ? 17 : 22;
   const moveToggle = useMemo(
     () =>
       animatedValue.interpolate({
@@ -66,13 +55,13 @@ const ToggleComponent = ({
     [animatedValue],
   );
 
-  const trackColor = value
-    ? !isDarkTheme
-      ? colors.image_bg
-      : colors.input_bg1
-    : !isDarkTheme
-    ? colors.image_bg
-    : colors.input_bg1;
+  // const trackColor = value
+  //   ? !isDarkTheme
+  //     ? colors.image_bg
+  //     : colors.input_bg1
+  //   : !isDarkTheme
+  //   ? colors.image_bg
+  //   : colors.input_bg1;
   const opacity = disabled ? 0.5 : 1;
 
   useEffect(() => {
@@ -91,10 +80,10 @@ const ToggleComponent = ({
         <View
           style={[
             styles.toggleContainer,
-            {backgroundColor: trackColor, opacity},
+            { backgroundColor: trackColor, opacity }, toggleContainerStyle
           ]}>
           <Animated.View
-            style={[styles.toggleWheelStyle, {marginLeft: moveToggle}]}
+            style={[styles.toggleWheelStyle, { marginLeft: moveToggle }, toggleWheel]}
           />
         </View>
       </TouchableWithoutFeedback>
@@ -106,7 +95,7 @@ export default ToggleComponent;
 const TOGGLE_LEFT_MARGIN = 3;
 const TOGGLE_RIGHT_MARGIN = 22;
 const getGlobalStyles = (props: any) => {
-  const {colors} = props;
+  const { colors } = props;
   return StyleSheet.create({
     container: {
       flexDirection: 'row',

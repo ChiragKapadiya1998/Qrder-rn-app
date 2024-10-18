@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, { useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useTheme } from '@react-navigation/native';
 import { commonFontStyle, hp } from '../theme/fonts';
 import NoDataFound from './NoDataFound';
@@ -22,17 +22,29 @@ type Props = {
   loadMoreData: () => void;
   loadingMore: boolean;
   onMomentumScrollBegin: () => void;
-  loading: boolean
+  loading: boolean;
+  searchQuery: any
+
 };
 
-const CartMenuCardList = ({ onRefresh, refreshing, loadMoreData, loadingMore, onMomentumScrollBegin, loading }: Props) => {
+const CartMenuCardList = ({ searchQuery, onRefresh, refreshing, loadMoreData, loadingMore, onMomentumScrollBegin, loading }: Props) => {
   const { colors } = useTheme();
   const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
-  const { getCanteenMenuData, canteenMenuCount } = useAppSelector(state => state.data);
+  const { getCanteenMenuData, canteenMenuCount, getSearch } = useAppSelector(state => state.data);
   const currentData = useRef();
   currentData.current = getCanteenMenuData;
+  const [searchData, setSearchData] = useState(getCanteenMenuData);
 
-  const hasMoreItems = currentData.current?.length < canteenMenuCount;
+  useEffect(() => {
+    if (searchQuery.length && getSearch.length === 0) {
+      setSearchData([])
+    } else if (searchQuery.length === 0) {
+      setSearchData(getCanteenMenuData)
+    } else {
+      setSearchData(getSearch)
+    }
+  }, [getSearch, getCanteenMenuData])
+  // const hasMoreItems = currentData.current?.length < canteenMenuCount;
 
   return (
     <View>
@@ -42,7 +54,7 @@ const CartMenuCardList = ({ onRefresh, refreshing, loadMoreData, loadingMore, on
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }
-          data={currentData.current}
+          data={searchData}
           onMomentumScrollBegin={onMomentumScrollBegin}
           numColumns={2}
           windowSize={10}
@@ -51,27 +63,27 @@ const CartMenuCardList = ({ onRefresh, refreshing, loadMoreData, loadingMore, on
           columnWrapperStyle={styles.columnWrapperStyle}
           contentContainerStyle={{ gap: 11 }}
           keyExtractor={(item, index) => `${item.id}-${index}`}
-          ListFooterComponent={() => (
-            <View>
-              {hasMoreItems && !loadingMore && (
-                <TouchableOpacity
-                  onPress={loadMoreData}
-                  style={[styles.seeMoreButton]}
-                >
-                  <Text style={styles.seeMoreText}>
-                    {strings('CardMenuList.see_more')}
-                  </Text>
-                </TouchableOpacity>
-              )}
-              {loadingMore && (
-                <View style={styles.seeMoreButton}>
-                  <ActivityIndicator size={'small'} color={colors.black} />
-                </View>
+          // ListFooterComponent={() => (
+          //   <View>
+          //     {hasMoreItems && !loadingMore && (
+          //       <TouchableOpacity
+          //         onPress={loadMoreData}
+          //         style={[styles.seeMoreButton]}
+          //       >
+          //         <Text style={styles.seeMoreText}>
+          //           {strings('CardMenuList.see_more')}
+          //         </Text>
+          //       </TouchableOpacity>
+          //     )}
+          //     {loadingMore && (
+          //       <View style={styles.seeMoreButton}>
+          //         <ActivityIndicator size={'small'} color={colors.black} />
+          //       </View>
 
-              )}
-              <View style={{ height: hp(30) }} />
-            </View>
-          )}
+          //     )}
+          //     <View style={{ height: hp(30) }} />
+          //   </View>
+          // )}
           ListEmptyComponent={!loading && (
             <NoDataFound />
           )}

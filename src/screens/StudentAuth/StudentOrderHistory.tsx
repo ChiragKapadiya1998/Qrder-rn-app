@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
+  ActivityIndicator,
   Alert,
   FlatList,
   Image,
@@ -44,6 +45,7 @@ const StudentOrderHistory = () => {
   const [endDate, setEndDate] = useState(null);
   const [isDatePickerVisible, setIsDatePickerVisible] = useState(false);
   const [isSelectingStartDate, setIsSelectingStartDate] = useState(true);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     getAllOrdersHistory();
@@ -51,13 +53,17 @@ const StudentOrderHistory = () => {
   }, []);
 
   const getAllOrdersHistory = () => {
+    setLoading(true);
     let obj = {
-      onSuccess: () => { },
-      onFailure: () => { },
+      onSuccess: () => {
+        setLoading(false);
+      },
+      onFailure: () => {
+        setLoading(false);
+      },
     };
     dispatch(getAllStudentOrder(obj));
   };
-
   const getAllOrdersFilter = data => {
     let obj = {
       params: {
@@ -187,41 +193,42 @@ const StudentOrderHistory = () => {
           strings('addFoodList.reset')
         }
       />
-      <View style={styles.headerView}>
-        {allStudentOrderHistory?.length !== 0 && (
-          <View style={styles.datePickerContainer}>
-            <TouchableOpacity
-              onPress={() => handleDatePickerOpen(true)}
-              style={styles.dateButton}>
-              <Text style={styles.dateText}>
-                {startDate
-                  ? `${formatDateToDDMMYYYY(startDate)}`
-                  : strings('orderModal.start_date')}
-              </Text>
-            </TouchableOpacity>
-            <Spacer width={5} />
-            <TouchableOpacity
-              onPress={() => handleDatePickerOpen(false)}
-              style={styles.dateButton}>
-              <Text style={styles.dateText}>
-                {endDate
-                  ? `${formatDateToDDMMYYYY(endDate)}`
-                  : strings('orderModal.end_date')}
-              </Text>
-            </TouchableOpacity>
-          </View>
-        )}
-        <FlatList
-          data={allStudentOrderHistory}
-          renderItem={renderItem}
-          keyExtractor={(item, index) => index.toString()}
-          showsVerticalScrollIndicator={false}
-          ListEmptyComponent={<NoDataFound />}
-          ListFooterComponent={() => {
-            return <View style={{ height: 100 }} />;
-          }}
-        />
-      </View>
+      {allStudentOrderHistory.length || !loading ?
+        <View style={styles.headerView}>
+          {allStudentOrderHistory?.length !== 0 && (
+            <View style={styles.datePickerContainer}>
+              <TouchableOpacity
+                onPress={() => handleDatePickerOpen(true)}
+                style={styles.dateButton}>
+                <Text style={styles.dateText}>
+                  {startDate
+                    ? `${formatDateToDDMMYYYY(startDate)}`
+                    : strings('orderModal.start_date')}
+                </Text>
+              </TouchableOpacity>
+              <Spacer width={5} />
+              <TouchableOpacity
+                onPress={() => handleDatePickerOpen(false)}
+                style={styles.dateButton}>
+                <Text style={styles.dateText}>
+                  {endDate
+                    ? `${formatDateToDDMMYYYY(endDate)}`
+                    : strings('orderModal.end_date')}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          )}
+          <FlatList
+            data={allStudentOrderHistory}
+            renderItem={renderItem}
+            keyExtractor={(item, index) => index.toString()}
+            showsVerticalScrollIndicator={false}
+            ListEmptyComponent={!loading && <NoDataFound />}
+            ListFooterComponent={() => {
+              return <View style={{ height: 100 }} />;
+            }}
+          />
+        </View> : <View style={styles.centerLoadr}><ActivityIndicator color={colors.black} /></View>}
       <Modal
         transparent={true}
         visible={isDatePickerVisible}
@@ -370,6 +377,11 @@ const getGlobalStyles = (props: any) => {
       paddingHorizontal: wp(16),
       borderRadius: 16,
     },
+    centerLoadr: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center'
+    }
   });
 };
 

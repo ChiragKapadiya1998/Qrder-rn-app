@@ -2,6 +2,7 @@ import {
   FlatList,
   Image,
   RefreshControl,
+  StatusBar,
   StyleSheet,
   Text,
   View,
@@ -21,6 +22,7 @@ import Spacer from '../../compoment/Spacer';
 import HomeHeader from '../../compoment/HomeHeader';
 import {strings} from '../../i18n/i18n';
 import {Icons} from '../../utils/images';
+import { useAppSelector } from '../../redux/hooks';
 type Props = {};
 
 const StudentNotification = ({}: Props) => {
@@ -28,6 +30,7 @@ const StudentNotification = ({}: Props) => {
   const navigation = useNavigation();
   const styles = React.useMemo(() => getGlobalStyles({colors}), [colors]);
   const [refreshing, setRefreshing] = React.useState(false);
+  const { isDarkTheme } = useAppSelector(state => state.common);
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
@@ -66,6 +69,10 @@ const StudentNotification = ({}: Props) => {
 
   return (
     <View style={{flex: 1, backgroundColor: colors.white}}>
+       <StatusBar
+        barStyle={isDarkTheme ? 'light-content' : 'dark-content'}
+        backgroundColor={colors.white}
+      />
       <HomeHeader
         onBackPress={() => {
           navigation.goBack();

@@ -52,6 +52,7 @@ export const api = {
   restaurantDiscount: 'restaurant-discount',
   changePassword: 'change-password',
   invoiceDownload:'invoice-download',
+  search_menu_list: 'search-menu',
 
   //student
   studentRegister: 'student-register',

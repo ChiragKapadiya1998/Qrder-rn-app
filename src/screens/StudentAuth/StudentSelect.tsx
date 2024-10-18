@@ -37,7 +37,9 @@ const StudentSelect = (props: Props) => {
       errorToast(strings('StudentSignUp.error_university'));
     } else {
       let data = new FormData();
+
       data.append('university_id', selectUniversity);
+
       let obj = {
         data,
         onSuccess: (res: any) => {
@@ -71,7 +73,7 @@ const StudentSelect = (props: Props) => {
         keyboardShouldPersistTaps={'handled'}
         contentContainerStyle={styles.contentContainerStyle}>
         <Text style={styles.selectText}>
-          {strings('StudentSignUp.select_university')}
+          {strings('sign_up.join_us_today')}
         </Text>
         <Text style={styles.desText}>{strings('sign_up.sign_dec')}</Text>
         <CCDropDown
@@ -79,7 +81,7 @@ const StudentSelect = (props: Props) => {
           label={strings('StudentSignUp.university_name')}
           labelField={'name'}
           valueField={'id'}
-          placeholder={strings('StudentSignUp.select_university_name')}
+          placeholder={strings('sign_up.select_university')}
           DropDownStyle={styles.dropDownStyle}
           value={selectUniversity}
           setValue={setSelectUniversity}
@@ -89,7 +91,7 @@ const StudentSelect = (props: Props) => {
         <PrimaryButton
           extraStyle={styles.signupButton}
           onPress={onPressSelect}
-          title={strings('roleSelection.continue')}
+          title={strings('CuisinesNameList.submit')}
         />
       </KeyboardAwareScrollView>
     </View>
@@ -125,6 +127,7 @@ const getGlobalStyles = (props: any) => {
     desText: {
       ...commonFontStyle(400, 14, colors.text_gray),
       textAlign: 'center',
+      marginTop: hp(8),
     },
     otherStyle: {
       marginTop: hp(8),

@@ -484,7 +484,7 @@ const EditProfile = (props: Props) => {
                 userData.role === 'staff' ? null : (
                   <TouchableOpacity
                     onPress={() =>
-                      Linking.openURL('https://qrder.in/api/profile')
+                      Linking.openURL('https://qrder.in/profile')
                     }>
                     <Text style={styles.qrCodetext}>
                       {strings('newAddText.download_qr_code')}

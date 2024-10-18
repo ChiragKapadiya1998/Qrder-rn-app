@@ -85,6 +85,8 @@ const Settings = () => {
     dispatch(setLanguage(lang));
   };
 
+  const trackColor = isDarkTheme ? colors.input_bg1 : colors.image_bg
+
   return (
     <View style={styles.container}>
       <StatusBar
@@ -112,6 +114,7 @@ const Settings = () => {
           <ToggleComponent
             value={isDarkTheme}
             onValueChange={() => changeValue()}
+            trackColor={trackColor}
           />
         </View>
         {isRoll === 'Staff' ? null :

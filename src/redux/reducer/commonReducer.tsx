@@ -10,6 +10,7 @@ import {
   SELECT_ROLE,
   SET_APP_LANGUAGE,
   SET_APP_THEME,
+  SET_FOOD_VEG,
 } from '../actionTypes';
 
 const initialState = {
@@ -20,7 +21,8 @@ const initialState = {
   selectedRole: '',
   isLanguage: 'en',
   discount: 0,
-  getSupport:[],
+  getSupport: [],
+  isFoodVeg: 1,
   getCity: [
     {
       id: 1041,
@@ -97,6 +99,9 @@ export default function (state = initialState, action: any) {
     }
     case GET_SUPPORT_TYPE: {
       return { ...state, getSupport: action.payload };
+    }
+    case SET_FOOD_VEG: {
+      return { ...state, isFoodVeg: action.payload };
     }
     default:
       return state;

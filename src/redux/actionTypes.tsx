@@ -13,6 +13,7 @@ export const GET_EMPTY_CANTEEN_LIST = 'GET_EMPTY_CANTEEN_LIST';
 export const SEARCH_CITY = 'SEARCH_CITY';
 export const SELECT_ROLE = 'SELECT_ROLE';
 export const SET_APP_LANGUAGE = 'SET_APP_LANGUAGE';
+export const SET_FOOD_VEG = 'SET_FOOD_VEG';
 export const INCREMENT = 'INCREMENT';
 export const DECREMENT = 'DECREMENT';
 export const DELETE_CHEF_DATA = 'DELETE_CHEF_DATA';
@@ -31,6 +32,7 @@ export const GET_CARD_LIST = 'GET_CARD_LIST';
 export const DELETE_CARD_LIST = 'DELETE_CARD_LIST';
 export const GET_DISCOUNT = 'GET_DISCOUNT';
 export const GET_SUPPORT_TYPE = 'GET_SUPPORT_TYPE';
+export const GET_SEARCH = 'GET_SEARCH'
 
 export const GET_RUNNING_ORDERS = 'GET_RUNNING_ORDERS';
 export const GET_ORDER_REQUESTS = 'GET_ORDER_REQUESTS';

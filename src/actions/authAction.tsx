@@ -287,7 +287,6 @@ export const getUserAction =
         headers: headers,
       })
         .then(async (response: any) => {
-          console.log('getUserAction response?.data', response?.data?.data);
           if (response?.data?.success === true) {
             await setAsyncUserInfo(response?.data?.data);
             if (request.onSuccess) request.onSuccess(response?.data?.data);

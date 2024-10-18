@@ -19,6 +19,7 @@ import {
   GET_MISCELLANEOUS,
   GET_RECIPES_MASTERS,
   GET_RECIPES_MENU,
+  GET_SEARCH,
   GET_UNIVERSITIES_CANTEEN_LIST,
   GET_UNIVERSITIES_LIST,
   INCREMENT,
@@ -43,6 +44,7 @@ const initialState = {
   getRecipesMasters: [],
   getRecipesMenu: [],
   getDashboardData: [],
+  getSearch: []
 };
 
 export default function (state = initialState, action: any) {
@@ -58,34 +60,40 @@ export default function (state = initialState, action: any) {
       };
     }
     case GET_UNIVERSITIES_LIST: {
-      return {...state, getUniversitiesData: action.payload};
+      return { ...state, getUniversitiesData: action.payload };
     }
     case GET_UNIVERSITIES_CANTEEN_LIST: {
-      return {...state, getUniversityCanteenData: action.payload};
+      return { ...state, getUniversityCanteenData: action.payload };
     }
     case GET_CANTEEN_MENU_LIST: {
-      if (action.payload.current_page == 1) {
-        return {
-          ...state,
-          getCanteenMenuData: action.payload.data,
-          canteenMenuCount: action.payload.total_count,
-        };
-      } else {
-        return {
-          ...state,
-          getCanteenMenuData: [
-            ...state.getCanteenMenuData,
-            ...action.payload.data,
-          ],
-          canteenMenuCount: action.payload.total_count,
-        };
-      }
+      return { ...state, getCanteenMenuData: action.payload };
     }
+    case GET_SEARCH: {
+      return { ...state, getSearch: action.payload };
+    }
+    // case GET_CANTEEN_MENU_LIST: {
+    //   if (action.payload.current_page == 1) {
+    //     return {
+    //       ...state,
+    //       getCanteenMenuData: action.payload.data,
+    //       canteenMenuCount: action.payload.total_count,
+    //     };
+    //   } else {
+    //     return {
+    //       ...state,
+    //       getCanteenMenuData: [
+    //         ...state.getCanteenMenuData,
+    //         ...action.payload.data,
+    //       ],
+    //       canteenMenuCount: action.payload.total_count,
+    //     };
+    //   }
+    // }
     case GET_EMPTY_CANTEEN_LIST: {
-      return {...state, getCanteenMenuData: [], canteenMenuCount: 0};
+      return { ...state, getCanteenMenuData: [], canteenMenuCount: 0 };
     }
     case GET_EMPTY_MENU_LIST: {
-      return {...state, getMenuData: [], allMenuCount: 0};
+      return { ...state, getMenuData: [], allMenuCount: 0 };
     }
     case GET_MENU_DATA: {
       if (action.payload.current_page == 1) {
@@ -103,7 +111,7 @@ export default function (state = initialState, action: any) {
       }
     }
     case GET_CHEFS_DATA: {
-      return {...state, getChefsData: action.payload};
+      return { ...state, getChefsData: action.payload };
     }
     case DELETE_MENU_DATA: {
       const remove = state.getMenuData.filter(
@@ -119,34 +127,34 @@ export default function (state = initialState, action: any) {
       const removeChef = state.getChefsData.filter(
         item => item?.id !== action.payload,
       );
-      return {...state, getChefsData: removeChef};
+      return { ...state, getChefsData: removeChef };
     }
     case DELETE_CUISINES_DATA: {
       const remove = state.getCuisines.filter(
         item => item?.id !== action.payload,
       );
-      return {...state, getCuisines: remove};
+      return { ...state, getCuisines: remove };
     }
     case GET_CANTEEN_CUISINE_LIST: {
-      return {...state, getCanteenCuisines: action.payload};
+      return { ...state, getCanteenCuisines: action.payload };
     }
     case GET_CARD_LIST: {
-      return {...state, getCardData: action.payload};
+      return { ...state, getCardData: action.payload };
     }
     case DELETE_CARD_LIST: {
       const removeCard = state.getCardData.filter(
         item => item?.id !== action.payload,
       );
-      return {...state, getCardData: removeCard};
+      return { ...state, getCardData: removeCard };
     }
     case INCREMENT: {
       const updatedCardData = state.getCardData.map((item: any) => {
         return item.menu_id === action.payload
           ? {
-              ...item,
-              quantity: item.quantity + 1,
-              product_total: item.price * (item.quantity + 1),
-            }
+            ...item,
+            quantity: item.quantity + 1,
+            product_total: item.price * (item.quantity + 1),
+          }
           : item;
       });
       return {
@@ -158,10 +166,10 @@ export default function (state = initialState, action: any) {
       const updatedCardData = state.getCardData.map((item: any) =>
         item.menu_id === action.payload && item.quantity > 1
           ? {
-              ...item,
-              quantity: item.quantity - 1,
-              product_total: item.price * (item.quantity - 1),
-            }
+            ...item,
+            quantity: item.quantity - 1,
+            product_total: item.price * (item.quantity - 1),
+          }
           : item,
       );
       return {
@@ -204,7 +212,7 @@ export default function (state = initialState, action: any) {
       };
     }
     case GET_CARD_EMPTY_LIST: {
-      return {...state, getCardData: []};
+      return { ...state, getCardData: [] };
     }
     default:
       return state;

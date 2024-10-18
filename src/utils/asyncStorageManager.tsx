@@ -9,6 +9,7 @@ export const asyncKeys = {
   is_dark_theme:"@is_dark_theme",
   is_language:'@is_language',
   location: "@location",
+  is_Food_veg:'@is_Food_veg',
 
   // no clear in logout time
   guest: "@guest",

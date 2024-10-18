@@ -3,8 +3,8 @@ import {
   BottomTabBarProps,
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs';
-import {Image, Platform, Pressable, StyleSheet, Text, View} from 'react-native';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import { Image, Platform, Pressable, StyleSheet, Text, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import {
   commonFontStyle,
   hp,
@@ -13,22 +13,22 @@ import {
   SCREEN_WIDTH,
   wp,
 } from '../theme/fonts';
-import {screenName} from './screenNames';
+import { screenName } from './screenNames';
 import Home from '../screens/Chef/Home';
-import {useTheme} from '@react-navigation/native';
+import { useTheme } from '@react-navigation/native';
 import FoodList from '../screens/Chef/FoodList';
 import AddFoodDetails from '../screens/Chef/AddFoodDetails';
 import Notification from '../screens/Chef/Notification';
 import Profile from '../screens/Chef/Profile';
-import {Icons} from '../utils/images';
-import {AdminHomeStack} from './StackNavigator';
+import { Icons } from '../utils/images';
+import { AdminHomeStack } from './StackNavigator';
 import MenuList from '../screens/Chef/MenuList';
 
 const Tab = createBottomTabNavigator();
 
-const TabBarItem = ({state, navigation}: BottomTabBarProps) => {
-  const {colors} = useTheme();
-  const styles = React.useMemo(() => getGlobalStyles({colors}), [colors]);
+const TabBarItem = ({ state, navigation }: BottomTabBarProps) => {
+  const { colors } = useTheme();
+  const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
 
   const getIcons = (key: number, isFocused: boolean) => {
     switch (key) {
@@ -59,7 +59,7 @@ const TabBarItem = ({state, navigation}: BottomTabBarProps) => {
         return (
           <Image
             source={Icons.addmenu}
-            style={{width: 56, height: 56, bottom: SCREEN_HEIGHT * 0.04}}
+            style={{ width: 56, height: 56, bottom: SCREEN_HEIGHT * 0.04 }}
           />
         );
 
@@ -147,8 +147,8 @@ const TabBarItem = ({state, navigation}: BottomTabBarProps) => {
 };
 
 function BottomTabBar() {
-  const {colors, isDark} = useTheme();
-  const styles = React.useMemo(() => getGlobalStyles({colors}), [colors]);
+  const { colors, isDark } = useTheme();
+  const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
 
   return (
     <Tab.Navigator
@@ -159,6 +159,7 @@ function BottomTabBar() {
         tabBarStyle: {
           height: 55,
         },
+        tabBarHideOnKeyboard: true
       }}>
       <Tab.Screen
         name={screenName.tab_bar_name.Home}
@@ -182,7 +183,7 @@ function BottomTabBar() {
 }
 
 const getGlobalStyles = (props: any) => {
-  const {colors} = props;
+  const { colors } = props;
   return StyleSheet.create({
     itemContainer: {
       height: hp(65),
