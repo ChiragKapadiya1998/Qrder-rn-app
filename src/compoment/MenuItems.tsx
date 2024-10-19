@@ -56,7 +56,7 @@ const MenuItems = ({item, index, setDelete, showChef}: ItemProps) => {
         onPress={() => {
           navigation.navigate(screenName.FoodDetails, {
             itemData: item,
-            showChef: showChef,
+            showChef: false,
             showAddToCard: false,
           });
         }}

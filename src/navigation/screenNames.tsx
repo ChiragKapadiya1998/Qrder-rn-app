@@ -13,7 +13,7 @@ export const screenName = {
   tab_bar_name: {
     Home: 'Home',
     FoodList: 'FoodList',
-    MenuList:'MenuList',
+    MenuList: 'MenuList',
     AddFoodDetails: 'AddFoodDetails',
     Notification: 'Notification',
     Profile: 'Profile',
@@ -29,7 +29,7 @@ export const screenName = {
   CuisinesNameList: 'CuisinesNameList',
   NewPassword: 'NewPassword',
   EditFoodDetails: 'EditFoodDetails',
-  EditMenuList:'EditMenuList',
+  EditMenuList: 'EditMenuList',
   OrderHistory: 'OrderHistory',
   CuisinesEdit: 'CuisinesEdit',
   CuisinesAdd: 'CuisinesAdd',
@@ -44,10 +44,9 @@ export const screenName = {
   AddItemMasters: 'AddItemMasters',
   EditItemMasters: 'EditItemMasters',
   MyOrders: 'MyOrders',
-  TermCondition:'TermCondition',
-  PrivacyPolicy:'PrivacyPolicy',
-  ChangePassword:'ChangePassword',
-
+  TermCondition: 'TermCondition',
+  PrivacyPolicy: 'PrivacyPolicy',
+  ChangePassword: 'ChangePassword',
 
   //chefSignUp
 
@@ -60,11 +59,12 @@ export const screenName = {
   chef_tab_bar: {
     ChefHome: 'ChefHome',
     ChefMenuList: 'ChefMenuList',
+    ChefMenuList1: 'ChefMenuList1',
     ChefNotification: 'ChefNotification',
     ChefProfile: 'ChefProfile',
   },
   ChefNotification: 'ChefNotification',
-  ChefMyOrders:'ChefMyOrders',
+  ChefMyOrders: 'ChefMyOrders',
 
   // student
 

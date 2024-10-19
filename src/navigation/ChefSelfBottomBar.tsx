@@ -15,6 +15,7 @@ import ChefFoodList from '../screens/ChefSelf/ChefMenuList';
 import ChefNotification from '../screens/ChefSelf/ChefNotification';
 import ChefMenuList from '../screens/ChefSelf/ChefMenuList';
 import {strings} from '../i18n/i18n';
+import OrderHistory from '../screens/ChefSettings/OrderHistory';
 
 const Tab = createBottomTabNavigator();
 
@@ -137,7 +138,7 @@ function ChefSelfBottomBar() {
       />
       <Tab.Screen
         name={screenName.chef_tab_bar.ChefMenuList}
-        component={ChefMenuList}
+        component={OrderHistory}
       />
       {/* <Tab.Screen
         name={screenName.chef_tab_bar.ChefNotification}

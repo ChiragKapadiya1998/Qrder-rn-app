@@ -142,12 +142,12 @@ const ChefProfile = (props: Props) => {
             {
               title: strings('profileScreen.menu'),
               iconName: Icons.menu_ic,
-              screens: screenName.chef_tab_bar.ChefMenuList,
+              screens: screenName.chef_tab_bar.ChefMenuList1,
             },
             {
               title: strings('profileScreen.order_history'),
               iconName: Icons.orderHistory_ic,
-              screens: screenName.OrderHistory,
+              screens: screenName.chef_tab_bar.ChefMenuList,
             },
           ]}
           onPressCell={onPressNavigation}

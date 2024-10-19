@@ -286,7 +286,7 @@ const FoodDetails = ({route}) => {
           />
         ) : null}
 
-        {!showChef && !showAddToCard && (
+        {/* {!showChef && !showAddToCard && (
           <>
             <Text style={styles.foodReviewText}>
               {strings('addFoodList.food_review')}
@@ -298,7 +298,7 @@ const FoodDetails = ({route}) => {
               titleStyle={styles.reviewText}
             />
           </>
-        )}
+        )} */}
         {showAddToCard && (
           <>
             <Text style={styles.foodReviewText}>
