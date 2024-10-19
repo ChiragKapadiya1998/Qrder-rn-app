@@ -57,15 +57,17 @@ const EditProfile = (props: Props) => {
     userData.restaurant_name,
   );
   const [gstNumber, setGstNumber] = useState<string>(
-    userData.gst_number !== null ? userData.gst_number : '',
+    userData.gst_number ? userData.gst_number : '',
   );
   const [fssaiNumber, setFssaiNumber] = useState<string>(
-    userData.fssai_number !== null ? userData.fssai_number : '',
+    userData.fssai_number ? userData.fssai_number : '',
   );
   const [googleReview, setGoogleReview] = useState<string>(
-    userData.google_review_link !== null ? userData.google_review_link : '',
+    userData.google_review_link ? userData.google_review_link : '',
   );
-  const [pincode, setPincode] = useState(String(userData?.pincode));
+  const [pincode, setPincode] = useState(
+    String(userData?.pincode) ? String(userData?.pincode) : '',
+  );
   const [city, setCity] = useState('');
   const [state, setState] = useState('');
   const [country, setCountry] = useState('');
@@ -77,7 +79,9 @@ const EditProfile = (props: Props) => {
   const [numbers, setNumber] = useState<string>(
     userData.number ? userData.number : '',
   );
-  const [address, setAddress] = useState<string>(userData.address);
+  const [address, setAddress] = useState<string>(
+    userData.address ? userData.address : '',
+  );
   const [photoUri, setPhotoUri] = useState(userData.profile_image);
   const [loading, setLoading] = useState(false);
   const {getCuisines} = useAppSelector(state => state.data);
