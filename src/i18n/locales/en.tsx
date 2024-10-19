@@ -578,5 +578,9 @@ export default {
     Nov: 'Nov',
     Dec: 'Dec',
     SelectBrand: 'Select Brand',
+    Home:'Home',
+    List:'List',
+    Profile:'Profile',
+    Settings:'Settings'
   },
 };

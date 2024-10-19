@@ -106,7 +106,7 @@ export const Icons = {
 
   //tab
   ic_home: require('../assets/Icons/ic_home.png'),
-  ic_bell: require('../assets/Icons/ic_bell.png'),
+  ic_bell: require('../assets/Icons/ic_settings.png'),
   ic_list: require('../assets/Icons/ic_item.png'),
   ic_user: require('../assets/Icons/ic_user.png'),
   ic_history: require('../assets/Icons/ic_history.png'),

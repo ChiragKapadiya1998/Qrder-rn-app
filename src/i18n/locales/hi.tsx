@@ -578,5 +578,9 @@ export default {
     Nov: 'नवंबर',
     Dec: 'दिसंबर',
     SelectBrand: 'ब्रांड चुनें',
+    Home: "होम",
+    List: "सूची",
+    Profile: "प्रोफ़ाइल",
+    Settings: "सेटिंग्स"
   },
 };

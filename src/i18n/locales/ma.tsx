@@ -579,5 +579,9 @@ export default {
     Nov: 'നവംബർ',
     Dec: 'ഡിസംബർ',
     SelectBrand: 'ബ്രാൻഡ് തിരഞ്ഞെടുക്കുക',
+    Home: "ഹോം",
+    List: "പട്ടിക",
+    Profile: "പ്രൊഫൈൽ",
+    Settings: "ക്രമീകരണങ്ങൾ"
   },
 };

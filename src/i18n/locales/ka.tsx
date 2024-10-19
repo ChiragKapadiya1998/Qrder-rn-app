@@ -580,5 +580,9 @@ export default {
     Nov: 'ನವೆಂಬರ್',
     Dec: 'ಡಿಸೆಂಬರ್',
     SelectBrand: 'ಬ್ರ್ಯಾಂಡ್ ಆಯ್ಕೆಮಾಡಿ',
+    Home: "ಮನೆ",
+    List: "ಪಟ್ಟಿ",
+    Profile: "ಪ್ರೊಫೈಲ್",
+    Settings: "ಸೆಟ್ಟಿಂಗ್ಗಳು"
   },
 };

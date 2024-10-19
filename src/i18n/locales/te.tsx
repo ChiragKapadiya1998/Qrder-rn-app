@@ -580,5 +580,9 @@ export default {
     Nov: 'నవంబర్',
     Dec: 'డిసెంబర్',
     SelectBrand: 'బ్రాండ్ ఎంచుకోండి',
+    Home: "హోమ్",
+    List: "జాబితా",
+    Profile: "ప్రొఫైల్",
+    Settings: "సెట్టింగ్‌లు"
   },
 };

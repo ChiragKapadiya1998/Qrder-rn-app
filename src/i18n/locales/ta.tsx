@@ -588,5 +588,9 @@ export default {
     Nov: 'நவம்பர்',
     Dec: 'டிசம்பர்',
     SelectBrand: 'பிராண்டை தேர்வு செய்க',
+    Home: "முகப்பு",
+    List: "பட்டியல்",
+    Profile: "சுயவிவரம்",
+    Settings: "அமைப்புகள்"
   },
 };
