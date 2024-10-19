@@ -53,7 +53,6 @@ const StudentProfile = (props: Props) => {
   const fetchUserInfo = async () => {
     try {
       const userList = await getAsyncUserInfo();
-      console.log('userList.original_url', JSON.stringify(userList));
 
       setUserData(userList);
       setName(userList?.name || '');
@@ -69,7 +68,6 @@ const StudentProfile = (props: Props) => {
     }, []),
   );
 
-  console.log(name);
   const selectImage = () => {
     setLoading(true);
     ImagePicker.openPicker({
@@ -82,7 +80,6 @@ const StudentProfile = (props: Props) => {
         setLoading(false);
       })
       .catch(error => {
-        console.log(error);
         setLoading(false);
       });
   };

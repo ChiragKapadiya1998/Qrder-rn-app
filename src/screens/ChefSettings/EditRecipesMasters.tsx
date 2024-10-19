@@ -37,7 +37,6 @@ const EditRecipesMasters = () => {
   const [recipesname, setRecipesname] = useState(data?.id);
   const {getMenuMasters, getRecipesMenu} = useAppSelector(state => state.data);
   const [recipesList, setRecipesList] = useState(data?.items);
-  console.log('recipesList', data);
 
   const onPressEdit = async () => {
     setLoading(true);
@@ -65,7 +64,6 @@ const EditRecipesMasters = () => {
         setLoading(false);
       },
     };
-    console.log('datadatadatadata', obj?.data);
 
     dispatch(editRecipeMastersAction(obj));
   };

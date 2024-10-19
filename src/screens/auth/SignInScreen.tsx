@@ -53,9 +53,9 @@ const SignInScreen = (props: Props) => {
   const styles = React.useMemo(() => getGlobalStyles({colors}), [colors]);
   // const [email, setEmail] = useState(__DEV__ ? 'adminstudent@gmail.com' : '');
   // const [email, setEmail] = useState(__DEV__ ? 'ssss@gmail.com' : '');
-  const [email, setEmail] = useState(__DEV__ ? 'admin@gmail.com' : '');
+  const [email, setEmail] = useState(__DEV__ ? '' : '');
   // const [email, setEmail] = useState(__DEV__ ? 'user03@gmail.com' : '');
-  const [password, setPassword] = useState(__DEV__ ? 'Test!@123' : '');
+  const [password, setPassword] = useState(__DEV__ ? '' : '');
   // const [password, setPassword] = useState(__DEV__ ? 'Test@1234' : '');
   // const [email, setEmail] = useState('');
   // const [password, setPassword] = useState('');
@@ -116,7 +116,6 @@ const SignInScreen = (props: Props) => {
       data.append('password', password);
       data.append('role', selectRole.toLowerCase());
       data.append('device_token', JSON.parse(deviceToken) || uniqueId);
-      console.log('data', data);
 
       let obj = {
         data,
@@ -185,14 +184,12 @@ const SignInScreen = (props: Props) => {
     });
     try {
       let user = await GoogleSignin.getCurrentUser();
-      console.log(user);
       if (user !== null && Object.keys(user).length !== 0) {
         await GoogleSignin.revokeAccess();
         await GoogleSignin.signOut();
       }
       await GoogleSignin.hasPlayServices();
       const userInfo = await GoogleSignin.signIn();
-      console.log('GoogleSignin userInfo', userInfo);
       let deviceToken = await AsyncStorage.getItem(asyncKeys.fcm_token);
       let uniqueId = await getUniqueId();
 
@@ -207,7 +204,6 @@ const SignInScreen = (props: Props) => {
       let userObj = {
         data: googleUser,
         onSuccess: async res => {
-          console.log('StudentBottomBarStudentBottomBarStudentBottomBar', res);
           await setAsyncRole(selectRole);
           if (res?.university_id) {
             dispatchNavigation(screenName.StudentBottomBar);

@@ -48,8 +48,6 @@ const AddRecipesMasters = () => {
     navigation.goBack();
   };
 
-  console.log('recipesname', recipesname);
-
   useEffect(() => {
     // Listeners for keyboard events
     const keyboardDidShowListener = Keyboard.addListener(

@@ -87,7 +87,6 @@ export async function onAppleLogin() {
     requestedOperation: appleAuth.Operation.LOGIN,
     requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME],
   });
-  console.log('appleAuthRequestResponse', appleAuthRequestResponse);
 
   if (!appleAuthRequestResponse.identityToken) {
     infoToast('Apple Sign-In failed - no identify token returned');
@@ -99,7 +98,6 @@ export async function onAppleLogin() {
     identityToken,
     nonce,
   );
-  console.log('appleCredential', appleCredential);
 
   return auth().signInWithCredential(appleCredential);
 }

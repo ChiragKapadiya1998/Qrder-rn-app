@@ -79,7 +79,9 @@ const MyOrderAdmin = () => {
     let obj = {
       params: itemData?.id,
       onSuccess: res => {
-        Linking.openURL(res.url);
+        if (res.url) {
+          Linking.openURL(res.url);
+        }
       },
       onFailure: () => {},
     };
@@ -179,7 +181,7 @@ const MyOrderAdmin = () => {
                 {color: colors.black},
               ]}>{`₹${calculateTotalTax(allMyOrder?.items)}`}</Text>
           </View> */}
-          <View style={[styles.comanStyle,{marginTop:hp(12)}]}>
+          <View style={[styles.comanStyle, {marginTop: hp(12)}]}>
             <Text style={styles.priText}>
               {strings('myOrders.platform_free')}
             </Text>

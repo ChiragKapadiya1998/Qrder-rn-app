@@ -361,7 +361,6 @@ const SignUpScreen = (props: Props) => {
       let obj = {
         data,
         onSuccess: async (response: any) => {
-          console.log('response', response);
           await setAsyncRole(selectRole);
 
           dispatchNavigation(screenName.StudentBottomBar);
@@ -438,7 +437,6 @@ const SignUpScreen = (props: Props) => {
     });
     try {
       let user = await GoogleSignin.getCurrentUser();
-      console.log(user);
       if (user !== null && Object.keys(user).length !== 0) {
         await GoogleSignin.revokeAccess();
         await GoogleSignin.signOut();

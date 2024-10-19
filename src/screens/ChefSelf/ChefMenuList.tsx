@@ -23,9 +23,11 @@ import {
   getCuisinesMenuListAction,
   getMenuAction,
 } from '../../actions/menuAction';
-import {GET_EMPTY_MENU_LIST} from '../../redux/actionTypes';
+import {GET_EMPTY_MENU_LIST, GET_MENU_DATA} from '../../redux/actionTypes';
 import {Icons} from '../../utils/images';
 import {screenName} from '../../navigation/screenNames';
+import ToggleComponent from '../../compoment/ToggleComponent';
+import {setFoodVeg} from '../../utils/commonActions';
 
 type Props = {};
 
@@ -49,8 +51,9 @@ const MyMenuList = (props: Props) => {
   const [photoUri, setPhotoUri] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [filterData, setFilterData] = useState([]);
-
+  const {isFoodVeg} = useAppSelector(state => state.common);
   const refFlatList = useRef();
+  const trackColor = isFoodVeg !== 2 ? colors.green_text : colors.red_text;
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
@@ -109,9 +112,12 @@ const MyMenuList = (props: Props) => {
 
   const onSearchBar = (text: string) => {
     setSearchQuery(text);
-    const filteredItems = getMenuData?.filter((f: any) =>
-      f?.name?.toLowerCase()?.match(text?.toLowerCase()),
-    );
+
+    const filteredItems = getMenuData
+      ?.filter(f => {
+        return f?.food_type == isFoodVeg;
+      })
+      ?.filter((f: any) => f?.name?.toLowerCase()?.match(text?.toLowerCase()));
     setFilterData(filteredItems);
   };
 
@@ -212,6 +218,20 @@ const MyMenuList = (props: Props) => {
     );
   };
 
+  const changeValue = () => {
+    const newValue = isFoodVeg === 1 ? 2 : 1;
+    console.log('newValue', newValue);
+
+    setSearchQuery('');
+    // if (tabSelection === strings('myMenuList.all')) {
+    //   getMenuList(1, isFoodVeg === 1 ? 2 : 1);
+    // } else {
+    //   getAllCuisinesMenuList(cuisineId, 1, isFoodVeg === 1 ? 2 : 1);
+    // }
+
+    dispatch(setFoodVeg(newValue));
+  };
+
   return (
     <View style={styles.container}>
       <StatusBar
@@ -256,15 +276,38 @@ const MyMenuList = (props: Props) => {
         </View>
       )}
 
-      <View style={styles.searchInputContainer}>
-        <Image source={Icons.search} style={styles.searchIcon} />
-        <TextInput
-          style={styles.searchInput}
-          placeholder={strings('CuisinesNameList.Search')}
-          value={searchQuery}
-          onChangeText={text => onSearchBar(text)}
-          placeholderTextColor={colors.text_gray1}
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          alignSelf: 'flex-start',
+          marginHorizontal: wp(20),
+          marginVertical: hp(20),
+        }}>
+        <View style={styles.searchInputContainer}>
+          <Image source={Icons.search} style={styles.searchIcon} />
+          <TextInput
+            style={styles.searchInput}
+            placeholder={strings('CuisinesNameList.Search')}
+            value={searchQuery}
+            onChangeText={text => onSearchBar(text)}
+            placeholderTextColor={colors.text_gray1}
+          />
+        </View>
+
+        <ToggleComponent
+          value={isFoodVeg === 2}
+          onValueChange={() => changeValue()}
+          trackColor={trackColor}
+          toggleContainerStyle={styles.btnStyle}
+          toggleWheel={styles.toggleWheels}
+          isFood={true}
         />
+        <Text numberOfLines={1} style={styles.vegText}>
+          {isFoodVeg !== 2
+            ? strings('addFoodList.veg')
+            : strings('addFoodList.non_veg')}
+        </Text>
       </View>
 
       <View style={styles.boxContainer}>
@@ -347,18 +390,35 @@ const getGlobalStyles = (props: any) => {
       flexDirection: 'row',
       alignItems: 'center',
       paddingHorizontal: wp(14),
-      marginHorizontal: hp(20),
-      marginTop: hp(20),
+      // flex: 1,
+      width: SCREEN_WIDTH * 0.58,
     },
     searchInput: {
       flex: 1,
       color: colors.black,
-      height: hp(44),
+      height: hp(54),
     },
     searchIcon: {
       width: 20,
       height: 20,
       tintColor: colors.border,
+    },
+    btnStyle: {
+      width: 32,
+      height: 20,
+      marginLeft: 14,
+      marginRight: 12,
+      borderRadius: 15,
+      justifyContent: 'center',
+    },
+    toggleWheels: {
+      width: 12,
+      height: 12,
+      borderRadius: 12,
+    },
+    vegText: {
+      ...commonFontStyle(500, 14, colors.black),
+      width: wp(59),
     },
   });
 };

@@ -119,7 +119,6 @@ const ChartsView = ({
           `${strings('newKey.St')}`,
           `${strings('newKey.S')}`,
         ];
-        console.log('revenueData', revenueData);
 
         const updateWeekly = revenueData?.map((entry, index) => {
           return {
@@ -286,7 +285,6 @@ const ChartsView = ({
         setIsLoading(false);
       },
     };
-    console.log('params', obj.params);
 
     dispatch(getDashboardAction(obj));
   };
@@ -295,20 +293,6 @@ const ChartsView = ({
     setdropDownValue(text);
     getDashboard(finedDate(text));
   };
-
-  console.log(
-    'adfasdasdas',
-    financial(getDashboardData?.total_revenue) == 0 ||
-      getDashboardData?.data == 0 ||
-      getDashboardData?.data == undefined,
-  );
-  console.log('adasdasdaddasda', getDashboardData?.data);
-
-  console.log('adasdasdaddasda', dropDownValue);
-  console.log(
-    'adasdasdaddasdadasdasdasdadasd',
-    chartData(getDashboardData?.data, dropDownValue),
-  );
 
   return (
     <View style={styles.container}>

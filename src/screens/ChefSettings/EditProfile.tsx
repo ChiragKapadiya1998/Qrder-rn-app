@@ -95,7 +95,6 @@ const EditProfile = (props: Props) => {
   const [isPictureEdit, setIsPictureEdit] = useState<boolean>(
     userData.profile_image ? true : false,
   );
-  console.log('userData.number', userData.number);
 
   const [salary, setSalary] = useState(
     userData?.salary ? userData.salary.toString() : '',

@@ -88,7 +88,7 @@ const FoodDetails = ({route}) => {
   }, [selectedItems]);
 
   const onPressAddCard = () => {
-    if (foodDelivery.trim().length === 0) {
+    if (false) {
       errorToast(strings('foodDetails.e_food_customization'));
     } else {
       let obj = {
@@ -130,8 +130,8 @@ const FoodDetails = ({route}) => {
       <View style={styles.itemContainer}>
         <TouchableOpacity
           style={styles.checkboxContainer}
-          onPress={() => !showChef && toggleSelection(item)}>
-          {!showChef && (
+          onPress={() => showChef && toggleSelection(item)}>
+          {showChef && (
             <View
               style={[
                 styles.checkbox,

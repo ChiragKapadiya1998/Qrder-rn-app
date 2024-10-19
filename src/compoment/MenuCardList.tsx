@@ -46,10 +46,10 @@ const MenuCardList = ({
   const [selectItem, setSelectItem] = useState([]);
   const {getMenuData, allMenuCount} = useAppSelector(state => state.data);
   const dispatch = useAppDispatch();
+  const {isFoodVeg} = useAppSelector(state => state.common);
 
   const currentData = useRef();
   currentData.current = getMenuData;
-  console.log('searchQuery', searchQuery);
 
   const removeMenuCardList = () => {
     let UserInfo = {
@@ -71,11 +71,6 @@ const MenuCardList = ({
     setVisible(false);
     removeMenuCardList();
   };
-
-  console.log(
-    'searchQuery.length !== 0 || filterData.length == 0',
-    searchQuery.length !== 0 || filterData.length == 0,
-  );
 
   const hasMoreItems = currentData.current?.length < allMenuCount;
   if (searchQuery.length !== 0) {
@@ -125,7 +120,9 @@ const MenuCardList = ({
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }
-          data={currentData.current}
+          data={currentData.current?.filter(f => {
+            return f?.food_type == isFoodVeg;
+          })}
           onMomentumScrollBegin={onMomentumScrollBegin}
           numColumns={2}
           windowSize={10}

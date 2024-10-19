@@ -29,7 +29,6 @@ export default function EditFolderModal({isVisible, onClose, selectItem}: any) {
   const styles = React.useMemo(() => getGlobalStyles({colors}), [colors]);
   const [addText, setAddText] = useState('');
   const dispatch = useAppDispatch();
-  console.log('selectItem', selectItem);
 
   const onPressNewAdd = async () => {
     if (addText == '') {

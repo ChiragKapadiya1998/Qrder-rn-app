@@ -33,7 +33,6 @@ const ChefMyOrders = () => {
   const dispatch = useAppDispatch();
   const [myOrderData, setMyOrderData] = useState({});
   const [isLoading, setIsLoading] = useState(true);
-  console.log('myOrderData.items', myOrderData.items);
 
   const goback = () => {
     navigation.goBack();

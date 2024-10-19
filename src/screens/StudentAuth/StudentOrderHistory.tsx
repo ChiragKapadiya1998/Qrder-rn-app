@@ -113,7 +113,9 @@ const StudentOrderHistory = () => {
     let obj = {
       params: id,
       onSuccess: res => {
-        Linking.openURL(res.url);
+        if (res.url) {
+          Linking.openURL(res.url);
+        }
       },
       onFailure: () => {},
     };

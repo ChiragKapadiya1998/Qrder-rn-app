@@ -190,8 +190,6 @@ const MyMenuList = (props: Props) => {
     );
   };
 
-  console.log('getCuisines', getCuisines);
-
   return (
     <View style={styles.container}>
       <StatusBar
@@ -203,7 +201,6 @@ const MyMenuList = (props: Props) => {
           navigation.goBack();
         }}
         onRightPress={() => {
-          console.log('dee');
           navigation.navigate(screenName.CuisinesNameList);
         }}
         mainShow={true}

@@ -82,11 +82,6 @@ const Home = (props: Props) => {
         await getAddress(
           response,
           async (result: any) => {
-            console.log(
-              'result?.results?.[0]?.formatted_address',
-              result?.results?.[0]?.formatted_address,
-            );
-
             setValue(result?.results?.[0]?.formatted_address);
             result?.results?.length
               ? await setAsyncLocation(result?.results?.[0]?.formatted_address)

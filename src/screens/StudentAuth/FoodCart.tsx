@@ -60,8 +60,7 @@ const FoodCart = () => {
   let discontData =
     discount == 0
       ? 0
-      : (miscellaneousItemsPrice + totalPrice + platformPrice) *
-        (discount / 100);
+      : (miscellaneousItemsPrice + totalPrice) * (discount / 100);
 
   const deleteCardItem = (id: number) => {
     let cardInfo = {
