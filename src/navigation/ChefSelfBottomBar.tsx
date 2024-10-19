@@ -14,6 +14,7 @@ import ChefProfile from '../screens/ChefSelf/ChefProfile';
 import ChefFoodList from '../screens/ChefSelf/ChefMenuList';
 import ChefNotification from '../screens/ChefSelf/ChefNotification';
 import ChefMenuList from '../screens/ChefSelf/ChefMenuList';
+import {strings} from '../i18n/i18n';
 
 const Tab = createBottomTabNavigator();
 
@@ -31,6 +32,7 @@ const TabBarItem = ({state, navigation}: BottomTabBarProps) => {
               width: 24,
               height: 24,
               tintColor: isFocused ? colors.Primary_Orange : colors.tabBar,
+              resizeMode: 'contain',
             }}
           />
         );
@@ -42,6 +44,7 @@ const TabBarItem = ({state, navigation}: BottomTabBarProps) => {
               width: 24,
               height: 24,
               tintColor: isFocused ? colors.Primary_Orange : colors.tabBar,
+              resizeMode: 'contain',
             }}
           />
         );
@@ -54,6 +57,7 @@ const TabBarItem = ({state, navigation}: BottomTabBarProps) => {
               width: 24,
               height: 24,
               tintColor: isFocused ? colors.Primary_Orange : colors.tabBar,
+              resizeMode: 'contain',
             }}
           />
         );
@@ -65,11 +69,11 @@ const TabBarItem = ({state, navigation}: BottomTabBarProps) => {
   const getText = (key: number) => {
     switch (key) {
       case 0:
-        return 'Home';
+        return strings('newKey.Home');
       case 1:
-        return 'History';
+        return strings('ordersList.history');
       case 2:
-        return 'Profile';
+        return strings('newKey.Profile');
       default:
         break;
     }

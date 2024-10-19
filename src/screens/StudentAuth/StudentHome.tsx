@@ -171,6 +171,7 @@ const StudentHome = () => {
         extraStyle={styles.headerContainer}
         isHideIcon={true}
         isShowIcon={false}
+        showRight={false}
         onRightPressNotification={() => {
           navigation.navigate(screenName.ChefNotification);
         }}

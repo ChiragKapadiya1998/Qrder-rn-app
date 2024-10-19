@@ -6,14 +6,14 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
-import React, { useEffect, useState } from 'react';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import React, {useEffect, useState} from 'react';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
-import { useNavigation, useTheme } from '@react-navigation/native';
-import { commonFontStyle, hp, wp } from '../theme/fonts';
-import { Icons } from '../utils/images';
-import { strings } from '../i18n/i18n';
-import { useAppSelector } from '../redux/hooks';
+import {useNavigation, useTheme} from '@react-navigation/native';
+import {commonFontStyle, hp, wp} from '../theme/fonts';
+import {Icons} from '../utils/images';
+import {strings} from '../i18n/i18n';
+import {useAppSelector} from '../redux/hooks';
 
 type HomeProps = {
   onPressLocation?: () => void;
@@ -31,9 +31,10 @@ type HomeProps = {
   isShowIcon?: boolean;
   rightTextStyle: any;
   isCardIcon?: boolean;
-  isCreateIcon?: boolean,
+  isCreateIcon?: boolean;
   createText?: string;
-  isShowInvoice?: boolean
+  isShowInvoice?: boolean;
+  showRight?: boolean;
 };
 
 const HomeHeader = ({
@@ -54,13 +55,14 @@ const HomeHeader = ({
   isCreateIcon = false,
   createText,
   onRightPressNotification,
-  isShowInvoice = false
+  isShowInvoice = false,
+  showRight,
 }: HomeProps) => {
-  const { navigate } = useNavigation();
-  const { colors } = useTheme();
-  const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
-  const { getCardData } = useAppSelector(state => state.data);
-  const { isDarkTheme } = useAppSelector(state => state.common);
+  const {navigate} = useNavigation();
+  const {colors} = useTheme();
+  const styles = React.useMemo(() => getGlobalStyles({colors}), [colors]);
+  const {getCardData} = useAppSelector(state => state.data);
+  const {isDarkTheme} = useAppSelector(state => state.common);
 
   const onPressBell = () => {
     // @ts-ignore
@@ -88,7 +90,6 @@ const HomeHeader = ({
               <View style={styles.bagView}>
                 <Image source={Icons?.bagIcon} style={styles?.bag_logo} />
               </View>
-
             )}
           </TouchableOpacity>
         ) : null}
@@ -100,17 +101,19 @@ const HomeHeader = ({
             </View>
           </View>
         ) : null}
-        {isCreateIcon ? isShowInvoice ?
-          <TouchableOpacity onPress={onRightPress} style={styles.invoiceView}>
-            <Image source={Icons.invoiceIcon} style={styles.invoiceIcons} />
-            <Text style={styles.invoiceText}>{createText}</Text>
-          </TouchableOpacity>
-          :
-          <TouchableOpacity onPress={onRightPress} style={styles.createView}>
-            <Image source={Icons.addItemIcon} style={styles.addItemIcon} />
-            <Text style={styles.createText}>{createText}</Text>
-          </TouchableOpacity>
-          : null}
+        {isCreateIcon ? (
+          isShowInvoice ? (
+            <TouchableOpacity onPress={onRightPress} style={styles.invoiceView}>
+              <Image source={Icons.invoiceIcon} style={styles.invoiceIcons} />
+              <Text style={styles.invoiceText}>{createText}</Text>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity onPress={onRightPress} style={styles.createView}>
+              <Image source={Icons.addItemIcon} style={styles.addItemIcon} />
+              <Text style={styles.createText}>{createText}</Text>
+            </TouchableOpacity>
+          )
+        ) : null}
       </SafeAreaView>
     );
   }
@@ -129,13 +132,15 @@ const HomeHeader = ({
         </TouchableOpacity>
       </View>
 
-      <TouchableOpacity
-        style={styles.location_icon1}
-        onPress={() => {
-          onRightPressNotification();
-        }}>
-        <Image source={Icons?.ic_bell} style={styles?.menuIcon} />
-      </TouchableOpacity>
+      {showRight && (
+        <TouchableOpacity
+          style={styles.location_icon1}
+          onPress={() => {
+            onRightPressNotification();
+          }}>
+          <Image source={Icons?.ic_bell} style={styles?.menuIcon} />
+        </TouchableOpacity>
+      )}
     </SafeAreaView>
   );
 };
@@ -143,7 +148,7 @@ const HomeHeader = ({
 export default HomeHeader;
 
 const getGlobalStyles = (props: any) => {
-  const { colors } = props;
+  const {colors} = props;
   return StyleSheet.create({
     container: {
       backgroundColor: colors?.bg_white,
@@ -157,7 +162,7 @@ const getGlobalStyles = (props: any) => {
       width: 20,
       height: 20,
       resizeMode: 'contain',
-      tintColor:colors.black
+      tintColor: colors.black,
     },
     bagView: {
       height: hp(35),
@@ -165,7 +170,7 @@ const getGlobalStyles = (props: any) => {
       borderRadius: 10,
       backgroundColor: colors.cards_bg,
       alignItems: 'center',
-      justifyContent: 'center'
+      justifyContent: 'center',
     },
     arrow_down: {
       width: wp(9),
@@ -220,7 +225,7 @@ const getGlobalStyles = (props: any) => {
     },
     resetText: {
       ...commonFontStyle(400, 14, colors.text_orange),
-      textDecorationLine: 'underline'
+      textDecorationLine: 'underline',
     },
     cardIcon: {
       width: 24,
@@ -268,12 +273,12 @@ const getGlobalStyles = (props: any) => {
     addItemIcon: {
       width: 12,
       height: 12,
-      tintColor: colors.defult_white
+      tintColor: colors.defult_white,
     },
     invoiceIcons: {
       width: 18,
       height: 18,
-      tintColor: colors.text_orange
-    }
+      tintColor: colors.text_orange,
+    },
   });
 };

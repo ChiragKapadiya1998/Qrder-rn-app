@@ -150,8 +150,6 @@ const SignUpScreen = (props: Props) => {
       errorToast(strings('login.error_role'));
     } else if (name.trim().length === 0) {
       errorToast(strings('login.error_name'));
-    } else if (user_name.trim().length === 0) {
-      errorToast(strings('sign_up.user_name_error'));
     } else if (lastName.trim().length === 0) {
       errorToast(strings('login.error_nameLastName'));
     } else if (number.trim().length === 0) {
@@ -174,6 +172,8 @@ const SignUpScreen = (props: Props) => {
       errorToast(strings('login.error_country'));
     } else if (pincode.trim().length === 0) {
       errorToast(strings('login.error_pincode'));
+    } else if (user_name.trim().length === 0) {
+      errorToast(strings('sign_up.user_name_error'));
     } else if (password.trim().length === 0) {
       errorToast(strings('login.error_password'));
     } else if (password.trim().length < 9) {
@@ -233,8 +233,6 @@ const SignUpScreen = (props: Props) => {
       errorToast(strings('login.error_v_university'));
     } else if (name.trim().length === 0) {
       errorToast(strings('login.error_name'));
-    } else if (user_name.trim().length === 0) {
-      errorToast(strings('sign_up.user_name_error'));
     } else if (lastName.trim().length === 0) {
       errorToast(strings('login.error_nameLastName'));
     } else if (number.trim().length === 0) {
@@ -257,6 +255,8 @@ const SignUpScreen = (props: Props) => {
       errorToast(strings('login.error_country'));
     } else if (pincode.trim().length === 0) {
       errorToast(strings('login.error_pincode'));
+    } else if (user_name.trim().length === 0) {
+      errorToast(strings('sign_up.user_name_error'));
     } else if (password.trim().length === 0) {
       errorToast(strings('login.error_password'));
     } else if (password.trim().length < 9) {

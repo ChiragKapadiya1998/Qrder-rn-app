@@ -1,10 +1,10 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   BottomTabBarProps,
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs';
-import { Image, Platform, Pressable, StyleSheet, Text, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {Image, Platform, Pressable, StyleSheet, Text, View} from 'react-native';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import {
   commonFontStyle,
   hp,
@@ -13,22 +13,26 @@ import {
   SCREEN_WIDTH,
   wp,
 } from '../theme/fonts';
-import { screenName } from './screenNames';
+import {screenName} from './screenNames';
 import Home from '../screens/Chef/Home';
-import { useTheme } from '@react-navigation/native';
+import {useTheme} from '@react-navigation/native';
 import FoodList from '../screens/Chef/FoodList';
 import AddFoodDetails from '../screens/Chef/AddFoodDetails';
 import Notification from '../screens/Chef/Notification';
 import Profile from '../screens/Chef/Profile';
-import { Icons } from '../utils/images';
-import { AdminHomeStack } from './StackNavigator';
+import {Icons} from '../utils/images';
+import {AdminHomeStack} from './StackNavigator';
 import MenuList from '../screens/Chef/MenuList';
+import {strings} from '../i18n/i18n';
+import Settings from '../screens/ChefSettings/Settings';
 
 const Tab = createBottomTabNavigator();
 
-const TabBarItem = ({ state, navigation }: BottomTabBarProps) => {
-  const { colors } = useTheme();
-  const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
+const TabBarItem = ({state, navigation}: BottomTabBarProps) => {
+  const {colors} = useTheme();
+  const styles = React.useMemo(() => getGlobalStyles({colors}), [colors]);
+
+  useEffect(() => {}, []);
 
   const getIcons = (key: number, isFocused: boolean) => {
     switch (key) {
@@ -40,6 +44,7 @@ const TabBarItem = ({ state, navigation }: BottomTabBarProps) => {
               width: 24,
               height: 24,
               tintColor: isFocused ? colors.Primary_Orange : colors.tabBar,
+              resizeMode: 'contain',
             }}
           />
         );
@@ -51,6 +56,7 @@ const TabBarItem = ({ state, navigation }: BottomTabBarProps) => {
               width: 24,
               height: 24,
               tintColor: isFocused ? colors.Primary_Orange : colors.tabBar,
+              resizeMode: 'contain',
             }}
           />
         );
@@ -59,23 +65,11 @@ const TabBarItem = ({ state, navigation }: BottomTabBarProps) => {
         return (
           <Image
             source={Icons.addmenu}
-            style={{ width: 56, height: 56, bottom: SCREEN_HEIGHT * 0.04 }}
+            style={{width: 56, height: 56, bottom: SCREEN_HEIGHT * 0.04}}
           />
         );
 
       case 3:
-        return (
-          <Image
-            source={Icons.ic_bell}
-            style={{
-              width: 24,
-              height: 24,
-              tintColor: isFocused ? colors.Primary_Orange : colors.tabBar,
-            }}
-          />
-        );
-
-      case 4:
         return (
           <Image
             source={Icons.ic_user}
@@ -83,6 +77,20 @@ const TabBarItem = ({ state, navigation }: BottomTabBarProps) => {
               width: 24,
               height: 24,
               tintColor: isFocused ? colors.Primary_Orange : colors.tabBar,
+              resizeMode: 'contain',
+            }}
+          />
+        );
+
+      case 4:
+        return (
+          <Image
+            source={Icons.ic_settings}
+            style={{
+              width: 24,
+              height: 24,
+              tintColor: isFocused ? colors.Primary_Orange : colors.tabBar,
+              resizeMode: 'contain',
             }}
           />
         );
@@ -94,15 +102,15 @@ const TabBarItem = ({ state, navigation }: BottomTabBarProps) => {
   const getText = (key: number) => {
     switch (key) {
       case 0:
-        return 'Home';
+        return strings('newKey.Home');
       case 1:
-        return 'Item';
+        return strings('foodDetails.item');
       case 2:
-        return 'Add';
+        return strings('addFoodList.add');
       case 3:
-        return 'Notification';
+        return strings('newKey.Profile');
       case 4:
-        return 'Profile';
+        return strings('newKey.Settings');
       default:
         break;
     }
@@ -147,8 +155,8 @@ const TabBarItem = ({ state, navigation }: BottomTabBarProps) => {
 };
 
 function BottomTabBar() {
-  const { colors, isDark } = useTheme();
-  const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
+  const {colors, isDark} = useTheme();
+  const styles = React.useMemo(() => getGlobalStyles({colors}), [colors]);
 
   return (
     <Tab.Navigator
@@ -159,7 +167,7 @@ function BottomTabBar() {
         tabBarStyle: {
           height: 55,
         },
-        tabBarHideOnKeyboard: true
+        tabBarHideOnKeyboard: true,
       }}>
       <Tab.Screen
         name={screenName.tab_bar_name.Home}
@@ -175,15 +183,15 @@ function BottomTabBar() {
       />
       <Tab.Screen
         name={screenName.tab_bar_name.Notification}
-        component={Notification}
+        component={Profile}
       />
-      <Tab.Screen name={screenName.tab_bar_name.Profile} component={Profile} />
+      <Tab.Screen name={screenName.Settings} component={Settings} />
     </Tab.Navigator>
   );
 }
 
 const getGlobalStyles = (props: any) => {
-  const { colors } = props;
+  const {colors} = props;
   return StyleSheet.create({
     itemContainer: {
       height: hp(65),

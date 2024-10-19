@@ -221,6 +221,7 @@ const ChefHome = () => {
         onPressCart={() => {}}
         location={value}
         onPressLocation={onPressLocation}
+        showRight={true}
         onRightPressNotification={() => {
           setRunninOrderModal(true);
           // navigation.navigate(screenName.ChefNotification);

@@ -366,6 +366,8 @@ const ChartsView = ({
             height={SCREEN_HEIGHT * 0.18}
             yAxisThickness={0}
             xAxisThickness={0}
+            rulesType="solid"
+            rulesColor={colors.line}
           />
         ) : (
           <BarChart
@@ -383,6 +385,8 @@ const ChartsView = ({
             height={SCREEN_HEIGHT * 0.18}
             yAxisThickness={0}
             xAxisThickness={0}
+            rulesType="solid"
+            rulesColor={colors.line}
           />
         )}
       </View>

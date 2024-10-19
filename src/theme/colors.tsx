@@ -81,6 +81,7 @@ export const light_theme = {
   green_text: '#1CAA50',
   red_text: '#CC3730',
   input_modal_bg: '#F1F1F1',
+  line: '#C8C8C8',
 };
 
 export const dark_theme = {
@@ -162,4 +163,5 @@ export const dark_theme = {
   green_text: '#1CAA50',
   red_text: '#CC3730',
   input_modal_bg: '#0C0F14',
+  line: '#303030',
 };

@@ -3,12 +3,12 @@ import {
   BottomTabBarProps,
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs';
-import { Image, Platform, Pressable, StyleSheet, Text, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { commonFontStyle, hp, isIos, SCREEN_WIDTH, wp } from '../theme/fonts';
-import { screenName } from './screenNames';
-import { CommonActions, StackActions, useTheme } from '@react-navigation/native';
-import { Icons } from '../utils/images';
+import {Image, Platform, Pressable, StyleSheet, Text, View} from 'react-native';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import {commonFontStyle, hp, isIos, SCREEN_WIDTH, wp} from '../theme/fonts';
+import {screenName} from './screenNames';
+import {CommonActions, StackActions, useTheme} from '@react-navigation/native';
+import {Icons} from '../utils/images';
 import ChefHome from '../screens/ChefSelf/ChefHome';
 import ChefProfile from '../screens/ChefSelf/ChefProfile';
 import ChefFoodList from '../screens/ChefSelf/ChefMenuList';
@@ -18,16 +18,17 @@ import StudentHome from '../screens/StudentAuth/StudentHome';
 import StudentProfile from '../screens/StudentAuth/StudentProfile';
 import StudentNotification from '../screens/StudentAuth/StudentNotification';
 import StudentOrderHistory from '../screens/StudentAuth/StudentOrderHistory';
-import { useAppSelector } from '../redux/hooks';
-import { StudentHomeStack } from './StackNavigator';
-import { strings } from '../i18n/i18n';
+import {useAppSelector} from '../redux/hooks';
+import {StudentHomeStack} from './StackNavigator';
+import {strings} from '../i18n/i18n';
+import Settings from '../screens/ChefSettings/Settings';
 
 const Tab = createBottomTabNavigator();
 
-const TabBarItem = ({ state, navigation }: BottomTabBarProps) => {
-  const { colors } = useTheme();
-  const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
-  const { getCardData } = useAppSelector(state => state.data);
+const TabBarItem = ({state, navigation}: BottomTabBarProps) => {
+  const {colors} = useTheme();
+  const styles = React.useMemo(() => getGlobalStyles({colors}), [colors]);
+  const {getCardData} = useAppSelector(state => state.data);
 
   const getIcons = (key: number, isFocused: boolean) => {
     switch (key) {
@@ -39,6 +40,7 @@ const TabBarItem = ({ state, navigation }: BottomTabBarProps) => {
               width: 24,
               height: 24,
               tintColor: isFocused ? colors.Primary_Orange : colors.tabBar,
+              resizeMode: 'contain',
             }}
           />
         );
@@ -51,6 +53,7 @@ const TabBarItem = ({ state, navigation }: BottomTabBarProps) => {
                 width: 24,
                 height: 24,
                 tintColor: isFocused ? colors.Primary_Orange : colors.tabBar,
+                resizeMode: 'contain',
               }}
             />
             {/* {getCardData?.length !== 0 && (
@@ -85,6 +88,7 @@ const TabBarItem = ({ state, navigation }: BottomTabBarProps) => {
               width: 24,
               height: 24,
               tintColor: isFocused ? colors.Primary_Orange : colors.tabBar,
+              resizeMode: 'contain',
             }}
           />
         );
@@ -92,11 +96,12 @@ const TabBarItem = ({ state, navigation }: BottomTabBarProps) => {
       case 3:
         return (
           <Image
-            source={Icons.ic_bell}
+            source={Icons.ic_settings}
             style={{
               width: 24,
               height: 24,
               tintColor: isFocused ? colors.Primary_Orange : colors.tabBar,
+              resizeMode: 'contain',
             }}
           />
         );
@@ -162,8 +167,8 @@ const TabBarItem = ({ state, navigation }: BottomTabBarProps) => {
 };
 
 function StudentBottomBar() {
-  const { colors } = useTheme();
-  const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
+  const {colors} = useTheme();
+  const styles = React.useMemo(() => getGlobalStyles({colors}), [colors]);
 
   return (
     <Tab.Navigator
@@ -188,16 +193,13 @@ function StudentBottomBar() {
         name={screenName.student_tab_bar.StudentProfile}
         component={StudentProfile}
       />
-      <Tab.Screen
-        name={screenName.student_tab_bar.StudentNotification}
-        component={StudentNotification}
-      />
+      <Tab.Screen name={screenName.Settings} component={Settings} />
     </Tab.Navigator>
   );
 }
 
 const getGlobalStyles = (props: any) => {
-  const { colors } = props;
+  const {colors} = props;
   return StyleSheet.create({
     itemContainer: {
       height: hp(65),

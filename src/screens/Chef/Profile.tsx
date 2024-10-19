@@ -196,7 +196,7 @@ const Profile = (props: Props) => {
               {/* <View style={styles.profilImage} /> */}
               <View style={styles.userNameView}>
                 <Text style={styles.nameText}>{name}</Text>
-                {/* <Text style={styles.numberText}>{number}</Text> */}
+                <Text style={styles.numberText}>{number}</Text>
               </View>
             </View>
           </View>

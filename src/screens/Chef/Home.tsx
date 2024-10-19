@@ -197,6 +197,9 @@ const Home = (props: Props) => {
         onPressCart={() => {}}
         location={value}
         onPressLocation={onPressLocation}
+        isHideIcon={true}
+        showRight={true}
+        isCreateIcon={true}
         onRightPressNotification={() => {
           setOrderRequestModal(true);
           // navigation.navigate(screenName.tab_bar_name?.Notification);
