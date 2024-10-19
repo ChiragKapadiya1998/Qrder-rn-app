@@ -549,14 +549,7 @@ const SignUpScreen = (props: Props) => {
             label={strings('sign_up.name')}
             onChangeText={(t: string) => setName(t)}
           />
-          {selectRole !== 'Student' && (
-            <Input
-              value={user_name}
-              placeholder={strings('sign_up.user_name')}
-              label={strings('sign_up.user_name')}
-              onChangeText={(t: string) => setUser_name(t)}
-            />
-          )}
+
           <Input
             value={lastName}
             placeholder={strings('sign_up.lats_p_name')}
@@ -672,6 +665,14 @@ const SignUpScreen = (props: Props) => {
               />
             </>
           )} */}
+          {selectRole !== 'Student' && (
+            <Input
+              value={user_name}
+              placeholder={strings('sign_up.user_name')}
+              label={strings('sign_up.user_name')}
+              onChangeText={(t: string) => setUser_name(t)}
+            />
+          )}
           <Input
             value={password}
             autoCorrect={false}

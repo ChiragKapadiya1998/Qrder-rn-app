@@ -121,6 +121,8 @@ export const orderCreateAction =
     })
       .then(async (response: any) => {
         if (response?.data?.data) {
+          console.log('orderCreateAction', response.data);
+
           successToast(response?.data.message);
           dispatch({type: GET_CARD_EMPTY_LIST, payload: response?.data?.data});
           if (request.onSuccess) request.onSuccess(response.data);
@@ -129,6 +131,8 @@ export const orderCreateAction =
         }
       })
       .catch(error => {
+        console.log('orderCreateAction', error);
+
         if (request.onFailure) request.onFailure(error?.response);
       });
   };

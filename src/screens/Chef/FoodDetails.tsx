@@ -130,16 +130,18 @@ const FoodDetails = ({route}) => {
       <View style={styles.itemContainer}>
         <TouchableOpacity
           style={styles.checkboxContainer}
-          onPress={() => toggleSelection(item)}>
-          <View
-            style={[
-              styles.checkbox,
-              {backgroundColor: isSelected ? colors.blue : 'transparent'},
-            ]}>
-            {isSelected && (
-              <Image source={Icons.ic_check} style={styles.ic_check} />
-            )}
-          </View>
+          onPress={() => !showChef && toggleSelection(item)}>
+          {!showChef && (
+            <View
+              style={[
+                styles.checkbox,
+                {backgroundColor: isSelected ? colors.blue : 'transparent'},
+              ]}>
+              {isSelected && (
+                <Image source={Icons.ic_check} style={styles.ic_check} />
+              )}
+            </View>
+          )}
           <Text style={[styles.text1, {color: selectColor}]}>{item.name}</Text>
         </TouchableOpacity>
         <Text

@@ -9,13 +9,13 @@ import {
   ScrollView,
   Alert,
 } from 'react-native';
-import React, { useEffect, useState } from 'react';
-import { useIsFocused, useNavigation, useTheme } from '@react-navigation/native';
-import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import React, {useEffect, useState} from 'react';
+import {useIsFocused, useNavigation, useTheme} from '@react-navigation/native';
+import {useAppDispatch, useAppSelector} from '../../redux/hooks';
 import HomeHeader from '../../compoment/HomeHeader';
-import { strings } from '../../i18n/i18n';
-import { commonFontStyle, hp, wp } from '../../theme/fonts';
-import { Icons } from '../../utils/images';
+import {strings} from '../../i18n/i18n';
+import {commonFontStyle, hp, wp} from '../../theme/fonts';
+import {Icons} from '../../utils/images';
 import Input from '../../compoment/Input';
 import PrimaryButton from '../../compoment/PrimaryButton';
 import {
@@ -30,14 +30,16 @@ import {
   getRestaurantDiscountAction,
   increment,
 } from '../../actions/commonAction';
+import {errorToast} from '../../utils/commonFunction';
+import {screenName} from '../../navigation/screenNames';
 
 const FoodCart = () => {
-  const { colors } = useTheme();
+  const {colors} = useTheme();
   const navigation = useNavigation();
   const dispatch = useAppDispatch();
-  const styles = React.useMemo(() => getGlobalStyles({ colors }), [colors]);
-  const { getCardData } = useAppSelector(state => state.data);
-  const { isDarkTheme, discount } = useAppSelector(state => state.common);
+  const styles = React.useMemo(() => getGlobalStyles({colors}), [colors]);
+  const {getCardData} = useAppSelector(state => state.data);
+  const {isDarkTheme, discount} = useAppSelector(state => state.common);
   const [address, setAddress] = useState('');
   const [loading, setLoading] = useState(false);
   const isFocuse = useIsFocused();
@@ -59,15 +61,15 @@ const FoodCart = () => {
     discount == 0
       ? 0
       : (miscellaneousItemsPrice + totalPrice + platformPrice) *
-      (discount / 100);
+        (discount / 100);
 
   const deleteCardItem = (id: number) => {
     let cardInfo = {
       data: id,
       onSuccess: () => {
         let obj = {
-          onSuccess: () => { },
-          onFailure: () => { },
+          onSuccess: () => {},
+          onFailure: () => {},
         };
         dispatch(getCardAction(obj));
       },
@@ -116,32 +118,35 @@ const FoodCart = () => {
     dispatch(updateQuantityAction(updateObj));
   };
   const payNowPress = (cardId: number, item) => {
-    setLoading(true);
-    let data = new FormData();
-    data.append('address', address);
-    data.append('order_type', '');
-    data.append(
-      'sub_total',
-      (
-        miscellaneousItemsPrice + totalPrice
-      ).toFixed(2),
-    );
-    data.append('table_number', '');
+    if (address == '') {
+      errorToast(strings('login.error_address'));
+    } else {
+      setLoading(true);
+      let data = new FormData();
+      data.append('address', address);
+      data.append('order_type', '');
+      data.append(
+        'sub_total',
+        (miscellaneousItemsPrice + totalPrice).toFixed(2),
+      );
+      data.append('table_number', '');
 
-    let updateObj = {
-      data,
-      onSuccess: (res: any) => {
-        setAddress('')
-        setLoading(false);
-      },
-      onFailure: (Err: any) => {
-        setLoading(false);
-        if (Err != undefined) {
-          Alert.alert('Warning', Err?.message);
-        }
-      },
-    };
-    dispatch(orderCreateAction(updateObj));
+      let updateObj = {
+        data,
+        onSuccess: (res: any) => {
+          setAddress('');
+          setLoading(false);
+          navigation.navigate(screenName.student_tab_bar.StudentHome);
+        },
+        onFailure: (Err: any) => {
+          setLoading(false);
+          if (Err != undefined) {
+            Alert.alert('Warning', Err?.message);
+          }
+        },
+      };
+      dispatch(orderCreateAction(updateObj));
+    }
   };
 
   return (
@@ -165,17 +170,17 @@ const FoodCart = () => {
 
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: hp(100) }}>
+        contentContainerStyle={{paddingBottom: hp(100)}}>
         <FlatList
           data={getCardData}
-          renderItem={({ item }) => (
+          renderItem={({item}) => (
             <View style={styles.headingView}>
-              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 <Image
-                  source={{ uri: item?.menu?.image }}
+                  source={{uri: item?.menu?.image}}
                   style={styles.imageStyle}
                 />
-                <View style={{ marginLeft: wp(10), flex: 1 }}>
+                <View style={{marginLeft: wp(10), flex: 1}}>
                   <Text style={styles.titleText}>{item?.name}</Text>
                   {/* <TouchableOpacity
                     style={styles.closeView}
@@ -223,13 +228,11 @@ const FoodCart = () => {
         />
 
         {/* Summary Section */}
-        <View style={{ paddingHorizontal: wp(20), marginTop: hp(16) }}>
+        <View style={{paddingHorizontal: wp(20), marginTop: hp(16)}}>
           <Text style={styles.summaryText}>{strings('foodCart.summary')}</Text>
-          <View style={[styles.comanStyle, { marginTop: hp(8) }]}>
-            <Text style={styles.priText}>
-              {strings('myOrders.subtotal')}
-            </Text>
-            <Text style={[styles.priText, { color: colors.black }]}>{`₹${(
+          <View style={[styles.comanStyle, {marginTop: hp(8)}]}>
+            <Text style={styles.priText}>{strings('myOrders.subtotal')}</Text>
+            <Text style={[styles.priText, {color: colors.black}]}>{`₹${(
               miscellaneousItemsPrice + totalPrice
             ).toFixed(2)}`}</Text>
           </View>
@@ -239,19 +242,19 @@ const FoodCart = () => {
               {platformPrice}
             </Text>
           </View> */}
-          <View style={[styles.comanStyle, { marginTop: hp(12) }]}>
+          <View style={[styles.comanStyle, {marginTop: hp(12)}]}>
             <Text style={styles.priText}>
               {strings('foodCart.Platform_Fee')}
             </Text>
-            <Text style={[styles.priText, { color: colors.black }]}>
+            <Text style={[styles.priText, {color: colors.black}]}>
               {`₹${platformPrice}`}
             </Text>
           </View>
-          <View style={[styles.comanStyle, { marginVertical: hp(12) }]}>
+          <View style={[styles.comanStyle, {marginVertical: hp(12)}]}>
             <Text style={styles.priText}>{`${strings(
               'foodCart.discount',
             )} (${discount}%)`}</Text>
-            <Text style={[styles.priText, { color: colors.black }]}>
+            <Text style={[styles.priText, {color: colors.black}]}>
               {discount == 0 ? 0 : `- ₹${discontData.toFixed(2)}`}
             </Text>
           </View>
@@ -308,7 +311,7 @@ const FoodCart = () => {
 export default FoodCart;
 
 const getGlobalStyles = (props: any) => {
-  const { colors } = props;
+  const {colors} = props;
   return StyleSheet.create({
     container: {
       flex: 1,

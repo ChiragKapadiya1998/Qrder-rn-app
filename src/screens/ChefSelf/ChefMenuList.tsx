@@ -169,6 +169,10 @@ const MyMenuList = (props: Props) => {
   const renderItem = ({item}) => {
     const selectColor =
       tabSelection === item.name ? colors.text_orange : colors.text_gray;
+    if (item.name === strings('myMenuList.all')) {
+      return null;
+    }
+
     return (
       <View>
         <TouchableOpacity

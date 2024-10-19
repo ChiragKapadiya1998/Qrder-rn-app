@@ -71,8 +71,12 @@ const EditProfile = (props: Props) => {
   const [country, setCountry] = useState('');
   const [showListView, setShowListView] = useState(false);
   const [addressList, setAddressList] = useState([]);
-  const [emails, setEmail] = useState<string>(userData.email);
-  const [numbers, setNumber] = useState<string>(userData.number);
+  const [emails, setEmail] = useState<string>(
+    userData.email ? userData.email : '',
+  );
+  const [numbers, setNumber] = useState<string>(
+    userData.number ? userData.number : '',
+  );
   const [address, setAddress] = useState<string>(userData.address);
   const [photoUri, setPhotoUri] = useState(userData.profile_image);
   const [loading, setLoading] = useState(false);
@@ -87,6 +91,7 @@ const EditProfile = (props: Props) => {
   const [isPictureEdit, setIsPictureEdit] = useState<boolean>(
     userData.profile_image ? true : false,
   );
+  console.log('userData.number', userData.number);
 
   const [salary, setSalary] = useState(
     userData?.salary ? userData.salary.toString() : '',
@@ -205,9 +210,9 @@ const EditProfile = (props: Props) => {
       errorToast(strings('login.error_email'));
     } else if (!emailCheck(emails)) {
       errorToast(strings('login.error_v_email'));
-    } else if (numbers.trim().length === 0) {
+    } else if (numbers?.trim()?.length === 0) {
       errorToast(strings('login.error_phone'));
-    } else if (numbers.trim().length !== 10) {
+    } else if (numbers?.trim()?.length !== 10) {
       errorToast(strings('login.error_v_phone'));
     } else if (address.trim().length == 0) {
       errorToast(strings('login.error_address'));
@@ -270,7 +275,11 @@ const EditProfile = (props: Props) => {
           navigation.goBack();
         }}
         mainShow={true}
-        title={userData.role === 'staff' ? strings('profileScreen.view_chef') : strings('profileScreen.profile')}
+        title={
+          userData.role === 'staff'
+            ? strings('profileScreen.view_chef')
+            : strings('profileScreen.profile')
+        }
         isShowIcon={false}
         extraStyle={styles.headerContainer}
         isHideIcon={true}
@@ -405,9 +414,17 @@ const EditProfile = (props: Props) => {
             ) : null}
             <Input
               value={numbers}
-              placeholder={userData.role === 'student' ? strings('sign_up.p_enter_phone') :strings('editProfiles.add_contact_number')}
+              placeholder={
+                userData.role === 'student'
+                  ? strings('sign_up.p_enter_phone')
+                  : strings('editProfiles.add_contact_number')
+              }
               keyboardType="number-pad"
-              label={userData.role === 'student' ? strings('chefSignUp.phone_Number') :strings('newAddText.contact_number')}
+              label={
+                userData.role === 'student'
+                  ? strings('chefSignUp.phone_Number')
+                  : strings('newAddText.contact_number')
+              }
               onChangeText={(t: string) => setNumber(t)}
               maxLength={10}
               isShowLabel={true}
@@ -483,9 +500,7 @@ const EditProfile = (props: Props) => {
                 {userData.role === 'student' ||
                 userData.role === 'staff' ? null : (
                   <TouchableOpacity
-                    onPress={() =>
-                      Linking.openURL('https://qrder.in/profile')
-                    }>
+                    onPress={() => Linking.openURL('https://qrder.in/profile')}>
                     <Text style={styles.qrCodetext}>
                       {strings('newAddText.download_qr_code')}
                     </Text>
