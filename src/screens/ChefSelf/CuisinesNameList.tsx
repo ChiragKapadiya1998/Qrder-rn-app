@@ -2,6 +2,7 @@ import {
   ActivityIndicator,
   FlatList,
   Image,
+  RefreshControl,
   StatusBar,
   StyleSheet,
   Text,
@@ -54,6 +55,12 @@ const CuisinesNameList = (props: Props) => {
   const [loading, setLoading] = useState(false);
   const dispatch = useAppDispatch();
   const isFocused = useIsFocused();
+  const [refreshing, setRefreshing] = useState(false);
+
+
+  const onRefresh = React.useCallback(() => {
+    getCuisinesList(1);
+  }, [refreshing]);
 
   const closeModal = () => {
     setVisible(false);
@@ -151,6 +158,9 @@ const CuisinesNameList = (props: Props) => {
             onEndReachedThreshold={0.3}
             data={getAllData}
             ListEmptyComponent={<NoDataFound />}
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
             ListHeaderComponent={() => {
               return (
                 <View style={styles.headerList}>
@@ -237,7 +247,7 @@ const getGlobalStyles = (props: any) => {
       marginTop: hp(16),
       borderRadius: 8,
       flexDirection: 'row',
-      marginBottom:hp(32)
+      marginBottom: hp(32)
     },
     nameText: {
       ...commonFontStyle(500, 16, colors.black),

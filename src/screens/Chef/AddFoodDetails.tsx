@@ -193,7 +193,7 @@ const AddFoodDetails = () => {
     } else {
       setLoading(true);
       let data = new FormData();
-      const texPre = selectedTex === 0 ? 0 : Number(percentageInput);
+      const texPre = selectedTex === 1 ? 0 : Number(percentageInput);
       const listData = miscellaneous
         .filter(list => list.isSelect == true)
         .map(item => {
@@ -204,7 +204,7 @@ const AddFoodDetails = () => {
       data.append('cuisine_id', quantityValue);
       data.append('price', price);
       data.append('description', basicDetails);
-      data.append('include_tax', selectedTex);
+      data.append('include_tax', selectedTex === 0 ? 1 : 0);
       data.append('tax_percentage', texPre);
       data.append('miscellaneous_item_ids', `[${listData}]`);
       data.append('food_type', selecteFood);

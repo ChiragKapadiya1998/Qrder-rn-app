@@ -2,6 +2,7 @@ import {
   ActivityIndicator,
   FlatList,
   Image,
+  RefreshControl,
   StatusBar,
   StyleSheet,
   Text,
@@ -54,6 +55,7 @@ const RecipesMastersList = (props: Props) => {
   const [editFolder, setEditFolder] = useState(false);
   const [selectItem, setSelectItem] = useState({});
   const [loading, setLoading] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
   const dispatch = useAppDispatch();
   const isFocused = useIsFocused();
 
@@ -148,6 +150,10 @@ const RecipesMastersList = (props: Props) => {
     setGetAllData(filteredItems);
   };
 
+  const onRefresh = React.useCallback(() => {
+    getCuisinesList(1);
+  }, [refreshing]);
+
   return (
     <View style={styles.container}>
       <StatusBar
@@ -189,6 +195,9 @@ const RecipesMastersList = (props: Props) => {
             onEndReachedThreshold={0.3}
             data={getAllData}
             ListEmptyComponent={<NoDataFound />}
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
             ListHeaderComponent={() => {
               return (
                 <View style={styles.headerList}>

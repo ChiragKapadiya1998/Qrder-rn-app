@@ -1,6 +1,7 @@
 import {
   FlatList,
   Image,
+  RefreshControl,
   StatusBar,
   StyleSheet,
   Text,
@@ -42,6 +43,11 @@ const ChefNameList = (props: Props) => {
   const [selectItem, setSelectItem] = useState([]);
   const [loading, setLoading] = useState(false);
   const [getAllData, setGetAllData] = useState(getChefsData);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = React.useCallback(() => {
+    getChefsList();
+  }, [refreshing]);
 
   useEffect(() => {
     getChefsList();
@@ -169,6 +175,9 @@ const ChefNameList = (props: Props) => {
             onEndReachedThreshold={0.3}
             data={getAllData}
             ListEmptyComponent={<NoDataFound />}
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
             ListHeaderComponent={() => {
               return (
                 <View style={styles.headerList}>
