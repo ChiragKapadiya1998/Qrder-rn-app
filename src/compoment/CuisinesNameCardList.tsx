@@ -51,15 +51,15 @@ const CuisinesNameCardList = ({
         <View style={styles.container}>
           <View style={[styles.leftView, {paddingHorizontal: wp(16)}]}>
             <View style={[styles.viewStyle, {flex: 1}]}>
-              {isRecipeMaster ? null : (
+              {/* {isRecipeMaster ? null : (
                 <Image source={{uri: item.image}} style={styles.imageStyle} />
-              )}
+              )} */}
               <Text numberOfLines={1} style={styles.titleText}>
                 {item?.name || item?.menu_name}
               </Text>
             </View>
             {isShowPrice ? (
-             <Text style={[styles.titleText]}>{parseInt(item?.price)}</Text>
+              <Text style={[styles.titleText]}>{parseInt(item?.price)}</Text>
             ) : null}
             <View style={styles.viewStyle}>
               {showIcon ? (

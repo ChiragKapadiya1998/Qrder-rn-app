@@ -1,4 +1,5 @@
 export const api = {
+  // BASE_URL: 'http://qrder.test/',
   BASE_URL: 'https://qrder.in/api/',
   // BASE_URL1: 'https://qrder.in/',
   // BASE_URL:
@@ -51,7 +52,7 @@ export const api = {
   orderCreate: 'order-create',
   restaurantDiscount: 'restaurant-discount',
   changePassword: 'change-password',
-  invoiceDownload:'invoice-download',
+  invoiceDownload: 'invoice-download',
   search_menu_list: 'search-menu',
 
   //student

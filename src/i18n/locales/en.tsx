@@ -562,7 +562,7 @@ export default {
     W: 'W',
     T: 'T',
     F: 'F',
-    S: 'S',
+    St: 'S',
     S: 'S',
 
     Jan: 'Jan',
@@ -577,5 +577,6 @@ export default {
     Oct: 'Oct',
     Nov: 'Nov',
     Dec: 'Dec',
+    SelectBrand: 'Select Brand',
   },
 };

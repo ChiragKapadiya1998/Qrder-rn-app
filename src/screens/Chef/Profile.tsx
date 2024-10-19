@@ -34,6 +34,7 @@ import {errorToast} from '../../utils/commonFunction';
 import ReviewModal from '../../compoment/ReviewModal';
 import {setDarkTheme, setLanguage} from '../../utils/commonActions';
 import ThankYouModal from '../../compoment/ThankYouModal';
+import {getUserAction} from '../../actions/authAction';
 
 type Props = {};
 
@@ -59,7 +60,7 @@ const Profile = (props: Props) => {
     try {
       const userList = await getAsyncUserInfo();
       setUserData(userList);
-      setName(userList.name || '');
+      setName(`${userList.name} ${userList.last_name}` || '');
       setNumber(userList.number || '');
       setPhotoUri(userList?.profile_image);
     } catch (error) {}
@@ -68,6 +69,7 @@ const Profile = (props: Props) => {
   useFocusEffect(
     useCallback(() => {
       fetchUserInfo();
+      onGetDataProfile();
     }, []),
   );
 
@@ -85,6 +87,14 @@ const Profile = (props: Props) => {
     } else {
       list !== '' && navigation.navigate(list);
     }
+  };
+
+  const onGetDataProfile = async () => {
+    let obj = {
+      onSuccess: (res: any) => {},
+      onFailure: (Err: any) => {},
+    };
+    dispatch(getUserAction(obj));
   };
 
   const closeModal = () => {

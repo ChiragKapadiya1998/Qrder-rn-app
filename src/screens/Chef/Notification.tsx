@@ -88,13 +88,14 @@ const Notification = ({}: Props) => {
           data={[]}
           ListEmptyComponent={() => {
             return (
-              <View>
+              <View style={{flex: 1}}>
                 <Image source={Icons.noData} style={styles.noDataIcon} />
               </View>
             );
           }}
           renderItem={renderItem}
           showsVerticalScrollIndicator={false}
+          contentContainerStyle={{flex: 1}}
           ListFooterComponent={() => {
             return (
               <View>
@@ -172,7 +173,7 @@ const getGlobalStyles = (props: any) => {
       height: wp(120),
       position: 'absolute',
       alignSelf: 'center',
-      top: SCREEN_HEIGHT * 0.23,
+      top: SCREEN_HEIGHT * 0.28,
     },
   });
 };

@@ -55,6 +55,7 @@ import {
 } from '../../actions/allOrdersAction';
 import moment from 'moment';
 import Spacer from '../../compoment/Spacer';
+import {getUserAction} from '../../actions/authAction';
 
 type Props = {};
 
@@ -105,7 +106,16 @@ const Home = (props: Props) => {
 
   useEffect(() => {
     getCurrentLocation();
+    onGetDataProfile();
   }, []);
+
+  const onGetDataProfile = async () => {
+    let obj = {
+      onSuccess: (res: any) => {},
+      onFailure: (Err: any) => {},
+    };
+    dispatch(getUserAction(obj));
+  };
 
   useEffect(() => {
     if (isFocuse) {
@@ -188,7 +198,8 @@ const Home = (props: Props) => {
         location={value}
         onPressLocation={onPressLocation}
         onRightPressNotification={() => {
-          navigation.navigate(screenName.tab_bar_name?.Notification);
+          setOrderRequestModal(true);
+          // navigation.navigate(screenName.tab_bar_name?.Notification);
         }}
       />
       <ScrollView style={{flex: 1, marginHorizontal: hp(20)}}>

@@ -2,6 +2,7 @@ import {
   ActivityIndicator,
   FlatList,
   Image,
+  RefreshControl,
   StatusBar,
   StyleSheet,
   Text,
@@ -54,6 +55,7 @@ const MiscellaneousList = (props: Props) => {
   const [editFolder, setEditFolder] = useState(false);
   const [selectItem, setSelectItem] = useState({});
   const [loading, setLoading] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
   const dispatch = useAppDispatch();
   const isFocused = useIsFocused();
 
@@ -105,11 +107,15 @@ const MiscellaneousList = (props: Props) => {
 
   const onSearchBar = (text: string) => {
     setSearchQuery(text);
-    const filteredItems = getMiscellaneous?.filter((f: any) =>
+    const filteredItems = getAllData?.filter((f: any) =>
       f?.name?.toLowerCase()?.match(text?.toLowerCase()),
     );
     setGetAllData(filteredItems);
   };
+
+  const onRefresh = React.useCallback(() => {
+    getCuisinesList(1);
+  }, [refreshing]);
 
   return (
     <View style={styles.container}>
@@ -149,6 +155,9 @@ const MiscellaneousList = (props: Props) => {
           <Loader size={'small'} />
         ) : (
           <FlatList
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
             onEndReachedThreshold={0.3}
             data={getAllData}
             ListEmptyComponent={<NoDataFound />}
@@ -243,7 +252,7 @@ const getGlobalStyles = (props: any) => {
       marginTop: hp(16),
       borderRadius: 8,
       flexDirection: 'row',
-      marginBottom:hp(32)
+      marginBottom: hp(32),
     },
     nameText: {
       ...commonFontStyle(500, 16, colors.black),

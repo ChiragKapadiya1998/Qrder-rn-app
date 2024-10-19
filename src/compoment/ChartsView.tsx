@@ -116,9 +116,11 @@ const ChartsView = ({
           `${strings('newKey.W')}`,
           `${strings('newKey.T')}`,
           `${strings('newKey.F')}`,
-          `${strings('newKey.S')}`,
+          `${strings('newKey.St')}`,
           `${strings('newKey.S')}`,
         ];
+        console.log('revenueData', revenueData);
+
         const updateWeekly = revenueData?.map((entry, index) => {
           return {
             value: parseFloat(entry?.revenue) || 0, // Parse revenue and default to 0 if NaN
@@ -193,10 +195,12 @@ const ChartsView = ({
         end_date = currentDate.format('YYYY-MM-DD');
         break;
       case strings('home.week'):
-        const startOfWeek = currentDate.clone().startOf('week'); // Start of the week (Sunday by default)
-        const endOfWeek = currentDate.clone().endOf('week'); // End of the week (Saturday by default)
-        start_date = startOfWeek.format('YYYY-MM-DD');
-        end_date = endOfWeek.format('YYYY-MM-DD');
+        const startOfWeek2 = moment().startOf('isoWeek');
+        const endOfWeek2 = moment().endOf('isoWeek');
+        // const startOfWeek = currentDate.clone().startOf('week'); // Start of the week (Sunday by default)
+        // const endOfWeek = currentDate.clone().endOf('week'); // End of the week (Saturday by default)
+        start_date = startOfWeek2.format('YYYY-MM-DD');
+        end_date = endOfWeek2.format('YYYY-MM-DD');
         break;
       case strings('home.monthly'):
         const startOfMonth = currentDate.clone().startOf('month'); // First day of the month
@@ -282,6 +286,8 @@ const ChartsView = ({
         setIsLoading(false);
       },
     };
+    console.log('params', obj.params);
+
     dispatch(getDashboardAction(obj));
   };
 
@@ -368,7 +374,7 @@ const ChartsView = ({
             adjustToWidth={false}
             barBorderRadius={5}
             frontColor={colors.text_orange}
-            yAxisTextStyle={{color: colors.black}}
+            yAxisTextStyle={{color: colors.text_orange}}
             xAxisLabelTextStyle={{color: colors.black}}
             noOfSections={4} // Number of sections on the Y-axis
             // yAxisLabelTexts={['0', '20K', '40K', '60K', '70K', '80K']}

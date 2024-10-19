@@ -68,20 +68,21 @@ const SignInScreen = (props: Props) => {
 
   const DropDownData = [
     {
-      name: strings('roleSelection.owner'),
+      name: strings('sign_up.restaurant'),
       value: 'Admin',
       id: 1,
-    },
-    {
-      name: strings('roleSelection.staff'),
-      value: 'Staff',
-      id: 2,
     },
     {
       name: strings('newAddText.canteen'),
       value: 'Canteen',
       id: 2,
     },
+    {
+      name: strings('roleSelection.staff'),
+      value: 'Staff',
+      id: 2,
+    },
+
     {
       name: strings('roleSelection.student'),
       value: 'Student',
@@ -115,6 +116,8 @@ const SignInScreen = (props: Props) => {
       data.append('password', password);
       data.append('role', selectRole.toLowerCase());
       data.append('device_token', JSON.parse(deviceToken) || uniqueId);
+      console.log('data', data);
+
       let obj = {
         data,
         onSuccess: async () => {

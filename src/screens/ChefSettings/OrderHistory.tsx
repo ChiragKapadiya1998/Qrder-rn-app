@@ -203,7 +203,7 @@ const OrderHistory = () => {
           showsVerticalScrollIndicator={false}
           ListEmptyComponent={<NoDataFound />}
           ListFooterComponent={() => {
-            return <View style={{height: 100}} />;
+            return <View style={{height: 200}} />;
           }}
         />
       </View>

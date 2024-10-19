@@ -1,5 +1,6 @@
 import {
   LogBox,
+  Platform,
   SafeAreaView,
   StatusBar,
   StyleSheet,
@@ -16,6 +17,9 @@ import RootContainer from './src/navigation/mainNavigator';
 // import * as Sentry from '@sentry/react-native';
 import SplashScreen from 'react-native-splash-screen';
 import {requestNotificationUserPermission} from './src/utils/firebaseConfig';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {asyncKeys} from './src/utils/asyncStorageManager';
+import {getUniqueId} from 'react-native-device-info';
 
 type Props = {};
 
@@ -25,8 +29,17 @@ const App = (props: Props) => {
       SplashScreen.hide();
     }, 1100);
     LogBox.ignoreAllLogs(true);
-    requestNotificationUserPermission();
+
+    fcmTokens();
   }, []);
+  const fcmTokens = async () => {
+    if (Platform.OS == 'ios') {
+      let uniqueId = await getUniqueId();
+      AsyncStorage.setItem(asyncKeys.fcm_token, JSON.stringify(uniqueId));
+    } else {
+      requestNotificationUserPermission();
+    }
+  };
 
   const toastConfig = {
     success: ({text1, text2, type, props, ...rest}: any) =>

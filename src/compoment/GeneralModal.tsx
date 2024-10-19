@@ -71,11 +71,14 @@ const GeneralModal = ({
         },
         onSuccess: res => {
           setLotSizeModal(false);
-          setIsOpenModal(true);
+
           setSelectBrand('');
           setLotSizeText('');
           setSelectedOption('500ml');
           setLoading(false);
+          setTimeout(() => {
+            setIsOpenModal(true);
+          }, 500);
         },
         onFailure: (Err: any) => {
           if (Err !== undefined) {
@@ -178,7 +181,9 @@ const GeneralModal = ({
                   keyboardType="number-pad"
                 />
 
-                <Text style={styles.selectText}>{'Select Brand'}</Text>
+                <Text style={styles.selectText}>
+                  {strings('newKey.SelectBrand')}
+                </Text>
                 <View style={styles.btnContainer}>
                   <TouchableOpacity
                     onPress={() => setSelectBrand(strings('newAddText.kinley'))}
@@ -186,7 +191,7 @@ const GeneralModal = ({
                       styles.kinleyBtn,
                       {
                         borderColor:
-                          selectBrand === 'Kinley'
+                          selectBrand === strings('newAddText.kinley')
                             ? colors.text_orange
                             : colors.title_dec100,
                       },
@@ -204,7 +209,7 @@ const GeneralModal = ({
                       styles.kinleyBtn,
                       {
                         borderColor:
-                          selectBrand === 'Bisleri'
+                          selectBrand === strings('newAddText.bisleri')
                             ? colors.text_orange
                             : colors.title_dec100,
                       },
